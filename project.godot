@@ -1,0 +1,30 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="Space_Race_Suburbia"
+run/main_scene="uid://dw2grejb4tc3k"
+config/features=PackedStringArray("4.4", "Forward Plus")
+run/max_fps=60
+config/icon="res://Assets/icon.svg"
+
+[display]
+
+window/size/viewport_width=2560
+window/size/viewport_height=1440
+window/size/initial_position_type=3
+window/size/initial_position=Vector2i(-500, 0)
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+
+[physics]
+
+3d/default_gravity=19.6

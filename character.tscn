@@ -1,0 +1,26 @@
+[gd_scene load_steps=5 format=3 uid="uid://f722yn8gdiyj"]
+
+[ext_resource type="PackedScene" uid="uid://bpvm0l41dywjs" path="res://PREM-7.tscn" id="1_glpr6"]
+[ext_resource type="Script" uid="uid://sw8eis2eqpyj" path="res://character.gd" id="1_pjt0s"]
+[ext_resource type="PackedScene" uid="uid://baomcogkgkbvv" path="res://hud.tscn" id="3_wa5vi"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_wa5vi"]
+radius = 2.033
+height = 7.5
+
+[node name="Character" type="CharacterBody3D"]
+script = ExtResource("1_pjt0s")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+
+[node name="PREM-7" parent="Camera3D" instance=ExtResource("1_glpr6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.05391, -0.376162, -1.12775)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.405213, 0)
+shape = SubResource("CapsuleShape3D_wa5vi")
+debug_color = Color(1, 1, 1, 1)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+
+[node name="HUD" parent="." instance=ExtResource("3_wa5vi")]
