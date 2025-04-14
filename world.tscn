@@ -1,9 +1,11 @@
-[gd_scene load_steps=55 format=4 uid="uid://dw2grejb4tc3k"]
+[gd_scene load_steps=57 format=4 uid="uid://dw2grejb4tc3k"]
 
 [ext_resource type="PackedScene" uid="uid://f722yn8gdiyj" path="res://character.tscn" id="1_f3sb7"]
 [ext_resource type="Script" uid="uid://cpdnlycwlet2q" path="res://world.gd" id="1_tlwt5"]
 [ext_resource type="Shader" uid="uid://dywmpt1g3j23k" path="res://grass.gdshader" id="2_fj7yv"]
 [ext_resource type="Shader" uid="uid://by1yom22y4i8p" path="res://metallic_white.gdshader" id="4_aqk2v"]
+[ext_resource type="Script" uid="uid://clwwid0cs6u32" path="res://drying_machine.gd" id="4_dwbse"]
+[ext_resource type="Script" uid="uid://cyj7bywqq8pgl" path="res://washing_machine.gd" id="6_pkg7o"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_f3sb7"]
 size = Vector3(100, 1, 100)
@@ -593,44 +595,45 @@ environment = SubResource("Environment_tlwt5")
 [node name="DryingMachine" type="RigidBody3D" parent="Objects"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.38035, 0.00344729, -9.6957)
 mass = 75.0
+center_of_mass_mode = 1
 contact_monitor = true
 max_contacts_reported = 100
+script = ExtResource("4_dwbse")
 
 [node name="Body" type="MeshInstance3D" parent="Objects/DryingMachine"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.01707, 0)
 mesh = SubResource("ArrayMesh_8hefi")
 skeleton = NodePath("")
 surface_material_override/0 = SubResource("ShaderMaterial_aqk2v")
 
 [node name="Drum" type="MeshInstance3D" parent="Objects/DryingMachine"]
-transform = Transform3D(1.25377, 0, 0, 0, 0, -1.25377, 0, 0.835317, 0, 0, 1.32612, 0.0363665)
+transform = Transform3D(1.25377, 0, 0, 0, 0, -1.25377, 0, 0.835317, 0, 0, 0.12, 0.036)
 mesh = SubResource("ArrayMesh_nahqf")
 skeleton = NodePath("")
 surface_material_override/0 = SubResource("StandardMaterial3D_tlwt5")
 
 [node name="Door" type="MeshInstance3D" parent="Objects/DryingMachine"]
-transform = Transform3D(0.822587, 0, 0, 0, 0, -0.736414, 0, -0.0233916, 0, 0.0228524, 1.04291, 0.992634)
+transform = Transform3D(0.822587, 0, 0, 0, 0, -0.736414, 0, -0.0233916, 0, 0.0228524, 0, 0.992634)
 mesh = SubResource("ArrayMesh_t6mm6")
 skeleton = NodePath("")
 surface_material_override/0 = SubResource("ShaderMaterial_036b0")
 
 [node name="Large_Knob" type="MeshInstance3D" parent="Objects/DryingMachine"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.01622, 0.991442, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.01622, -0.0200704, 0)
 mesh = SubResource("ArrayMesh_3gl8p")
 skeleton = NodePath("")
 
 [node name="Small_Knob_Green" type="MeshInstance3D" parent="Objects/DryingMachine"]
-transform = Transform3D(0.647879, 0, 0, 0, 0.647879, 0, 0, 0, 0.647879, 0.213365, 1.40498, -0.208776)
+transform = Transform3D(0.647879, 0, 0, 0, 0.647879, 0, 0, 0, 0.647879, 0.213365, 0.39, -0.208776)
 mesh = SubResource("ArrayMesh_hyogf")
 skeleton = NodePath("")
 
 [node name="Small_Knob_Red" type="MeshInstance3D" parent="Objects/DryingMachine"]
-transform = Transform3D(0.647879, 0, 0, 0, 0.647879, 0, 0, 0, 0.647879, 0.00536856, 1.40498, -0.208776)
+transform = Transform3D(0.647879, 0, 0, 0, 0.647879, 0, 0, 0, 0.647879, 0.00536856, 0.39, -0.208776)
 mesh = SubResource("ArrayMesh_0jvtl")
 skeleton = NodePath("")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Objects/DryingMachine"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00570679, 1.21622, -0.00463867)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00570679, 0, -0.00463867)
 shape = SubResource("BoxShape3D_fj7yv")
 debug_color = Color(0.580641, 0.0919842, 0.225232, 1)
 
@@ -639,42 +642,40 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.54401, 0, -9.51485)
 mass = 75.0
 contact_monitor = true
 max_contacts_reported = 100
+script = ExtResource("6_pkg7o")
 
 [node name="Body" type="MeshInstance3D" parent="Objects/WashingMachine"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0106875, 1.02254, -0.0156592)
 mesh = SubResource("ArrayMesh_m4j1c")
 skeleton = NodePath("")
 surface_material_override/0 = SubResource("ShaderMaterial_dwbse")
 
 [node name="Drum" type="MeshInstance3D" parent="Objects/WashingMachine"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0106875, 1.02254, -0.129148)
 mesh = SubResource("ArrayMesh_88p0t")
 skeleton = NodePath("")
 surface_material_override/0 = SubResource("ShaderMaterial_dwbse")
 
 [node name="Door" type="MeshInstance3D" parent="Objects/WashingMachine"]
-transform = Transform3D(0.822587, 0, 0, 0, -0.0233916, 0, 0, 0, 0.736414, 0.03354, 2.01857, 0.123192)
+transform = Transform3D(-0.822587, 0, 0, 0, -0.0233916, 0, 0, 0, -0.736414, 0.03354, 0.994581, 0.123192)
 mesh = SubResource("ArrayMesh_fhg2h")
 skeleton = NodePath("")
 surface_material_override/0 = SubResource("ShaderMaterial_dwbse")
 
 [node name="Large_Knob" type="MeshInstance3D" parent="Objects/WashingMachine"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0655203, 0.996917, -0.0156592)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0655203, -0.0270724, -0.0156593)
 mesh = SubResource("ArrayMesh_c4rsh")
 skeleton = NodePath("")
 
 [node name="Small_Knob_Green" type="MeshInstance3D" parent="Objects/WashingMachine"]
-transform = Transform3D(0.647879, 0, 0, 0, 0.647879, 0, 0, 0, 0.647879, -0.918133, 1.41045, -0.224436)
+transform = Transform3D(0.647879, 0, 0, 0, 0.647879, 0, 0, 0, 0.647879, -0.918133, 0.386461, -0.224436)
 mesh = SubResource("ArrayMesh_nrbh0")
 skeleton = NodePath("")
 
 [node name="Small_Knob_Red" type="MeshInstance3D" parent="Objects/WashingMachine"]
-transform = Transform3D(0.647879, 0, 0, 0, 0.647879, 0, 0, 0, 0.647879, -0.71894, 1.41045, -0.224436)
+transform = Transform3D(0.647879, 0, 0, 0, 0.647879, 0, 0, 0, 0.647879, -0.71894, 0.386461, -0.224436)
 mesh = SubResource("ArrayMesh_b56r8")
 skeleton = NodePath("")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Objects/WashingMachine"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00570679, 1.21622, -0.00463867)
 shape = SubResource("BoxShape3D_fj7yv")
 debug_color = Color(0.580641, 0.0919842, 0.225232, 1)
 

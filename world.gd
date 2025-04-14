@@ -23,7 +23,7 @@ var char_pos: Vector3
 var char_forward: Vector3
 var target_pos: Vector3
 var target_transform: Transform3D
-var target_grabbed_rotation: Vector3
+var target_grabbed_rotation: Vector3 = Vector3(10, 0, 0)
 var reset_rotation: bool = false
 
 
@@ -42,6 +42,7 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	# When an object is grabbed for the first time:
 	if character.object_is_grabbed and not object_is_grabbed:
+		character.pitch_set = false
 		character.initial_grab = true
 		grabbed_object = character.grabbed_object 
 		grabbed_object.reparent(character.camera)
@@ -54,13 +55,15 @@ func _process(delta: float) -> void:
 		grabbed_object.reparent(self)
 		grabbed_object.global_position = object_global_position
 		character.distance_from_character = base_distance_in_front
+		character.pitch_set = false
 		grabbed_object = null
 		object_is_grabbed = false
 
 	if character.object_is_grabbed and object_is_grabbed and grabbed_object:
 		char_pos = character.camera.global_transform.origin
 		char_forward = -character.camera.global_transform.basis.z.normalized()
-
+		#print('Grabbed Object Position: ', grabbed_object.position)
+		#print('Grabbed Object Rotation: ', grabbed_object.global_rotation_degrees)
 		target_pos = char_pos + char_forward * character.distance_from_character
 		var custom_up = Vector3(0, 1, 0.001).normalized()
 		target_transform = Transform3D().looking_at(char_pos, custom_up)
@@ -71,8 +74,10 @@ func _process(delta: float) -> void:
 			grabbed_object.global_transform = grabbed_object.global_transform.interpolate_with(target_transform, delta * airborne_interp_speed)
 		if reset_rotation:
 			character.grabbed_rotation = character.grabbed_rotation.lerp(target_grabbed_rotation, delta * 2.0)
-			if abs(character.grabbed_rotation.x + target_grabbed_rotation.x) < .05:
+			grabbed_object.rotation_degrees = character.grabbed_rotation
+			if character.grabbed_rotation.distance_to(target_grabbed_rotation) < 0.05:
 				reset_rotation = false
+
 		if character.shifting_object_active:
 			reset_rotation = false
 
@@ -82,7 +87,6 @@ func _input(event: InputEvent) -> void:
 		if event.keycode == KEY_R:
 			reset_rotation = true
 			character.distance_from_character = base_distance_in_front
-			target_grabbed_rotation = Vector3.ZERO
 
 		elif event.keycode == KEY_SHIFT:
 			if event.is_pressed():

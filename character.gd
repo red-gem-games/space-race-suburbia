@@ -1,14 +1,14 @@
 extends CharacterBody3D
 class_name character
 
-
-var target_strength: float = 1
-
-
+@onready var collision_shape: CollisionShape3D = $CollisionShape3D
 @onready var char_anim: AnimationPlayer = $AnimationPlayer
 @onready var camera: Camera3D = $Camera3D
 @onready var PREM_7: Node3D = $"Camera3D/PREM-7"
 @onready var hud_reticle: Control = $HUD.hud_reticle
+@onready var gravity_cast: RayCast3D = $Gravity_Ray_Cast
+
+#var target_strength: float = 1
 
 var distance_from_character: float = 6
 var previous_height: float
@@ -37,13 +37,14 @@ var grab_offset_factor: float = 0.01  # Adjust as needed.
 var grabbed_distance: float = 0.0
 var grabbed_rotation: Vector3
 var grabbed_initial_rotation: Vector3 = Vector3.ZERO
+var grabbed_global_rotation: Vector3
 
 var shifting_object_active: bool = false
 var dividing_object_active: bool = false
 var inspecting_object_active: bool = false
 var fusing_object_active: bool = false
 
-var floor_y: float = -1     # The floor level (adjust as needed)
+var floor_y: float = -1.5     # The floor level (adjust as needed)
 var max_y: float = 20.0       # The maximum Y allowed (adjust as needed)
 var base_pitch_factor: float = 3
 var pitch_factor: float = base_pitch_factor # How much camera pitch affects the Y offset
@@ -56,6 +57,8 @@ var last_mouse_time: float = 0.0          # Timestamp of the last mouse motion e
 var grabbed_x_rotation: float
 var grabbed_y_rotation: float
 var grabbed_z_rotation: float
+
+var grabbed_vertical_offset: float = 0.0
 
 # Mouse button states
 var left_mouse_down: bool = false
@@ -71,21 +74,33 @@ var current_mode: String = mode_1
 var pending_mode: String = ""  # Holds the pending mode change
 var pending_mode_key: int = 0  # Will store the keycode of the mode key that triggered pending_mode
 
-# Variables for camera rotation
-var desired_yaw: float = 0.0
-var desired_pitch: float = 0.0
-var yaw: float = 0.0
 var pitch: float = 0.0
+var pitch_set: bool = false
 var base_pitch_min: float = -PI/2
 var base_pitch_max: float = PI/2
+var grab_pitch_min: float = -0.25
+var grab_pitch_max: float = 1
 var pitch_min: float = base_pitch_min
 var pitch_max: float = base_pitch_max
 var base_mouse_sensitivity: float = 0.002
 var mouse_sensitivity: float = base_mouse_sensitivity
 var smoothing: float = 0.05  # Smoothing factor (0-1)
 
+# Variables for camera rotation
+var desired_yaw: float = 0.0
+var desired_pitch: float = 0.0
+var yaw: float = 0.0
+var distance_factor: float = 0.0
+var height_factor: float = 0.0
+var last_y: float = 0.0
+var change_rate: float = 0.05  # Adjust this value to control sensitivity
+var fall_speed_factor: float = 0.0
+var fall_sensitivity: float = 0.01  # You can tweak this to make pitch change more or less based on falling speed
+var distance_to_ground: float
+
+
 # Variables for player movement
-var base_movement_speed: float = 7.0
+var base_movement_speed: float = 14.0
 var movement_speed: float = base_movement_speed
 var current_velocity: Vector3 = Vector3.ZERO
 
@@ -93,105 +108,148 @@ var current_velocity: Vector3 = Vector3.ZERO
 var prem7_original_rotation: Vector3
 var prem7_rotation_offset: Vector3 = Vector3.ZERO
 var prem7_rotation_speed: float = 0.0001  # Adjust this to slow or speed up PREM-7's rotation while shifting.
-
+ 
+var grounded: bool = false  
+var airborne: bool = false
 var jetpack_active: bool = false
-var jetpack_force: float = 15.0     # Adjust for how fast you want the character to rise.
-var gravity: float = 20.0     
-var grounded: bool = false   # Adjust for how fast the character falls.
 var vertical_velocity: float = 0.0
-var ground_y: float = 2.0           # The minimum height (ground level).
+var gravity_strength: float = 10.0
+var current_jetpack_thrust: float = 0.0
+var current_jetpack_accel: float = 0.0
+var min_thrust_threshold: float = 0.2
+
+# Max values you can tweak
+var jetpack_thrust_max: float = 5.0
+var jetpack_accel_max: float = 2.0
+var thrust_ramp_up_speed: float = 2.5
+var thrust_ramp_down_speed: float = 2.5
+var hover_threshold: float = 0.2  # How close to the ground before hover softens descent
+var hover_lock: bool = false
+var hover_base_y: float = 0.0
+var hover_bob_time: float = 0.0
+# Ceiling soft clamp logic
+var ceiling_buffer: float = 2.0
+var ceiling_threshold: float = max_y - ceiling_buffer
+var touching_ceiling: bool = false
 
 
 
+func handle_jetpack(status, timing):
+	# Jetpack Ceiling Clamp
+	if position.y >= max_y:
+		position.y = max_y
+		if vertical_velocity > 0:
+			vertical_velocity = 0.0
 
+	elif position.y > ceiling_threshold and vertical_velocity > 0:
+		var closeness: float = (position.y - ceiling_threshold) / ceiling_buffer
+		var damp_factor: float = clamp(closeness * 0.5, 0.0, 1.0)
+		var damp_strength: float = 1.0 - pow(damp_factor, 2)
+		vertical_velocity *= damp_strength
 
+	if status == '1':
+		current_jetpack_thrust = lerp(current_jetpack_thrust, jetpack_thrust_max, thrust_ramp_up_speed * timing)
+		current_jetpack_accel = lerp(current_jetpack_accel, jetpack_accel_max, thrust_ramp_up_speed * timing)
+	elif status == '2':
+		current_jetpack_thrust = lerp(current_jetpack_thrust, 0.0, thrust_ramp_down_speed * timing)
+		current_jetpack_accel = lerp(current_jetpack_accel, 0.0, thrust_ramp_down_speed * timing)
+	elif status == '3':
+		vertical_velocity = lerp(vertical_velocity, current_jetpack_thrust, current_jetpack_accel * timing)
+	elif status == '4':
+		vertical_velocity *= pow(0.55, timing * 4.0)
+	elif status == '5':
+		var hover_gravity = -gravity_strength * (distance_to_ground / 25.0)
+		vertical_velocity = lerp(vertical_velocity, hover_gravity, 3.0 * timing)
+	elif status == '6':
+		vertical_velocity = lerp(vertical_velocity, -gravity_strength, 1.0 * timing)
+	elif status == '7':
+		hover_bob_time += timing  # use delta to advance time
+		var bob_strength = 0.5    # Amplitude (how far up/down)
+		var bob_speed = 2.0       # Frequency (how fast)
+		var bob_offset = sin(hover_bob_time * bob_speed) * bob_strength
+		global_position.y = hover_base_y + bob_offset
+		vertical_velocity = 0.0  # Freeze vertical momentum
 
+func raycast_to_ground() -> float:
+	var from = global_position
+	var to = from - Vector3.UP * 10.0
 
+	var query = PhysicsRayQueryParameters3D.new()
+	query.from = from
+	query.to = to
+	query.exclude = [self]
 
+	var space_state = get_world_3d().direct_space_state
+	var result = space_state.intersect_ray(query)
+
+	if result:
+		return from.y - result.position.y
+	return 9999.0
 
 func _ready() -> void:
+
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	# Store the original rotation of PREM-7.
 	prem7_original_rotation = PREM_7.rotation
 
+
+
+##----------------------------------------##
+##------------PROCESS RESPONSE------------##
+##----------------------------------------##
+
+
 func _process(delta: float) -> void:
-	
+
+	print("Player Y position: ", position.y)
+	# -------------------
+	# Jetpack Logic
+	# -------------------
+	distance_to_ground = raycast_to_ground()
+
+	# Update thrust and acceleration values
 	if jetpack_active:
-		pitch_min = base_pitch_min
-		vertical_velocity = jetpack_force
-		gravity = 20
-		grounded = false  # Constant upward velocity, or you can add acceleration.
+		handle_jetpack('1', delta)
 	else:
-		vertical_velocity -= gravity * delta
+		handle_jetpack('2', delta)
+		if hover_lock:
+			handle_jetpack('7', delta)
+		elif current_jetpack_thrust > min_thrust_threshold:
+			handle_jetpack('3', delta)
 
-	# Update the character's vertical position using the vertical_velocity.
-	self.position.y += vertical_velocity * delta
+	if current_jetpack_thrust > min_thrust_threshold:
+		# Actively rising
+		handle_jetpack('3', delta)
 
-	# Clamp the character's position so that it does not go below ground level.
-	if self.position.y < 2.5 and not grounded:
-		self.position.y = ground_y
-		pitch_min = base_pitch_min
-		pitch_max = 1
-		vertical_velocity = 0
-		gravity = 0
-		grounded = true
-	
-	if grounded:
-		if grabbed_object:
-			pitch_min = 0
-			pitch_max = 0.75
+	elif not is_on_floor():
+		# Jetpack is no longer active, but player is airborne
+		if not touching_ceiling:
+			if vertical_velocity > 0:
+				handle_jetpack('4', delta)
+				# Clamp vertical velocity close to zero to avoid endless float
+				if abs(vertical_velocity) < 0.25:
+					vertical_velocity = 0.0
+
+			else:
+				# Now descending — use your hover gravity
+				if distance_to_ground < 8:
+					handle_jetpack('5', delta)
+				else:
+					handle_jetpack('6', delta)
 		else:
-			pitch_min = base_pitch_min
-			pitch_max = base_pitch_max
-		
-
-	# Perform a raycast from the camera's position forward.
-	var space_state = get_world_3d().direct_space_state
-	var from = camera.global_transform.origin
-	# Assuming the camera's forward direction is -z:
-	var to = from + (-camera.global_transform.basis.z) * 100.0  # adjust distance as needed
-
-	# Exclude the player (and any other objects you don't want to hit).
-	var exclude = [self]
-	var query = PhysicsRayQueryParameters3D.new()
-	query.from = from
-	query.to = to
-	query.exclude = exclude
-	var result = space_state.intersect_ray(query)
-
-
-
-	if result:
-		var collider = result.collider
-		if collider is RigidBody3D:
-			match current_mode:
-				mode_1:
-					hud_reticle.modulate = Color.GREEN
-				mode_2:
-					hud_reticle.modulate = Color.RED
-				mode_3:
-					hud_reticle.modulate = Color.AQUA
-				mode_4:
-					hud_reticle.modulate = Color.PURPLE
-				_:
-					hud_reticle.modulate = Color.WHITE
-		else:
-			hud_reticle.modulate = Color.WHITE
+			handle_jetpack('6', delta)
 	else:
-		hud_reticle.modulate = Color.WHITE
+		# On the ground
+		vertical_velocity = 0.0
 
+	velocity.y = vertical_velocity
 
-	# Smooth camera rotation.
-	desired_pitch = clamp(desired_pitch, pitch_min, pitch_max)
-	yaw = lerp(yaw, desired_yaw, smoothing)
-	pitch = lerp(pitch, desired_pitch, smoothing)
-	rotation.y = yaw
-	camera.rotation.x = pitch
+	# -------------------
+	# Horizontal Movement
+	# -------------------
+	var vertical = 0
+	var horizontal = 0
 
-	# Process movement keys into vertical/horizontal values.
-	var vertical = 0  # 1 for forward, -1 for backward.
-	var horizontal = 0  # 1 for right, -1 for left.
-	
 	if move_input["up"] and not move_input["down"]:
 		vertical = 1
 	elif move_input["down"] and not move_input["up"]:
@@ -202,47 +260,120 @@ func _process(delta: float) -> void:
 	elif move_input["left"] and not move_input["right"]:
 		horizontal = -1
 
-# Calculate desired movement direction relative to the player's orientation.
-	var desired_direction: Vector3 = Vector3.ZERO
+	var desired_direction = Vector3.ZERO
 	if vertical != 0 or horizontal != 0:
 		desired_direction = ((-transform.basis.z) * vertical + (transform.basis.x) * horizontal).normalized()
+
 	var desired_velocity = desired_direction * movement_speed
 	current_velocity = current_velocity.lerp(desired_velocity, smoothing)
-	velocity = current_velocity
+	velocity.x = current_velocity.x
+	velocity.z = current_velocity.z
+
 	move_and_slide()
-	
+
+	# -------------------
+	# Landing Check
+	# -------------------
+	if is_on_floor() and not grounded:
+		vertical_velocity = 0.0
+		airborne = false
+		grounded = true
+
+	# -------------------
+	# Grounded vs. Airborne Settings
+	# -------------------
+	if grounded:
+		gravity_cast.character_airborne = false
+		if grabbed_object:
+			pitch_min = grab_pitch_min + distance_factor
+			pitch_max = grab_pitch_max - height_factor
+		else:
+			if not pitch_set:
+				pitch_min = base_pitch_min
+				pitch_max = base_pitch_max
+				pitch_set = true
+
+	if airborne:
+		gravity_cast.character_airborne = true
+		var delta_y = position.y - last_y
+		height_factor += delta_y * change_rate
+		height_factor = clamp(height_factor, 0.0, 1.0)
+
+		var fall_speed_factor = 0.0
+		if vertical_velocity > 0:
+			fall_speed_factor = -vertical_velocity * fall_sensitivity
+		else:
+			fall_speed_factor = -vertical_velocity * fall_sensitivity + distance_factor / 2
+
+		if grabbed_object:
+			pitch_min = grab_pitch_min + distance_factor - height_factor + fall_speed_factor
+			pitch_max = grab_pitch_max - height_factor + fall_speed_factor
+		else:
+			pitch_min = base_pitch_min
+			pitch_max = base_pitch_max
+
+		last_y = position.y
+
+	# -------------------
+	# Reticle Targeting
+	# -------------------
+	var space_state = get_world_3d().direct_space_state
+	var from = camera.global_transform.origin
+	var to = from + (-camera.global_transform.basis.z) * 100.0
+
+	var query = PhysicsRayQueryParameters3D.new()
+	query.from = from
+	query.to = to
+	query.exclude = [self]
+	var result = space_state.intersect_ray(query)
+
+	if result and not grabbed_object:
+		var collider = result.collider
+		if collider is RigidBody3D:
+			match current_mode:
+				mode_1: hud_reticle.modulate = Color.GREEN
+				mode_2: hud_reticle.modulate = Color.RED
+				mode_3: hud_reticle.modulate = Color.AQUA
+				mode_4: hud_reticle.modulate = Color.PURPLE
+				_: hud_reticle.modulate = Color.WHITE
+		else:
+			hud_reticle.modulate = Color.WHITE
+	else:
+		hud_reticle.modulate = Color.WHITE
+
+	# -------------------
+	# Camera Smoothing
+	# -------------------
+	desired_pitch = clamp(desired_pitch, pitch_min, pitch_max)
+	yaw = lerp(yaw, desired_yaw, smoothing)
+	pitch = lerp(pitch, desired_pitch, smoothing)
+	rotation.y = yaw
+	camera.rotation.x = pitch
+
+	# -------------------
+	# Object Grabbing Logic
+	# -------------------
 	if grabbed_object:
-		match current_mode:
-			mode_1:
-				hud_reticle.modulate = Color.GREEN
-			mode_2:
-				hud_reticle.modulate = Color.RED
-			mode_3:
-				hud_reticle.modulate = Color.AQUA
-			mode_4:
-				hud_reticle.modulate = Color.PURPLE
-
-		grabbed_object.rotation_degrees = grabbed_rotation
-
-		# (Your code updating Y position remains the same.)
-		var pitch_offset = camera.rotation.x
+		var pitch_offset = camera.rotation.x - 0.5
 		var target_y = grabbed_initial_position.y + pitch_offset
 		target_y = clamp(target_y, floor_y, max_y)
-
 		grabbed_object.position.y = target_y
+		grabbed_object.rotation_degrees = grabbed_rotation
+		grabbed_object.object_rotation = grabbed_object.global_rotation_degrees
 
-
-		if shifting_object_active:
-			grabbed_object.rotation_degrees = grabbed_rotation
-
-	# At the end of your _process() function:
-	# Check the time since the last mouse motion.
-	var time_since_last = (Time.get_ticks_msec() - last_mouse_time) / 1000.0  # in seconds
-
-	# If the mouse isn't moving fast (or enough time has passed), decay the prem7_rotation_offset.
+	# -------------------
+	# PREM-7 Mouse Decay
+	# -------------------
+	var time_since_last = (Time.get_ticks_msec() - last_mouse_time) / 1000.0
 	if last_mouse_speed < mouse_speed_threshold or time_since_last > 0.05:
 		prem7_rotation_offset = prem7_rotation_offset.lerp(Vector3.ZERO, prem7_decay_speed * delta)
 		PREM_7.rotation = prem7_original_rotation + prem7_rotation_offset
+
+
+
+##---------------------------------------##
+##------------INPUT RESPONSES------------##
+##---------------------------------------##
 
 
 func _input(event: InputEvent) -> void:
@@ -261,41 +392,23 @@ func _input(event: InputEvent) -> void:
 				left_mouse_down = false
 				PREM_7.trig_anim.play("trigger_release")
 				PREM_7.trig_anim.play("RESET")
+
 		elif event.button_index == MOUSE_BUTTON_RIGHT and grabbed_object:
 			if event.is_pressed():
-				right_mouse_down = true
-				PREM_7.trig_anim.play("RESET")
-				PREM_7.trig_anim.play("trigger_pull")
-				if current_mode == mode_1:
-					print("Begin Shifting Object")
-					shifting_object_active = true
-				elif current_mode == mode_2:
-					print("Begin Dividing Object")
-					inspecting_object_active = true
-				elif current_mode == mode_3:
-					print("Begin Inspecting Object")
-					dividing_object_active = true
-				elif current_mode == mode_4:
-					print("Begin Fusing Object")
-					fusing_object_active = true
+				right_click('pressed')
 			else:
-				right_mouse_down = false
-				PREM_7.trig_anim.play("trigger_release")
-				PREM_7.trig_anim.play("RESET")
-				prem7_rotation_offset = Vector3.ZERO
-				PREM_7.rotation = prem7_original_rotation
-				print("No Longer Shifting Object")
-				shifting_object_active = false
+				right_click('released')
 
-		# Use the mouse wheel to cycle through modes.
 		elif event.button_index == MOUSE_BUTTON_WHEEL_UP or event.button_index == MOUSE_BUTTON_WHEEL_RIGHT:
 			if not middle_mouse_down:
 				if grabbed_object:
 					distance_from_character = clamp(distance_from_character + 0.25, 6, 24)
+					distance_factor = clamp(distance_factor + 0.005, 0, 0.25)
 		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN or event.button_index == MOUSE_BUTTON_WHEEL_LEFT:
 			if not middle_mouse_down:
 				if grabbed_object:
 					distance_from_character = clamp(distance_from_character - 0.25, 6, 24)
+					distance_factor = clamp(distance_factor - 0.0025, 0, 0.25)
 		elif event.button_index == MOUSE_BUTTON_MIDDLE:
 			if event.is_pressed():
 				middle_mouse_down = true
@@ -343,32 +456,20 @@ func _input(event: InputEvent) -> void:
 				Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 		if event.keycode == KEY_ESCAPE and pressed and not event.is_echo():
 			get_tree().quit()
-		if event.keycode == KEY_SHIFT:
-			if pressed:
-				movement_speed = base_movement_speed * 2
-				mouse_sensitivity = base_mouse_sensitivity * 2
-				rotation_sensitivity = base_rotation_sensitivity * 2
-			else:
-				movement_speed = base_movement_speed
-				mouse_sensitivity = base_mouse_sensitivity
-				rotation_sensitivity = base_rotation_sensitivity
-
-		if event.keycode == KEY_R and pressed and not event.is_echo():
-			desired_pitch = 0
-			prem7_rotation_offset = Vector3.ZERO
-			PREM_7.rotation = prem7_original_rotation
-			if grabbed_object and shifting_object_active:
-				grabbed_rotation = grabbed_initial_rotation
 
 		# Update movement key states.
 		if event.keycode == KEY_W or event.keycode == KEY_UP:
 			move_input["up"] = pressed
+			print("Current Player Position: ", position)
 		elif event.keycode == KEY_S or event.keycode == KEY_DOWN:
 			move_input["down"] = pressed
+			print("Current Player Position: ", position)
 		elif event.keycode == KEY_A or event.keycode == KEY_LEFT:
 			move_input["left"] = pressed
+			print("Current Player Position: ", position)
 		elif event.keycode == KEY_D or event.keycode == KEY_RIGHT:
 			move_input["right"] = pressed
+			print("Current Player Position: ", position)
 
 		# Process number keys (1-4) to directly change modes, if desired.
 		if event.keycode in [KEY_1, KEY_2, KEY_3, KEY_4]:
@@ -404,7 +505,58 @@ func _input(event: InputEvent) -> void:
 		# Process SPACE for jetpack functionality.
 		# When SPACE is pressed, enable upward thrust.
 		if event.keycode == KEY_SPACE:
-			jetpack_active = pressed
+			hover_lock = false
+			if not airborne:
+				pitch_set = false
+				airborne = true
+			if pressed:
+				jetpack_active = true
+			else:
+				jetpack_active = false
+		if event.keycode == KEY_ALT:
+			if not pressed:
+				hover_lock =! hover_lock
+				hover_base_y = global_position.y
+				hover_bob_time = 0.0
+		if event.keycode == KEY_SHIFT:
+			if pressed:
+				movement_speed = base_movement_speed * 2
+				mouse_sensitivity = base_mouse_sensitivity * 2
+				rotation_sensitivity = base_rotation_sensitivity * 2
+				jetpack_accel_max = jetpack_accel_max * 2
+				jetpack_thrust_max = jetpack_thrust_max * 2
+				current_jetpack_accel = current_jetpack_accel * 2
+				current_jetpack_thrust = current_jetpack_thrust * 2
+			else:
+				movement_speed = base_movement_speed
+				mouse_sensitivity = base_mouse_sensitivity
+				rotation_sensitivity = base_rotation_sensitivity
+				jetpack_accel_max = jetpack_accel_max / 2
+				jetpack_thrust_max = jetpack_thrust_max / 2
+				current_jetpack_accel = current_jetpack_accel / 2
+				current_jetpack_thrust = current_jetpack_thrust / 2
+
+		if event.keycode == KEY_R and pressed and not event.is_echo():
+			desired_pitch = 0
+			if grabbed_object:
+				if shifting_object_active:
+					grabbed_rotation = grabbed_initial_rotation
+				else:
+					pitch_min = grab_pitch_min
+					pitch_max = grab_pitch_max
+					distance_factor = 0
+					height_factor = 0
+			else:
+				pitch_min = base_pitch_min
+				pitch_max = base_pitch_max
+				distance_factor = 0
+				height_factor = 0
+
+
+##---------------------------------------##
+##----------CLICKING FUNCTIONS-----------##
+##---------------------------------------##
+
 
 
 func grab_object():
@@ -413,13 +565,23 @@ func grab_object():
 	PREM_7.trig_anim.play("trigger_pull")
 	print("Multitool Trigger Pulled")
 
-	# If in GRAB mode, either grab or release the object.
+	match current_mode:
+		mode_1:
+			hud_reticle.modulate = Color.GREEN
+		mode_2:
+			hud_reticle.modulate = Color.RED
+		mode_3:
+			hud_reticle.modulate = Color.AQUA
+		mode_4:
+			hud_reticle.modulate = Color.PURPLE
+
 	if grabbed_object:  # An object is already grabbed; release it.
 		print("Released Object.")
 		# *Re-enable physics on the object:*
 		grabbed_object.lock_rotation = false
 		grabbed_object.angular_velocity = Vector3.ZERO
 		grabbed_object.linear_velocity = Vector3.ZERO
+		#grabbed_object.rotation_degrees = grabbed_object.global_rotation_degrees
 		# If you changed any other simulation parameters (e.g. custom_integrator) disable that too.
 
 		# Optionally, you could reset any manual transform or rotation offsets if needed.
@@ -444,11 +606,10 @@ func grab_object():
 			if target_body is RigidBody3D:
 				grabbed_object = target_body
 				# Before shifting, disable physics control on the object.
-				grabbed_object.lock_rotation = true
+				#grabbed_object.lock_rotation = true
 				grabbed_object.angular_velocity = Vector3.ZERO
 				# (You may also consider setting MODE_KINEMATIC or using a custom integrator
 				# for full manual control while shifting.)
-				
 				var object_children = grabbed_object.get_children()
 				for child in object_children:
 					if child is MeshInstance3D:
@@ -458,7 +619,13 @@ func grab_object():
 				grabbed_initial_position = grabbed_object.global_transform.origin
 				grabbed_initial_mouse = get_viewport().get_mouse_position()
 				grabbed_distance = (grabbed_object.global_transform.origin - camera.global_transform.origin).length()
-				grabbed_rotation = grabbed_initial_rotation
+				grabbed_initial_rotation = rotation_degrees
+				grabbed_global_rotation = grabbed_object.global_rotation_degrees
+				grabbed_rotation.x = shortest_angle_diff_value(grabbed_initial_rotation.x, grabbed_global_rotation.x)
+				grabbed_rotation.y = shortest_angle_diff_value(grabbed_initial_rotation.y, grabbed_global_rotation.y)
+				grabbed_rotation.z = shortest_angle_diff_value(grabbed_initial_rotation.z, grabbed_global_rotation.z)
+				print('Global Rotation: ', grabbed_global_rotation)
+				print('Initial Rotation: ', grabbed_initial_rotation)
 				object_is_grabbed = true
 			else:
 				print("Object hit, but no MeshInstance3D child found!")
@@ -466,6 +633,37 @@ func grab_object():
 			print("Object is not RigidBody3D")
 			return
 
+func right_click(status):
+	if status == 'pressed':
+		PREM_7.trig_anim.play("RESET")
+		PREM_7.trig_anim.play("trigger_pull")
+		if current_mode == mode_1:
+			print("Begin Shifting Object")
+			shifting_object_active = true
+		elif current_mode == mode_2:
+			print("Begin Dividing Object")
+			inspecting_object_active = true
+		elif current_mode == mode_3:
+			print("Begin Inspecting Object")
+			dividing_object_active = true
+		elif current_mode == mode_4:
+			print("Begin Fusing Object")
+			fusing_object_active = true
+		collision_layer = 12
+		right_mouse_down = true
+	if status == 'released':
+		PREM_7.trig_anim.play("trigger_release")
+		PREM_7.trig_anim.play("RESET")
+		print("No Longer Shifting Object")
+		shifting_object_active = false
+		collision_layer = 1
+		right_mouse_down = false
+
+
+
+##---------------------------------------##
+##-----------HELPER FUNCTIONS------------##
+##---------------------------------------##
 
 func update_prem7_glow() -> void:
 	match current_mode:
@@ -492,8 +690,6 @@ func update_prem7_glow() -> void:
 		if mat and mat is ShaderMaterial:
 			mat.set_shader_parameter("glow_color", Vector3(new_glow_color.r, new_glow_color.g, new_glow_color.b))
 
-
-# Function to change the mode if it's different from the current one.
 func change_mode(new_mode: String) -> void:
 	if new_mode == current_mode:
 		print("Already in mode: " + new_mode)
@@ -502,17 +698,26 @@ func change_mode(new_mode: String) -> void:
 	print("Multitool Mode Changed: " + current_mode)
 	update_prem7_glow()
 
-# Function to cycle through the modes using the spacebar.
 func cycle_mode() -> void:
 	var current_index = modes.find(current_mode)
 	if current_index == -1:
 		current_index = 0
 	var new_index = (current_index + 1) % modes.size()
 	change_mode(modes[new_index])
+	match current_mode:
+		mode_1:
+			hud_reticle.modulate = Color.GREEN
+		mode_2:
+			hud_reticle.modulate = Color.RED
+		mode_3:
+			hud_reticle.modulate = Color.AQUA
+		mode_4:
+			hud_reticle.modulate = Color.PURPLE
 
-
-func rotate_object(object, rot_deg, time):
-	rotate_tween = Tween.new()
-	
-	rotate_tween.tween_property(object, "rotation_degrees", rot_deg, time)
-	rotate_tween.EASE_IN_OUT
+func shortest_angle_diff_value(initial_angle: float, target_angle: float) -> float:
+	var diff = target_angle - initial_angle
+	if diff > 180:
+		diff -= 360
+	elif diff < -180:
+		diff += 360
+	return diff
