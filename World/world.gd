@@ -2,19 +2,6 @@ extends Node3D
 class_name world
 
 
-
-
-
-
-
-### NEED TO FIX: When jumping and grabbing an object, and then falling to the ground (while facing the ground), the object goes through. This means I'll need to implement a better way of changing the floor_y and/or pitch_min as I'm falling ###
-
-
-
-
-
-
-
 @onready var character: CharacterBody3D = $Character
 var grabbed_object: RigidBody3D = null
 var object_is_grabbed: bool = false
@@ -46,6 +33,8 @@ func _process(delta: float) -> void:
 		character.initial_grab = true
 		grabbed_object = character.grabbed_object 
 		grabbed_object.reparent(character.camera)
+		#print('Character POV: ', character.desired_pitch)
+		#print('Object Position: ', grabbed_object.global_position.y)
 		reset_rotation = true
 		object_is_grabbed = true
 	
@@ -62,8 +51,6 @@ func _process(delta: float) -> void:
 	if character.object_is_grabbed and object_is_grabbed and grabbed_object:
 		char_pos = character.camera.global_transform.origin
 		char_forward = -character.camera.global_transform.basis.z.normalized()
-		#print('Grabbed Object Position: ', grabbed_object.position)
-		#print('Grabbed Object Rotation: ', grabbed_object.global_rotation_degrees)
 		target_pos = char_pos + char_forward * character.distance_from_character
 		var custom_up = Vector3(0, 1, 0.001).normalized()
 		target_transform = Transform3D().looking_at(char_pos, custom_up)

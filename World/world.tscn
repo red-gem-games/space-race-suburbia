@@ -1,0 +1,115 @@
+[gd_scene load_steps=15 format=3 uid="uid://dw2grejb4tc3k"]
+
+[ext_resource type="PackedScene" uid="uid://f722yn8gdiyj" path="res://Character/character.tscn" id="1_f3sb7"]
+[ext_resource type="Script" uid="uid://cpdnlycwlet2q" path="res://World/world.gd" id="1_tlwt5"]
+[ext_resource type="Shader" uid="uid://dywmpt1g3j23k" path="res://Shaders/grass.gdshader" id="2_fj7yv"]
+[ext_resource type="PackedScene" uid="uid://cvtdsd7mu2wv" path="res://Objects/washing_machine.tscn" id="4_036b0"]
+[ext_resource type="PackedScene" uid="uid://diw15u24g3w3h" path="res://Objects/drying_machine.tscn" id="6_dwbse"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_f3sb7"]
+size = Vector3(100, 1, 100)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_tlwt5"]
+render_priority = 0
+shader = ExtResource("2_fj7yv")
+shader_parameter/base_scale = 500.0
+shader_parameter/min_fill = 1.0
+shader_parameter/max_fill = 1.0
+shader_parameter/border_color = Vector4(0.2, 0.3, 0.2, 1)
+shader_parameter/color0 = Vector4(0.3, 0.475, 0.1, 1)
+shader_parameter/color1 = Vector4(0.25, 0.45, 0.1, 1)
+shader_parameter/color2 = Vector4(0.25, 0.45, 0.12, 1)
+shader_parameter/color3 = Vector4(0.2, 0.4, 0.1, 1)
+shader_parameter/color4 = Vector4(0.2, 0.45, 0.1, 1)
+shader_parameter/color5 = Vector4(0.274, 0.45, 0.12, 1)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_fj7yv"]
+material = SubResource("ShaderMaterial_tlwt5")
+size = Vector2(100, 100)
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_f3sb7"]
+sky_top_color = Color(1, 1, 1, 1)
+sky_horizon_color = Color(0.541452, 0.840693, 1, 1)
+ground_bottom_color = Color(0.554954, 0.554954, 0.554954, 1)
+ground_horizon_color = Color(0.557856, 0.567997, 0.584009, 1)
+energy_multiplier = 2.0
+
+[sub_resource type="Sky" id="Sky_fj7yv"]
+sky_material = SubResource("ProceduralSkyMaterial_f3sb7")
+
+[sub_resource type="Environment" id="Environment_tlwt5"]
+background_mode = 1
+background_color = Color(0.709012, 1, 0.995678, 1)
+sky = SubResource("Sky_fj7yv")
+ambient_light_source = 3
+ambient_light_color = Color(1, 1, 1, 1)
+reflected_light_source = 2
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_aqk2v"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_036b0"]
+shading_mode = 0
+albedo_color = Color(0.435192, 0.435192, 0.435192, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_dwbse"]
+size = Vector3(11.2339, 1, 7.64476)
+
+[node name="World" type="Node3D"]
+script = ExtResource("1_tlwt5")
+
+[node name="Lights" type="Node3D" parent="."]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Lights"]
+transform = Transform3D(0.984808, -0.167731, 0.0449435, 0, 0.258819, 0.965926, -0.173648, -0.951251, 0.254887, 0, 0, 0)
+light_energy = 1.5
+light_specular = 1.5
+shadow_enabled = true
+shadow_bias = 0.5
+shadow_normal_bias = 0.8
+shadow_transmittance_bias = 0.0
+directional_shadow_split_1 = 0.05
+directional_shadow_split_2 = 0.15
+directional_shadow_split_3 = 0.4
+directional_shadow_blend_splits = true
+directional_shadow_pancake_size = 80.0
+
+[node name="Character" parent="." instance=ExtResource("1_f3sb7")]
+transform = Transform3D(1, -6.61363e-18, 1.77533e-09, 0, 1, 3.72529e-09, -1.77533e-09, -3.72529e-09, 1, 7.45058e-09, 0.446776, 0)
+
+[node name="Floor" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.23, 0)
+input_ray_pickable = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.17535, 0)
+shape = SubResource("BoxShape3D_f3sb7")
+debug_color = Color(0, 0.6, 0.701961, 1)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Floor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.858479, 0)
+mesh = SubResource("PlaneMesh_fj7yv")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_tlwt5")
+
+[node name="Objects" type="Node3D" parent="."]
+
+[node name="Drying_Machine" parent="Objects" instance=ExtResource("6_dwbse")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.51313, 0, -9.46213)
+
+[node name="Washing_Machine" parent="Objects" instance=ExtResource("4_036b0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.55625, 0, -9.44205)
+
+[node name="Garage" type="Node3D" parent="."]
+
+[node name="Garage_Floor" type="StaticBody3D" parent="Garage"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0552647, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Garage/Garage_Floor"]
+transform = Transform3D(5.64313, 0, 0, 0, 1, 0, 0, 0, 3.81774, 0, -1.05, -9.3864)
+mesh = SubResource("PlaneMesh_aqk2v")
+surface_material_override/0 = SubResource("StandardMaterial3D_036b0")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Garage/Garage_Floor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0168211, -1.50434, -9.36897)
+shape = SubResource("BoxShape3D_dwbse")

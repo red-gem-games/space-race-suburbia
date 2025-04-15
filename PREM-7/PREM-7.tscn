@@ -1,7 +1,7 @@
 [gd_scene load_steps=98 format=4 uid="uid://bpvm0l41dywjs"]
 
-[ext_resource type="Script" uid="uid://so25svauxmkt" path="res://prem_7.gd" id="1_iarxa"]
-[ext_resource type="Shader" uid="uid://cw73tbbh1mfcs" path="res://PREM-7_glow.gdshader" id="2_2cjep"]
+[ext_resource type="Script" uid="uid://so25svauxmkt" path="res://PREM-7/prem_7.gd" id="1_iarxa"]
+[ext_resource type="Shader" uid="uid://cw73tbbh1mfcs" path="res://Shaders/PREM-7_glow.gdshader" id="2_2cjep"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_a4na6"]
 resource_name = "Material.003"

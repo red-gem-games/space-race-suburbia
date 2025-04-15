@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://baomcogkgkbvv"]
 
 [ext_resource type="Texture2D" uid="uid://dj7bpyq468f67" path="res://Assets/UI/Reticle.png" id="1_37p78"]
-[ext_resource type="Script" uid="uid://bi78c7lvurqh7" path="res://hud.gd" id="1_64ctp"]
+[ext_resource type="Script" uid="uid://bi78c7lvurqh7" path="res://HUD/hud.gd" id="1_64ctp"]
 
 [node name="HUD" type="Control"]
 layout_mode = 3
