@@ -33,8 +33,6 @@ func _process(delta: float) -> void:
 		character.initial_grab = true
 		grabbed_object = character.grabbed_object 
 		grabbed_object.reparent(character.camera)
-		#print('Character POV: ', character.desired_pitch)
-		#print('Object Position: ', grabbed_object.global_position.y)
 		reset_rotation = true
 		object_is_grabbed = true
 	

@@ -1,21 +1,11 @@
 extends CharacterBody3D
 class_name character
 
-
-### When an object touches another, the character's mouse senitivity & sway should decrease until contact is removed
-
-### Add color outline to object when picked up? Maybe use
-
-### Add shadows!!!
-
-
 @onready var collision_shape: CollisionShape3D = $CollisionShape3D
 @onready var char_anim: AnimationPlayer = $AnimationPlayer
 @onready var camera: Camera3D = $Camera3D
 @onready var PREM_7: Node3D = $"Camera3D/PREM-7"
 @onready var hud_reticle: Control = $HUD.hud_reticle
-
-#var target_strength: float = 1
 
 var distance_from_character: float = 6
 var previous_height: float
@@ -262,6 +252,11 @@ func _process(delta: float) -> void:
 		var delta_y = position.y - last_y
 		height_factor += delta_y * change_rate
 		height_factor = clamp(height_factor, 0.0, 1.0)
+		
+		if position.y > ceiling_threshold:
+			touching_ceiling = true
+		elif position.y < ceiling_threshold:
+			touching_ceiling = false
 
 		var fall_speed_factor = 0.0
 		if vertical_velocity > 0:
@@ -275,8 +270,9 @@ func _process(delta: float) -> void:
 		else:
 			pitch_min = base_pitch_min
 			pitch_max = base_pitch_max
-
-		last_y = position.y
+		if not touching_ceiling:
+			print(touching_ceiling)
+			last_y = position.y
 
 	# -------------------
 	# Reticle Targeting
@@ -314,9 +310,31 @@ func _process(delta: float) -> void:
 	camera.rotation.x = pitch
 
 	# -------------------
+	# PREM-7 Mouse Decay
+	# -------------------
+	var time_since_last = (Time.get_ticks_msec() - last_mouse_time) / 1000.0
+	if last_mouse_speed < mouse_speed_threshold or time_since_last > 0.05:
+		prem7_rotation_offset = prem7_rotation_offset.lerp(Vector3.ZERO, prem7_decay_speed * delta)
+		PREM_7.rotation = prem7_original_rotation + prem7_rotation_offset
+		object_sway_offset.x = lerp(object_sway_offset.x, 0.0, object_sway_decay_x * delta)
+		object_sway_offset.y = lerp(object_sway_offset.y, 0.0, object_sway_decay_y * delta)
+
+
+
+	# -------------------
 	# Object Grabbing Logic
 	# -------------------
 	if grabbed_object:
+		## Reticle Logic ##
+		if mode_1:
+			hud_reticle.modulate = Color.GREEN
+		elif mode_2:
+			hud_reticle.modulate = Color.RED
+		elif mode_3:
+			hud_reticle.modulate = Color.AQUA
+		elif mode_4:
+			hud_reticle.modulate = Color.PURPLE
+		
 		## Collision Logic ##
 		var current_position = grabbed_object.global_transform.origin
 		speed_vector = (current_position - last_position) / delta
@@ -346,26 +364,6 @@ func _process(delta: float) -> void:
 		grabbed_object.object_rotation = grabbed_object.global_rotation_degrees
 
 
-	# -------------------
-	# PREM-7 Mouse Decay
-	# -------------------
-	var time_since_last = (Time.get_ticks_msec() - last_mouse_time) / 1000.0
-	if last_mouse_speed < mouse_speed_threshold or time_since_last > 0.05:
-		prem7_rotation_offset = prem7_rotation_offset.lerp(Vector3.ZERO, prem7_decay_speed * delta)
-		PREM_7.rotation = prem7_original_rotation + prem7_rotation_offset
-		object_sway_offset.x = lerp(object_sway_offset.x, 0.0, object_sway_decay_x * delta)
-		object_sway_offset.y = lerp(object_sway_offset.y, 0.0, object_sway_decay_y * delta)
-
-
-	if right_mouse_down or grabbed_object:
-		if mode_1:
-			hud_reticle.modulate = Color.GREEN
-		elif mode_2:
-			hud_reticle.modulate = Color.RED
-		elif mode_3:
-			hud_reticle.modulate = Color.AQUA
-		elif mode_4:
-			hud_reticle.modulate = Color.PURPLE
 
 ##---------------------------------------##
 ##------------INPUT RESPONSES------------##
@@ -398,7 +396,7 @@ func _input(event: InputEvent) -> void:
 		elif event.button_index == MOUSE_BUTTON_WHEEL_UP or event.button_index == MOUSE_BUTTON_WHEEL_RIGHT:
 			if not middle_mouse_down:
 				if grabbed_object:
-					distance_from_character = clamp(distance_from_character + 0.25, 6, 24)
+					distance_from_character = clamp(distance_from_character + 0.25, 5, 20)
 					distance_factor = clamp(distance_factor + 0.005, 0, 0.25)
 		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN or event.button_index == MOUSE_BUTTON_WHEEL_LEFT:
 			if not middle_mouse_down:
@@ -524,10 +522,11 @@ func _input(event: InputEvent) -> void:
 			else:
 				jetpack_active = false
 		if event.keycode == KEY_ALT:
-			if not pressed:
-				hover_lock =! hover_lock
-				hover_base_y = global_position.y
-				hover_bob_time = 0.0
+			if airborne:
+				if not pressed:
+					hover_lock =! hover_lock
+					hover_base_y = global_position.y
+					hover_bob_time = 0.0
 		if event.keycode == KEY_SHIFT:
 			if pressed:
 				movement_speed = base_movement_speed * 2
@@ -631,7 +630,6 @@ func grab_object():
 					elif child is CollisionShape3D:
 						grabbed_collision = child
 				grabbed_object.mass = grabbed_object.mass * 2.0
-				grabbed_initial_position = grabbed_object.global_transform.origin
 				grabbed_initial_mouse = get_viewport().get_mouse_position()
 				grabbed_distance = (grabbed_object.global_transform.origin - camera.global_transform.origin).length()
 				grabbed_initial_rotation = rotation_degrees
@@ -703,6 +701,8 @@ func handle_jetpack(status, timing):
 		var damp_factor: float = clamp(closeness * 0.5, 0.0, 1.0)
 		var damp_strength: float = 1.0 - pow(damp_factor, 2)
 		vertical_velocity *= damp_strength
+
+
 
 	if status == '1':
 		current_jetpack_thrust = lerp(current_jetpack_thrust, jetpack_thrust_max, thrust_ramp_up_speed * timing)

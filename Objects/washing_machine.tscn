@@ -251,7 +251,6 @@ shadow_mesh = SubResource("ArrayMesh_rjcqw")
 size = Vector3(2.03436, 2.35641, 1.98682)
 
 [node name="Washing_Machine" type="RigidBody3D"]
-collision_layer = 2
 script = ExtResource("1_hnuj6")
 
 [node name="Body" type="MeshInstance3D" parent="."]
