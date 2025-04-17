@@ -13,7 +13,7 @@ config_version=5
 config/name="Space_Race_Suburbia"
 run/main_scene="uid://dw2grejb4tc3k"
 config/features=PackedStringArray("4.4", "Forward Plus")
-run/max_fps=60
+run/max_fps=240
 config/icon="res://Assets/icon.svg"
 
 [display]

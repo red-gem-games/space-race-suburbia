@@ -302,5 +302,18 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00570679, 0.193962, -0.0046
 shape = SubResource("BoxShape3D_q78ll")
 debug_color = Color(0.580641, 0.0919842, 0.225232, 1)
 
+[node name="Glow_Body" type="Node3D" parent="."]
+
+[node name="Body" type="MeshInstance3D" parent="Glow_Body"]
+mesh = SubResource("ArrayMesh_35r78")
+skeleton = NodePath("")
+surface_material_override/0 = SubResource("ShaderMaterial_yvv8m")
+
+[node name="Door" type="MeshInstance3D" parent="Glow_Body"]
+transform = Transform3D(0.822587, 0, 0, 0, 0, -0.736414, 0, -0.0233916, 0, 0.0228524, 0, 0.992634)
+mesh = SubResource("ArrayMesh_7lhlc")
+skeleton = NodePath("")
+surface_material_override/0 = SubResource("ShaderMaterial_0v1pp")
+
 [connection signal="body_shape_entered" from="." to="." method="_on_body_shape_entered"]
 [connection signal="body_shape_exited" from="." to="." method="_on_body_shape_exited"]

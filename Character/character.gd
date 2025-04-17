@@ -7,6 +7,8 @@ class_name character
 @onready var PREM_7: Node3D = $"Camera3D/PREM-7"
 @onready var hud_reticle: Control = $HUD.hud_reticle
 
+var glow_color: Color
+
 var distance_from_character: float = 6
 var previous_height: float
 var rotate_tween: Tween
@@ -49,6 +51,7 @@ var last_mouse_time: float = 0.0          # Timestamp of the last mouse motion e
 var grabbed_x_rotation: float
 var grabbed_y_rotation: float
 var grabbed_z_rotation: float
+var z_rotate_mode: bool = false
 
 var grabbed_vertical_offset: float = 0.0
 
@@ -157,6 +160,9 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
+	#print('PREM-7 Mode: ', current_mode)
+	#print('PREM-7 Reticle Color: ', hud_reticle.modulate)
+	
 	# -------------------
 	# Jetpack Logic
 	# -------------------
@@ -253,6 +259,7 @@ func _process(delta: float) -> void:
 		height_factor += delta_y * change_rate
 		height_factor = clamp(height_factor, 0.0, 1.0)
 		
+		
 		if position.y > ceiling_threshold:
 			touching_ceiling = true
 		elif position.y < ceiling_threshold:
@@ -271,8 +278,9 @@ func _process(delta: float) -> void:
 			pitch_min = base_pitch_min
 			pitch_max = base_pitch_max
 		if not touching_ceiling:
-			print(touching_ceiling)
 			last_y = position.y
+
+
 
 	# -------------------
 	# Reticle Targeting
@@ -303,6 +311,7 @@ func _process(delta: float) -> void:
 	# -------------------
 	# Camera Smoothing
 	# -------------------
+	
 	desired_pitch = clamp(desired_pitch, pitch_min, pitch_max)
 	yaw = lerp(yaw, desired_yaw, smoothing)
 	pitch = lerp(pitch, desired_pitch, smoothing)
@@ -325,15 +334,11 @@ func _process(delta: float) -> void:
 	# Object Grabbing Logic
 	# -------------------
 	if grabbed_object:
-		## Reticle Logic ##
-		if mode_1:
-			hud_reticle.modulate = Color.GREEN
-		elif mode_2:
-			hud_reticle.modulate = Color.RED
-		elif mode_3:
-			hud_reticle.modulate = Color.AQUA
-		elif mode_4:
-			hud_reticle.modulate = Color.PURPLE
+		match current_mode:
+			mode_1: hud_reticle.modulate = Color.GREEN
+			mode_2: hud_reticle.modulate = Color.RED
+			mode_3: hud_reticle.modulate = Color.AQUA
+			mode_4: hud_reticle.modulate = Color.PURPLE
 		
 		## Collision Logic ##
 		var current_position = grabbed_object.global_transform.origin
@@ -362,7 +367,6 @@ func _process(delta: float) -> void:
 		grabbed_object.global_position += sway_offset
 		grabbed_object.rotation_degrees = grabbed_rotation
 		grabbed_object.object_rotation = grabbed_object.global_rotation_degrees
-
 
 
 ##---------------------------------------##
@@ -437,21 +441,22 @@ func _input(event: InputEvent) -> void:
 				desired_pitch = clamp(desired_pitch, pitch_min, pitch_max)
 				object_sway_offset.x -= event.relative.x * object_sway_strength_x
 				object_sway_offset.y -= event.relative.y * object_sway_strength_y
-				object_sway_offset.x = clamp(object_sway_offset.x, -0.2, 0.2)  # More generous sway on X
-				object_sway_offset.y = clamp(object_sway_offset.y, -1.75, 1.75)  # Tighter on Y for less vertical wiggle
-
-				
+				object_sway_offset.x = clamp(object_sway_offset.x, -0.2, 0.2) 
+				object_sway_offset.y = clamp(object_sway_offset.y, -1.75, 1.75) 
 			else:
 				if grabbed_object:
-					grabbed_rotation.z = 0
-					grabbed_rotation.y += event.relative.x * rotation_sensitivity / 3
-					grabbed_rotation.x += event.relative.y * rotation_sensitivity / 3
-					var horizontal_delta = event.relative.x * mouse_speed * 10
-					var vertical_delta = event.relative.y * mouse_speed * 10 
-					grabbed_object.rotate_y(deg_to_rad(horizontal_delta))
-					var local_right: Vector3 = grabbed_object.global_transform.basis.x
-					grabbed_object.rotate(local_right, deg_to_rad(vertical_delta))
-					
+					if z_rotate_mode:
+						grabbed_rotation.z += event.relative.x * rotation_sensitivity / 3
+						var local_forward: Vector3 = grabbed_object.global_transform.basis.z
+						grabbed_object.rotate(local_forward, deg_to_rad(event.relative.x * mouse_speed * 10))
+					else:
+						grabbed_rotation.y += event.relative.x * rotation_sensitivity / 3
+						grabbed_rotation.x += event.relative.y * rotation_sensitivity / 3
+						var horizontal_delta = event.relative.x * mouse_speed * 10
+						var vertical_delta = event.relative.y * mouse_speed * 10 
+						grabbed_object.rotate_y(deg_to_rad(horizontal_delta))
+						var local_right: Vector3 = grabbed_object.global_transform.basis.x
+						grabbed_object.rotate(local_right, deg_to_rad(vertical_delta))
 
 	# Process Keyboard events.
 	if event is InputEventKey:
@@ -523,7 +528,7 @@ func _input(event: InputEvent) -> void:
 				jetpack_active = false
 		if event.keycode == KEY_ALT:
 			if airborne:
-				if not pressed:
+				if pressed:
 					hover_lock =! hover_lock
 					hover_base_y = global_position.y
 					hover_bob_time = 0.0
@@ -545,21 +550,27 @@ func _input(event: InputEvent) -> void:
 				current_jetpack_accel = current_jetpack_accel / 2
 				current_jetpack_thrust = current_jetpack_thrust / 2
 
+		if event.keycode == KEY_CTRL:
+			if pressed:
+				z_rotate_mode = true
+			else:
+				z_rotate_mode = false
+
 		if event.keycode == KEY_R and pressed and not event.is_echo():
+			print('RESETTING')
 			desired_pitch = 0
 			if grabbed_object:
-				if shifting_object_active:
-					grabbed_rotation = grabbed_initial_rotation
-				else:
-					pitch_min = grab_pitch_min
-					pitch_max = grab_pitch_max
-					distance_factor = 0
-					height_factor = 0
+				var current_rot = grabbed_object.rotation_degrees
+				grabbed_rotation.x = shortest_angle_diff_value(-current_rot.x, 0)
+				grabbed_rotation.y = shortest_angle_diff_value(-current_rot.y, 0)
+				grabbed_rotation.z = shortest_angle_diff_value(-current_rot.z, 0)
+				pitch_min = grab_pitch_min
+				pitch_max = grab_pitch_max
+				distance_factor = 0
 			else:
 				pitch_min = base_pitch_min
 				pitch_max = base_pitch_max
 				distance_factor = 0
-				height_factor = 0
 
 
 ##---------------------------------------##
@@ -569,31 +580,29 @@ func _input(event: InputEvent) -> void:
 
 
 func grab_object():
+	
+	#print('Pitch Min: ', pitch_min)
+	#print('Grab Pitch Min: ', grab_pitch_min)
+	#print('Distance Factor: ', distance_factor)
+	#print('Height Factor: ', height_factor)
+	#print('Fall Speed Factor: ', fall_speed_factor)
+	
 	left_mouse_down = true
 	PREM_7.trig_anim.play("RESET")
 	PREM_7.trig_anim.play("trigger_pull")
-
-	match current_mode:
-		mode_1:
-			hud_reticle.modulate = Color.GREEN
-		mode_2:
-			hud_reticle.modulate = Color.RED
-		mode_3:
-			hud_reticle.modulate = Color.AQUA
-		mode_4:
-			hud_reticle.modulate = Color.PURPLE
 
 	if grabbed_object:  # An object is already grabbed; release it.
 		# *Re-enable physics on the object:*
 		grabbed_object.lock_rotation = false
 		grabbed_object.angular_velocity = Vector3.ZERO
 		grabbed_object.linear_velocity = Vector3.ZERO
+		grabbed_object.set_outline('RELEASE', Color.WHITE)
+		hud_reticle.visible = true
 		#grabbed_object.rotation_degrees = grabbed_object.global_rotation_degrees
 		# If you changed any other simulation parameters (e.g. custom_integrator) disable that too.
 		object_sway_strength_x = object_sway_base_x
 		object_sway_strength_y = object_sway_base_y
 		distance_factor = 0.0
-		height_factor = 0.0
 		# Optionally, you could reset any manual transform or rotation offsets if needed.
 		grabbed_distance = 0.0
 		grabbed_object.position.z = 0.0
@@ -604,7 +613,6 @@ func grab_object():
 		object_is_grabbed = false
 		grabbed_object = null
 	else:
-		# No object grabbed yet, so perform the raycast.
 		var space_state = get_world_3d().direct_space_state
 		var from = camera.global_transform.origin
 		var to = from + (-camera.global_transform.basis.z) * 100.0
@@ -629,6 +637,17 @@ func grab_object():
 						grabbed_mesh = child
 					elif child is CollisionShape3D:
 						grabbed_collision = child
+				hud_reticle.visible = false
+				match current_mode:
+					mode_1:
+						glow_color = Color.GREEN
+					mode_2:
+						glow_color = Color.RED
+					mode_3:
+						glow_color = Color.AQUA
+					mode_4:
+						glow_color = Color.PURPLE
+				grabbed_object.set_outline('GRAB', glow_color)
 				grabbed_object.mass = grabbed_object.mass * 2.0
 				grabbed_initial_mouse = get_viewport().get_mouse_position()
 				grabbed_distance = (grabbed_object.global_transform.origin - camera.global_transform.origin).length()
@@ -651,6 +670,7 @@ func right_click(status):
 	if status == 'pressed':
 		PREM_7.trig_anim.play("RESET")
 		PREM_7.trig_anim.play("trigger_pull")
+		grabbed_object.set_outline('ENHANCE', glow_color)
 		if current_mode == mode_1:
 			print("Begin Shifting Object")
 			shifting_object_active = true
@@ -668,6 +688,8 @@ func right_click(status):
 	if status == 'released':
 		PREM_7.trig_anim.play("trigger_release")
 		PREM_7.trig_anim.play("RESET")
+		grabbed_object.set_outline('DIM', glow_color)
+		print(glow_color)
 		if current_mode == mode_1:
 			print("No Longer Shifting Object")
 			shifting_object_active = false
@@ -775,6 +797,16 @@ func change_mode(new_mode: String) -> void:
 	current_mode = new_mode
 	print("Multitool Mode Changed: " + current_mode)
 	update_prem7_glow()
+
+	if grabbed_object:
+		match current_mode:
+			mode_1: glow_color = Color.GREEN
+			mode_2: glow_color = Color.RED
+			mode_3: glow_color = Color.AQUA
+			mode_4: glow_color = Color.PURPLE
+			_: glow_color = Color.WHITE
+
+		grabbed_object.set_outline('UPDATE', glow_color)
 
 func cycle_mode() -> void:
 	var current_index = modes.find(current_mode)

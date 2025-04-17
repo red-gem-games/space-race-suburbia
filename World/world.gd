@@ -1,6 +1,7 @@
 extends Node3D
 class_name world
 
+@onready var objects_node: Node3D = $Objects
 
 @onready var character: CharacterBody3D = $Character
 var grabbed_object: RigidBody3D = null
@@ -12,7 +13,7 @@ var target_pos: Vector3
 var target_transform: Transform3D
 var target_grabbed_rotation: Vector3 = Vector3(10, 0, 0)
 var reset_rotation: bool = false
-
+var object_global_position: Vector3
 
 var object_position_timer: Timer = Timer.new()
 
@@ -38,15 +39,16 @@ func _process(delta: float) -> void:
 	
 	# When the object is released:
 	elif not character.object_is_grabbed and object_is_grabbed:
-		var object_global_position: Vector3 = grabbed_object.global_position
-		grabbed_object.reparent(self)
+		grabbed_object.reparent(objects_node)
 		grabbed_object.global_position = object_global_position
 		character.distance_from_character = base_distance_in_front
 		character.pitch_set = false
+		print('Object Position: ', grabbed_object.position)
 		grabbed_object = null
 		object_is_grabbed = false
 
 	if character.object_is_grabbed and object_is_grabbed and grabbed_object:
+		object_global_position = grabbed_object.global_position
 		char_pos = character.camera.global_transform.origin
 		char_forward = -character.camera.global_transform.basis.z.normalized()
 		target_pos = char_pos + char_forward * character.distance_from_character
