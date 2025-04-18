@@ -2,8 +2,9 @@ extends CharacterBody3D
 class_name character
 
 @onready var collision_shape: CollisionShape3D = $CollisionShape3D
-@onready var char_anim: AnimationPlayer = $AnimationPlayer
+@onready var grabbed_anim: AnimationPlayer = $Grabbed_Animation
 @onready var camera: Camera3D = $Camera3D
+@onready var grabbed_container: Node3D = $Camera3D/Grabbed_Container
 @onready var PREM_7: Node3D = $"Camera3D/PREM-7"
 @onready var hud_reticle: Control = $HUD.hud_reticle
 
@@ -384,39 +385,42 @@ func _input(event: InputEvent) -> void:
 			return
 
 		if event.button_index == MOUSE_BUTTON_LEFT:
-			if event.is_pressed():
-				grab_object()
-			else:
-				left_mouse_down = false
-				PREM_7.trig_anim.play("trigger_release")
-				PREM_7.trig_anim.play("RESET")
+			if not middle_mouse_down and not right_mouse_down:
+				if event.is_pressed():
+					grab_object()
+				else:
+					left_mouse_down = false
+					PREM_7.trig_anim.play("trigger_release")
+					PREM_7.trig_anim.play("RESET")
 
 		elif event.button_index == MOUSE_BUTTON_RIGHT and grabbed_object:
-			if event.is_pressed():
-				right_click('pressed')
-			else:
-				right_click('released')
+			if not middle_mouse_down and not left_mouse_down:
+				if event.is_pressed():
+					right_click('pressed')
+				else:
+					right_click('released')
 
 		elif event.button_index == MOUSE_BUTTON_WHEEL_UP or event.button_index == MOUSE_BUTTON_WHEEL_RIGHT:
-			if not middle_mouse_down:
+			if not middle_mouse_down and not right_mouse_down and not left_mouse_down:
 				if grabbed_object:
 					distance_from_character = clamp(distance_from_character + 0.25, 5, 20)
 					distance_factor = clamp(distance_factor + 0.005, 0, 0.25)
 		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN or event.button_index == MOUSE_BUTTON_WHEEL_LEFT:
-			if not middle_mouse_down:
+			if not middle_mouse_down and not right_mouse_down and not left_mouse_down:
 				if grabbed_object:
 					distance_from_character = clamp(distance_from_character - 0.25, 6, 24)
 					distance_factor = clamp(distance_factor - 0.0025, 0, 0.25)
 		elif event.button_index == MOUSE_BUTTON_MIDDLE:
-			if event.is_pressed():
-				middle_mouse_down = true
-				PREM_7.mode_anim.play("RESET")
-				PREM_7.mode_anim.play("shift_mode_down")
-			if not event.is_pressed():
-				middle_mouse_down = false
-				PREM_7.mode_anim.play("RESET")
-				PREM_7.mode_anim.play("shift_mode_up")
-				cycle_mode()
+			if not right_mouse_down and not left_mouse_down:
+				if event.is_pressed():
+					middle_mouse_down = true
+					PREM_7.mode_anim.play("RESET")
+					PREM_7.mode_anim.play("shift_mode_down")
+				if not event.is_pressed():
+					middle_mouse_down = false
+					PREM_7.mode_anim.play("RESET")
+					PREM_7.mode_anim.play("shift_mode_up")
+					cycle_mode()
 
 	# Process Mouse Motion events.
 	if event is InputEventMouseMotion:
@@ -486,34 +490,35 @@ func _input(event: InputEvent) -> void:
 
 		# Process number keys (1-4) to directly change modes, if desired.
 		if event.keycode in [KEY_1, KEY_2, KEY_3, KEY_4]:
-			if pressed and not event.is_echo():
-				if pending_mode != "" and event.keycode != pending_mode_key:
-					return
-				if pending_mode == "":
-					var new_mode = ""
-					match event.keycode:
-						KEY_1:
-							new_mode = mode_1
-						KEY_2:
-							new_mode = mode_2
-						KEY_3:
-							new_mode = mode_3
-						KEY_4:
-							new_mode = mode_4
-					if new_mode == current_mode:
-						print("Already in mode: " + new_mode)
+			if not right_mouse_down and not left_mouse_down and not middle_mouse_down:
+				if pressed and not event.is_echo():
+					if pending_mode != "" and event.keycode != pending_mode_key:
 						return
-					PREM_7.mode_anim.play("RESET")
-					PREM_7.mode_anim.play("shift_mode_down")
-					pending_mode = new_mode
-					pending_mode_key = event.keycode
-			elif not pressed:
-				if pending_mode != "" and event.keycode == pending_mode_key:
-					PREM_7.mode_anim.play("RESET")
-					PREM_7.mode_anim.play("shift_mode_up")
-					change_mode(pending_mode)
-					pending_mode = ""
-					pending_mode_key = 0
+					if pending_mode == "":
+						var new_mode = ""
+						match event.keycode:
+							KEY_1:
+								new_mode = mode_1
+							KEY_2:
+								new_mode = mode_2
+							KEY_3:
+								new_mode = mode_3
+							KEY_4:
+								new_mode = mode_4
+						if new_mode == current_mode:
+							print("Already in mode: " + new_mode)
+							return
+						PREM_7.mode_anim.play("RESET")
+						PREM_7.mode_anim.play("shift_mode_down")
+						pending_mode = new_mode
+						pending_mode_key = event.keycode
+				elif not pressed:
+					if pending_mode != "" and event.keycode == pending_mode_key:
+						PREM_7.mode_anim.play("RESET")
+						PREM_7.mode_anim.play("shift_mode_up")
+						change_mode(pending_mode)
+						pending_mode = ""
+						pending_mode_key = 0
 
 		# Process SPACE for jetpack functionality.
 		# When SPACE is pressed, enable upward thrust.
@@ -593,6 +598,7 @@ func grab_object():
 
 	if grabbed_object:  # An object is already grabbed; release it.
 		# *Re-enable physics on the object:*
+		grabbed_anim.stop()
 		grabbed_object.lock_rotation = false
 		grabbed_object.angular_velocity = Vector3.ZERO
 		grabbed_object.linear_velocity = Vector3.ZERO
@@ -613,6 +619,8 @@ func grab_object():
 		object_is_grabbed = false
 		grabbed_object = null
 	else:
+		grabbed_anim.play("RESET")
+		grabbed_anim.play("hover")
 		var space_state = get_world_3d().direct_space_state
 		var from = camera.global_transform.origin
 		var to = from + (-camera.global_transform.basis.z) * 100.0
@@ -668,6 +676,7 @@ func grab_object():
 
 func right_click(status):
 	if status == 'pressed':
+		grabbed_anim.pause()
 		PREM_7.trig_anim.play("RESET")
 		PREM_7.trig_anim.play("trigger_pull")
 		grabbed_object.set_outline('ENHANCE', glow_color)
@@ -686,6 +695,7 @@ func right_click(status):
 		collision_layer = 12
 		right_mouse_down = true
 	if status == 'released':
+		grabbed_anim.play()
 		PREM_7.trig_anim.play("trigger_release")
 		PREM_7.trig_anim.play("RESET")
 		grabbed_object.set_outline('DIM', glow_color)

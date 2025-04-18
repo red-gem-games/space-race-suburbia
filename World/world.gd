@@ -33,7 +33,7 @@ func _process(delta: float) -> void:
 		character.pitch_set = false
 		character.initial_grab = true
 		grabbed_object = character.grabbed_object 
-		grabbed_object.reparent(character.camera)
+		grabbed_object.reparent(character.grabbed_container)
 		reset_rotation = true
 		object_is_grabbed = true
 	

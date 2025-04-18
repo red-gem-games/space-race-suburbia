@@ -1,7 +1,8 @@
-[gd_scene load_steps=23 format=4 uid="uid://cvtdsd7mu2wv"]
+[gd_scene load_steps=28 format=4 uid="uid://cvtdsd7mu2wv"]
 
 [ext_resource type="Script" uid="uid://clwwid0cs6u32" path="res://Objects/rigid_object.gd" id="1_hnuj6"]
 [ext_resource type="Shader" uid="uid://by1yom22y4i8p" path="res://Shaders/metallic_white.gdshader" id="1_loto6"]
+[ext_resource type="Shader" uid="uid://vetnq53dk60g" path="res://Shaders/grabbed_glow.gdshader" id="3_s6kqv"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_uw51m"]
 resource_name = "Primary"
@@ -250,6 +251,53 @@ shadow_mesh = SubResource("ArrayMesh_rjcqw")
 [sub_resource type="BoxShape3D" id="BoxShape3D_v3oqm"]
 size = Vector3(2.03436, 2.35641, 1.98682)
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_t3w28"]
+resource_name = "Material"
+cull_mode = 2
+albedo_color = Color(0.906332, 0.906332, 0.906332, 1)
+roughness = 0.5
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_yt4dw"]
+_surfaces = [{
+"aabb": AABB(-1, -1, -1, 2, 2.40928, 2),
+"format": 34359742465,
+"index_count": 84,
+"index_data": PackedByteArray("AAABAAIAAAAEAAEAAwACAAEABQABAAQABQADAAEADAAFAAQADAAEAAAADQADAAUADQAFAAwAAwANAAIABwAMAAAABgANAAwABgAMAAcADQAOAAIADQAGAA4AAgAIAAAABgAHAA8ABgAPAA4ABwAAAA8ADwAJAA4ADgAKAAIAAgAKAAgADgAJAAoAAAAIAAsAAAALAA8ACwAIAAoADwALAAkACwAKAAkA"),
+"lods": [0.000411917, PackedByteArray("AAABAAIAAwACAAEAAAAEAAEABQABAAQABQADAAEABQAEAAAABgADAAUAAwAGAAIABwAFAAAABgAFAAcAAgAIAAAABwAJAAYABgAKAAIAAgAKAAgABgAJAAoAAAAIAAsAAAALAAcACwAIAAoABwALAAkACwAKAAkA")],
+"name": "Material",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 16,
+"vertex_data": PackedByteArray("AACAPwAAgD8Tssa+AACAvwAAgD8AAIA/AACAvwAAgD8Tssa+AACAvwAAgL8AAIA/AACAPwAAgD8AAIA/AACAPwAAgL8AAIA/AACAvwAAgL8AAIC/AACAPwAAgL8AAIC/AACAP2NjtD8Tssa+AACAv2NjtD8AAIC/AACAv2NjtD8Tssa+AACAP2NjtD8AAIC/AACAPwAAgL8Tssa+AACAvwAAgL8Tssa+AACAvwAAgD8AAIC/AACAPwAAgD8AAIC/")
+}]
+blend_shape_mode = 0
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_hnuj6"]
+resource_name = "Washer_Dryer_GlowBody_Cube"
+_surfaces = [{
+"aabb": AABB(-1, -1, -1, 2, 2.40928, 2),
+"attribute_data": PackedByteArray("AAAgP0LW2D4AAGA/AACAPgAAYD9C1tg+AAAgPwAAgD4AAMA+AACAPgAAID8AAAAAAAAgPwAAgD4AAMA+AAAAAAAAAD4AAAA/AAAAPgAAgD4AAMA+AACAPgAAwD4AAAA/AADAPgAAgD4AACA/AACAPgAAID9C1tg+AADAPgAAAD8AACA/AAAAPwAAID9C1tg+AADAPgAAgD8AACA/35RTPwAAID8AAIA/AADAPgAAQD8AACA/35RTPwAAID8AAEA/AAAgPwAAAD8AAGA/QtbYPgAAYD8AAAA/AAAgP0LW2D4AAMA+AAAAPwAAID8AAEA/AADAPgAAQD8AACA/AAAAPwAAYD9C1tg+AAAgP0LW2D4AACA/QtbYPgAAYD9C1tg+AADAPt+UUz8AACA/AABAPwAAAD5C1tg+AADAPkLW2D4AAMA+QtbYPgAAID8AAAA/AAAgPwAAAD8AACA/AABAPw=="),
+"format": 34359742487,
+"index_count": 84,
+"index_data": PackedByteArray("AAABAAIAAAADAAEABAAFAAYABAAHAAUAJAAlABMAJAAVACUAEgAkABMAEgATABQAJQAWABMAJQAXABYAJgAKACcAJgAJAAoACAAmACcACAAnAAsAKAANAA4AKAAMAA0ADwAoAA4ADwAOACkADgAQACkADgARABAAHgAqACsAHgAcACoAKgAdACsAKgAfAB0AGAAZABoAGAAbABkAIAAhACIAIAAjACEA"),
+"lods": [0.000411917, PackedByteArray("AAABAAIAAAADAAEABAAFAAYABAAHAAUACAAJAAoACAAKAAsADAANAA4ADwAMAA4ADgAQAA8ADgARABAAEgATABQAEgAVABMAFQAWABMAFQAXABYAGAAZABoAGAAbABkAHAAdAB4AHAAfAB0AIAAhACIAIAAjACEA")],
+"material": SubResource("StandardMaterial3D_t3w28"),
+"name": "Material",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 44,
+"vertex_data": PackedByteArray("AACAPwAAgD8Tssa+AACAvwAAgD8AAIA/AACAvwAAgD8Tssa+AACAPwAAgD8AAIA/AACAPwAAgL8AAIA/AACAvwAAgD8AAIA/AACAPwAAgD8AAIA/AACAvwAAgL8AAIA/AACAvwAAgL8AAIC/AACAvwAAgL8AAIA/AACAPwAAgL8AAIA/AACAPwAAgL8AAIC/AACAPwAAgL8AAIA/AACAPwAAgD8AAIA/AACAPwAAgD8Tssa+AACAPwAAgL8AAIC/AACAP2NjtD8AAIC/AACAP2NjtD8Tssa+AACAvwAAgL8AAIA/AACAvwAAgD8Tssa+AACAvwAAgD8AAIA/AACAvwAAgL8AAIC/AACAv2NjtD8Tssa+AACAv2NjtD8AAIC/AACAP2NjtD8AAIC/AACAv2NjtD8Tssa+AACAv2NjtD8AAIC/AACAP2NjtD8Tssa+AACAPwAAgL8AAIC/AACAv2NjtD8AAIC/AACAvwAAgL8AAIC/AACAP2NjtD8AAIC/AACAvwAAgD8Tssa+AACAP2NjtD8Tssa+AACAPwAAgD8Tssa+AACAv2NjtD8Tssa+AACAvwAAgL8Tssa+AACAvwAAgD8AAIC/AACAvwAAgL8Tssa+AACAPwAAgL8Tssa+AACAPwAAgL8Tssa+AACAPwAAgD8AAIC/AACAPwAAgD8AAIC/AACAvwAAgD8AAIC//3///wAA/7//f///AAD/v/9///8AAP+//3///wAA/7//f/9//3////9//3//f////3//f/9/////f/9//3////9/AAD///+//38AAP///7//fwAA////v/9/AAD///+/////f/9///////9//3///////3//f///////f/9///////9/////v////3////+/AAD/f/9///8AAP9//3///wAA/3//f///AAD/f/9///8AAP9/////vwAA/3////+//3///wAA/7//f///AAD/v/9///8AAP+//3///wAA/7///////3////////////+///////9/////////////v/9//3////8//3//f////z//f/9/////P/9//3////8/AAD/f/9///8AAP9//3////9/AAD///+//38AAP///7////9//3///////3//f/////////9//////////3///w==")
+}]
+blend_shape_mode = 0
+shadow_mesh = SubResource("ArrayMesh_yt4dw")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_kbxlq"]
+render_priority = 0
+shader = ExtResource("3_s6kqv")
+shader_parameter/glow_color = Vector4(1, 1, 1, 0.5)
+shader_parameter/random_seed = 0.0
+shader_parameter/fresnel_power = 3.0
+
 [node name="Washing_Machine" type="RigidBody3D"]
 script = ExtResource("1_hnuj6")
 
@@ -264,7 +312,7 @@ skeleton = NodePath("")
 surface_material_override/0 = SubResource("ShaderMaterial_hnuj6")
 
 [node name="Door" type="MeshInstance3D" parent="."]
-transform = Transform3D(-0.822587, 0, 0, 0, -0.0233916, 0, 0, 0, -0.736414, 0.03354, 0.994581, 0.123192)
+transform = Transform3D(-0.822587, 0, 0, 0, -0.0233916, 0, 0, 0, -0.736414, 0, 0.99, 0.123)
 mesh = SubResource("ArrayMesh_kbxlq")
 skeleton = NodePath("")
 surface_material_override/0 = SubResource("ShaderMaterial_hnuj6")
@@ -289,19 +337,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.189571, 0)
 shape = SubResource("BoxShape3D_v3oqm")
 debug_color = Color(0.580641, 0.0919842, 0.225232, 1)
 
-[node name="Glow_Body" type="Node3D" parent="."]
-visible = false
-
-[node name="Body" type="MeshInstance3D" parent="Glow_Body"]
-mesh = SubResource("ArrayMesh_ieqsk")
+[node name="Glow_Body" type="MeshInstance3D" parent="."]
+transform = Transform3D(1.1, 0, 0, 0, 1.1, 0, 0, 0, 1.1, 0, 0, 0)
+mesh = SubResource("ArrayMesh_hnuj6")
 skeleton = NodePath("")
-surface_material_override/0 = SubResource("ShaderMaterial_hnuj6")
-
-[node name="Door" type="MeshInstance3D" parent="Glow_Body"]
-transform = Transform3D(-0.822587, 0, 0, 0, -0.0233916, 0, 0, 0, -0.736414, 0.03354, 0.994581, 0.123192)
-mesh = SubResource("ArrayMesh_kbxlq")
-skeleton = NodePath("")
-surface_material_override/0 = SubResource("ShaderMaterial_hnuj6")
+surface_material_override/0 = SubResource("ShaderMaterial_kbxlq")
 
 [connection signal="body_shape_entered" from="." to="." method="_on_body_shape_entered"]
 [connection signal="body_shape_exited" from="." to="." method="_on_body_shape_exited"]
