@@ -7,6 +7,8 @@ class_name world
 var grabbed_object: RigidBody3D = null
 var object_is_grabbed: bool = false
 
+var screen_refresh_rate: float
+
 var char_pos: Vector3
 var char_forward: Vector3
 var target_pos: Vector3
@@ -39,6 +41,8 @@ func _process(delta: float) -> void:
 	
 	# When the object is released:
 	elif not character.object_is_grabbed and object_is_grabbed:
+		if not is_instance_valid(grabbed_object):
+			return
 		grabbed_object.reparent(objects_node)
 		grabbed_object.global_position = object_global_position
 		character.distance_from_character = base_distance_in_front

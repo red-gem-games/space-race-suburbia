@@ -161,6 +161,7 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
+	
 	#print('PREM-7 Mode: ', current_mode)
 	#print('PREM-7 Reticle Color: ', hud_reticle.modulate)
 	
@@ -387,9 +388,9 @@ func _input(event: InputEvent) -> void:
 		if event.button_index == MOUSE_BUTTON_LEFT:
 			if not middle_mouse_down and not right_mouse_down:
 				if event.is_pressed():
-					grab_object()
+					left_mouse_down = true
 				else:
-					left_mouse_down = false
+					grab_object()
 					PREM_7.trig_anim.play("trigger_release")
 					PREM_7.trig_anim.play("RESET")
 
@@ -592,7 +593,7 @@ func grab_object():
 	#print('Height Factor: ', height_factor)
 	#print('Fall Speed Factor: ', fall_speed_factor)
 	
-	left_mouse_down = true
+	left_mouse_down = false
 	PREM_7.trig_anim.play("RESET")
 	PREM_7.trig_anim.play("trigger_pull")
 
@@ -616,6 +617,8 @@ func grab_object():
 		grabbed_object.mass = grabbed_object.mass / 2.0
 		grabbed_object.is_grabbed = false
 		grabbed_object.is_released = true
+		if extracting_object_active:
+			grabbed_object.extract_parts()
 		object_is_grabbed = false
 		grabbed_object = null
 	else:
@@ -684,7 +687,7 @@ func right_click(status):
 			print("Begin Shifting Object")
 			shifting_object_active = true
 		elif current_mode == mode_2:
-			print("Begin Dividing Object")
+			print("Begin Extracting Object")
 			extracting_object_active = true
 		elif current_mode == mode_3:
 			print("Begin Inspecting Object")
@@ -701,16 +704,17 @@ func right_click(status):
 		grabbed_object.set_outline('DIM', glow_color)
 		print(glow_color)
 		if current_mode == mode_1:
-			print("No Longer Shifting Object")
+			print("Object has been Shifted!")
 			shifting_object_active = false
 		elif current_mode == mode_2:
-			print("No Longer Dividing Object")
+			print("Object has been Extracted!")
+			grab_object()
 			extracting_object_active = false
 		elif current_mode == mode_3:
-			print("No Longer Inspecting Object")
+			print("Object has been Inspected!")
 			inspecting_object_active = false
 		elif current_mode == mode_4:
-			print("No Longer Fusing Object")
+			print("Object has been Fused!")
 			fusing_object_active = false
 		collision_layer = 1
 		right_mouse_down = false

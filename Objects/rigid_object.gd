@@ -1,6 +1,8 @@
 extends RigidBody3D
 class_name rigid_object
 
+var ASSEMBLY_OBJECT_SCRIPT: Script = preload("res://Objects/rigid_object.gd")
+
 var object_rotation: Vector3
 var is_grabbed: bool = false
 var is_released: bool = false
@@ -10,22 +12,64 @@ var object_currently_struck: bool = false
 var object_speed: Vector3
 var object_speed_y: float
 
-@onready var glow_body: MeshInstance3D = $Glow_Body
+var assembly_parts: Array[RigidBody3D] = []
+var has_been_extracted: bool = false
+
+var glow_body: MeshInstance3D
 var shader: Shader
 var shader_material: ShaderMaterial
 
+var grab_particles: GPUParticles3D
+var grab_particles_shader: Shader
+var particles_material: ShaderMaterial
+
+var world_object_container: Node3D
+
 func _ready() -> void:
-	mass = 35.0
-	contact_monitor = true
-	continuous_cd = true
-	max_contacts_reported = 100
-	glow_body.visible = false
+	world_object_container = get_parent()
 	
 	shader = Shader.new()
 	shader.code = preload("res://Shaders/grabbed_glow.gdshader").code
 	shader_material = ShaderMaterial.new()
+	
+	grab_particles_shader = Shader.new()
+	grab_particles_shader.code = preload("res://Shaders/particle_glow.gdshader").code
+	particles_material = ShaderMaterial.new()
+	
+	mass = 35.0
+	contact_monitor = true
+	continuous_cd = true
+	max_contacts_reported = 100
+
+	var base_mesh : MeshInstance3D = null
+	for child in get_children():
+		if child is MeshInstance3D:
+			base_mesh = child
+			break
+	if base_mesh:
+		var outline_mesh : Mesh = base_mesh.mesh.create_outline(0.15)
+		glow_body = MeshInstance3D.new()
+		glow_body.name = "GlowBody"
+		glow_body.mesh = outline_mesh
+		glow_body.material_override = shader_material
+		glow_body.visible = false    # start hidden
+		add_child(glow_body)
+	else:
+		push_warning("%s has no MeshInstance3D child to outline!" % name)
+	
+	for child in get_children():
+		if child is RigidBody3D:
+			assembly_parts.append(child)
+			child.collision_layer = 0
+			child.collision_mask = 0
+			child.freeze = true
+
+	print(get_script())
+
+	print('I, ', name, ' am an assembly part!')
 
 func _physics_process(delta: float) -> void:
+	
 
 	if is_grabbed:
 		for obj in struck_objects:
@@ -57,77 +101,99 @@ func set_outline(status: String, color: Color) -> void:
 	if status == 'GRAB':
 		randomize()
 		shader_material.shader = shader
-		color.a = 0.4
+		color.a = 0.25
 		shader_material.set_shader_parameter("glow_color", color)
 		shader_material.set_shader_parameter("fresnel_power", 0.01)
 		shader_material.set_shader_parameter("random_seed", randf())
 		glow_body.material_override = shader_material
 		glow_body.visible = true
+		create_particles()
+
 
 	elif status == 'RELEASE':
 		shader_material.shader = null
 		glow_body.material_override = null
 		glow_body.visible = false
+		
+		grab_particles.queue_free()
+		grab_particles = null
+
 
 	elif status == 'UPDATE':
-		color.a = 0.4
+		color.a = 0.25
 		shader_material.set_shader_parameter("glow_color", color)
 
 	elif status == 'ENHANCE':
-		color.a = 1.0
+		color.a = 0.65
 		shader_material.set_shader_parameter("glow_color", color)
 
-					
 	elif status == 'DIM':
-		color.a = 0.4
+		color.a = 0.25
 		shader_material.set_shader_parameter("glow_color", color)
+		
 
 
-#func glow_flicker():
-	#if not is_instance_valid(glow_body):
-		#return
-#
-	## Kill existing tweens (safeguard)
-	#for tween in get_tree().get_processed_tweens():
-		#if tween.is_valid() and tween.is_running():
-			#tween.kill()
-#
-	#var tween := create_tween().set_loops().bind_node(self).set_parallel()
-#
-	#var original_position = glow_body.position
-	#var original_scale = glow_body.scale
-#
-	## Jitter loop (subtle & repeated)
-	#tween.tween_property(glow_body, "position", original_position + Vector3(0.01, -0.015, 0.005), 0.05)
-	#tween.tween_property(glow_body, "position", original_position, 0.05)
-#
-	## Scale pulse
-	#tween.tween_property(glow_body, "scale", original_scale * 1.03, 0.1)
-	#tween.tween_property(glow_body, "scale", original_scale, 0.1)
-#
-	## Visibility flicker
-	#tween.tween_property(glow_body, "visible", false, 0.02).set_delay(0.03)
-	#tween.tween_property(glow_body, "visible", true, 0.02).set_delay(0.03)
-#
-#
-#func hover_object(amt: float, dur: float) -> void:
-	#if not is_instance_valid(glow_body):
-		#return
-#
-	## Kill any old tweens that might be messing things up
-	##for tween in get_tree().get_processed_tweens():
-		##if tween.is_valid() and tween.is_running() and tween.is_bound(self):
-			##tween.kill()
-#
-	#var start_pos := glow_body.position
-	#var hover_up := start_pos + Vector3(0, amt, 0)
-	#var hover_down := start_pos - Vector3(0, amt, 0)
-#
-	#var tween := create_tween().bind_node(self)
-	#tween.set_loops()  # infinite
-	#tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-#
-	#tween.tween_property(glow_body, "position", hover_up, dur)
-	#tween.tween_property(glow_body, "position", hover_down, dur)
-#
-	#print('Position: ', glow_body.position)
+func create_particles():
+	grab_particles= GPUParticles3D.new()
+	grab_particles.name = "GrabParticles"
+	grab_particles.amount = 250
+	grab_particles.lifetime = 0.25
+	grab_particles.one_shot = false
+	grab_particles.preprocess = 0.2
+	grab_particles.speed_scale = 0.05
+	grab_particles.emitting = true
+
+	var material := ParticleProcessMaterial.new()
+	material.emission_shape = ParticleProcessMaterial.EMISSION_SHAPE_SPHERE
+	material.emission_sphere_radius = 2.5
+	material.initial_velocity_min = 4.0
+	material.initial_velocity_max = 10.0
+	material.gravity = Vector3.ZERO
+	material.direction = Vector3(0, 0, 0)
+	material.spread = 100
+	grab_particles.process_material = material
+
+	# Use a custom shader material for particle visuals
+	var particle_visual_mat := ShaderMaterial.new()
+	particle_visual_mat.shader = grab_particles_shader
+	particle_visual_mat.set_shader_parameter("glow_color", Color(0.0, 1.0, 0.0, 0.5))
+	particle_visual_mat.set_shader_parameter("pulse_speed", 2.0)
+	particle_visual_mat.set_shader_parameter("glow_intensity", 1.5)
+
+	var mesh := SphereMesh.new()
+	mesh.radius = 0.02
+	mesh.height = 0.04
+
+	var mesh_instance := MeshInstance3D.new()
+	mesh_instance.mesh = mesh
+	mesh_instance.material_override = particle_visual_mat
+
+	grab_particles.draw_pass_1 = mesh
+	grab_particles.material_override = particle_visual_mat  # <- This is key
+
+	grab_particles.position = Vector3.ZERO
+	add_child(grab_particles)
+	grab_particles.restart()
+
+func extract_parts():
+	var parts = assembly_parts.duplicate()
+	assembly_parts.clear()
+	for part in parts:
+		if not is_instance_valid(part):
+			continue
+
+		var world_xform = part.global_transform
+
+		remove_child(part)
+		world_object_container.add_child(part)
+		part.call_deferred("set_global_transform", world_xform)
+		
+		part.collision_layer = 1
+		part.collision_mask = 1
+		
+		part.freeze = false
+		part.set_script(ASSEMBLY_OBJECT_SCRIPT)
+		part.call_deferred("_ready")
+
+	await get_tree().create_timer(0.5).timeout
+	queue_free()

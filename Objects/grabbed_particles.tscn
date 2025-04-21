@@ -1,0 +1,35 @@
+[gd_scene load_steps=6 format=3 uid="uid://baqt2fusafr6r"]
+
+[ext_resource type="Shader" uid="uid://7w1cnpswqex" path="res://Shaders/particle_glow.gdshader" id="1_n2qrk"]
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_n2qrk"]
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_wfct5"]
+emission_shape_scale = Vector3(0.15, 0.15, 0.15)
+emission_shape = 2
+emission_sphere_radius = 7.94
+direction = Vector3(0, 0, 0)
+gravity = Vector3(0, 0, 0)
+radial_accel_min = -2.23517e-06
+radial_accel_max = 6.48
+color_ramp = SubResource("GradientTexture1D_n2qrk")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_n2qrk"]
+render_priority = 0
+shader = ExtResource("1_n2qrk")
+shader_parameter/glow_color = Color(0, 1, 0, 0.5)
+shader_parameter/pulse_speed = 2.0
+shader_parameter/glow_intensity = 1.5
+
+[sub_resource type="SphereMesh" id="SphereMesh_fmmdc"]
+material = SubResource("ShaderMaterial_n2qrk")
+radius = 0.05
+height = 0.1
+
+[node name="Grabbed_Particles" type="GPUParticles3D"]
+amount = 50
+lifetime = 1.5
+speed_scale = 0.2
+randomness = 0.1
+process_material = SubResource("ParticleProcessMaterial_wfct5")
+draw_pass_1 = SubResource("SphereMesh_fmmdc")
