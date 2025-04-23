@@ -1,6 +1,8 @@
 extends RigidBody3D
 class_name rigid_object
 
+@onready var collision_shape: CollisionShape3D = $CollisionShape3D
+
 var ASSEMBLY_OBJECT_SCRIPT: Script = preload("res://Objects/rigid_object.gd")
 
 var object_rotation: Vector3
@@ -8,8 +10,6 @@ var is_grabbed: bool = false
 var is_released: bool = false
 var is_extractable: bool = true
 
-var struck_objects: Array[RigidBody3D] = []
-var object_currently_struck: bool = false
 var object_speed: Vector3
 var object_speed_y: float
 
@@ -80,38 +80,17 @@ func _ready() -> void:
 	set_physics_process(true)
 
 func _physics_process(delta: float) -> void:
-
-	if is_grabbed:
-		for obj in struck_objects:
-			if is_instance_valid(obj):
-				if not obj.is_rocketship:
-					print('What you are probably looking for is here')
-					obj.move_and_collide(object_speed * delta)
-					obj.apply_impulse(Vector3.ZERO, object_speed * 0.5)
-		if struck_objects.size() > 0:
-			object_currently_struck = true
-		else:
-			object_currently_struck = false
-			
-	if is_released:
-		struck_objects.clear()
-		is_released = false
+	pass
 
 func _on_body_shape_entered(body_rid: RID, body: Node, body_shape_index: int, local_shape_index: int) -> void:
-	if is_grabbed and body is RigidBody3D and not struck_objects.has(body):
-		struck_objects.append(body)
-		if body.is_rocketship:
-			print('Rocket Rocket!')
-			is_touching_rocket = true
-		print(name, ' >>> is now touching >>> ', body.name)
+	if is_grabbed and body is RigidBody3D:
+		#print(name, ' >>> is now touching >>> ', body.name)
+		pass
 
 func _on_body_shape_exited(body_rid: RID, body: Node, body_shape_index: int, local_shape_index: int) -> void:
-	if is_grabbed and body is RigidBody3D and struck_objects.has(body):
-		struck_objects.erase(body)
-		if body.is_rocketship:
-			print('No More Rocket Rocket!')
-			is_touching_rocket = false
-		print(name, ' ||| no longer touching ||| ', body.name)
+	if is_grabbed and body is RigidBody3D:
+		#print(name, ' ||| no longer touching ||| ', body.name)
+		pass
 
 func set_outline(status: String, color: Color) -> void:
 	if not is_instance_valid(glow_body):
@@ -212,7 +191,7 @@ func extract_parts():
 		part.call_deferred("_ready")
 
 
-		await get_tree().create_timer(0.05).timeout
+		await get_tree().create_timer(0.001).timeout
 	
 		part.contact_monitor = true
 		part.max_contacts_reported = 1000
@@ -223,10 +202,8 @@ func extract_parts():
 		part.gravity_scale = 0.0
 		part.is_grabbed = false
 		part.is_released = false
-		part.struck_objects.clear()
-		part.object_currently_struck = false
 		print(part.mass)
 		
-	
+	visible = false
 	await get_tree().create_timer(0.5).timeout
 	queue_free()

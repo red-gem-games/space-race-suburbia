@@ -7,6 +7,7 @@ class_name character
 @onready var grabbed_container: Node3D = $Camera3D/Grabbed_Container
 @onready var PREM_7: Node3D = $"Camera3D/PREM-7"
 @onready var hud_reticle: Control = $HUD.hud_reticle
+@onready var char_obj_shape: CollisionShape3D
 
 var glow_color: Color
 
@@ -355,10 +356,6 @@ func _process(delta: float) -> void:
 		speed_vector = (current_position - last_position) / delta
 		last_position = current_position
 		grabbed_object.object_speed = speed_vector
-		if grabbed_object.object_currently_struck:
-			mouse_speed = base_mouse_speed / 5
-		else:
-			mouse_speed = base_mouse_speed
 		
 		## Sway Logic ##
 		var pitch_range = pitch_max - pitch_min
@@ -377,7 +374,6 @@ func _process(delta: float) -> void:
 		grabbed_object.global_position += sway_offset
 		grabbed_object.rotation_degrees = grabbed_rotation
 		grabbed_object.object_rotation = grabbed_object.global_rotation_degrees
-
 
 ##---------------------------------------##
 ##------------INPUT RESPONSES------------##
@@ -609,17 +605,17 @@ func grab_object():
 	if grabbed_object:  # An object is already grabbed; release it.
 		# *Re-enable physics on the object:*
 		grabbed_anim.stop()
+		clear_char_obj_shape()
+		grabbed_object.collision_shape.disabled = false
 		grabbed_object.lock_rotation = false
 		grabbed_object.angular_velocity = Vector3.ZERO
 		grabbed_object.linear_velocity = Vector3.ZERO
 		grabbed_object.set_outline('RELEASE', Color.WHITE)
 		hud_reticle.visible = true
-		#grabbed_object.rotation_degrees = grabbed_object.global_rotation_degrees
-		# If you changed any other simulation parameters (e.g. custom_integrator) disable that too.
+
 		object_sway_strength_x = object_sway_base_x
 		object_sway_strength_y = object_sway_base_y
 		distance_factor = 0.0
-		# Optionally, you could reset any manual transform or rotation offsets if needed.
 		grabbed_distance = 0.0
 		grabbed_object.position.z = 0.0
 		grabbed_collision.position.z = 0.0
@@ -642,15 +638,11 @@ func grab_object():
 		query.exclude = [self]
 		var result = space_state.intersect_ray(query)
 		if result:
-			var target_body = result.collider  # Likely a RigidBody3D.
+			var target_body = result.collider
 			if target_body is RigidBody3D:
 				grabbed_object = target_body
-				# Before shifting, disable physics control on the object.
-				#grabbed_object.lock_rotation = true
 				grabbed_object.angular_velocity = Vector3.ZERO
 				grabbed_object.is_grabbed = true
-				# (You may also consider setting MODE_KINEMATIC or using a custom integrator
-				# for full manual control while shifting.)
 				var object_children = grabbed_object.get_children()
 				for child in object_children:
 					if child is MeshInstance3D:
@@ -680,6 +672,9 @@ func grab_object():
 				grabbed_rotation.y = shortest_angle_diff_value(grabbed_initial_rotation.y, grabbed_global_rotation.y)
 				grabbed_rotation.z = shortest_angle_diff_value(grabbed_initial_rotation.z, grabbed_global_rotation.z)
 				object_is_grabbed = true
+				grabbed_object.collision_shape.disabled = true
+				create_collision_proxy_from_grabbed_object(grabbed_object)
+
 			else:
 				print("Object hit, but no MeshInstance3D child found!")
 		else:
@@ -800,7 +795,7 @@ func update_prem7_glow() -> void:
 			new_glow_color = Color.PURPLE
 		_:
 			new_glow_color = Color.WHITE
-	var back_glow_instance = PREM_7.back_glow  # Adjust the path as needed
+	var back_glow_instance = PREM_7.back_glow
 	var photon_glow_instance = PREM_7.photon_glow
 
 	if back_glow_instance:
@@ -857,3 +852,40 @@ func shortest_angle_diff_value(initial_angle: float, target_angle: float) -> flo
 	elif diff < -180:
 		diff += 360
 	return diff
+
+
+func create_collision_proxy_from_grabbed_object(grabbed_object: RigidBody3D) -> void:
+	if not is_instance_valid(grabbed_object):
+		return
+
+	# Find first visible mesh
+	var mesh_node: MeshInstance3D = null
+	for child in grabbed_object.get_children():
+		if child is MeshInstance3D:
+			mesh_node = child
+			break
+
+	if mesh_node == null or mesh_node.mesh == null:
+		print("No valid mesh found on grabbed object.")
+		return
+
+	# Create a more accurate collision shape from mesh
+	var shape := mesh_node.mesh.create_trimesh_shape()
+	if not is_instance_valid(char_obj_shape):
+		char_obj_shape = CollisionShape3D.new()
+		add_child(char_obj_shape)
+
+	char_obj_shape.shape = shape
+	char_obj_shape.visible = true
+	char_obj_shape.debug_color = Color.RED
+
+	var object_pos = grabbed_object.global_transform.origin
+	char_obj_shape.global_transform.origin = object_pos + Vector3(0, 0, 0)
+	char_obj_shape.visible = true
+	char_obj_shape.debug_fill = true
+	char_obj_shape.debug_color = Color.RED
+
+func clear_char_obj_shape():
+	if is_instance_valid(char_obj_shape):
+		char_obj_shape.shape = null
+		char_obj_shape.visible = false

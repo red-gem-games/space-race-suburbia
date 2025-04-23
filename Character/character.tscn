@@ -99,9 +99,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.05391, -0.376162, -1.12775)
 [node name="Grabbed_Container" type="Node3D" parent="Camera3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.15, 0)
 
-[node name="Hover_Target" type="Marker3D" parent="Camera3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -12)
-
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.27157, -0.510495)
 shape = SubResource("CapsuleShape3D_wa5vi")

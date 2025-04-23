@@ -74,6 +74,11 @@ func _process(delta: float) -> void:
 		if character.shifting_object_active:
 			reset_rotation = false
 
+		if is_instance_valid(character.char_obj_shape):
+			var proxy_transform := grabbed_object.global_transform
+			proxy_transform.origin = target_pos  # Keep proxy slightly ahead of the object
+			character.char_obj_shape.global_transform = proxy_transform
+
 func _input(event: InputEvent) -> void:
 
 	if event is InputEventKey:
