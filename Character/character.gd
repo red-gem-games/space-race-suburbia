@@ -146,13 +146,21 @@ var touching_ceiling: bool = false
 var last_position := Vector3.ZERO
 var speed_vector := Vector3.ZERO
 
+var bounce_cooldown: float = 0.0
+var bounce_decay: float = 0.1
+
+
+
+
+
+
+
 
 func _ready() -> void:
 
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	# Store the original rotation of PREM-7.
 	prem7_original_rotation = PREM_7.rotation
-
 
 
 ##----------------------------------------##
@@ -439,6 +447,14 @@ func _input(event: InputEvent) -> void:
 			current_mouse_speed_x = event.relative.x
 			current_mouse_speed_y = event.relative.y
 
+			if grabbed_object:
+				if grabbed_object.is_touching_rocket:
+					print(grabbed_object.name, " is touching the rocketship!")
+					desired_yaw -= -dx * 1.25
+					desired_pitch -= -dy * 1.25
+					grabbed_object.is_resetting = true
+					grabbed_object.is_touching_rocket = false
+					return
 
 			if not shifting_object_active:
 				desired_yaw -= dx
@@ -586,13 +602,6 @@ func _input(event: InputEvent) -> void:
 
 
 func grab_object():
-	
-	#print('Pitch Min: ', pitch_min)
-	#print('Grab Pitch Min: ', grab_pitch_min)
-	#print('Distance Factor: ', distance_factor)
-	#print('Height Factor: ', height_factor)
-	#print('Fall Speed Factor: ', fall_speed_factor)
-	
 	left_mouse_down = false
 	PREM_7.trig_anim.play("RESET")
 	PREM_7.trig_anim.play("trigger_pull")
@@ -617,7 +626,7 @@ func grab_object():
 		grabbed_object.mass = grabbed_object.mass / 2.0
 		grabbed_object.is_grabbed = false
 		grabbed_object.is_released = true
-		if extracting_object_active:
+		if extracting_object_active and grabbed_object.is_extractable:
 			grabbed_object.extract_parts()
 		object_is_grabbed = false
 		grabbed_object = null

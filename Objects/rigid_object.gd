@@ -6,6 +6,7 @@ var ASSEMBLY_OBJECT_SCRIPT: Script = preload("res://Objects/rigid_object.gd")
 var object_rotation: Vector3
 var is_grabbed: bool = false
 var is_released: bool = false
+var is_extractable: bool = true
 
 var struck_objects: Array[RigidBody3D] = []
 var object_currently_struck: bool = false
@@ -25,8 +26,18 @@ var particles_material: ShaderMaterial
 
 var world_object_container: Node3D
 
+var is_rocketship: bool = false
+var is_touching_rocket: bool = false
+var is_resetting: bool = false
+
+
 func _ready() -> void:
-	world_object_container = get_parent()
+	
+	contact_monitor = true
+	continuous_cd = true
+	
+	connect("body_shape_entered", Callable(self, "_on_body_shape_entered"))
+	connect("body_shape_exited",  Callable(self, "_on_body_shape_exited"))
 	
 	shader = Shader.new()
 	shader.code = preload("res://Shaders/grabbed_glow.gdshader").code
@@ -40,6 +51,7 @@ func _ready() -> void:
 	contact_monitor = true
 	continuous_cd = true
 	max_contacts_reported = 100
+	gravity_scale = 1.25
 
 	var base_mesh : MeshInstance3D = null
 	for child in get_children():
@@ -63,23 +75,24 @@ func _ready() -> void:
 			child.collision_layer = 0
 			child.collision_mask = 0
 			child.freeze = true
-
-	print(get_script())
-
-	print('I, ', name, ' am an assembly part!')
+			print('I, ', child.name, ' am an assembly part!')
+	
+	set_physics_process(true)
 
 func _physics_process(delta: float) -> void:
-	
 
 	if is_grabbed:
 		for obj in struck_objects:
 			if is_instance_valid(obj):
-				obj.move_and_collide(object_speed * delta)
-				obj.apply_impulse(Vector3.ZERO, object_speed * 0.5)
+				if not obj.is_rocketship:
+					print('What you are probably looking for is here')
+					obj.move_and_collide(object_speed * delta)
+					obj.apply_impulse(Vector3.ZERO, object_speed * 0.5)
 		if struck_objects.size() > 0:
 			object_currently_struck = true
 		else:
 			object_currently_struck = false
+			
 	if is_released:
 		struck_objects.clear()
 		is_released = false
@@ -87,11 +100,17 @@ func _physics_process(delta: float) -> void:
 func _on_body_shape_entered(body_rid: RID, body: Node, body_shape_index: int, local_shape_index: int) -> void:
 	if is_grabbed and body is RigidBody3D and not struck_objects.has(body):
 		struck_objects.append(body)
+		if body.is_rocketship:
+			print('Rocket Rocket!')
+			is_touching_rocket = true
 		print(name, ' >>> is now touching >>> ', body.name)
 
 func _on_body_shape_exited(body_rid: RID, body: Node, body_shape_index: int, local_shape_index: int) -> void:
 	if is_grabbed and body is RigidBody3D and struck_objects.has(body):
 		struck_objects.erase(body)
+		if body.is_rocketship:
+			print('No More Rocket Rocket!')
+			is_touching_rocket = false
 		print(name, ' ||| no longer touching ||| ', body.name)
 
 func set_outline(status: String, color: Color) -> void:
@@ -131,7 +150,6 @@ func set_outline(status: String, color: Color) -> void:
 		color.a = 0.25
 		shader_material.set_shader_parameter("glow_color", color)
 		
-
 
 func create_particles():
 	grab_particles= GPUParticles3D.new()
@@ -182,18 +200,33 @@ func extract_parts():
 		if not is_instance_valid(part):
 			continue
 
+		part.freeze = false
 		var world_xform = part.global_transform
+		world_xform.origin.y += 0.5
 
 		remove_child(part)
 		world_object_container.add_child(part)
 		part.call_deferred("set_global_transform", world_xform)
 		
-		part.collision_layer = 1
-		part.collision_mask = 1
-		
-		part.freeze = false
 		part.set_script(ASSEMBLY_OBJECT_SCRIPT)
 		part.call_deferred("_ready")
 
+
+		await get_tree().create_timer(0.05).timeout
+	
+		part.contact_monitor = true
+		part.max_contacts_reported = 1000
+		part.continuous_cd = true
+		part.collision_layer = 1
+		part.collision_mask = 1
+		part.is_extractable = false
+		part.gravity_scale = 0.0
+		part.is_grabbed = false
+		part.is_released = false
+		part.struck_objects.clear()
+		part.object_currently_struck = false
+		print(part.mass)
+		
+	
 	await get_tree().create_timer(0.5).timeout
 	queue_free()

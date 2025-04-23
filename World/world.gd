@@ -30,12 +30,13 @@ func _ready() -> void:
 	add_child(object_position_timer)
 
 func _process(delta: float) -> void:
-	# When an object is grabbed for the first time:
+	# When an object is grabbed:
 	if character.object_is_grabbed and not object_is_grabbed:
 		character.pitch_set = false
 		character.initial_grab = true
 		grabbed_object = character.grabbed_object 
 		grabbed_object.reparent(character.grabbed_container)
+		grabbed_object.world_object_container = objects_node
 		reset_rotation = true
 		object_is_grabbed = true
 	
@@ -45,6 +46,7 @@ func _process(delta: float) -> void:
 			return
 		grabbed_object.reparent(objects_node)
 		grabbed_object.global_position = object_global_position
+		grabbed_object.global_position.y += 0.05
 		character.distance_from_character = base_distance_in_front
 		character.pitch_set = false
 		print('Object Position: ', grabbed_object.position)

@@ -1,0 +1,54 @@
+[gd_scene load_steps=6 format=3 uid="uid://8y8q1bb5ncvv"]
+
+[ext_resource type="Script" uid="uid://cbiinlnk684f" path="res://Objects/Rocketship/rocketship.gd" id="1_7m23k"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_2u7x2"]
+top_radius = 1.25
+bottom_radius = 2.0
+height = 15.0
+rings = 13
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_hpdu1"]
+top_radius = 0.1
+bottom_radius = 1.25
+rings = 13
+
+[sub_resource type="PrismMesh" id="PrismMesh_77ywk"]
+size = Vector3(1.79, 6.76, 0.25)
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_w4pcp"]
+height = 17.3
+radius = 2.368
+
+[node name="Rocketship" type="RigidBody3D"]
+freeze = true
+continuous_cd = true
+contact_monitor = true
+max_contacts_reported = 1000
+script = ExtResource("1_7m23k")
+
+[node name="Body" type="MeshInstance3D" parent="."]
+mesh = SubResource("CylinderMesh_2u7x2")
+
+[node name="Top" type="MeshInstance3D" parent="Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8.504, 0)
+mesh = SubResource("CylinderMesh_hpdu1")
+
+[node name="Fin_1" type="MeshInstance3D" parent="Body"]
+transform = Transform3D(0.990014, -0.14097, 0, 0.14097, 0.990014, 0, 0, 0, 1, 2.01335, -4.01198, 0)
+mesh = SubResource("PrismMesh_77ywk")
+
+[node name="Fin_2" type="MeshInstance3D" parent="Body"]
+transform = Transform3D(-0.700052, 0.0996322, 0.707107, 0.140901, 0.990024, 0, -0.700052, 0.0996322, -0.707107, -1.42458, -4.01198, -1.51954)
+mesh = SubResource("PrismMesh_77ywk")
+
+[node name="Fin_3" type="MeshInstance3D" parent="Body"]
+transform = Transform3D(-0.457924, 0.0651722, -0.886599, 0.140901, 0.990024, -5.86254e-09, 0.877755, -0.124923, -0.462538, -1.04476, -4.012, 1.91847)
+mesh = SubResource("PrismMesh_77ywk")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.15, 0)
+shape = SubResource("CylinderShape3D_w4pcp")
+
+[connection signal="body_shape_entered" from="." to="." method="_on_body_shape_entered"]
+[connection signal="body_shape_exited" from="." to="." method="_on_body_shape_exited"]
