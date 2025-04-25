@@ -1,9 +1,9 @@
 extends RigidBody3D
-class_name rigid_object
+class_name assembly_objects
 
 @onready var collision_shape: CollisionShape3D = $CollisionShape3D
 
-var ASSEMBLY_OBJECT_SCRIPT: Script = preload("res://Objects/rigid_object.gd")
+var ASSEMBLY_OBJECT_SCRIPT: Script = preload("res://Objects/assembly_objects.gd")
 
 var object_rotation: Vector3
 var is_grabbed: bool = false
@@ -30,6 +30,8 @@ var is_rocketship: bool = false
 var is_touching_rocket: bool = false
 var is_resetting: bool = false
 
+var colliding_with_character: bool = false
+const phantom_body: bool = false
 
 func _ready() -> void:
 	
@@ -47,7 +49,7 @@ func _ready() -> void:
 	grab_particles_shader.code = preload("res://Shaders/particle_glow.gdshader").code
 	particles_material = ShaderMaterial.new()
 	
-	mass = 35.0
+	mass = 10
 	contact_monitor = true
 	continuous_cd = true
 	max_contacts_reported = 100
@@ -75,6 +77,7 @@ func _ready() -> void:
 			child.collision_layer = 0
 			child.collision_mask = 0
 			child.freeze = true
+			print('****** ADD THE MAIN BODY NAME TO THE CHILD NAME TO KEEP TRACK******')
 			print('I, ', child.name, ' am an assembly part!')
 	
 	set_physics_process(true)
@@ -83,11 +86,18 @@ func _physics_process(delta: float) -> void:
 	pass
 
 func _on_body_shape_entered(body_rid: RID, body: Node, body_shape_index: int, local_shape_index: int) -> void:
+	if body is CharacterBody3D:
+		print('hello????')
+		body.colliding_with_object = true
+		colliding_with_character = true
 	if is_grabbed and body is RigidBody3D:
 		#print(name, ' >>> is now touching >>> ', body.name)
 		pass
 
 func _on_body_shape_exited(body_rid: RID, body: Node, body_shape_index: int, local_shape_index: int) -> void:
+	if body is CharacterBody3D:
+		body.colliding_with_object = false
+		colliding_with_character = false
 	if is_grabbed and body is RigidBody3D:
 		#print(name, ' ||| no longer touching ||| ', body.name)
 		pass
@@ -189,7 +199,6 @@ func extract_parts():
 		
 		part.set_script(ASSEMBLY_OBJECT_SCRIPT)
 		part.call_deferred("_ready")
-
 
 		await get_tree().create_timer(0.001).timeout
 	

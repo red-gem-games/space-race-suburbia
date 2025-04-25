@@ -1,12 +1,11 @@
-[gd_scene load_steps=8 format=3 uid="uid://f722yn8gdiyj"]
+[gd_scene load_steps=11 format=3 uid="uid://f722yn8gdiyj"]
 
 [ext_resource type="PackedScene" uid="uid://bpvm0l41dywjs" path="res://PREM-7/PREM-7.tscn" id="1_glpr6"]
 [ext_resource type="Script" uid="uid://sw8eis2eqpyj" path="res://Character/character.gd" id="1_pjt0s"]
 [ext_resource type="PackedScene" uid="uid://baomcogkgkbvv" path="res://HUD/hud.tscn" id="3_wa5vi"]
+[ext_resource type="Script" uid="uid://sxqqjg0gs7oh" path="res://Character/phantom_body.gd" id="4_twwou"]
 
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_wa5vi"]
-radius = 1.538
-height = 4.035
+[sub_resource type="BoxShape3D" id="BoxShape3D_twwou"]
 
 [sub_resource type="Animation" id="Animation_a23tb"]
 length = 0.001
@@ -88,7 +87,17 @@ _data = {
 &"hover": SubResource("Animation_twwou")
 }
 
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_twwou"]
+friction = 0.3
+rough = true
+bounce = 0.5
+absorbent = true
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_a23tb"]
+radius = 1.902
+
 [node name="Character" type="CharacterBody3D"]
+safe_margin = 0.1
 script = ExtResource("1_pjt0s")
 
 [node name="Camera3D" type="Camera3D" parent="."]
@@ -100,8 +109,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.05391, -0.376162, -1.12775)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.15, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.27157, -0.510495)
-shape = SubResource("CapsuleShape3D_wa5vi")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.63912, 0)
+shape = SubResource("BoxShape3D_twwou")
 debug_color = Color(1, 0.264211, 0.231967, 1)
 
 [node name="Grabbed_Animation" type="AnimationPlayer" parent="."]
@@ -110,3 +119,16 @@ libraries = {
 }
 
 [node name="HUD" parent="." instance=ExtResource("3_wa5vi")]
+
+[node name="Phantom_Body" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.64738, 0)
+collision_layer = 16
+collision_mask = 16
+mass = 1000.0
+physics_material_override = SubResource("PhysicsMaterial_twwou")
+gravity_scale = 8.0
+script = ExtResource("4_twwou")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Phantom_Body"]
+shape = SubResource("CylinderShape3D_a23tb")
+disabled = true

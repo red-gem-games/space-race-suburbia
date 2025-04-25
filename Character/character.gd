@@ -1,6 +1,8 @@
 extends CharacterBody3D
 class_name character
 
+const is_character: bool = true
+
 @onready var collision_shape: CollisionShape3D = $CollisionShape3D
 @onready var grabbed_anim: AnimationPlayer = $Grabbed_Animation
 @onready var camera: Camera3D = $Camera3D
@@ -8,6 +10,8 @@ class_name character
 @onready var PREM_7: Node3D = $"Camera3D/PREM-7"
 @onready var hud_reticle: Control = $HUD.hud_reticle
 @onready var char_obj_shape: CollisionShape3D
+
+var colliding_with_object: bool = false
 
 var glow_color: Color
 
@@ -41,7 +45,7 @@ var grabbed_initial_rotation: Vector3 = Vector3.ZERO
 var grabbed_global_rotation: Vector3
 
 var floor_y: float = -1.5     # The floor level (adjust as needed)
-var max_y: float = 20.0       # The maximum Y allowed (adjust as needed)
+var max_y: float = 30.0       # The maximum Y allowed (adjust as needed)
 var base_pitch_factor: float = 3
 #var pitch_factor: float = base_pitch_factor # How much camera pitch affects the Y offset
 
@@ -64,7 +68,7 @@ var middle_mouse_down: bool = false
 
 var mode_1: String = "SHIFT"
 var mode_2: String = "EXTRACT"
-var mode_3: String = "INSPECT"
+var mode_3: String = "SUSPEND"
 var mode_4: String = "FUSE"
 var modes = [mode_1, mode_2, mode_3, mode_4]
 var current_mode: String = mode_1
@@ -72,8 +76,9 @@ var pending_mode: String = ""  # Holds the pending mode change
 var pending_mode_key: int = 0  # Will store the keycode of the mode key that triggered pending_mode
 var shifting_object_active: bool = false
 var extracting_object_active: bool = false
-var inspecting_object_active: bool = false
+var suspending_object_active: bool = false
 var fusing_object_active: bool = false
+var inspecting_object_active: bool = false
 
 var pitch: float = 0.0
 var pitch_set: bool = false
@@ -150,7 +155,10 @@ var speed_vector := Vector3.ZERO
 var bounce_cooldown: float = 0.0
 var bounce_decay: float = 0.1
 
+var scroll_cooldown := 0.0
+var scroll_cooldown_duration := 0.05  # Adjust to taste (0.1–0.2 is typical)
 
+var start_day: bool = false
 
 
 
@@ -158,6 +166,8 @@ var bounce_decay: float = 0.1
 
 
 func _ready() -> void:
+	
+	print('Work on F Key = freeing up use of right click')
 
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	# Store the original rotation of PREM-7.
@@ -171,13 +181,16 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	
-	#print('PREM-7 Mode: ', current_mode)
-	#print('PREM-7 Reticle Color: ', hud_reticle.modulate)
+	
+	if scroll_cooldown > 0.0:
+		scroll_cooldown -= delta
 	
 	# -------------------
 	# Jetpack Logic
 	# -------------------
 	distance_to_ground = raycast_to_ground()
+	if distance_to_ground > 5.0:
+		airborne = true
 
 	# Update thrust and acceleration values
 	if jetpack_active:
@@ -256,13 +269,19 @@ func _process(delta: float) -> void:
 	# -------------------
 	if grounded:
 		if grabbed_object:
-			pitch_min = grab_pitch_min + distance_factor / 1.5
-			pitch_max = grab_pitch_max - height_factor
+			pass
+			#pitch_min = grab_pitch_min + distance_factor / 1.5
+			#pitch_max = grab_pitch_max - height_factor
 		else:
 			if not pitch_set:
 				pitch_min = base_pitch_min
 				pitch_max = base_pitch_max
 				pitch_set = true
+		if not start_day:
+			print("When's liftoff scheduled for, again? Let's get started.")
+			print("Change color of 'SUSPEND' - Blue doesn't work because of the sky")
+			$Phantom_Body/CollisionShape3D.disabled = false
+			start_day = true
 
 	if airborne:
 		grounded = false
@@ -283,8 +302,9 @@ func _process(delta: float) -> void:
 			fall_speed_factor = -vertical_velocity * fall_sensitivity + distance_factor / 2
 
 		if grabbed_object:
-			pitch_min = grab_pitch_min + distance_factor - height_factor + fall_speed_factor
-			pitch_max = grab_pitch_max - height_factor + fall_speed_factor
+			pass
+			#pitch_min = grab_pitch_min + distance_factor - height_factor + fall_speed_factor
+			#pitch_max = grab_pitch_max - height_factor + fall_speed_factor
 		else:
 			pitch_min = base_pitch_min
 			pitch_max = base_pitch_max
@@ -308,7 +328,7 @@ func _process(delta: float) -> void:
 
 	if result and not grabbed_object:
 		var collider = result.collider
-		if collider is RigidBody3D:
+		if collider is RigidBody3D and not collider.is_rocketship and not collider.phantom_body:
 			match current_mode:
 				mode_1: hud_reticle.modulate = Color.GREEN
 				mode_2: hud_reticle.modulate = Color.RED
@@ -375,10 +395,9 @@ func _process(delta: float) -> void:
 		grabbed_object.rotation_degrees = grabbed_rotation
 		grabbed_object.object_rotation = grabbed_object.global_rotation_degrees
 
-##---------------------------------------##
-##------------INPUT RESPONSES------------##
-##---------------------------------------##
-
+##--------------------------------------##
+##------------INPUT RESPONSE------------##
+##--------------------------------------##
 
 func _input(event: InputEvent) -> void:
 	# Process Mouse Button events.
@@ -401,31 +420,38 @@ func _input(event: InputEvent) -> void:
 		elif event.button_index == MOUSE_BUTTON_RIGHT and grabbed_object:
 			if not middle_mouse_down and not left_mouse_down:
 				if event.is_pressed():
-					right_click('pressed')
+					control_object('pressed')
 				else:
-					right_click('released')
+					control_object('released')
 
-		elif event.button_index == MOUSE_BUTTON_WHEEL_UP or event.button_index == MOUSE_BUTTON_WHEEL_RIGHT:
-			if not middle_mouse_down and not right_mouse_down and not left_mouse_down:
-				if grabbed_object:
-					distance_from_character = clamp(distance_from_character + 0.25, 5, 20)
-					distance_factor = clamp(distance_factor + 0.005, 0, 0.25)
-		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN or event.button_index == MOUSE_BUTTON_WHEEL_LEFT:
-			if not middle_mouse_down and not right_mouse_down and not left_mouse_down:
-				if grabbed_object:
-					distance_from_character = clamp(distance_from_character - 0.25, 6, 24)
-					distance_factor = clamp(distance_factor - 0.0025, 0, 0.25)
+		elif event.button_index == MOUSE_BUTTON_WHEEL_UP:
+			if scroll_cooldown <= 0.0 and not middle_mouse_down and not right_mouse_down and not left_mouse_down:
+				print('cycling up')
+				cycle_mode_direction(true)
+				scroll_cooldown = scroll_cooldown_duration
+
+		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
+			if scroll_cooldown <= 0.0 and not middle_mouse_down and not right_mouse_down and not left_mouse_down:
+				print('cycling down')
+				cycle_mode_direction(false)
+				scroll_cooldown = scroll_cooldown_duration
+
+
 		elif event.button_index == MOUSE_BUTTON_MIDDLE:
 			if not right_mouse_down and not left_mouse_down:
 				if event.is_pressed():
 					middle_mouse_down = true
 					PREM_7.mode_anim.play("RESET")
 					PREM_7.mode_anim.play("shift_mode_down")
+					print("Object is being inspected!")
+					print('Add hologram tablet above PREM-7 that shoots out of top opening')
+					inspecting_object_active = true
 				if not event.is_pressed():
 					middle_mouse_down = false
 					PREM_7.mode_anim.play("RESET")
 					PREM_7.mode_anim.play("shift_mode_up")
-					cycle_mode()
+					print("Object is no longer being inspected!")
+					inspecting_object_active = false
 
 	# Process Mouse Motion events.
 	if event is InputEventMouseMotion:
@@ -442,15 +468,15 @@ func _input(event: InputEvent) -> void:
 
 			current_mouse_speed_x = event.relative.x
 			current_mouse_speed_y = event.relative.y
-
-			if grabbed_object:
-				if grabbed_object.is_touching_rocket:
-					print(grabbed_object.name, " is touching the rocketship!")
-					desired_yaw -= -dx * 1.25
-					desired_pitch -= -dy * 1.25
-					grabbed_object.is_resetting = true
-					grabbed_object.is_touching_rocket = false
-					return
+#
+			#if grabbed_object:
+				#if grabbed_object.is_touching_rocket:
+					#print(grabbed_object.name, " is touching the rocketship!")
+					#desired_yaw -= -dx * 1.25
+					#desired_pitch -= -dy * 1.25
+					#grabbed_object.is_resetting = true
+					#grabbed_object.is_touching_rocket = false
+					#return
 
 			if not shifting_object_active:
 				desired_yaw -= dx
@@ -539,7 +565,6 @@ func _input(event: InputEvent) -> void:
 			hover_lock = false
 			if not airborne:
 				pitch_set = false
-				airborne = true
 			if pressed:
 				jetpack_active = true
 			else:
@@ -548,6 +573,7 @@ func _input(event: InputEvent) -> void:
 			if airborne:
 				if pressed:
 					hover_lock =! hover_lock
+					print(hover_lock)
 					hover_base_y = global_position.y
 					hover_bob_time = 0.0
 		if event.keycode == KEY_SHIFT:
@@ -592,7 +618,7 @@ func _input(event: InputEvent) -> void:
 
 
 ##---------------------------------------##
-##----------CLICKING FUNCTIONS-----------##
+##------------GAME MECHANICS-------------##
 ##---------------------------------------##
 
 
@@ -622,6 +648,7 @@ func grab_object():
 		grabbed_object.mass = grabbed_object.mass / 2.0
 		grabbed_object.is_grabbed = false
 		grabbed_object.is_released = true
+		grabbed_object.mass = 10
 		if extracting_object_active and grabbed_object.is_extractable:
 			grabbed_object.extract_parts()
 		object_is_grabbed = false
@@ -639,7 +666,7 @@ func grab_object():
 		var result = space_state.intersect_ray(query)
 		if result:
 			var target_body = result.collider
-			if target_body is RigidBody3D:
+			if target_body is RigidBody3D and not target_body.is_rocketship and not target_body.phantom_body:
 				grabbed_object = target_body
 				grabbed_object.angular_velocity = Vector3.ZERO
 				grabbed_object.is_grabbed = true
@@ -672,8 +699,10 @@ func grab_object():
 				grabbed_rotation.y = shortest_angle_diff_value(grabbed_initial_rotation.y, grabbed_global_rotation.y)
 				grabbed_rotation.z = shortest_angle_diff_value(grabbed_initial_rotation.z, grabbed_global_rotation.z)
 				object_is_grabbed = true
+				grabbed_object.mass = 100
+				grabbed_object.gravity_scale = 1.5
 				grabbed_object.collision_shape.disabled = true
-				create_collision_proxy_from_grabbed_object(grabbed_object)
+				create_char_obj_shape(grabbed_object)
 
 			else:
 				print("Object hit, but no MeshInstance3D child found!")
@@ -681,7 +710,7 @@ func grab_object():
 			print("Object is not RigidBody3D")
 			return
 
-func right_click(status):
+func control_object(status):
 	if status == 'pressed':
 		grabbed_anim.pause()
 		PREM_7.trig_anim.play("RESET")
@@ -692,12 +721,14 @@ func right_click(status):
 			shifting_object_active = true
 		elif current_mode == mode_2:
 			print("Begin Extracting Object")
+			print('ADD FUNCTIONALITY HERE - Press & Hold for Extraction...object starts to progressively shake until extraction complete')
 			extracting_object_active = true
 		elif current_mode == mode_3:
-			print("Begin Inspecting Object")
-			inspecting_object_active = true
+			print("Begin Suspending Object")
+			suspending_object_active = true
 		elif current_mode == mode_4:
 			print("Begin Fusing Object")
+			print('ADD FUNCTIONALITY HERE - Press & Hold for Fusion...grabbed object becomes child of object it is fusing to // objects begin to rumble and glow')
 			fusing_object_active = true
 		collision_layer = 12
 		right_mouse_down = true
@@ -715,19 +746,15 @@ func right_click(status):
 			grab_object()
 			extracting_object_active = false
 		elif current_mode == mode_3:
-			print("Object has been Inspected!")
-			inspecting_object_active = false
+			print("Object has been Suspended!")
+			grabbed_object.gravity_scale = 0.0
+			grab_object()
+			suspending_object_active = false
 		elif current_mode == mode_4:
 			print("Object has been Fused!")
 			fusing_object_active = false
 		collision_layer = 1
 		right_mouse_down = false
-
-
-
-##---------------------------------------##
-##-----------HELPER FUNCTIONS------------##
-##---------------------------------------##
 
 func handle_jetpack(status, timing):
 	# Jetpack Ceiling Clamp
@@ -741,8 +768,6 @@ func handle_jetpack(status, timing):
 		var damp_factor: float = clamp(closeness * 0.5, 0.0, 1.0)
 		var damp_strength: float = 1.0 - pow(damp_factor, 2)
 		vertical_velocity *= damp_strength
-
-
 
 	if status == '1':
 		current_jetpack_thrust = lerp(current_jetpack_thrust, jetpack_thrust_max, thrust_ramp_up_speed * timing)
@@ -766,6 +791,12 @@ func handle_jetpack(status, timing):
 		var bob_offset = sin(hover_bob_time * bob_speed) * bob_strength
 		global_position.y = hover_base_y + bob_offset
 		vertical_velocity = 0.0  # Freeze vertical momentum
+
+
+
+##---------------------------------------##
+##-----------HELPER FUNCTIONS------------##
+##---------------------------------------##
 
 func raycast_to_ground() -> float:
 	var from = global_position
@@ -826,21 +857,17 @@ func change_mode(new_mode: String) -> void:
 
 		grabbed_object.set_outline('UPDATE', glow_color)
 
-func cycle_mode() -> void:
+func cycle_mode_direction(forward: bool = true) -> void:
 	var current_index = modes.find(current_mode)
-	if current_index == -1:
-		current_index = 0
-	var new_index = (current_index + 1) % modes.size()
+	var new_index = (current_index + (1 if forward else -1)) % modes.size()
+	if new_index < 0:
+		new_index = modes.size() - 1
 	change_mode(modes[new_index])
 	match current_mode:
-		mode_1:
-			hud_reticle.modulate = Color.GREEN
-		mode_2:
-			hud_reticle.modulate = Color.RED
-		mode_3:
-			hud_reticle.modulate = Color.AQUA
-		mode_4:
-			hud_reticle.modulate = Color.PURPLE
+		mode_1: hud_reticle.modulate = Color.GREEN
+		mode_2: hud_reticle.modulate = Color.RED
+		mode_3: hud_reticle.modulate = Color.AQUA
+		mode_4: hud_reticle.modulate = Color.PURPLE
 
 func shortest_angle_diff_value(initial_angle: float, target_angle: float) -> float:
 	initial_angle = wrapf(initial_angle, -180.0, 180.0)
@@ -853,8 +880,7 @@ func shortest_angle_diff_value(initial_angle: float, target_angle: float) -> flo
 		diff += 360
 	return diff
 
-
-func create_collision_proxy_from_grabbed_object(grabbed_object: RigidBody3D) -> void:
+func create_char_obj_shape(grabbed_object: RigidBody3D) -> void:
 	if not is_instance_valid(grabbed_object):
 		return
 
@@ -880,7 +906,7 @@ func create_collision_proxy_from_grabbed_object(grabbed_object: RigidBody3D) -> 
 	char_obj_shape.debug_color = Color.RED
 
 	var object_pos = grabbed_object.global_transform.origin
-	char_obj_shape.global_transform.origin = object_pos + Vector3(0, 0, 0)
+	char_obj_shape.global_transform.origin = object_pos
 	char_obj_shape.visible = true
 	char_obj_shape.debug_fill = true
 	char_obj_shape.debug_color = Color.RED

@@ -7,9 +7,9 @@ uniform float time_offset = 0.5;
 uniform float fresnel_power = 0.5;
 
 // Power surge / distortion pulse
-uniform float surge_strength = 0.75;
-uniform float surge_frequency = 1.0;
-uniform float surge_thickness = 0.25;
+uniform float surge_strength = 0.2;
+uniform float surge_frequency = 0.5;
+uniform float surge_thickness = 0.06;
 
 float surge_wave(vec2 uv, float offset) {
 	// Pulse wave oscillates between 0 and 1

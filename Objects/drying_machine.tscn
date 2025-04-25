@@ -1,7 +1,8 @@
-[gd_scene load_steps=36 format=4 uid="uid://diw15u24g3w3h"]
+[gd_scene load_steps=38 format=4 uid="uid://diw15u24g3w3h"]
 
-[ext_resource type="Script" uid="uid://clwwid0cs6u32" path="res://Objects/rigid_object.gd" id="1_yvv8m"]
+[ext_resource type="Script" uid="uid://clwwid0cs6u32" path="res://Objects/assembly_objects.gd" id="1_yvv8m"]
 [ext_resource type="Material" uid="uid://c7xbbfk34fthw" path="res://Shaders/metallic_standard_material.tres" id="2_yvv8m"]
+[ext_resource type="Shader" uid="uid://vetnq53dk60g" path="res://Shaders/grabbed_glow.gdshader" id="3_7qgkv"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_c5je4"]
 size = Vector3(1.925, 0.04, 1.98)
@@ -271,6 +272,16 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_iutrw")
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_tbemb"]
+render_priority = 0
+shader = ExtResource("3_7qgkv")
+shader_parameter/glow_color = Color(0, 1, 0, 0.5)
+shader_parameter/time_offset = 0.5
+shader_parameter/fresnel_power = 0.5
+shader_parameter/surge_strength = 0.2
+shader_parameter/surge_frequency = 0.5
+shader_parameter/surge_thickness = 0.06
+
 [sub_resource type="ArrayMesh" id="ArrayMesh_jrhel"]
 _surfaces = [{
 "aabb": AABB(-1, -1, -1, 2, 2.04099, 2),
@@ -347,6 +358,8 @@ blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_7bi4r")
 
 [node name="Drying_Machine" type="RigidBody3D"]
+collision_layer = 17
+collision_mask = 17
 script = ExtResource("1_yvv8m")
 
 [node name="Front_Wall" type="RigidBody3D" parent="."]
@@ -477,6 +490,7 @@ debug_color = Color(0.580641, 0.0919842, 0.225232, 1)
 visible = false
 mesh = SubResource("ArrayMesh_5wic0")
 skeleton = NodePath("")
+surface_material_override/0 = SubResource("ShaderMaterial_tbemb")
 
 [node name="Extra_Body" type="Node3D" parent="."]
 

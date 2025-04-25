@@ -1,6 +1,6 @@
 [gd_scene load_steps=36 format=4 uid="uid://cvtdsd7mu2wv"]
 
-[ext_resource type="Script" uid="uid://clwwid0cs6u32" path="res://Objects/rigid_object.gd" id="1_hnuj6"]
+[ext_resource type="Script" uid="uid://clwwid0cs6u32" path="res://Objects/assembly_objects.gd" id="1_hnuj6"]
 [ext_resource type="Material" uid="uid://c7xbbfk34fthw" path="res://Shaders/metallic_standard_material.tres" id="2_hnuj6"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_s6kqv"]
@@ -347,6 +347,8 @@ blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_ieqsk")
 
 [node name="Washing_Machine" type="RigidBody3D"]
+collision_layer = 17
+collision_mask = 17
 script = ExtResource("1_hnuj6")
 
 [node name="Front_Wall" type="RigidBody3D" parent="."]

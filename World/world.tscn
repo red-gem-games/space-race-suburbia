@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://dw2grejb4tc3k"]
+[gd_scene load_steps=26 format=3 uid="uid://dw2grejb4tc3k"]
 
 [ext_resource type="PackedScene" uid="uid://f722yn8gdiyj" path="res://Character/character.tscn" id="1_f3sb7"]
 [ext_resource type="Script" uid="uid://cpdnlycwlet2q" path="res://World/world.gd" id="1_tlwt5"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://cvtdsd7mu2wv" path="res://Objects/washing_machine.tscn" id="4_036b0"]
 [ext_resource type="PackedScene" uid="uid://diw15u24g3w3h" path="res://Objects/drying_machine.tscn" id="6_dwbse"]
 [ext_resource type="Shader" uid="uid://cgn0qf8wluwxh" path="res://Shaders/garage_floor.gdshader" id="6_eidgh"]
+[ext_resource type="Script" uid="uid://clwwid0cs6u32" path="res://Objects/assembly_objects.gd" id="6_w47uh"]
 [ext_resource type="Texture2D" uid="uid://dpi43v27xa8kb" path="res://Assets/Textures/cracked_concrete_disp_1k.png" id="7_oe8m4"]
 [ext_resource type="Texture2D" uid="uid://cmgbtrrh42i2v" path="res://Assets/Textures/concrete_floor_worn_001_disp_4k.png" id="8_w47uh"]
 [ext_resource type="PackedScene" uid="uid://8y8q1bb5ncvv" path="res://Objects/Rocketship/rocketship.tscn" id="9_oe8m4"]
@@ -48,6 +49,16 @@ sky = SubResource("Sky_fj7yv")
 ambient_light_source = 3
 ambient_light_color = Color(1, 1, 1, 1)
 reflected_light_source = 2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_w47uh"]
+albedo_color = Color(0.298039, 0.27451, 0.298039, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_oe8m4"]
+material = SubResource("StandardMaterial3D_w47uh")
+size = Vector3(10, 0.3, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_w47uh"]
+size = Vector3(9.968, 5.713, 0.028)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_aqk2v"]
 
@@ -117,7 +128,7 @@ mesh = SubResource("PlaneMesh_fj7yv")
 environment = SubResource("Environment_tlwt5")
 
 [node name="Character" parent="." instance=ExtResource("1_f3sb7")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.383, 0.447, 47.6645)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.383, 7.87488, 46.6999)
 
 [node name="Objects" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.7833, 0, 39.6017)
@@ -127,6 +138,46 @@ transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -6.824
 
 [node name="Washing_Machine" parent="Objects" instance=ExtResource("4_036b0")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -6.82642, 0, 6.56096)
+
+[node name="Stepladder" type="RigidBody3D" parent="Objects"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.1505, -0.685292, -13.7328)
+script = ExtResource("6_w47uh")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Objects/Stepladder"]
+mesh = SubResource("BoxMesh_oe8m4")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Objects/Stepladder/MeshInstance3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, -1)
+mesh = SubResource("BoxMesh_oe8m4")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="Objects/Stepladder/MeshInstance3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, -2)
+mesh = SubResource("BoxMesh_oe8m4")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="Objects/Stepladder/MeshInstance3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.905434, -2.98973)
+mesh = SubResource("BoxMesh_oe8m4")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D5" type="MeshInstance3D" parent="Objects/Stepladder/MeshInstance3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.20543, -3.98973)
+mesh = SubResource("BoxMesh_oe8m4")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D6" type="MeshInstance3D" parent="Objects/Stepladder/MeshInstance3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.50543, -4.98973)
+mesh = SubResource("BoxMesh_oe8m4")
+skeleton = NodePath("../..")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Objects/Stepladder"]
+transform = Transform3D(1, 0, 0, 0, 0.37451, 0.927223, 0, -0.927223, 0.37451, 0.0262451, 0.940501, -2.1008)
+shape = SubResource("BoxShape3D_w47uh")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="Objects/Stepladder"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.0262451, -0.357357, -2.31797)
+shape = SubResource("BoxShape3D_w47uh")
 
 [node name="Garage" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.7833, 0, 47.7116)

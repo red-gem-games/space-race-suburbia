@@ -1,7 +1,8 @@
 extends Node3D
 class_name world
 
-@onready var objects_node: Node3D = $Objects
+@onready var object_container: Node3D = $Objects
+var assembly_object_array: Array[RigidBody3D]
 
 @onready var character: CharacterBody3D = $Character
 var grabbed_object: RigidBody3D = null
@@ -19,6 +20,8 @@ var object_global_position: Vector3
 
 var object_position_timer: Timer = Timer.new()
 
+var proxy_is_moving_to_character := false
+
 # Desired fixed distance in front of the character (adjust as needed)
 var base_distance_in_front: float = 6
 # Speed factor for the interpolation (tweak for smoother/faster movement)
@@ -30,13 +33,17 @@ func _ready() -> void:
 	add_child(object_position_timer)
 
 func _process(delta: float) -> void:
+	
+	push_rigidbodies_on_contact()
+	
 	# When an object is grabbed:
 	if character.object_is_grabbed and not object_is_grabbed:
 		character.pitch_set = false
 		character.initial_grab = true
+		proxy_is_moving_to_character = true
 		grabbed_object = character.grabbed_object 
 		grabbed_object.reparent(character.grabbed_container)
-		grabbed_object.world_object_container = objects_node
+		grabbed_object.world_object_container = object_container
 		reset_rotation = true
 		object_is_grabbed = true
 	
@@ -44,7 +51,7 @@ func _process(delta: float) -> void:
 	elif not character.object_is_grabbed and object_is_grabbed:
 		if not is_instance_valid(grabbed_object):
 			return
-		grabbed_object.reparent(objects_node)
+		grabbed_object.reparent(object_container)
 		grabbed_object.global_position = object_global_position
 		grabbed_object.global_position.y += 0.05
 		character.distance_from_character = base_distance_in_front
@@ -75,9 +82,18 @@ func _process(delta: float) -> void:
 			reset_rotation = false
 
 		if is_instance_valid(character.char_obj_shape):
-			var proxy_transform := grabbed_object.global_transform
-			proxy_transform.origin = target_pos  # Keep proxy slightly ahead of the object
-			character.char_obj_shape.global_transform = proxy_transform
+			if proxy_is_moving_to_character:
+				var proxy_transform: Transform3D = character.char_obj_shape.global_transform
+				proxy_transform.origin = proxy_transform.origin.lerp(target_pos, delta * 4.0)
+				character.char_obj_shape.global_transform = proxy_transform
+
+				if proxy_transform.origin.distance_to(target_pos) < 0.1:
+					proxy_is_moving_to_character = false
+			else:
+				var proxy_transform := grabbed_object.global_transform
+				proxy_transform.origin = target_pos
+				character.char_obj_shape.global_transform = proxy_transform
+
 
 func _input(event: InputEvent) -> void:
 
@@ -91,3 +107,11 @@ func _input(event: InputEvent) -> void:
 				movement_speed = 2
 			else:
 				movement_speed = 1
+
+
+func push_rigidbodies_on_contact():
+	
+	pass
+	#create array of all objects in objects container
+			#var push_dir = (body.global_transform.origin - character.global_transform.origin).normalized()
+			#body.apply_central_force(push_dir * 100.0)  # Adjust strength as needed
