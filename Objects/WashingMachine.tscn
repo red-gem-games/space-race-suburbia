@@ -346,39 +346,38 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_ieqsk")
 
-[node name="Washing_Machine" type="RigidBody3D"]
-collision_layer = 17
-collision_mask = 17
+[node name="WashingMachine" type="RigidBody3D"]
 script = ExtResource("1_hnuj6")
 
-[node name="Front_Wall" type="RigidBody3D" parent="."]
+[node name="FrontWall" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, -0.00484157, 0.898047)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Front_Wall"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="FrontWall"]
 mesh = SubResource("BoxMesh_s6kqv")
 surface_material_override/0 = ExtResource("2_hnuj6")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Front_Wall"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="FrontWall"]
 shape = SubResource("ConvexPolygonShape3D_kbxlq")
 
-[node name="Left_Wall" type="RigidBody3D" parent="."]
+[node name="LeftWall" type="RigidBody3D" parent="."]
 transform = Transform3D(-4.37114e-08, 1, -4.37114e-08, 0, -4.37114e-08, -1, -1, -4.37114e-08, 1.91069e-15, -0.925378, -0.00484157, -0.00133049)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Left_Wall"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="LeftWall"]
 mesh = SubResource("BoxMesh_s6kqv")
 surface_material_override/0 = ExtResource("2_hnuj6")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Left_Wall"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="LeftWall"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.35189e-23, 0, -8.35188e-23, 1, 0, 0, 0)
 shape = SubResource("ConvexPolygonShape3D_kbxlq")
 
-[node name="Right_Wall" type="RigidBody3D" parent="."]
+[node name="RightWall" type="RigidBody3D" parent="."]
 transform = Transform3D(-4.37114e-08, 1, -4.37114e-08, 0, -4.37114e-08, -1, -1, -4.37114e-08, 1.91069e-15, 0.881539, -0.00484157, -0.00133049)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Right_Wall"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="RightWall"]
 mesh = SubResource("BoxMesh_s6kqv")
 surface_material_override/0 = ExtResource("2_hnuj6")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Right_Wall"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RightWall"]
 shape = SubResource("ConvexPolygonShape3D_kbxlq")
 
 [node name="Drum" type="RigidBody3D" parent="."]
@@ -390,54 +389,54 @@ skeleton = NodePath("")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Drum"]
 shape = SubResource("ConvexPolygonShape3D_pql11")
 
-[node name="Back_Panel" type="RigidBody3D" parent="."]
+[node name="BackPanel" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.23296, -0.842713)
 
-[node name="Back_Panel2" type="MeshInstance3D" parent="Back_Panel"]
+[node name="Back_Panel2" type="MeshInstance3D" parent="BackPanel"]
 mesh = SubResource("ArrayMesh_rudyc")
 skeleton = NodePath("")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Back_Panel"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="BackPanel"]
 shape = SubResource("ConvexPolygonShape3D_ce3dm")
 
-[node name="Small_Knob_Green" type="StaticBody3D" parent="Back_Panel"]
+[node name="Small_Knob_Green" type="StaticBody3D" parent="BackPanel"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.53256, 0, 0.128671)
 collision_layer = 0
 collision_mask = 0
 
-[node name="Green_Knob" type="MeshInstance3D" parent="Back_Panel/Small_Knob_Green"]
+[node name="Green_Knob" type="MeshInstance3D" parent="BackPanel/Small_Knob_Green"]
 transform = Transform3D(0.75, 0, 0, 0, 0.75, 0, 0, 0, 0.75, 0, 0, 0)
 mesh = SubResource("ArrayMesh_4el1u")
 skeleton = NodePath("")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Back_Panel/Small_Knob_Green"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="BackPanel/Small_Knob_Green"]
 transform = Transform3D(0.75, 0, 0, 0, 0.75, 0, 0, 0, 0.75, 0, 0, 0)
 shape = SubResource("ConvexPolygonShape3D_bipnr")
 
-[node name="Small_Knob_Red" type="StaticBody3D" parent="Back_Panel"]
+[node name="Small_Knob_Red" type="StaticBody3D" parent="BackPanel"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -0.533, 0, 0.128711)
 collision_layer = 0
 collision_mask = 0
 
-[node name="Red_Knob" type="MeshInstance3D" parent="Back_Panel/Small_Knob_Red"]
+[node name="Red_Knob" type="MeshInstance3D" parent="BackPanel/Small_Knob_Red"]
 transform = Transform3D(0.75, 0, 0, 0, 0.75, 0, 0, 0, 0.75, 0, 0, 0)
 mesh = SubResource("ArrayMesh_av4p2")
 skeleton = NodePath("")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Back_Panel/Small_Knob_Red"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="BackPanel/Small_Knob_Red"]
 transform = Transform3D(0.75, 0, 0, 0, 0.75, 0, 0, 0, 0.75, 0, 0, 0)
 shape = SubResource("ConvexPolygonShape3D_kvag6")
 
-[node name="Gray_Knob" type="StaticBody3D" parent="Back_Panel"]
+[node name="Gray_Knob" type="StaticBody3D" parent="BackPanel"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0.17496)
 collision_layer = 0
 collision_mask = 0
 
-[node name="Gray_Knob" type="MeshInstance3D" parent="Back_Panel/Gray_Knob"]
+[node name="Gray_Knob" type="MeshInstance3D" parent="BackPanel/Gray_Knob"]
 mesh = SubResource("ArrayMesh_6nqae")
 skeleton = NodePath("")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Back_Panel/Gray_Knob"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="BackPanel/Gray_Knob"]
 shape = SubResource("ConvexPolygonShape3D_hg6vh")
 
 [node name="Door" type="RigidBody3D" parent="."]

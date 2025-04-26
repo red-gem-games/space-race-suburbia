@@ -20,7 +20,7 @@ var object_global_position: Vector3
 
 var object_position_timer: Timer = Timer.new()
 
-var proxy_is_moving_to_character := false
+var proxy_is_moving_to_character: bool = false
 
 # Desired fixed distance in front of the character (adjust as needed)
 var base_distance_in_front: float = 6
@@ -34,8 +34,6 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	
-	push_rigidbodies_on_contact()
-	
 	# When an object is grabbed:
 	if character.object_is_grabbed and not object_is_grabbed:
 		character.pitch_set = false
@@ -44,6 +42,11 @@ func _process(delta: float) -> void:
 		grabbed_object = character.grabbed_object 
 		grabbed_object.reparent(character.grabbed_container)
 		grabbed_object.world_object_container = object_container
+		if grabbed_object.is_extracted:
+			var machine_name = grabbed_object.name.split("_", true, 1)[0]
+			var part_name = grabbed_object.name.split("_", true, 1)[1]
+			print("Came from machine:", machine_name)
+			print("This part is:", part_name)
 		reset_rotation = true
 		object_is_grabbed = true
 	
@@ -107,11 +110,3 @@ func _input(event: InputEvent) -> void:
 				movement_speed = 2
 			else:
 				movement_speed = 1
-
-
-func push_rigidbodies_on_contact():
-	
-	pass
-	#create array of all objects in objects container
-			#var push_dir = (body.global_transform.origin - character.global_transform.origin).normalized()
-			#body.apply_central_force(push_dir * 100.0)  # Adjust strength as needed

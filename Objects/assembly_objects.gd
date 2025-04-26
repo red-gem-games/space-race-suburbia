@@ -14,7 +14,13 @@ var object_speed: Vector3
 var object_speed_y: float
 
 var assembly_parts: Array[RigidBody3D] = []
-var has_been_extracted: bool = false
+var is_extracted: bool = false
+
+var damp_set: bool = false
+var target_damp: float = 100.0
+var starting_damp: float = 10.0
+var damp_ramp_time: float = 0.5  # 1 second total
+var damp_elapsed_time: float = 0.0
 
 var glow_body: MeshInstance3D
 var shader: Shader
@@ -77,27 +83,42 @@ func _ready() -> void:
 			child.collision_layer = 0
 			child.collision_mask = 0
 			child.freeze = true
-			print('****** ADD THE MAIN BODY NAME TO THE CHILD NAME TO KEEP TRACK******')
+			child.name = "%s_%s" % [name, child.name]  # <--- this is the new line
+		
 			print('I, ', child.name, ' am an assembly part!')
-	
+
 	set_physics_process(true)
 
 func _physics_process(delta: float) -> void:
-	pass
+	
+	if is_extracted:
+		print(name, ' ', linear_damp)
+	
+	if not damp_set:
+		if not is_grabbed:
+			if global_position.y < -0.5 or global_position.z < -0.5:
+				damp_elapsed_time += delta
+				var t = clamp(damp_elapsed_time / damp_ramp_time, 0.0, 1.0)
+				linear_damp = lerp(starting_damp, target_damp, t)
+				angular_damp = lerp(starting_damp, target_damp, t)
+				
+				if t >= 1.0:
+					contact_monitor = false
+					damp_set = true
+
+	if is_grabbed:
+		linear_damp = 0
+		angular_damp = 0
+		contact_monitor = true
+		damp_set = false
+		damp_elapsed_time = 0.0
 
 func _on_body_shape_entered(body_rid: RID, body: Node, body_shape_index: int, local_shape_index: int) -> void:
-	if body is CharacterBody3D:
-		print('hello????')
-		body.colliding_with_object = true
-		colliding_with_character = true
 	if is_grabbed and body is RigidBody3D:
 		#print(name, ' >>> is now touching >>> ', body.name)
 		pass
 
 func _on_body_shape_exited(body_rid: RID, body: Node, body_shape_index: int, local_shape_index: int) -> void:
-	if body is CharacterBody3D:
-		body.colliding_with_object = false
-		colliding_with_character = false
 	if is_grabbed and body is RigidBody3D:
 		#print(name, ' ||| no longer touching ||| ', body.name)
 		pass
@@ -211,6 +232,7 @@ func extract_parts():
 		part.gravity_scale = 0.0
 		part.is_grabbed = false
 		part.is_released = false
+		part.is_extracted = true
 		print(part.mass)
 		
 	visible = false

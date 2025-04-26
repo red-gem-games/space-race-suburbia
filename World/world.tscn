@@ -3,8 +3,8 @@
 [ext_resource type="PackedScene" uid="uid://f722yn8gdiyj" path="res://Character/character.tscn" id="1_f3sb7"]
 [ext_resource type="Script" uid="uid://cpdnlycwlet2q" path="res://World/world.gd" id="1_tlwt5"]
 [ext_resource type="Shader" uid="uid://dywmpt1g3j23k" path="res://Shaders/grass.gdshader" id="2_fj7yv"]
-[ext_resource type="PackedScene" uid="uid://cvtdsd7mu2wv" path="res://Objects/washing_machine.tscn" id="4_036b0"]
-[ext_resource type="PackedScene" uid="uid://diw15u24g3w3h" path="res://Objects/drying_machine.tscn" id="6_dwbse"]
+[ext_resource type="PackedScene" uid="uid://cvtdsd7mu2wv" path="res://Objects/WashingMachine.tscn" id="4_036b0"]
+[ext_resource type="PackedScene" uid="uid://diw15u24g3w3h" path="res://Objects/DryingMachine.tscn" id="6_dwbse"]
 [ext_resource type="Shader" uid="uid://cgn0qf8wluwxh" path="res://Shaders/garage_floor.gdshader" id="6_eidgh"]
 [ext_resource type="Script" uid="uid://clwwid0cs6u32" path="res://Objects/assembly_objects.gd" id="6_w47uh"]
 [ext_resource type="Texture2D" uid="uid://dpi43v27xa8kb" path="res://Assets/Textures/cracked_concrete_disp_1k.png" id="7_oe8m4"]
@@ -128,16 +128,16 @@ mesh = SubResource("PlaneMesh_fj7yv")
 environment = SubResource("Environment_tlwt5")
 
 [node name="Character" parent="." instance=ExtResource("1_f3sb7")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.383, 7.87488, 46.6999)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.383, 2.48471, 46.6999)
 
 [node name="Objects" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.7833, 0, 39.6017)
 
-[node name="Drying_Machine" parent="Objects" instance=ExtResource("6_dwbse")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -6.8241, 0, 3.92467)
-
-[node name="Washing_Machine" parent="Objects" instance=ExtResource("4_036b0")]
+[node name="WashingMachine" parent="Objects" instance=ExtResource("4_036b0")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -6.82642, 0, 6.56096)
+
+[node name="DryingMachine" parent="Objects" instance=ExtResource("6_dwbse")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -6.8241, 0, 3.92467)
 
 [node name="Stepladder" type="RigidBody3D" parent="Objects"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.1505, -0.685292, -13.7328)

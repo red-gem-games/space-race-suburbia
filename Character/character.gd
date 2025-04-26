@@ -2,6 +2,7 @@ extends CharacterBody3D
 class_name character
 
 const is_character: bool = true
+var start_day: bool = false
 
 @onready var collision_shape: CollisionShape3D = $CollisionShape3D
 @onready var grabbed_anim: AnimationPlayer = $Grabbed_Animation
@@ -12,6 +13,16 @@ const is_character: bool = true
 @onready var char_obj_shape: CollisionShape3D
 
 var colliding_with_object: bool = false
+
+# Moving to physics process
+var desired_direction := Vector3.ZERO
+var desired_velocity := Vector3.ZERO
+
+
+var push_force: float = 50.0
+var push_force_multiplier: float = 5
+var pushed_bodies: Array = []
+
 
 var glow_color: Color
 
@@ -67,9 +78,13 @@ var right_mouse_down: bool = false
 var middle_mouse_down: bool = false
 
 var mode_1: String = "SHIFT"
-var mode_2: String = "EXTRACT"
-var mode_3: String = "SUSPEND"
+var mode_2: String = "SUSPEND"
+var mode_3: String = "EXTRACT"
 var mode_4: String = "FUSE"
+var mode_1_color: Color = Color.WEB_GREEN
+var mode_2_color: Color = Color.DARK_GOLDENROD
+var mode_3_color: Color = Color.DARK_RED
+var mode_4_color: Color = Color.MIDNIGHT_BLUE
 var modes = [mode_1, mode_2, mode_3, mode_4]
 var current_mode: String = mode_1
 var pending_mode: String = ""  # Holds the pending mode change
@@ -93,6 +108,11 @@ var mouse_speed: float = base_mouse_speed
 var smoothing: float = 0.05  # Smoothing factor (0-1)
 var current_mouse_speed_x: float
 var current_mouse_speed_y: float
+
+var target_pitch_min: float
+var pitch_min_lerp_speed: float = 5.0  # Higher = faster adjustment
+var grounded_grabbed_pitch_min: float = deg_to_rad(-10.0)  # Limit downward look when grounded with object
+
 
 # Variables for camera rotation
 var desired_yaw: float = 0.0
@@ -158,9 +178,6 @@ var bounce_decay: float = 0.1
 var scroll_cooldown := 0.0
 var scroll_cooldown_duration := 0.05  # Adjust to taste (0.1–0.2 is typical)
 
-var start_day: bool = false
-
-
 
 
 
@@ -174,64 +191,17 @@ func _ready() -> void:
 	prem7_original_rotation = PREM_7.rotation
 
 
-##----------------------------------------##
-##------------PROCESS RESPONSE------------##
-##----------------------------------------##
-
-
-func _process(delta: float) -> void:
-	
-	
-	if scroll_cooldown > 0.0:
-		scroll_cooldown -= delta
-	
-	# -------------------
-	# Jetpack Logic
-	# -------------------
+func _physics_process(delta: float) -> void:
+	# Update ground distance
 	distance_to_ground = raycast_to_ground()
-	if distance_to_ground > 5.0:
-		airborne = true
 
-	# Update thrust and acceleration values
-	if jetpack_active:
-		handle_jetpack('1', delta)
-	else:
-		handle_jetpack('2', delta)
-		if hover_lock:
-			handle_jetpack('7', delta)
-		elif current_jetpack_thrust > min_thrust_threshold:
-			handle_jetpack('3', delta)
+	# Update jetpack thrust, hover, ceiling logic
+	handle_jetpack_logic(delta)
 
-	if current_jetpack_thrust > min_thrust_threshold:
-		# Actively rising
-		handle_jetpack('3', delta)
+	# Handle grounded/airborne vertical velocity
+	update_vertical_velocity()
 
-	elif not is_on_floor():
-		# Jetpack is no longer active, but player is airborne
-		if not touching_ceiling:
-			if vertical_velocity > 0:
-				handle_jetpack('4', delta)
-				# Clamp vertical velocity close to zero to avoid endless float
-				if abs(vertical_velocity) < 0.25:
-					vertical_velocity = 0.0
-
-			else:
-				# Now descending — use your hover gravity
-				if distance_to_ground < 8:
-					handle_jetpack('5', delta)
-				else:
-					handle_jetpack('6', delta)
-		else:
-			handle_jetpack('6', delta)
-	else:
-		# On the ground
-		vertical_velocity = 0.0
-
-	velocity.y = vertical_velocity
-
-	# -------------------
-	# Horizontal Movement
-	# -------------------
+	# Handle basic directional input
 	var vertical = 0
 	var horizontal = 0
 
@@ -251,149 +221,62 @@ func _process(delta: float) -> void:
 
 	var desired_velocity = desired_direction * movement_speed
 	current_velocity = current_velocity.lerp(desired_velocity, smoothing)
+
 	velocity.x = current_velocity.x
 	velocity.z = current_velocity.z
+	velocity.y = vertical_velocity
 
-	move_and_slide()
+	# Push RigidBodies when colliding
+	handle_pushing_rigidbodies(delta)
 
-	# -------------------
-	# Landing Check
-	# -------------------
+	# Landing check
 	if is_on_floor() and not grounded:
 		vertical_velocity = 0.0
 		airborne = false
 		grounded = true
-
-	# -------------------
-	# Grounded vs. Airborne Settings
-	# -------------------
-	if grounded:
-		if grabbed_object:
-			pass
-			#pitch_min = grab_pitch_min + distance_factor / 1.5
-			#pitch_max = grab_pitch_max - height_factor
-		else:
-			if not pitch_set:
-				pitch_min = base_pitch_min
-				pitch_max = base_pitch_max
-				pitch_set = true
-		if not start_day:
-			print("When's liftoff scheduled for, again? Let's get started.")
-			print("Change color of 'SUSPEND' - Blue doesn't work because of the sky")
-			$Phantom_Body/CollisionShape3D.disabled = false
-			start_day = true
-
-	if airborne:
+	elif not is_on_floor():
 		grounded = false
-		var delta_y = position.y - last_y
-		height_factor += delta_y * change_rate
-		height_factor = clamp(height_factor, 0.0, 1.0)
-		
-		
-		if position.y > ceiling_threshold:
-			touching_ceiling = true
-		elif position.y < ceiling_threshold:
-			touching_ceiling = false
-
-		var fall_speed_factor = 0.0
-		if vertical_velocity > 0:
-			fall_speed_factor = -vertical_velocity * fall_sensitivity
-		else:
-			fall_speed_factor = -vertical_velocity * fall_sensitivity + distance_factor / 2
-
-		if grabbed_object:
-			pass
-			#pitch_min = grab_pitch_min + distance_factor - height_factor + fall_speed_factor
-			#pitch_max = grab_pitch_max - height_factor + fall_speed_factor
-		else:
-			pitch_min = base_pitch_min
-			pitch_max = base_pitch_max
-		if not touching_ceiling:
-			last_y = position.y
+		airborne = true
 
 
 
-	# -------------------
-	# Reticle Targeting
-	# -------------------
-	var space_state = get_world_3d().direct_space_state
-	var from = camera.global_transform.origin
-	var to = from + (-camera.global_transform.basis.z) * 100.0
+	# Grabbed object physics update
+	update_grabbed_object_physics(delta)
 
-	var query = PhysicsRayQueryParameters3D.new()
-	query.from = from
-	query.to = to
-	query.exclude = [self]
-	var result = space_state.intersect_ray(query)
 
-	if result and not grabbed_object:
-		var collider = result.collider
-		if collider is RigidBody3D and not collider.is_rocketship and not collider.phantom_body:
-			match current_mode:
-				mode_1: hud_reticle.modulate = Color.GREEN
-				mode_2: hud_reticle.modulate = Color.RED
-				mode_3: hud_reticle.modulate = Color.AQUA
-				mode_4: hud_reticle.modulate = Color.PURPLE
-				_: hud_reticle.modulate = Color.WHITE
-		else:
-			hud_reticle.modulate = Color.WHITE
-	elif not result:
-		hud_reticle.modulate = Color.WHITE
-	# -------------------
-	# Camera Smoothing
-	# -------------------
+func _process(delta: float) -> void:
 	
+	if scroll_cooldown > 0.0:
+		scroll_cooldown -= delta
+	
+	# Dynamically adjust pitch_min when grounded and grabbing an object
+	if grounded and grabbed_object:
+		# Prevent looking too far down when grounded with object
+		pitch_min = deg_to_rad(-10)  # You can tweak this; -10 degrees downward allowed
+	else:
+		# Otherwise, normal freedom
+		pitch_min = base_pitch_min
+
+	
+	# Smooth camera yaw and pitch
 	desired_pitch = clamp(desired_pitch, pitch_min, pitch_max)
 	yaw = lerp(yaw, desired_yaw, smoothing)
 	pitch = lerp(pitch, desired_pitch, smoothing)
 	rotation.y = yaw
 	camera.rotation.x = pitch
 
-	# -------------------
-	# PREM-7 Mouse Decay
-	# -------------------
-	var time_since_last = (Time.get_ticks_msec() - last_mouse_time) / 1000.0
-	if last_mouse_speed < mouse_speed_threshold or time_since_last > 0.05:
-		prem7_rotation_offset = prem7_rotation_offset.lerp(Vector3.ZERO, prem7_decay_speed * delta)
-		PREM_7.rotation = prem7_original_rotation + prem7_rotation_offset
-		object_sway_offset.x = lerp(object_sway_offset.x, 0.0, object_sway_decay_x * delta)
-		object_sway_offset.y = lerp(object_sway_offset.y, 0.0, object_sway_decay_y * delta)
+	move_and_slide()
 
+	# PREM-7 mouse decay effect
+	handle_prem7_decay(delta)
 
+	# Update HUD Reticle target and color
+	update_reticle_targeting()
 
-	# -------------------
-	# Object Grabbing Logic
-	# -------------------
+	# Update grabbed object sway
 	if grabbed_object:
-		match current_mode:
-			mode_1: hud_reticle.modulate = Color.GREEN
-			mode_2: hud_reticle.modulate = Color.RED
-			mode_3: hud_reticle.modulate = Color.AQUA
-			mode_4: hud_reticle.modulate = Color.PURPLE
-		
-		## Collision Logic ##
-		var current_position = grabbed_object.global_transform.origin
-		speed_vector = (current_position - last_position) / delta
-		last_position = current_position
-		grabbed_object.object_speed = speed_vector
-		
-		## Sway Logic ##
-		var pitch_range = pitch_max - pitch_min
-		var pitch_center = pitch_min + pitch_range / 2.0
-		var pitch_distance = abs(camera.rotation.x - pitch_center)
-		var max_pitch_distance = pitch_range / 2.0
-		var pitch_factor = 1.0 - clamp(pitch_distance / max_pitch_distance, 0.0, 1.0)
-		object_sway_strength_y = object_sway_base_y * pitch_factor
-		var pitch_offset = clamp(camera.rotation.x, -0.25, 1)
-		var target_y = grabbed_initial_position.y
-		var sway_x = camera.global_transform.basis.x.normalized() * object_sway_offset.x
-		var sway_z = camera.global_transform.basis.y.normalized() * object_sway_offset.y
-		var sway_offset = sway_x + sway_z
-		target_y = clamp(target_y, floor_y, max_y)
-		grabbed_object.position.y = target_y
-		grabbed_object.global_position += sway_offset
-		grabbed_object.rotation_degrees = grabbed_rotation
-		grabbed_object.object_rotation = grabbed_object.global_rotation_degrees
+		update_grabbed_object_sway(delta)
+
 
 ##--------------------------------------##
 ##------------INPUT RESPONSE------------##
@@ -573,7 +456,7 @@ func _input(event: InputEvent) -> void:
 			if airborne:
 				if pressed:
 					hover_lock =! hover_lock
-					print(hover_lock)
+					print('Jetpack & Hover need to be unlocked later in game...')
 					hover_base_y = global_position.y
 					hover_bob_time = 0.0
 		if event.keycode == KEY_SHIFT:
@@ -666,7 +549,7 @@ func grab_object():
 		var result = space_state.intersect_ray(query)
 		if result:
 			var target_body = result.collider
-			if target_body is RigidBody3D and not target_body.is_rocketship and not target_body.phantom_body:
+			if target_body is RigidBody3D and not target_body.is_rocketship:
 				grabbed_object = target_body
 				grabbed_object.angular_velocity = Vector3.ZERO
 				grabbed_object.is_grabbed = true
@@ -679,13 +562,13 @@ func grab_object():
 				hud_reticle.visible = false
 				match current_mode:
 					mode_1:
-						glow_color = Color.GREEN
+						glow_color = mode_1_color
 					mode_2:
-						glow_color = Color.RED
+						glow_color = mode_2_color
 					mode_3:
-						glow_color = Color.AQUA
+						glow_color = mode_3_color
 					mode_4:
-						glow_color = Color.PURPLE
+						glow_color = mode_4_color
 				grabbed_object.set_outline('GRAB', glow_color)
 				grabbed_object.mass = grabbed_object.mass * 2.0
 				grabbed_initial_mouse = get_viewport().get_mouse_position()
@@ -720,12 +603,12 @@ func control_object(status):
 			print("Begin Shifting Object")
 			shifting_object_active = true
 		elif current_mode == mode_2:
+			print("Begin Suspending Object")
+			suspending_object_active = true
+		elif current_mode == mode_3:
 			print("Begin Extracting Object")
 			print('ADD FUNCTIONALITY HERE - Press & Hold for Extraction...object starts to progressively shake until extraction complete')
 			extracting_object_active = true
-		elif current_mode == mode_3:
-			print("Begin Suspending Object")
-			suspending_object_active = true
 		elif current_mode == mode_4:
 			print("Begin Fusing Object")
 			print('ADD FUNCTIONALITY HERE - Press & Hold for Fusion...grabbed object becomes child of object it is fusing to // objects begin to rumble and glow')
@@ -742,14 +625,14 @@ func control_object(status):
 			print("Object has been Shifted!")
 			shifting_object_active = false
 		elif current_mode == mode_2:
-			print("Object has been Extracted!")
-			grab_object()
-			extracting_object_active = false
-		elif current_mode == mode_3:
 			print("Object has been Suspended!")
 			grabbed_object.gravity_scale = 0.0
 			grab_object()
 			suspending_object_active = false
+		elif current_mode == mode_3:
+			print("Object has been Extracted!")
+			grab_object()
+			extracting_object_active = false
 		elif current_mode == mode_4:
 			print("Object has been Fused!")
 			fusing_object_active = false
@@ -817,13 +700,13 @@ func raycast_to_ground() -> float:
 func update_prem7_glow() -> void:
 	match current_mode:
 		mode_1:
-			new_glow_color = Color.GREEN
+			new_glow_color = mode_1_color
 		mode_2:
-			new_glow_color = Color.RED
+			new_glow_color = mode_2_color
 		mode_3:
-			new_glow_color = Color.AQUA
+			new_glow_color = mode_3_color
 		mode_4:
-			new_glow_color = Color.PURPLE
+			new_glow_color = mode_4_color
 		_:
 			new_glow_color = Color.WHITE
 	var back_glow_instance = PREM_7.back_glow
@@ -849,10 +732,10 @@ func change_mode(new_mode: String) -> void:
 
 	if grabbed_object:
 		match current_mode:
-			mode_1: glow_color = Color.GREEN
-			mode_2: glow_color = Color.RED
-			mode_3: glow_color = Color.AQUA
-			mode_4: glow_color = Color.PURPLE
+			mode_1: glow_color = mode_1_color
+			mode_2: glow_color = mode_2_color
+			mode_3: glow_color = mode_3_color
+			mode_4: glow_color = mode_4_color
 			_: glow_color = Color.WHITE
 
 		grabbed_object.set_outline('UPDATE', glow_color)
@@ -864,10 +747,10 @@ func cycle_mode_direction(forward: bool = true) -> void:
 		new_index = modes.size() - 1
 	change_mode(modes[new_index])
 	match current_mode:
-		mode_1: hud_reticle.modulate = Color.GREEN
-		mode_2: hud_reticle.modulate = Color.RED
-		mode_3: hud_reticle.modulate = Color.AQUA
-		mode_4: hud_reticle.modulate = Color.PURPLE
+		mode_1: hud_reticle.modulate = mode_1_color
+		mode_2: hud_reticle.modulate = mode_2_color
+		mode_3: hud_reticle.modulate = mode_3_color
+		mode_4: hud_reticle.modulate = mode_4_color
 
 func shortest_angle_diff_value(initial_angle: float, target_angle: float) -> float:
 	initial_angle = wrapf(initial_angle, -180.0, 180.0)
@@ -915,3 +798,115 @@ func clear_char_obj_shape():
 	if is_instance_valid(char_obj_shape):
 		char_obj_shape.shape = null
 		char_obj_shape.visible = false
+
+func handle_pushing_rigidbodies(delta: float) -> void:
+	pushed_bodies.clear()
+
+	for i in get_slide_collision_count():
+		var collision = get_slide_collision(i)
+		if collision.get_collider() is RigidBody3D:
+			if collision.get_collider().is_rocketship:
+				return
+			var body: RigidBody3D = collision.get_collider()
+
+			if not pushed_bodies.size() > 0:
+				var player_speed = velocity.length()
+				var dynamic_push_force = player_speed * push_force_multiplier
+
+				# Decay impulse based on collision strength and delta time
+				dynamic_push_force *= 0.75  # Softens impulse
+				dynamic_push_force = clamp(dynamic_push_force, 5.0, 10.0)
+
+				body.apply_central_impulse(-collision.get_normal() * dynamic_push_force)
+
+				pushed_bodies.append(body)
+
+func handle_jetpack_logic(delta: float) -> void:
+	if jetpack_active:
+		handle_jetpack('1', delta)
+	else:
+		handle_jetpack('2', delta)
+		if hover_lock:
+			handle_jetpack('7', delta)
+		elif current_jetpack_thrust > min_thrust_threshold:
+			handle_jetpack('3', delta)
+
+func update_vertical_velocity() -> void:
+	if current_jetpack_thrust > min_thrust_threshold:
+		handle_jetpack('3', get_process_delta_time())
+	elif not is_on_floor():
+		if not touching_ceiling:
+			if vertical_velocity > 0:
+				handle_jetpack('4', get_process_delta_time())
+				if abs(vertical_velocity) < 0.25:
+					vertical_velocity = 0.0
+			else:
+				if distance_to_ground < 8:
+					handle_jetpack('5', get_process_delta_time())
+				else:
+					handle_jetpack('6', get_process_delta_time())
+		else:
+			handle_jetpack('6', get_process_delta_time())
+	else:
+		vertical_velocity = 0.0
+
+func update_reticle_targeting() -> void:
+	var space_state = get_world_3d().direct_space_state
+	var from = camera.global_transform.origin
+	var to = from + (-camera.global_transform.basis.z) * 100.0
+
+	var query = PhysicsRayQueryParameters3D.new()
+	query.from = from
+	query.to = to
+	query.exclude = [self]
+
+	var result = space_state.intersect_ray(query)
+
+	if result and not grabbed_object:
+		var collider = result.collider
+		if collider is RigidBody3D and not collider.is_rocketship:
+			match current_mode:
+				mode_1: hud_reticle.modulate = mode_1_color
+				mode_2: hud_reticle.modulate = mode_2_color
+				mode_3: hud_reticle.modulate = mode_3_color
+				mode_4: hud_reticle.modulate = mode_4_color
+				_: hud_reticle.modulate = Color.WHITE
+		else:
+			hud_reticle.modulate = Color.WHITE
+	else:
+		hud_reticle.modulate = Color.WHITE
+
+func handle_prem7_decay(delta: float) -> void:
+	var time_since_last = (Time.get_ticks_msec() - last_mouse_time) / 1000.0
+	if last_mouse_speed < mouse_speed_threshold or time_since_last > 0.05:
+		prem7_rotation_offset = prem7_rotation_offset.lerp(Vector3.ZERO, prem7_decay_speed * delta)
+		PREM_7.rotation = prem7_original_rotation + prem7_rotation_offset
+		object_sway_offset.x = lerp(object_sway_offset.x, 0.0, object_sway_decay_x * delta)
+		object_sway_offset.y = lerp(object_sway_offset.y, 0.0, object_sway_decay_y * delta)
+
+func update_grabbed_object_physics(delta: float) -> void:
+	if not grabbed_object:
+		return
+	
+	var current_position = grabbed_object.global_transform.origin
+	speed_vector = (current_position - last_position) / delta
+	last_position = current_position
+	grabbed_object.object_speed = speed_vector
+
+func update_grabbed_object_sway(delta: float) -> void:
+	var pitch_range = pitch_max - pitch_min
+	var pitch_center = pitch_min + pitch_range / 2.0
+	var pitch_distance = abs(camera.rotation.x - pitch_center)
+	var max_pitch_distance = pitch_range / 2.0
+	var pitch_factor = 1.0 - clamp(pitch_distance / max_pitch_distance, 0.0, 1.0)
+	object_sway_strength_y = object_sway_base_y * pitch_factor
+	var pitch_offset = clamp(camera.rotation.x, -0.25, 1)
+	var target_y = grabbed_initial_position.y
+	var sway_x = camera.global_transform.basis.x.normalized() * object_sway_offset.x
+	var sway_z = camera.global_transform.basis.y.normalized() * object_sway_offset.y
+	var sway_offset = sway_x + sway_z
+	target_y = clamp(target_y, floor_y, max_y)
+	grabbed_object.position.y = target_y
+	grabbed_object.global_position += sway_offset
+	grabbed_object.rotation_degrees = grabbed_rotation
+	grabbed_object.object_rotation = grabbed_object.global_rotation_degrees

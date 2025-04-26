@@ -28,3 +28,6 @@ window/stretch/aspect="expand"
 [physics]
 
 3d/default_gravity=19.6
+3d/default_linear_damp=0.25
+3d/default_angular_damp=0.25
+3d/solver/solver_iterations=60
