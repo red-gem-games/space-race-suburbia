@@ -1,7 +1,7 @@
 extends Node3D
 class_name world
 
-@onready var object_container: Node3D = $Objects
+@onready var assembly_object_container: Node3D = $Assembly_Objects
 var assembly_object_array: Array[RigidBody3D]
 
 @onready var character: CharacterBody3D = $Character
@@ -33,6 +33,10 @@ func _ready() -> void:
 	add_child(object_position_timer)
 
 func _process(delta: float) -> void:
+	#var assembly_object_children = assembly_object_container.get_children()
+	#for object in assembly_object_children:
+		#if object.colliding_with_character:
+			#character.apply_resistance_based_on_mass(object.mass)
 	
 	# When an object is grabbed:
 	if character.object_is_grabbed and not object_is_grabbed:
@@ -41,12 +45,12 @@ func _process(delta: float) -> void:
 		proxy_is_moving_to_character = true
 		grabbed_object = character.grabbed_object 
 		grabbed_object.reparent(character.grabbed_container)
-		grabbed_object.world_object_container = object_container
+		grabbed_object.world_object_container = assembly_object_container
 		if grabbed_object.is_extracted:
 			var machine_name = grabbed_object.name.split("_", true, 1)[0]
 			var part_name = grabbed_object.name.split("_", true, 1)[1]
-			print("Came from machine:", machine_name)
-			print("This part is:", part_name)
+			print("Came from machine: ", machine_name)
+			print("This part is: ", part_name)
 		reset_rotation = true
 		object_is_grabbed = true
 	
@@ -54,7 +58,7 @@ func _process(delta: float) -> void:
 	elif not character.object_is_grabbed and object_is_grabbed:
 		if not is_instance_valid(grabbed_object):
 			return
-		grabbed_object.reparent(object_container)
+		grabbed_object.reparent(assembly_object_container)
 		grabbed_object.global_position = object_global_position
 		grabbed_object.global_position.y += 0.05
 		character.distance_from_character = base_distance_in_front

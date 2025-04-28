@@ -89,7 +89,6 @@ _data = {
 }
 
 [node name="Character" type="CharacterBody3D"]
-safe_margin = 0.1
 script = ExtResource("1_pjt0s")
 
 [node name="Camera3D" type="Camera3D" parent="."]

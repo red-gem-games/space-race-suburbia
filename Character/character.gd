@@ -12,17 +12,14 @@ var start_day: bool = false
 @onready var hud_reticle: Control = $HUD.hud_reticle
 @onready var char_obj_shape: CollisionShape3D
 
-var colliding_with_object: bool = false
+var colliding_with_assembly_object: bool = false
+var assembly_object_mass: float
+var player_moving_forward: bool = false
 
 # Moving to physics process
 var desired_direction := Vector3.ZERO
 var desired_velocity := Vector3.ZERO
-
-
-var push_force: float = 50.0
-var push_force_multiplier: float = 5
-var pushed_bodies: Array = []
-
+var movement_resistance: float = 0.0
 
 var glow_color: Color
 
@@ -77,17 +74,18 @@ var left_mouse_down: bool = false
 var right_mouse_down: bool = false
 var middle_mouse_down: bool = false
 
-var mode_1: String = "SHIFT"
-var mode_2: String = "SUSPEND"
-var mode_3: String = "EXTRACT"
-var mode_4: String = "FUSE"
-var mode_1_color: Color = Color.WEB_GREEN
-var mode_2_color: Color = Color.DARK_GOLDENROD
-var mode_3_color: Color = Color.DARK_RED
-var mode_4_color: Color = Color.MIDNIGHT_BLUE
-var modes = [mode_1, mode_2, mode_3, mode_4]
-var current_mode: String = mode_1
+const MODE_1: String = "SHIFT"
+const MODE_2: String = "SUSPEND"
+const MODE_3: String = "EXTRACT"
+const MODE_4: String = "FUSE"
+const MODE_1_COLOR: Color = Color.GREEN
+const MODE_2_COLOR: Color = Color.CYAN
+const MODE_3_COLOR: Color = Color.RED
+const MODE_4_COLOR: Color = Color.PURPLE
+var modes = [MODE_1, MODE_2, MODE_3, MODE_4]
+var current_mode: String = MODE_1
 var pending_mode: String = ""  # Holds the pending mode change
+
 var pending_mode_key: int = 0  # Will store the keycode of the mode key that triggered pending_mode
 var shifting_object_active: bool = false
 var extracting_object_active: bool = false
@@ -195,11 +193,6 @@ func _physics_process(delta: float) -> void:
 	# Update ground distance
 	distance_to_ground = raycast_to_ground()
 
-	# Update jetpack thrust, hover, ceiling logic
-	handle_jetpack_logic(delta)
-
-	# Handle grounded/airborne vertical velocity
-	update_vertical_velocity()
 
 	# Handle basic directional input
 	var vertical = 0
@@ -222,12 +215,12 @@ func _physics_process(delta: float) -> void:
 	var desired_velocity = desired_direction * movement_speed
 	current_velocity = current_velocity.lerp(desired_velocity, smoothing)
 
+
 	velocity.x = current_velocity.x
 	velocity.z = current_velocity.z
+	#print('go toward object and stop, then go forward...youll move slower')
 	velocity.y = vertical_velocity
 
-	# Push RigidBodies when colliding
-	handle_pushing_rigidbodies(delta)
 
 	# Landing check
 	if is_on_floor() and not grounded:
@@ -245,6 +238,13 @@ func _physics_process(delta: float) -> void:
 
 
 func _process(delta: float) -> void:
+	
+	
+	# Update jetpack thrust, hover, ceiling logic
+	handle_jetpack_logic(delta)
+
+	# Handle grounded/airborne vertical velocity
+	update_vertical_velocity()
 	
 	if scroll_cooldown > 0.0:
 		scroll_cooldown -= delta
@@ -265,6 +265,7 @@ func _process(delta: float) -> void:
 	rotation.y = yaw
 	camera.rotation.x = pitch
 
+	#_push_away_rigid_bodies()
 	move_and_slide()
 
 	# PREM-7 mouse decay effect
@@ -420,13 +421,13 @@ func _input(event: InputEvent) -> void:
 						var new_mode = ""
 						match event.keycode:
 							KEY_1:
-								new_mode = mode_1
+								new_mode = MODE_1
 							KEY_2:
-								new_mode = mode_2
+								new_mode = MODE_2
 							KEY_3:
-								new_mode = mode_3
+								new_mode = MODE_3
 							KEY_4:
-								new_mode = mode_4
+								new_mode = MODE_4
 						if new_mode == current_mode:
 							print("Already in mode: " + new_mode)
 							return
@@ -521,17 +522,14 @@ func grab_object():
 		grabbed_object.linear_velocity = Vector3.ZERO
 		grabbed_object.set_outline('RELEASE', Color.WHITE)
 		hud_reticle.visible = true
-
 		object_sway_strength_x = object_sway_base_x
 		object_sway_strength_y = object_sway_base_y
 		distance_factor = 0.0
 		grabbed_distance = 0.0
 		grabbed_object.position.z = 0.0
 		grabbed_collision.position.z = 0.0
-		grabbed_object.mass = grabbed_object.mass / 2.0
 		grabbed_object.is_grabbed = false
 		grabbed_object.is_released = true
-		grabbed_object.mass = 10
 		if extracting_object_active and grabbed_object.is_extractable:
 			grabbed_object.extract_parts()
 		object_is_grabbed = false
@@ -561,16 +559,15 @@ func grab_object():
 						grabbed_collision = child
 				hud_reticle.visible = false
 				match current_mode:
-					mode_1:
-						glow_color = mode_1_color
-					mode_2:
-						glow_color = mode_2_color
-					mode_3:
-						glow_color = mode_3_color
-					mode_4:
-						glow_color = mode_4_color
+					MODE_1:
+						glow_color = MODE_1_COLOR
+					MODE_2:
+						glow_color = MODE_2_COLOR
+					MODE_3:
+						glow_color = MODE_3_COLOR
+					MODE_4:
+						glow_color = MODE_4_COLOR
 				grabbed_object.set_outline('GRAB', glow_color)
-				grabbed_object.mass = grabbed_object.mass * 2.0
 				grabbed_initial_mouse = get_viewport().get_mouse_position()
 				grabbed_distance = (grabbed_object.global_transform.origin - camera.global_transform.origin).length()
 				grabbed_initial_rotation = rotation_degrees
@@ -582,9 +579,9 @@ func grab_object():
 				grabbed_rotation.y = shortest_angle_diff_value(grabbed_initial_rotation.y, grabbed_global_rotation.y)
 				grabbed_rotation.z = shortest_angle_diff_value(grabbed_initial_rotation.z, grabbed_global_rotation.z)
 				object_is_grabbed = true
-				grabbed_object.mass = 100
-				grabbed_object.gravity_scale = 1.5
+				grabbed_object.gravity_scale = 1.0
 				grabbed_object.collision_shape.disabled = true
+				grabbed_object.is_touching_ground = false
 				create_char_obj_shape(grabbed_object)
 
 			else:
@@ -599,17 +596,17 @@ func control_object(status):
 		PREM_7.trig_anim.play("RESET")
 		PREM_7.trig_anim.play("trigger_pull")
 		grabbed_object.set_outline('ENHANCE', glow_color)
-		if current_mode == mode_1:
+		if current_mode == MODE_1:
 			print("Begin Shifting Object")
 			shifting_object_active = true
-		elif current_mode == mode_2:
+		elif current_mode == MODE_2:
 			print("Begin Suspending Object")
 			suspending_object_active = true
-		elif current_mode == mode_3:
+		elif current_mode == MODE_3:
 			print("Begin Extracting Object")
 			print('ADD FUNCTIONALITY HERE - Press & Hold for Extraction...object starts to progressively shake until extraction complete')
 			extracting_object_active = true
-		elif current_mode == mode_4:
+		elif current_mode == MODE_4:
 			print("Begin Fusing Object")
 			print('ADD FUNCTIONALITY HERE - Press & Hold for Fusion...grabbed object becomes child of object it is fusing to // objects begin to rumble and glow')
 			fusing_object_active = true
@@ -621,19 +618,19 @@ func control_object(status):
 		PREM_7.trig_anim.play("RESET")
 		grabbed_object.set_outline('DIM', glow_color)
 		print(glow_color)
-		if current_mode == mode_1:
+		if current_mode == MODE_1:
 			print("Object has been Shifted!")
 			shifting_object_active = false
-		elif current_mode == mode_2:
+		elif current_mode == MODE_2:
 			print("Object has been Suspended!")
 			grabbed_object.gravity_scale = 0.0
 			grab_object()
 			suspending_object_active = false
-		elif current_mode == mode_3:
+		elif current_mode == MODE_3:
 			print("Object has been Extracted!")
 			grab_object()
 			extracting_object_active = false
-		elif current_mode == mode_4:
+		elif current_mode == MODE_4:
 			print("Object has been Fused!")
 			fusing_object_active = false
 		collision_layer = 1
@@ -699,14 +696,14 @@ func raycast_to_ground() -> float:
 
 func update_prem7_glow() -> void:
 	match current_mode:
-		mode_1:
-			new_glow_color = mode_1_color
-		mode_2:
-			new_glow_color = mode_2_color
-		mode_3:
-			new_glow_color = mode_3_color
-		mode_4:
-			new_glow_color = mode_4_color
+		MODE_1:
+			new_glow_color = MODE_1_COLOR
+		MODE_2:
+			new_glow_color = MODE_2_COLOR
+		MODE_3:
+			new_glow_color = MODE_3_COLOR
+		MODE_4:
+			new_glow_color = MODE_4_COLOR
 		_:
 			new_glow_color = Color.WHITE
 	var back_glow_instance = PREM_7.back_glow
@@ -732,10 +729,10 @@ func change_mode(new_mode: String) -> void:
 
 	if grabbed_object:
 		match current_mode:
-			mode_1: glow_color = mode_1_color
-			mode_2: glow_color = mode_2_color
-			mode_3: glow_color = mode_3_color
-			mode_4: glow_color = mode_4_color
+			MODE_1: glow_color = MODE_1_COLOR
+			MODE_2: glow_color = MODE_2_COLOR
+			MODE_3: glow_color = MODE_3_COLOR
+			MODE_4: glow_color = MODE_4_COLOR
 			_: glow_color = Color.WHITE
 
 		grabbed_object.set_outline('UPDATE', glow_color)
@@ -747,10 +744,10 @@ func cycle_mode_direction(forward: bool = true) -> void:
 		new_index = modes.size() - 1
 	change_mode(modes[new_index])
 	match current_mode:
-		mode_1: hud_reticle.modulate = mode_1_color
-		mode_2: hud_reticle.modulate = mode_2_color
-		mode_3: hud_reticle.modulate = mode_3_color
-		mode_4: hud_reticle.modulate = mode_4_color
+		MODE_1: hud_reticle.modulate = MODE_1_COLOR
+		MODE_2: hud_reticle.modulate = MODE_2_COLOR
+		MODE_3: hud_reticle.modulate = MODE_3_COLOR
+		MODE_4: hud_reticle.modulate = MODE_4_COLOR
 
 func shortest_angle_diff_value(initial_angle: float, target_angle: float) -> float:
 	initial_angle = wrapf(initial_angle, -180.0, 180.0)
@@ -799,28 +796,6 @@ func clear_char_obj_shape():
 		char_obj_shape.shape = null
 		char_obj_shape.visible = false
 
-func handle_pushing_rigidbodies(delta: float) -> void:
-	pushed_bodies.clear()
-
-	for i in get_slide_collision_count():
-		var collision = get_slide_collision(i)
-		if collision.get_collider() is RigidBody3D:
-			if collision.get_collider().is_rocketship:
-				return
-			var body: RigidBody3D = collision.get_collider()
-
-			if not pushed_bodies.size() > 0:
-				var player_speed = velocity.length()
-				var dynamic_push_force = player_speed * push_force_multiplier
-
-				# Decay impulse based on collision strength and delta time
-				dynamic_push_force *= 0.75  # Softens impulse
-				dynamic_push_force = clamp(dynamic_push_force, 5.0, 10.0)
-
-				body.apply_central_impulse(-collision.get_normal() * dynamic_push_force)
-
-				pushed_bodies.append(body)
-
 func handle_jetpack_logic(delta: float) -> void:
 	if jetpack_active:
 		handle_jetpack('1', delta)
@@ -866,10 +841,10 @@ func update_reticle_targeting() -> void:
 		var collider = result.collider
 		if collider is RigidBody3D and not collider.is_rocketship:
 			match current_mode:
-				mode_1: hud_reticle.modulate = mode_1_color
-				mode_2: hud_reticle.modulate = mode_2_color
-				mode_3: hud_reticle.modulate = mode_3_color
-				mode_4: hud_reticle.modulate = mode_4_color
+				MODE_1: hud_reticle.modulate = MODE_1_COLOR
+				MODE_2: hud_reticle.modulate = MODE_2_COLOR
+				MODE_3: hud_reticle.modulate = MODE_3_COLOR
+				MODE_4: hud_reticle.modulate = MODE_4_COLOR
 				_: hud_reticle.modulate = Color.WHITE
 		else:
 			hud_reticle.modulate = Color.WHITE
@@ -910,3 +885,35 @@ func update_grabbed_object_sway(delta: float) -> void:
 	grabbed_object.global_position += sway_offset
 	grabbed_object.rotation_degrees = grabbed_rotation
 	grabbed_object.object_rotation = grabbed_object.global_rotation_degrees
+
+
+func _push_away_rigid_bodies():
+	for i in get_slide_collision_count():
+		var c := get_slide_collision(i)
+		var object = c.get_collider()
+		if object is RigidBody3D:
+			# Calculate a force direction
+			var push_dir = -c.get_normal()
+			var velocity_diff_in_push_dir = self.velocity.dot(push_dir) - object.linear_velocity.dot(push_dir)
+			
+			velocity_diff_in_push_dir = max(0.0, velocity_diff_in_push_dir)
+			
+			const CHAR_MASS_KG = 80.0
+			var mass_ratio = min(1.0, CHAR_MASS_KG / object.mass)
+			push_dir.y = 0
+			
+			var push_force = mass_ratio * 10.0
+			
+			object.apply_impulse(push_dir * velocity_diff_in_push_dir * push_force, c.get_position() - object.global_position)
+
+func apply_resistance_based_on_mass(mass: float) -> void:
+	var character_mass = 80.0
+	if mass > character_mass:
+		var excess_mass = mass - character_mass
+		movement_resistance = clamp(excess_mass / 200.0, 0.0, 1.0)
+	else:
+		movement_resistance = 0.0
+	print('Movement Resistance: ', movement_resistance)
+
+	
+	#This did not work when adding it to velocity.z...

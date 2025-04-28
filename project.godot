@@ -25,6 +25,11 @@ window/size/initial_position=Vector2i(-500, 0)
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 
+[global_group]
+
+Stepladder=""
+Ground=""
+
 [physics]
 
 3d/default_gravity=19.6

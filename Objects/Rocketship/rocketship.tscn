@@ -21,6 +21,7 @@ height = 17.3
 radius = 2.368
 
 [node name="Rocketship" type="RigidBody3D"]
+mass = 100000.0
 freeze = true
 continuous_cd = true
 contact_monitor = true

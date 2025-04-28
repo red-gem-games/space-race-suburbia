@@ -347,10 +347,12 @@ blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_ieqsk")
 
 [node name="WashingMachine" type="RigidBody3D"]
+mass = 75.0
 script = ExtResource("1_hnuj6")
 
 [node name="FrontWall" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, -0.00484157, 0.898047)
+mass = 10.0
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="FrontWall"]
 mesh = SubResource("BoxMesh_s6kqv")
@@ -361,6 +363,7 @@ shape = SubResource("ConvexPolygonShape3D_kbxlq")
 
 [node name="LeftWall" type="RigidBody3D" parent="."]
 transform = Transform3D(-4.37114e-08, 1, -4.37114e-08, 0, -4.37114e-08, -1, -1, -4.37114e-08, 1.91069e-15, -0.925378, -0.00484157, -0.00133049)
+mass = 10.0
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="LeftWall"]
 mesh = SubResource("BoxMesh_s6kqv")
@@ -372,6 +375,7 @@ shape = SubResource("ConvexPolygonShape3D_kbxlq")
 
 [node name="RightWall" type="RigidBody3D" parent="."]
 transform = Transform3D(-4.37114e-08, 1, -4.37114e-08, 0, -4.37114e-08, -1, -1, -4.37114e-08, 1.91069e-15, 0.881539, -0.00484157, -0.00133049)
+mass = 10.0
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="RightWall"]
 mesh = SubResource("BoxMesh_s6kqv")
@@ -381,6 +385,7 @@ surface_material_override/0 = ExtResource("2_hnuj6")
 shape = SubResource("ConvexPolygonShape3D_kbxlq")
 
 [node name="Drum" type="RigidBody3D" parent="."]
+mass = 20.0
 
 [node name="Drum" type="MeshInstance3D" parent="Drum"]
 mesh = SubResource("ArrayMesh_ems38")
@@ -391,6 +396,7 @@ shape = SubResource("ConvexPolygonShape3D_pql11")
 
 [node name="BackPanel" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.23296, -0.842713)
+mass = 5.0
 
 [node name="Back_Panel2" type="MeshInstance3D" parent="BackPanel"]
 mesh = SubResource("ArrayMesh_rudyc")
@@ -441,6 +447,7 @@ shape = SubResource("ConvexPolygonShape3D_hg6vh")
 
 [node name="Door" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.00834, 0.0484515)
+mass = 10.0
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Door"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.00331438, 0.0622684)
@@ -453,6 +460,7 @@ shape = SubResource("ConvexPolygonShape3D_fme25")
 
 [node name="Base" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.9691, -0.0164085)
+mass = 10.0
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Base"]
 mesh = SubResource("BoxMesh_s6kqv")
@@ -464,7 +472,7 @@ shape = SubResource("ConvexPolygonShape3D_kbxlq")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00570679, 0.193962, -0.00463867)
 shape = SubResource("BoxShape3D_uhtd6")
-debug_color = Color(0.580641, 0.0919842, 0.225232, 1)
+debug_color = Color(0.98438, 0.578333, 0.63001, 1)
 
 [node name="Body_For_Glow" type="MeshInstance3D" parent="."]
 visible = false

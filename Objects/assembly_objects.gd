@@ -6,6 +6,7 @@ class_name assembly_objects
 var ASSEMBLY_OBJECT_SCRIPT: Script = preload("res://Objects/assembly_objects.gd")
 
 var object_rotation: Vector3
+var is_touching_ground: bool = false
 var is_grabbed: bool = false
 var is_released: bool = false
 var is_extractable: bool = true
@@ -32,6 +33,7 @@ var particles_material: ShaderMaterial
 
 var world_object_container: Node3D
 
+var is_stepladder: bool = false
 var is_rocketship: bool = false
 var is_touching_rocket: bool = false
 var is_resetting: bool = false
@@ -40,6 +42,8 @@ var colliding_with_character: bool = false
 const phantom_body: bool = false
 
 func _ready() -> void:
+	
+	print(name, ' okay okay okay')
 	
 	contact_monitor = true
 	continuous_cd = true
@@ -55,11 +59,21 @@ func _ready() -> void:
 	grab_particles_shader.code = preload("res://Shaders/particle_glow.gdshader").code
 	particles_material = ShaderMaterial.new()
 	
-	mass = 10
+	print(name, ' = ', mass)
+	#mass = 10
 	contact_monitor = true
 	continuous_cd = true
 	max_contacts_reported = 100
 	gravity_scale = 1.25
+	
+	if is_in_group("Stepladder"):
+		is_stepladder = true
+		collision_layer = 1
+		collision_mask = 1
+	
+	else:
+		collision_layer = 2
+		collision_mask = 3
 
 	var base_mesh : MeshInstance3D = null
 	for child in get_children():
@@ -91,21 +105,38 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	
-	if is_extracted:
-		print(name, ' ', linear_damp)
+	print(name, ' is touching ground? ', is_touching_ground)
 	
-	if not damp_set:
-		if not is_grabbed:
-			if global_position.y < -0.5 or global_position.z < -0.5:
-				damp_elapsed_time += delta
-				var t = clamp(damp_elapsed_time / damp_ramp_time, 0.0, 1.0)
-				linear_damp = lerp(starting_damp, target_damp, t)
-				angular_damp = lerp(starting_damp, target_damp, t)
-				
-				if t >= 1.0:
-					contact_monitor = false
-					damp_set = true
+	var up_vector = global_transform.basis.y
+	var alignment = up_vector.dot(Vector3.UP)
 
+	if abs(alignment) < 0.01 and is_touching_ground:
+		if not damp_set:
+			dampen_assembly_object(delta)
+		print(name, " is lying flat sideways!")
+	elif alignment > 0.99 and is_touching_ground:
+		if not damp_set:
+			dampen_assembly_object(delta)
+		print(name, " is standing upright!")
+	elif alignment < -0.99 and is_touching_ground:
+		if not damp_set:
+			dampen_assembly_object(delta)
+		print(name, " is upside-down!")
+	#if is_extracted:
+		#print(name, ' ', linear_damp)
+	#
+	#if not damp_set:
+		#if not is_grabbed:
+			#if global_position.y < -0.5 or global_position.z < -0.5:
+				#damp_elapsed_time += delta
+				#var t = clamp(damp_elapsed_time / damp_ramp_time, 0.0, 1.0)
+				#linear_damp = lerp(starting_damp, target_damp, t)
+				#angular_damp = lerp(starting_damp, target_damp, t)
+				#
+				#if t >= 1.0:
+					#contact_monitor = false
+					#damp_set = true
+#
 	if is_grabbed:
 		linear_damp = 0
 		angular_damp = 0
@@ -114,14 +145,30 @@ func _physics_process(delta: float) -> void:
 		damp_elapsed_time = 0.0
 
 func _on_body_shape_entered(body_rid: RID, body: Node, body_shape_index: int, local_shape_index: int) -> void:
-	if is_grabbed and body is RigidBody3D:
-		#print(name, ' >>> is now touching >>> ', body.name)
-		pass
+	if body.is_in_group("Ground"):
+		print(name, ' is touching the ground!')
+		is_touching_ground = true
+	#if body is CharacterBody3D:
+		#pass
+		##body.colliding_with_assembly_object = true
+		##body.assembly_object_mass = mass
+		##body.apply_resistance_based_on_mass(mass)
+	#if is_grabbed and body is RigidBody3D:
+		##print(name, ' >>> is now touching >>> ', body.name)
+		#pass
 
 func _on_body_shape_exited(body_rid: RID, body: Node, body_shape_index: int, local_shape_index: int) -> void:
-	if is_grabbed and body is RigidBody3D:
-		#print(name, ' ||| no longer touching ||| ', body.name)
-		pass
+	pass
+	#if body.is_in_group("Ground"):
+		#print(name, ' is NOT touching the ground!')
+		#is_touching_ground = false
+	#if body is CharacterBody3D:
+		#pass
+		##body.colliding_with_assembly_object = false
+		##body.assembly_object_mass = 0.0
+	#if is_grabbed and body is RigidBody3D:
+		##print(name, ' ||| no longer touching ||| ', body.name)
+		#pass
 
 func set_outline(status: String, color: Color) -> void:
 	if not is_instance_valid(glow_body):
@@ -223,11 +270,6 @@ func extract_parts():
 
 		await get_tree().create_timer(0.001).timeout
 	
-		part.contact_monitor = true
-		part.max_contacts_reported = 1000
-		part.continuous_cd = true
-		part.collision_layer = 1
-		part.collision_mask = 1
 		part.is_extractable = false
 		part.gravity_scale = 0.0
 		part.is_grabbed = false
@@ -238,3 +280,15 @@ func extract_parts():
 	visible = false
 	await get_tree().create_timer(0.5).timeout
 	queue_free()
+
+func dampen_assembly_object(time):
+	damp_elapsed_time += time
+	var t = clamp(damp_elapsed_time / damp_ramp_time, 0.0, 1.0)
+	linear_damp = lerp(starting_damp, target_damp, t)
+	angular_damp = lerp(starting_damp, target_damp, t)
+	
+	if t >= 1.0:
+		contact_monitor = false
+		damp_set = true
+		linear_damp = 0
+		angular_damp = 0
