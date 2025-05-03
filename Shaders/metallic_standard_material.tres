@@ -2,7 +2,10 @@
 
 [resource]
 resource_name = "Primary"
+transparency = 3
+alpha_hash_scale = 0.1
+alpha_antialiasing_mode = 0
 cull_mode = 2
-albedo_color = Color(0.838613, 0.8333, 0.8333, 1)
+albedo_color = Color(0.839216, 0.831373, 0.831373, 1)
 metallic = 0.25
 roughness = 0.5

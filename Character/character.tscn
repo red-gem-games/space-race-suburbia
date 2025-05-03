@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://f722yn8gdiyj"]
+[gd_scene load_steps=13 format=3 uid="uid://f722yn8gdiyj"]
 
 [ext_resource type="PackedScene" uid="uid://bpvm0l41dywjs" path="res://PREM-7/PREM-7.tscn" id="1_glpr6"]
 [ext_resource type="Script" uid="uid://sw8eis2eqpyj" path="res://Character/character.gd" id="1_pjt0s"]
@@ -7,6 +7,111 @@
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_jkkns"]
 radius = 1.25
 height = 4.5
+
+[sub_resource type="Animation" id="Animation_1l6l2"]
+length = 0.001
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Camera3D/Grabbed_Container:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(0, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Camera3D/Grabbed_Container:scale:x")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(1, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Camera3D/Grabbed_Container:scale:y")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(1, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/3/type = "bezier"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Camera3D/Grabbed_Container:scale:z")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(1, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+
+[sub_resource type="Animation" id="Animation_jkkns"]
+resource_name = "extract_negative"
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Camera3D/Grabbed_Container:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0, 0),
+"points": PackedFloat32Array(0, -0.25, 0, 0.25, 0, 0.1, -0.25, 0, 0.25, 0, -0.1, -0.25, 0, 0.25, 0, 0.1, -0.25, 0, 0.25, 0, 0, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0, 0.0993599, 0.20064, 0.29936, 0.4)
+}
+
+[sub_resource type="Animation" id="Animation_q4sqr"]
+resource_name = "extract_positive"
+length = 3.0
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Camera3D/Grabbed_Container:scale:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0),
+"points": PackedFloat32Array(1, -0.25, 0, 0.25, 0, 0.5, -0.25, 0, 0.25, 0, 3, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(1.7316, 2.4309, 2.997)
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Camera3D/Grabbed_Container:scale:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0),
+"points": PackedFloat32Array(1, -0.25, 0, 0.25, 0, 0.5, -0.25, 0, 0.25, 0, 3, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(1.7316, 2.4309, 2.997)
+}
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Camera3D/Grabbed_Container:scale:z")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0),
+"points": PackedFloat32Array(1, -0.25, 0, 0.25, 0, 0.5, -0.25, 0, 0.25, 0, 3, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(1.7316, 2.4309, 2.997)
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_twwou"]
+_data = {
+&"RESET": SubResource("Animation_1l6l2"),
+&"extract_negative": SubResource("Animation_jkkns"),
+&"extract_positive": SubResource("Animation_q4sqr")
+}
 
 [sub_resource type="Animation" id="Animation_a23tb"]
 length = 0.001
@@ -42,6 +147,22 @@ tracks/2/keys = {
 "handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(0, -0.25, 0, 0.25, 0),
 "times": PackedFloat32Array(0)
+}
+
+[sub_resource type="Animation" id="Animation_uerqc"]
+resource_name = "extract_negative"
+length = 0.4
+step = 0.05
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Camera3D/Grabbed_Container:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0, 0),
+"points": PackedFloat32Array(0, -0.25, 0, 0.25, 0, 0.1, -0.25, 0, 0.25, 0, -0.1, -0.25, 0, 0.25, 0, 0.1, -0.25, 0, 0.25, 0, 0, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0, 0.0993599, 0.20064, 0.29936, 0.4)
 }
 
 [sub_resource type="Animation" id="Animation_twwou"]
@@ -85,6 +206,7 @@ tracks/2/keys = {
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_uerqc"]
 _data = {
 &"RESET": SubResource("Animation_a23tb"),
+&"extract_negative": SubResource("Animation_uerqc"),
 &"hover": SubResource("Animation_twwou")
 }
 
@@ -104,7 +226,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.085, 0)
 shape = SubResource("CapsuleShape3D_jkkns")
 debug_color = Color(1, 0.264211, 0.231967, 1)
 
-[node name="Grabbed_Animation" type="AnimationPlayer" parent="."]
+[node name="Extract_Animation" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_twwou")
+}
+
+[node name="Hover_Animation" type="AnimationPlayer" parent="."]
 libraries = {
 &"": SubResource("AnimationLibrary_uerqc")
 }

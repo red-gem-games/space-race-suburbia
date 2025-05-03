@@ -3,19 +3,42 @@ class_name assembly_objects
 
 @onready var collision_shape: CollisionShape3D = $CollisionShape3D
 
+var object_body: MeshInstance3D
+
 var ASSEMBLY_OBJECT_SCRIPT: Script = preload("res://Objects/assembly_objects.gd")
+var GLOW_SHADER := preload("res://Shaders/grabbed_glow.gdshader")
+
 
 var object_rotation: Vector3
 var is_touching_ground: bool = false
+
 var is_grabbed: bool = false
+var recently_grabbed: bool = false
 var is_released: bool = false
-var is_extractable: bool = true
+
+var base_spawn_pos: Vector3
 
 var object_speed: Vector3
 var object_speed_y: float
 
+var is_extractable: bool = true
+var shake_intensity: float = 25.0
+var shake_duration: float = 3.0
+var shake_timer: float = 0.0
+var is_extracting: bool = false
+var is_being_extracted: bool = false
+var extract_in_motion: bool = false
 var assembly_parts: Array[RigidBody3D] = []
-var is_extracted: bool = false
+var is_assembly_part: bool = false
+var is_full_size: bool = false
+
+var base_x_rot: float
+var base_y_rot: float
+var base_z_rot: float
+var base_x_pos: float
+var base_y_pos: float
+var base_z_pos: float
+var ext_z_pos: float
 
 var damp_set: bool = false
 var target_damp: float = 100.0
@@ -41,9 +64,19 @@ var is_resetting: bool = false
 var colliding_with_character: bool = false
 const phantom_body: bool = false
 
+
+### TWEENS ###
+
+var rotate_tween: Tween
+var position_tween: Tween
+var scale_tween: Tween
+
+
+
+
+
+
 func _ready() -> void:
-	
-	print(name, ' okay okay okay')
 	
 	contact_monitor = true
 	continuous_cd = true
@@ -52,15 +85,13 @@ func _ready() -> void:
 	connect("body_shape_exited",  Callable(self, "_on_body_shape_exited"))
 	
 	shader = Shader.new()
-	shader.code = preload("res://Shaders/grabbed_glow.gdshader").code
+	shader.code = GLOW_SHADER.code
 	shader_material = ShaderMaterial.new()
 	
 	grab_particles_shader = Shader.new()
 	grab_particles_shader.code = preload("res://Shaders/particle_glow.gdshader").code
 	particles_material = ShaderMaterial.new()
 	
-	print(name, ' = ', mass)
-	#mass = 10
 	contact_monitor = true
 	continuous_cd = true
 	max_contacts_reported = 100
@@ -78,19 +109,22 @@ func _ready() -> void:
 	var base_mesh : MeshInstance3D = null
 	for child in get_children():
 		if child is MeshInstance3D:
-			base_mesh = child
-			break
+			if child.name != "Body":
+				base_mesh = child
+			else:
+				object_body = child 
+
 	if base_mesh:
 		var outline_mesh : Mesh = base_mesh.mesh.create_outline(0.15)
 		glow_body = MeshInstance3D.new()
-		glow_body.name = "GlowBody"
+		glow_body.name = "Outline"
 		glow_body.mesh = outline_mesh
 		glow_body.material_override = shader_material
-		glow_body.visible = false    # start hidden
+		glow_body.visible = false
 		add_child(glow_body)
 	else:
 		push_warning("%s has no MeshInstance3D child to outline!" % name)
-	
+
 	for child in get_children():
 		if child is RigidBody3D:
 			assembly_parts.append(child)
@@ -98,14 +132,24 @@ func _ready() -> void:
 			child.collision_mask = 0
 			child.freeze = true
 			child.name = "%s_%s" % [name, child.name]  # <--- this is the new line
-		
+
 			print('I, ', child.name, ' am an assembly part!')
 
 	set_physics_process(true)
+	
+	#if is_assembly_part:
+		#scale = Vector3(0.25, 0.25, 0.25)
+
 
 func _physics_process(delta: float) -> void:
 	
-	print(name, ' is touching ground? ', is_touching_ground)
+	#if is_assembly_part and not is_full_size:
+		#scale = Vector3(0.25, 0.25, 0.25)
+	
+	#if is_assembly_part and not is_full_size:
+		#print('huh')
+		#scale_object(self, 5.0, 5.0, 5.0, 2.5, 0.5)
+		#is_full_size = true
 	
 	var up_vector = global_transform.basis.y
 	var alignment = up_vector.dot(Vector3.UP)
@@ -113,64 +157,86 @@ func _physics_process(delta: float) -> void:
 	if abs(alignment) < 0.01 and is_touching_ground:
 		if not damp_set:
 			dampen_assembly_object(delta)
-		print(name, " is lying flat sideways!")
 	elif alignment > 0.99 and is_touching_ground:
 		if not damp_set:
 			dampen_assembly_object(delta)
-		print(name, " is standing upright!")
 	elif alignment < -0.99 and is_touching_ground:
 		if not damp_set:
 			dampen_assembly_object(delta)
-		print(name, " is upside-down!")
-	#if is_extracted:
-		#print(name, ' ', linear_damp)
-	#
-	#if not damp_set:
-		#if not is_grabbed:
-			#if global_position.y < -0.5 or global_position.z < -0.5:
-				#damp_elapsed_time += delta
-				#var t = clamp(damp_elapsed_time / damp_ramp_time, 0.0, 1.0)
-				#linear_damp = lerp(starting_damp, target_damp, t)
-				#angular_damp = lerp(starting_damp, target_damp, t)
-				#
-				#if t >= 1.0:
-					#contact_monitor = false
-					#damp_set = true
-#
+
 	if is_grabbed:
+		base_spawn_pos = global_position
+		object_body.top_level = false
+		object_body.global_transform = global_transform
 		linear_damp = 0
 		angular_damp = 0
 		contact_monitor = true
-		damp_set = false
 		damp_elapsed_time = 0.0
+		damp_set = false
+		if is_in_group("Ground"):
+			remove_from_group("Ground")
+
+func _process(delta: float) -> void:
+
+	
+	### Frame Smoothing ###
+	if not is_grabbed and object_body:
+		object_body.top_level = true
+		object_body.global_transform = object_body.global_transform.interpolate_with(self.global_transform, delta * 25.0)
+	
+	if is_extracting:
+		print('is currently extracting')
+		shake_timer -= delta
+		if not extract_in_motion:
+			extract_object_motion()
+
+
+	if extract_in_motion:
+		if shake_timer < 3.0 and shake_timer > 2.0:
+			rotate_object(object_body, base_x_rot, base_y_rot - 360.0, base_z_rot, 0.0, 0.35)
+			rotate_object(glow_body, base_x_rot, base_y_rot - 360.0, base_z_rot, 0.0, 0.35)
+		elif shake_timer < 2.0 and shake_timer > 1.0:
+			rotate_object(object_body, base_x_rot - 360.0, base_y_rot - 360.0, base_z_rot, 0.0, 0.35)
+			rotate_object(glow_body, base_x_rot - 360.0, base_y_rot - 360.0, base_z_rot, 0.0, 0.35)
+			scale_object(object_body, 1.5, 1.5, 1.5, 0.25, 0.5)
+			scale_object(glow_body, 1.5, 1.5, 1.5, 0.25, 0.5)
+		elif shake_timer < 1.0 and shake_timer > 0.0:
+			rotate_object(object_body, base_x_rot, base_y_rot, base_z_rot, 0.0, 0.35)
+			rotate_object(glow_body, base_x_rot, base_y_rot, base_z_rot, 0.0, 0.35)
+			scale_object(object_body, 0.01, 0.01, 0.01, 0.25, 0.15)
+			scale_object(glow_body, 0.01, 0.01, 0.01, 0.25, 0.15)
+		elif shake_timer <= 0.0:
+			is_being_extracted = true
+			is_extracting = false
+			extract_parts()
+			extract_in_motion = false
+
+
+func dampen_assembly_object(time):
+	damp_elapsed_time += time
+	var t = clamp(damp_elapsed_time / damp_ramp_time, 0.0, 1.0)
+	linear_damp = lerp(starting_damp, target_damp, t)
+	angular_damp = lerp(starting_damp, target_damp, t)
+	gravity_scale = 0.25
+	
+	if t >= 1.0:
+		add_to_group("Ground")
+		contact_monitor = true
+		damp_set = true
+		linear_damp = 10 * mass
+		angular_damp = 0
+		gravity_scale = 1.0
+		damp_elapsed_time = 0.0
+		recently_grabbed = false
 
 func _on_body_shape_entered(body_rid: RID, body: Node, body_shape_index: int, local_shape_index: int) -> void:
 	if body.is_in_group("Ground"):
-		print(name, ' is touching the ground!')
 		is_touching_ground = true
-	#if body is CharacterBody3D:
-		#pass
-		##body.colliding_with_assembly_object = true
-		##body.assembly_object_mass = mass
-		##body.apply_resistance_based_on_mass(mass)
-	#if is_grabbed and body is RigidBody3D:
-		##print(name, ' >>> is now touching >>> ', body.name)
-		#pass
 
 func _on_body_shape_exited(body_rid: RID, body: Node, body_shape_index: int, local_shape_index: int) -> void:
 	pass
-	#if body.is_in_group("Ground"):
-		#print(name, ' is NOT touching the ground!')
-		#is_touching_ground = false
-	#if body is CharacterBody3D:
-		#pass
-		##body.colliding_with_assembly_object = false
-		##body.assembly_object_mass = 0.0
-	#if is_grabbed and body is RigidBody3D:
-		##print(name, ' ||| no longer touching ||| ', body.name)
-		#pass
 
-func set_outline(status: String, color: Color) -> void:
+func set_outline(status: String, color: Color, opacity: float) -> void:
 	if not is_instance_valid(glow_body):
 		return
 
@@ -187,9 +253,10 @@ func set_outline(status: String, color: Color) -> void:
 
 
 	elif status == 'RELEASE':
-		shader_material.shader = null
-		glow_body.material_override = null
-		glow_body.visible = false
+		if not is_being_extracted:
+			shader_material.shader = null
+			glow_body.material_override = null
+			glow_body.visible = false
 		
 		grab_particles.queue_free()
 		grab_particles = null
@@ -200,7 +267,7 @@ func set_outline(status: String, color: Color) -> void:
 		shader_material.set_shader_parameter("glow_color", color)
 
 	elif status == 'ENHANCE':
-		color.a = 0.65
+		color.a = opacity
 		shader_material.set_shader_parameter("glow_color", color)
 
 	elif status == 'DIM':
@@ -250,9 +317,30 @@ func create_particles():
 	add_child(grab_particles)
 	grab_particles.restart()
 
+func start_extraction():
+	is_extracting = true
+	shake_timer = shake_duration
+
+func cancel_extraction():
+	extract_in_motion = false
+	if position_tween:
+		position_tween.stop()
+	if rotate_tween:
+		rotate_tween.stop()
+	if scale_tween:
+		scale_tween.stop()
+	#move_object(self, base_x_pos, base_y_pos, base_y_pos, 0.0, 0.5)
+	is_extracting = false
+
+func shake():
+	var shake_force = Vector3(randf_range(-1, 1), randf_range(-1, 1), randf_range(-1, 1)) * shake_intensity
+	apply_central_impulse(shake_force)
+
 func extract_parts():
 	var parts = assembly_parts.duplicate()
 	assembly_parts.clear()
+	
+	
 	for part in parts:
 		if not is_instance_valid(part):
 			continue
@@ -267,28 +355,102 @@ func extract_parts():
 		
 		part.set_script(ASSEMBLY_OBJECT_SCRIPT)
 		part.call_deferred("_ready")
-
 		await get_tree().create_timer(0.001).timeout
-	
+		
 		part.is_extractable = false
 		part.gravity_scale = 0.0
 		part.is_grabbed = false
 		part.is_released = false
-		part.is_extracted = true
-		print(part.mass)
+		part.is_assembly_part = true
+		part.is_full_size = false
+		part.visible = true
+		part.freeze = false
+
+		var rand_x_pos: float = randf_range(-50.0, 50.0)
+		var rand_y_pos: float = randf_range(2.0, 10.0)
+
+		move_object(part, rand_x_pos, rand_y_pos, base_spawn_pos.z - 50, 0.0, 15.0)
+
+
+		# === Outline logic ===
+		var base_mesh: MeshInstance3D = null
+		for child in part.get_children():
+			if child is MeshInstance3D:
+				base_mesh = child
+				break
 		
+		if base_mesh:
+			var outline_mesh := base_mesh.mesh.create_outline(0.15)
+			part.glow_body = MeshInstance3D.new()
+			part.glow_body.name = "Outline"
+			part.glow_body.mesh = outline_mesh
+
+			# Create or assign a real shader material
+			var glow_mat := ShaderMaterial.new()
+			glow_mat.shader = GLOW_SHADER
+			part.glow_body.material_override = glow_mat
+
+			# Match transform/position
+			part.glow_body.transform = base_mesh.transform
+			part.glow_body.visible = false
+			part.add_child(part.glow_body)
+			
+			
+		else:
+			push_warning("%s has no MeshInstance3D child to outline!" % part.name)
+
+		part.set_physics_process(true)
+		part.set_process(true)
+
+
 	visible = false
 	await get_tree().create_timer(0.5).timeout
 	queue_free()
 
-func dampen_assembly_object(time):
-	damp_elapsed_time += time
-	var t = clamp(damp_elapsed_time / damp_ramp_time, 0.0, 1.0)
-	linear_damp = lerp(starting_damp, target_damp, t)
-	angular_damp = lerp(starting_damp, target_damp, t)
+func extract_object_motion():
+	print(' -------- MOTION ACTIVATED --------- ')
+
+	if not extract_in_motion:
+		base_x_rot = rotation_degrees.x
+		base_y_rot = rotation_degrees.y
+		base_z_rot = rotation_degrees.z
+
+		base_x_pos = position.x
+		base_y_pos = position.y
+		base_z_pos=  position.z
+		ext_z_pos= base_z_pos + 4.0
+
+	extract_in_motion = true
+
+
+##### TWEENS #####
+
+func rotate_object(object, x_rot: float, y_rot: float, z_rot: float, wait_time: float, duration: float):
+	await get_tree().create_timer(wait_time).timeout
 	
-	if t >= 1.0:
-		contact_monitor = false
-		damp_set = true
-		linear_damp = 0
-		angular_damp = 0
+	rotate_tween = create_tween()
+	
+	rotate_tween.tween_property(object, "rotation_degrees", Vector3(x_rot, y_rot, z_rot), duration)
+	
+	rotate_tween.set_trans(Tween.TRANS_LINEAR)
+	rotate_tween.set_ease(Tween.EASE_IN_OUT)
+
+func move_object(object, x_pos: float, y_pos: float, z_pos: float, wait_time: float, duration: float):
+	await get_tree().create_timer(wait_time).timeout
+	
+	position_tween = create_tween()
+	
+	position_tween.tween_property(object, "position", Vector3(x_pos, y_pos, z_pos), duration)
+	
+	position_tween.set_trans(Tween.TRANS_SINE)
+	position_tween.set_ease(Tween.EASE_IN_OUT)
+
+func scale_object(object, x_scale: float, y_scale: float, z_scale: float, wait_time: float, duration: float):
+	await get_tree().create_timer(wait_time).timeout
+	
+	scale_tween = create_tween()
+	
+	scale_tween.tween_property(object, "scale", Vector3(x_scale, y_scale, z_scale), duration)
+	
+	scale_tween.set_trans(Tween.TRANS_LINEAR)
+	scale_tween.set_ease(Tween.EASE_IN_OUT)

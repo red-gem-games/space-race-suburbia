@@ -5,8 +5,10 @@ uniform vec4 albedo = vec4(1.0, 1.0, 1.0, 1.0);
 uniform float metallic : hint_range(0.0, 1.0) = 1.0;
 uniform float roughness : hint_range(0.0, 1.0) = 0.6;
 uniform float ambient_occlusion : hint_range(0.0, 1.0) = 1.0;
+uniform float fade_amount : hint_range(0.0, 1.0) = 0.0;
 
 void fragment() {
+	albedo == albedo - fade_amount;
     ALBEDO = albedo.rgb;
     METALLIC = metallic;
     ROUGHNESS = roughness;

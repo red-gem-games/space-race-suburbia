@@ -5,7 +5,8 @@ const is_character: bool = true
 var start_day: bool = false
 
 @onready var collision_shape: CollisionShape3D = $CollisionShape3D
-@onready var grabbed_anim: AnimationPlayer = $Grabbed_Animation
+@onready var hover_anim: AnimationPlayer = $Hover_Animation
+@onready var extract_anim: AnimationPlayer = $Extract_Animation
 @onready var camera: Camera3D = $Camera3D
 @onready var grabbed_container: Node3D = $Camera3D/Grabbed_Container
 @onready var PREM_7: Node3D = $"Camera3D/PREM-7"
@@ -176,6 +177,9 @@ var bounce_decay: float = 0.1
 var scroll_cooldown := 0.0
 var scroll_cooldown_duration := 0.05  # Adjust to taste (0.1–0.2 is typical)
 
+var scale_tween: Tween
+
+
 
 
 
@@ -218,27 +222,23 @@ func _physics_process(delta: float) -> void:
 
 	velocity.x = current_velocity.x
 	velocity.z = current_velocity.z
-	#print('go toward object and stop, then go forward...youll move slower')
 	velocity.y = vertical_velocity
 
 
 	# Landing check
-	if is_on_floor() and not grounded:
+	if position.y < 2 and not grounded:
 		vertical_velocity = 0.0
 		airborne = false
 		grounded = true
-	elif not is_on_floor():
+	elif position.y > 2:
 		grounded = false
 		airborne = true
-
-
 
 	# Grabbed object physics update
 	update_grabbed_object_physics(delta)
 
 
 func _process(delta: float) -> void:
-	
 	
 	# Update jetpack thrust, hover, ceiling logic
 	handle_jetpack_logic(delta)
@@ -249,12 +249,20 @@ func _process(delta: float) -> void:
 	if scroll_cooldown > 0.0:
 		scroll_cooldown -= delta
 	
-	# Dynamically adjust pitch_min when grounded and grabbing an object
-	if grounded and grabbed_object:
-		# Prevent looking too far down when grounded with object
-		pitch_min = deg_to_rad(-10)  # You can tweak this; -10 degrees downward allowed
+	# Dynamically adjust pitch_min based on height when grabbing
+	if grabbed_object:
+		var y = position.y
+		var min_y = 2.0       # Ground level threshold
+		var max_y = 10.0      # Max height where full freedom kicks in
+
+		# Calculate blend factor (0 near ground, 1 when high in air)
+		var t = clamp((y - min_y) / (max_y - min_y), 0.0, 1.0)
+		t = smoothstep(min_y, max_y, y)
+
+		# Interpolate between restricted and full downward pitch
+		var clamped_pitch_min = deg_to_rad(-15)
+		pitch_min = lerp(clamped_pitch_min, base_pitch_min, t)
 	else:
-		# Otherwise, normal freedom
 		pitch_min = base_pitch_min
 
 	
@@ -277,6 +285,9 @@ func _process(delta: float) -> void:
 	# Update grabbed object sway
 	if grabbed_object:
 		update_grabbed_object_sway(delta)
+		if grabbed_object.is_being_extracted:
+			control_object('released')
+			
 
 
 ##--------------------------------------##
@@ -514,29 +525,33 @@ func grab_object():
 
 	if grabbed_object:  # An object is already grabbed; release it.
 		# *Re-enable physics on the object:*
-		grabbed_anim.stop()
+		hover_anim.stop()
 		clear_char_obj_shape()
 		grabbed_object.collision_shape.disabled = false
 		grabbed_object.lock_rotation = false
 		grabbed_object.angular_velocity = Vector3.ZERO
 		grabbed_object.linear_velocity = Vector3.ZERO
-		grabbed_object.set_outline('RELEASE', Color.WHITE)
+		grabbed_object.set_outline('RELEASE', Color.WHITE, 0.0)
 		hud_reticle.visible = true
 		object_sway_strength_x = object_sway_base_x
 		object_sway_strength_y = object_sway_base_y
 		distance_factor = 0.0
 		grabbed_distance = 0.0
 		grabbed_object.position.z = 0.0
+		if grabbed_object.is_being_extracted:
+			grabbed_object.position.z += 15.0
 		grabbed_collision.position.z = 0.0
 		grabbed_object.is_grabbed = false
+		grabbed_object.recently_grabbed = true
 		grabbed_object.is_released = true
-		if extracting_object_active and grabbed_object.is_extractable:
-			grabbed_object.extract_parts()
+		#if extracting_object_active and grabbed_object.is_extractable:
+			#grabbed_object.extract_parts()
 		object_is_grabbed = false
 		grabbed_object = null
+		return
 	else:
-		grabbed_anim.play("RESET")
-		grabbed_anim.play("hover")
+		hover_anim.play("RESET")
+		hover_anim.play("hover")
 		var space_state = get_world_3d().direct_space_state
 		var from = camera.global_transform.origin
 		var to = from + (-camera.global_transform.basis.z) * 100.0
@@ -567,7 +582,7 @@ func grab_object():
 						glow_color = MODE_3_COLOR
 					MODE_4:
 						glow_color = MODE_4_COLOR
-				grabbed_object.set_outline('GRAB', glow_color)
+				grabbed_object.set_outline('GRAB', glow_color, 0.0)
 				grabbed_initial_mouse = get_viewport().get_mouse_position()
 				grabbed_distance = (grabbed_object.global_transform.origin - camera.global_transform.origin).length()
 				grabbed_initial_rotation = rotation_degrees
@@ -579,7 +594,7 @@ func grab_object():
 				grabbed_rotation.y = shortest_angle_diff_value(grabbed_initial_rotation.y, grabbed_global_rotation.y)
 				grabbed_rotation.z = shortest_angle_diff_value(grabbed_initial_rotation.z, grabbed_global_rotation.z)
 				object_is_grabbed = true
-				grabbed_object.gravity_scale = 1.0
+				grabbed_object.gravity_scale = 1.75
 				grabbed_object.collision_shape.disabled = true
 				grabbed_object.is_touching_ground = false
 				create_char_obj_shape(grabbed_object)
@@ -592,32 +607,40 @@ func grab_object():
 
 func control_object(status):
 	if status == 'pressed':
-		grabbed_anim.pause()
+		var glow_opacity: float
+		hover_anim.pause()
 		PREM_7.trig_anim.play("RESET")
 		PREM_7.trig_anim.play("trigger_pull")
-		grabbed_object.set_outline('ENHANCE', glow_color)
 		if current_mode == MODE_1:
 			print("Begin Shifting Object")
 			shifting_object_active = true
+			glow_opacity = 0.65
 		elif current_mode == MODE_2:
 			print("Begin Suspending Object")
 			suspending_object_active = true
+			glow_opacity = 0.7
 		elif current_mode == MODE_3:
-			print("Begin Extracting Object")
+			print("Extracting Assembly Parts")
 			print('ADD FUNCTIONALITY HERE - Press & Hold for Extraction...object starts to progressively shake until extraction complete')
 			extracting_object_active = true
+			if not grabbed_object.is_assembly_part:
+				grabbed_object.start_extraction()
+			else:
+				extract_anim.play("extract_negative")
+			glow_opacity = 0.5
 		elif current_mode == MODE_4:
 			print("Begin Fusing Object")
 			print('ADD FUNCTIONALITY HERE - Press & Hold for Fusion...grabbed object becomes child of object it is fusing to // objects begin to rumble and glow')
 			fusing_object_active = true
+			glow_opacity = 0.6
+		grabbed_object.set_outline('ENHANCE', glow_color, glow_opacity)
 		collision_layer = 12
 		right_mouse_down = true
 	if status == 'released':
-		grabbed_anim.play()
+		hover_anim.play()
 		PREM_7.trig_anim.play("trigger_release")
 		PREM_7.trig_anim.play("RESET")
-		grabbed_object.set_outline('DIM', glow_color)
-		print(glow_color)
+		grabbed_object.set_outline('DIM', glow_color, 0.0)
 		if current_mode == MODE_1:
 			print("Object has been Shifted!")
 			shifting_object_active = false
@@ -627,8 +650,13 @@ func control_object(status):
 			grab_object()
 			suspending_object_active = false
 		elif current_mode == MODE_3:
-			print("Object has been Extracted!")
-			grab_object()
+			if grabbed_object:
+				if not grabbed_object.is_being_extracted and not grabbed_object.is_assembly_part:
+					grabbed_object.cancel_extraction()
+				else:
+					if not grabbed_object.is_assembly_part:
+						print("Assembly parts have been Extracted!")
+						grab_object()
 			extracting_object_active = false
 		elif current_mode == MODE_4:
 			print("Object has been Fused!")
@@ -735,7 +763,7 @@ func change_mode(new_mode: String) -> void:
 			MODE_4: glow_color = MODE_4_COLOR
 			_: glow_color = Color.WHITE
 
-		grabbed_object.set_outline('UPDATE', glow_color)
+		grabbed_object.set_outline('UPDATE', glow_color, 0.0)
 
 func cycle_mode_direction(forward: bool = true) -> void:
 	var current_index = modes.find(current_mode)
@@ -761,13 +789,14 @@ func shortest_angle_diff_value(initial_angle: float, target_angle: float) -> flo
 	return diff
 
 func create_char_obj_shape(grabbed_object: RigidBody3D) -> void:
+	print('hmmmmm')
 	if not is_instance_valid(grabbed_object):
 		return
 
 	# Find first visible mesh
 	var mesh_node: MeshInstance3D = null
 	for child in grabbed_object.get_children():
-		if child is MeshInstance3D:
+		if child is MeshInstance3D and child.name != "Body":
 			mesh_node = child
 			break
 
@@ -784,12 +813,15 @@ func create_char_obj_shape(grabbed_object: RigidBody3D) -> void:
 	char_obj_shape.shape = shape
 	char_obj_shape.visible = true
 	char_obj_shape.debug_color = Color.RED
+	char_obj_shape.scale = Vector3(0.1, 0.1, 0.1)
 
 	var object_pos = grabbed_object.global_transform.origin
 	char_obj_shape.global_transform.origin = object_pos
 	char_obj_shape.visible = true
 	char_obj_shape.debug_fill = true
 	char_obj_shape.debug_color = Color.RED
+	scale_object(char_obj_shape, 1.0, 1.0, 1.0, 0.0, 1.0)
+	
 
 func clear_char_obj_shape():
 	if is_instance_valid(char_obj_shape):
@@ -878,7 +910,7 @@ func update_grabbed_object_sway(delta: float) -> void:
 	var pitch_offset = clamp(camera.rotation.x, -0.25, 1)
 	var target_y = grabbed_initial_position.y
 	var sway_x = camera.global_transform.basis.x.normalized() * object_sway_offset.x
-	var sway_z = camera.global_transform.basis.y.normalized() * object_sway_offset.y
+	var sway_z = camera.global_transform.basis.y.normalized() * -object_sway_offset.y
 	var sway_offset = sway_x + sway_z
 	target_y = clamp(target_y, floor_y, max_y)
 	grabbed_object.position.y = target_y
@@ -906,14 +938,13 @@ func _push_away_rigid_bodies():
 			
 			object.apply_impulse(push_dir * velocity_diff_in_push_dir * push_force, c.get_position() - object.global_position)
 
-func apply_resistance_based_on_mass(mass: float) -> void:
-	var character_mass = 80.0
-	if mass > character_mass:
-		var excess_mass = mass - character_mass
-		movement_resistance = clamp(excess_mass / 200.0, 0.0, 1.0)
-	else:
-		movement_resistance = 0.0
-	print('Movement Resistance: ', movement_resistance)
 
+func scale_object(object, x_scale: float, y_scale: float, z_scale: float, wait_time: float, duration: float):
+	await get_tree().create_timer(wait_time).timeout
 	
-	#This did not work when adding it to velocity.z...
+	scale_tween = create_tween()
+	
+	scale_tween.tween_property(object, "scale", Vector3(x_scale, y_scale, z_scale), duration)
+	
+	scale_tween.set_trans(Tween.TRANS_LINEAR)
+	scale_tween.set_ease(Tween.EASE_IN_OUT)

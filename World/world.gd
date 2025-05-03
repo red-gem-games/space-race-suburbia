@@ -29,31 +29,45 @@ var grounded_interp_speed: float = 2.0
 var airborne_interp_speed: float = 2.0
 var movement_speed: float = 1.0
 
+var grid_parent = Node3D.new()
+
+
+
+
+
+
+
+
+
 func _ready() -> void:
 	add_child(object_position_timer)
 
+
 func _process(delta: float) -> void:
-	#var assembly_object_children = assembly_object_container.get_children()
-	#for object in assembly_object_children:
-		#if object.colliding_with_character:
-			#character.apply_resistance_based_on_mass(object.mass)
-	
+
 	# When an object is grabbed:
 	if character.object_is_grabbed and not object_is_grabbed:
+		grabbed_object = character.grabbed_object
+		reset_rotation = true
+		object_is_grabbed = true
 		character.pitch_set = false
 		character.initial_grab = true
 		proxy_is_moving_to_character = true
-		grabbed_object = character.grabbed_object 
+		
 		grabbed_object.reparent(character.grabbed_container)
 		grabbed_object.world_object_container = assembly_object_container
-		if grabbed_object.is_extracted:
+
+		if grabbed_object.is_assembly_part:
 			var machine_name = grabbed_object.name.split("_", true, 1)[0]
 			var part_name = grabbed_object.name.split("_", true, 1)[1]
 			print("Came from machine: ", machine_name)
 			print("This part is: ", part_name)
-		reset_rotation = true
-		object_is_grabbed = true
+		
+		if is_instance_valid(grid_parent):
+			grid_parent.queue_free()
+			grid_parent = null
 	
+		spawn_grid()
 	# When the object is released:
 	elif not character.object_is_grabbed and object_is_grabbed:
 		if not is_instance_valid(grabbed_object):
@@ -63,9 +77,9 @@ func _process(delta: float) -> void:
 		grabbed_object.global_position.y += 0.05
 		character.distance_from_character = base_distance_in_front
 		character.pitch_set = false
-		print('Object Position: ', grabbed_object.position)
 		grabbed_object = null
 		object_is_grabbed = false
+		
 
 	if character.object_is_grabbed and object_is_grabbed and grabbed_object:
 		object_global_position = grabbed_object.global_position
@@ -88,18 +102,30 @@ func _process(delta: float) -> void:
 		if character.shifting_object_active:
 			reset_rotation = false
 
+		#if is_instance_valid(grid_parent):
+			#var char_pos = character.camera.global_transform.origin
+			#var char_forward = -character.camera.global_transform.basis.z.normalized()
+			#grid_parent.global_position = char_pos + char_forward * base_distance_in_front
+
+
 		if is_instance_valid(character.char_obj_shape):
 			if proxy_is_moving_to_character:
-				var proxy_transform: Transform3D = character.char_obj_shape.global_transform
-				proxy_transform.origin = proxy_transform.origin.lerp(target_pos, delta * 4.0)
-				character.char_obj_shape.global_transform = proxy_transform
+				var current_transform: Transform3D = character.char_obj_shape.global_transform
+				var target_transform := grabbed_object.global_transform
 
-				if proxy_transform.origin.distance_to(target_pos) < 0.1:
+				target_transform.origin.y += 1.0
+
+				var interp_transform := current_transform.interpolate_with(target_transform, delta * 10.0)
+				character.char_obj_shape.global_transform = interp_transform
+
+				if interp_transform.origin.distance_to(target_transform.origin) < 0.1:
 					proxy_is_moving_to_character = false
 			else:
+				
 				var proxy_transform := grabbed_object.global_transform
 				proxy_transform.origin = target_pos
-				character.char_obj_shape.global_transform = proxy_transform
+				character.char_obj_shape.global_transform = grabbed_object.global_transform
+
 
 
 func _input(event: InputEvent) -> void:
@@ -114,3 +140,24 @@ func _input(event: InputEvent) -> void:
 				movement_speed = 2
 			else:
 				movement_speed = 1
+
+
+func spawn_grid():
+	grid_parent = Node3D.new()
+	grid_parent.name = "GridContainer"
+	grabbed_object.add_child(grid_parent)
+
+	var spacing = 3.0
+	var grid_size = 4
+	var cube_size = 1.5
+	var start_offset = Vector3(-((grid_size - 1) * spacing) / 2.0, -((grid_size - 1) * spacing) / 2.0, 0)
+
+	for x in range(grid_size):
+		for y in range(grid_size):
+			var cube = MeshInstance3D.new()
+			cube.mesh = BoxMesh.new()
+			cube.material_override = StandardMaterial3D.new()
+			cube.scale = Vector3(cube_size, cube_size, cube_size)
+			var pos = Vector3(x * spacing, y * spacing, 0) + start_offset
+			cube.position = pos
+			grid_parent.add_child(cube)
