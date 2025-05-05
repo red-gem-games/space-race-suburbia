@@ -8,6 +8,8 @@ var assembly_object_array: Array[RigidBody3D]
 var grabbed_object: RigidBody3D = null
 var object_is_grabbed: bool = false
 
+var previous_grid_positions := {}
+
 var screen_refresh_rate: float
 
 var char_pos: Vector3
@@ -45,6 +47,12 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 
+	for child in assembly_object_container.get_children():
+		if child.extraction_complete:
+			if not child.is_full_size:
+				add_part_to_grid(child)
+
+
 	# When an object is grabbed:
 	if character.object_is_grabbed and not object_is_grabbed:
 		grabbed_object = character.grabbed_object
@@ -67,7 +75,6 @@ func _process(delta: float) -> void:
 			grid_parent.queue_free()
 			grid_parent = null
 	
-		spawn_grid()
 	# When the object is released:
 	elif not character.object_is_grabbed and object_is_grabbed:
 		if not is_instance_valid(grabbed_object):
@@ -102,10 +109,22 @@ func _process(delta: float) -> void:
 		if character.shifting_object_active:
 			reset_rotation = false
 
-		#if is_instance_valid(grid_parent):
-			#var char_pos = character.camera.global_transform.origin
-			#var char_forward = -character.camera.global_transform.basis.z.normalized()
-			#grid_parent.global_position = char_pos + char_forward * base_distance_in_front
+		if is_instance_valid(grid_parent) and is_instance_valid(grabbed_object):
+			var raw_forward = -character.camera.global_transform.basis.z.normalized()
+			var flattened_forward = Vector3(raw_forward.x, 0, raw_forward.z).normalized()
+			var vertical_influence = clamp(raw_forward.y, 0, 0)  # limits up/down range
+			var adjusted_forward = (flattened_forward + Vector3(0, vertical_influence, 0)).normalized()
+
+			# Position grid a fixed distance in front of the object (relative to camera)
+			grid_parent.global_position = char_pos + adjusted_forward * base_distance_in_front
+
+			var camera_pos = character.camera.global_transform.origin
+			var grid_pos = grid_parent.global_transform.origin
+
+			# Flatten both positions so Y is the same — only rotate horizontally
+			camera_pos.y = grid_pos.y
+
+			grid_parent.look_at(camera_pos, Vector3.UP)
 
 
 		if is_instance_valid(character.char_obj_shape):
@@ -126,7 +145,8 @@ func _process(delta: float) -> void:
 				proxy_transform.origin = target_pos
 				character.char_obj_shape.global_transform = grabbed_object.global_transform
 
-
+		if character.extracting_object_active and not grid_parent:
+			spawn_grid()
 
 func _input(event: InputEvent) -> void:
 
@@ -143,21 +163,69 @@ func _input(event: InputEvent) -> void:
 
 
 func spawn_grid():
+	if is_instance_valid(grid_parent):
+		grid_parent.queue_free()
+
 	grid_parent = Node3D.new()
-	grid_parent.name = "GridContainer"
-	grabbed_object.add_child(grid_parent)
+	grid_parent.name = "ExtractionGrid"
+	add_child(grid_parent)
 
 	var spacing = 3.0
-	var grid_size = 4
 	var cube_size = 1.5
-	var start_offset = Vector3(-((grid_size - 1) * spacing) / 2.0, -((grid_size - 1) * spacing) / 2.0, 0)
+	var curve_strength = 2.0
 
-	for x in range(grid_size):
-		for y in range(grid_size):
+	var camera_pos = character.camera.global_transform.origin
+
+	if not is_instance_valid(grabbed_object):
+		return
+
+	var part_count = grabbed_object.assembly_parts.size()
+	if part_count == 0:
+		return
+
+	var columns = min(5, part_count)
+	var rows = 2
+
+	# Corrected logic: top row gets the extra item if odd
+	var top_row_count = int(ceil(part_count / 2.0))
+	var bottom_row_count = part_count - top_row_count
+	var row_counts = [bottom_row_count, top_row_count]  # Y = 0 (bottom), Y = 1 (top)
+
+	for y in range(rows):
+		var items_in_this_row = row_counts[y]
+		var row_width = (items_in_this_row - 1) * spacing
+		var row_start_x = -row_width / 2.0
+
+		for x in range(items_in_this_row):
 			var cube = MeshInstance3D.new()
 			cube.mesh = BoxMesh.new()
 			cube.material_override = StandardMaterial3D.new()
 			cube.scale = Vector3(cube_size, cube_size, cube_size)
-			var pos = Vector3(x * spacing, y * spacing, 0) + start_offset
-			cube.position = pos
+
+			var x_offset = x * spacing
+			var x_pos = row_start_x + x_offset
+
+			# Curved placement
+			var curve_center = (items_in_this_row - 1) / 2.0
+			var z_curve = -pow((x - curve_center) / max(columns - 1, 1), 2) * curve_strength
+
+			var local_pos = Vector3(x_pos, y * spacing, z_curve) + Vector3(0, 0, 3.0)
+			cube.position = local_pos
 			grid_parent.add_child(cube)
+
+			await get_tree().process_frame
+
+			var global_cube_pos = cube.global_transform.origin
+			var to_camera = (camera_pos - global_cube_pos).normalized()
+			to_camera.y = 0
+			cube.look_at(global_cube_pos + to_camera, Vector3.UP)
+
+			var column_letter = char(65 + x)
+			var row_number = str(y + 1)
+			cube.name = "ExtractionGrid_%s%s" % [column_letter, row_number]
+
+
+
+func add_part_to_grid(obj):
+	await get_tree().create_timer(0.5).timeout
+	obj.visible = true

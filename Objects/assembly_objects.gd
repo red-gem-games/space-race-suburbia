@@ -31,6 +31,7 @@ var extract_in_motion: bool = false
 var assembly_parts: Array[RigidBody3D] = []
 var is_assembly_part: bool = false
 var is_full_size: bool = false
+var extraction_complete: bool = false
 
 var base_x_rot: float
 var base_y_rot: float
@@ -136,15 +137,15 @@ func _ready() -> void:
 			print('I, ', child.name, ' am an assembly part!')
 
 	set_physics_process(true)
-	
-	#if is_assembly_part:
-		#scale = Vector3(0.25, 0.25, 0.25)
-
 
 func _physics_process(delta: float) -> void:
 	
-	#if is_assembly_part and not is_full_size:
-		#scale = Vector3(0.25, 0.25, 0.25)
+	if is_assembly_part and not extraction_complete:
+		extraction_complete = true
+	
+	#if extraction_complete and not is_full_size:
+		#add_part_to_grid()
+		#visible = true
 	
 	#if is_assembly_part and not is_full_size:
 		#print('huh')
@@ -193,18 +194,18 @@ func _process(delta: float) -> void:
 
 	if extract_in_motion:
 		if shake_timer < 3.0 and shake_timer > 2.0:
-			rotate_object(object_body, base_x_rot, base_y_rot - 360.0, base_z_rot, 0.0, 0.35)
-			rotate_object(glow_body, base_x_rot, base_y_rot - 360.0, base_z_rot, 0.0, 0.35)
+			rotate_object(object_body, 0.0, -360.0, 0.0, 0.0, 0.35)
+			rotate_object(glow_body, 0.0, -360.0, 0.0, 0.0, 0.35)
 		elif shake_timer < 2.0 and shake_timer > 1.0:
-			rotate_object(object_body, base_x_rot - 360.0, base_y_rot - 360.0, base_z_rot, 0.0, 0.35)
-			rotate_object(glow_body, base_x_rot - 360.0, base_y_rot - 360.0, base_z_rot, 0.0, 0.35)
+			rotate_object(object_body, -360.0, -360.0, 0.0, 0.0, 0.35)
+			rotate_object(glow_body, -360.0, -360.0, 0.0, 0.0, 0.35)
 			scale_object(object_body, 1.5, 1.5, 1.5, 0.25, 0.5)
 			scale_object(glow_body, 1.5, 1.5, 1.5, 0.25, 0.5)
 		elif shake_timer < 1.0 and shake_timer > 0.0:
-			rotate_object(object_body, base_x_rot, base_y_rot, base_z_rot, 0.0, 0.35)
-			rotate_object(glow_body, base_x_rot, base_y_rot, base_z_rot, 0.0, 0.35)
-			scale_object(object_body, 0.01, 0.01, 0.01, 0.25, 0.15)
-			scale_object(glow_body, 0.01, 0.01, 0.01, 0.25, 0.15)
+			rotate_object(object_body, 0.0, 0.0, 0.0, 0.0, 0.35)
+			rotate_object(glow_body, 0.0, 0.0, 0.0, 0.0, 0.35)
+			scale_object(object_body, 0.001, 0.001, 0.001, 0.25, 0.15)
+			scale_object(glow_body, 0.001, 0.001, 0.001, 0.25, 0.15)
 		elif shake_timer <= 0.0:
 			is_being_extracted = true
 			is_extracting = false
@@ -340,7 +341,6 @@ func extract_parts():
 	var parts = assembly_parts.duplicate()
 	assembly_parts.clear()
 	
-	
 	for part in parts:
 		if not is_instance_valid(part):
 			continue
@@ -350,6 +350,7 @@ func extract_parts():
 		world_xform.origin.y += 0.5
 
 		remove_child(part)
+		
 		world_object_container.add_child(part)
 		part.call_deferred("set_global_transform", world_xform)
 		
@@ -370,7 +371,6 @@ func extract_parts():
 		var rand_y_pos: float = randf_range(2.0, 10.0)
 
 		move_object(part, rand_x_pos, rand_y_pos, base_spawn_pos.z - 50, 0.0, 15.0)
-
 
 		# === Outline logic ===
 		var base_mesh: MeshInstance3D = null
@@ -403,6 +403,7 @@ func extract_parts():
 		part.set_process(true)
 
 
+
 	visible = false
 	await get_tree().create_timer(0.5).timeout
 	queue_free()
@@ -414,6 +415,8 @@ func extract_object_motion():
 		base_x_rot = rotation_degrees.x
 		base_y_rot = rotation_degrees.y
 		base_z_rot = rotation_degrees.z
+		
+		print(base_x_rot)
 
 		base_x_pos = position.x
 		base_y_pos = position.y

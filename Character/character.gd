@@ -197,7 +197,6 @@ func _physics_process(delta: float) -> void:
 	# Update ground distance
 	distance_to_ground = raycast_to_ground()
 
-
 	# Handle basic directional input
 	var vertical = 0
 	var horizontal = 0
@@ -284,6 +283,8 @@ func _process(delta: float) -> void:
 
 	# Update grabbed object sway
 	if grabbed_object:
+		if extracting_object_active:
+			desired_pitch = 0.15
 		update_grabbed_object_sway(delta)
 		if grabbed_object.is_being_extracted:
 			control_object('released')
