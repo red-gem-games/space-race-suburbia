@@ -9,6 +9,7 @@ var grabbed_object: RigidBody3D = null
 var object_is_grabbed: bool = false
 
 var previous_grid_positions := {}
+var assembly_parts_global_position: Vector3
 
 var screen_refresh_rate: float
 
@@ -47,7 +48,7 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 
-	for child in assembly_object_container.get_children():
+	for child in $Extracted_Object.get_children():
 		if child.extraction_complete:
 			if not child.is_full_size:
 				add_part_to_grid(child)
@@ -61,15 +62,9 @@ func _process(delta: float) -> void:
 		character.pitch_set = false
 		character.initial_grab = true
 		proxy_is_moving_to_character = true
-		
+		print(grabbed_object.rotation_degrees)
 		grabbed_object.reparent(character.grabbed_container)
-		grabbed_object.world_object_container = assembly_object_container
-
-		if grabbed_object.is_assembly_part:
-			var machine_name = grabbed_object.name.split("_", true, 1)[0]
-			var part_name = grabbed_object.name.split("_", true, 1)[1]
-			print("Came from machine: ", machine_name)
-			print("This part is: ", part_name)
+		grabbed_object.extracted_object_container = $Extracted_Object
 		
 		if is_instance_valid(grid_parent):
 			grid_parent.queue_free()
@@ -117,15 +112,10 @@ func _process(delta: float) -> void:
 
 			# Position grid a fixed distance in front of the object (relative to camera)
 			grid_parent.global_position = char_pos + adjusted_forward * base_distance_in_front
-
 			var camera_pos = character.camera.global_transform.origin
 			var grid_pos = grid_parent.global_transform.origin
-
-			# Flatten both positions so Y is the same — only rotate horizontally
 			camera_pos.y = grid_pos.y
-
 			grid_parent.look_at(camera_pos, Vector3.UP)
-
 
 		if is_instance_valid(character.char_obj_shape):
 			if proxy_is_moving_to_character:
@@ -140,13 +130,13 @@ func _process(delta: float) -> void:
 				if interp_transform.origin.distance_to(target_transform.origin) < 0.1:
 					proxy_is_moving_to_character = false
 			else:
-				
 				var proxy_transform := grabbed_object.global_transform
 				proxy_transform.origin = target_pos
 				character.char_obj_shape.global_transform = grabbed_object.global_transform
 
-		if character.extracting_object_active and not grid_parent:
+		if grabbed_object.create_the_grid and not grid_parent:
 			spawn_grid()
+			grabbed_object.create_the_grid = false
 
 func _input(event: InputEvent) -> void:
 
@@ -169,6 +159,10 @@ func spawn_grid():
 	grid_parent = Node3D.new()
 	grid_parent.name = "ExtractionGrid"
 	add_child(grid_parent)
+	
+	previous_grid_positions.clear()
+	
+	assembly_parts_global_position = grabbed_object.global_position
 
 	var spacing = 3.0
 	var cube_size = 1.5
@@ -198,9 +192,9 @@ func spawn_grid():
 
 		for x in range(items_in_this_row):
 			var cube = MeshInstance3D.new()
-			cube.mesh = BoxMesh.new()
-			cube.material_override = StandardMaterial3D.new()
-			cube.scale = Vector3(cube_size, cube_size, cube_size)
+			#cube.mesh = BoxMesh.new()
+			#cube.material_override = StandardMaterial3D.new()
+			#cube.scale = Vector3(cube_size, cube_size, cube_size)
 
 			var x_offset = x * spacing
 			var x_pos = row_start_x + x_offset
@@ -222,10 +216,22 @@ func spawn_grid():
 
 			var column_letter = char(65 + x)
 			var row_number = str(y + 1)
-			cube.name = "ExtractionGrid_%s%s" % [column_letter, row_number]
+			var cube_name = "ExtractionGrid_%s%s" % [column_letter, row_number]
+			cube.name = cube_name
+			
+			await get_tree().process_frame
+			
+			previous_grid_positions[cube_name] = cube.global_position
+			grabbed_object.grid_positions = previous_grid_positions
+			#print('Previous Grid Positions: ', previous_grid_positions)
 
-
+	grabbed_object.extracted_object_container.global_position = grid_parent.global_position
 
 func add_part_to_grid(obj):
-	await get_tree().create_timer(0.5).timeout
+	obj.scale = Vector3(0.01, 0.01, 0.01)
+	character.assembly_part_selection = true
+	await get_tree().create_timer(0.025).timeout
 	obj.visible = true
+	obj.scale = Vector3(1.0, 1.0, 1.0)
+	obj.reparent(assembly_object_container)
+	obj.is_full_size = true

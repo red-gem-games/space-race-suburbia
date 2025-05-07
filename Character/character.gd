@@ -17,6 +17,8 @@ var colliding_with_assembly_object: bool = false
 var assembly_object_mass: float
 var player_moving_forward: bool = false
 
+var assembly_part_selection: bool = false
+
 # Moving to physics process
 var desired_direction := Vector3.ZERO
 var desired_velocity := Vector3.ZERO
@@ -117,6 +119,8 @@ var grounded_grabbed_pitch_min: float = deg_to_rad(-10.0)  # Limit downward look
 var desired_yaw: float = 0.0
 var desired_pitch: float = 0.0
 
+var extracting_yaw: float = 0.0
+
 var yaw: float = 0.0
 var distance_factor: float = 0.0
 var height_factor: float = 0.0
@@ -201,15 +205,16 @@ func _physics_process(delta: float) -> void:
 	var vertical = 0
 	var horizontal = 0
 
-	if move_input["up"] and not move_input["down"]:
-		vertical = 1
-	elif move_input["down"] and not move_input["up"]:
-		vertical = -1
+	if not extracting_object_active:
+		if move_input["up"] and not move_input["down"]:
+			vertical = 1
+		elif move_input["down"] and not move_input["up"]:
+			vertical = -1
 
-	if move_input["right"] and not move_input["left"]:
-		horizontal = 1
-	elif move_input["left"] and not move_input["right"]:
-		horizontal = -1
+		if move_input["right"] and not move_input["left"]:
+			horizontal = 1
+		elif move_input["left"] and not move_input["right"]:
+			horizontal = -1
 
 	var desired_direction = Vector3.ZERO
 	if vertical != 0 or horizontal != 0:
@@ -217,7 +222,6 @@ func _physics_process(delta: float) -> void:
 
 	var desired_velocity = desired_direction * movement_speed
 	current_velocity = current_velocity.lerp(desired_velocity, smoothing)
-
 
 	velocity.x = current_velocity.x
 	velocity.z = current_velocity.z
@@ -232,6 +236,7 @@ func _physics_process(delta: float) -> void:
 	elif position.y > 2:
 		grounded = false
 		airborne = true
+
 
 	# Grabbed object physics update
 	update_grabbed_object_physics(delta)
@@ -283,12 +288,17 @@ func _process(delta: float) -> void:
 
 	# Update grabbed object sway
 	if grabbed_object:
-		if extracting_object_active:
-			desired_pitch = 0.15
 		update_grabbed_object_sway(delta)
 		if grabbed_object.is_being_extracted:
 			control_object('released')
-			
+
+	if extracting_object_active:
+		desired_pitch = clamp(desired_pitch, 0.0, 0.35)
+		if assembly_part_selection:
+			var yaw_range = deg_to_rad(30.0)
+			desired_yaw = clamp(desired_yaw, extracting_yaw - yaw_range, extracting_yaw + yaw_range)
+		else:
+			desired_yaw = extracting_yaw
 
 
 ##--------------------------------------##
@@ -504,6 +514,7 @@ func _input(event: InputEvent) -> void:
 				grabbed_rotation.x = shortest_angle_diff_value(-current_rot.x, 0)
 				grabbed_rotation.y = shortest_angle_diff_value(-current_rot.y, 0)
 				grabbed_rotation.z = shortest_angle_diff_value(-current_rot.z, 0)
+
 				pitch_min = grab_pitch_min
 				pitch_max = grab_pitch_max
 				distance_factor = 0
@@ -551,6 +562,8 @@ func grab_object():
 		grabbed_object = null
 		return
 	else:
+		extracting_object_active = false
+		assembly_part_selection = false
 		hover_anim.play("RESET")
 		hover_anim.play("hover")
 		var space_state = get_world_3d().direct_space_state
@@ -612,44 +625,59 @@ func control_object(status):
 		hover_anim.pause()
 		PREM_7.trig_anim.play("RESET")
 		PREM_7.trig_anim.play("trigger_pull")
+		collision_layer = 12
+		right_mouse_down = true
+
 		if current_mode == MODE_1:
 			print("Begin Shifting Object")
 			shifting_object_active = true
 			glow_opacity = 0.65
+
 		elif current_mode == MODE_2:
 			print("Begin Suspending Object")
 			suspending_object_active = true
 			glow_opacity = 0.7
+
 		elif current_mode == MODE_3:
 			print("Extracting Assembly Parts")
-			print('ADD FUNCTIONALITY HERE - Press & Hold for Extraction...object starts to progressively shake until extraction complete')
-			extracting_object_active = true
 			if not grabbed_object.is_assembly_part:
+				extracting_object_active = true
+				extracting_yaw = desired_yaw
 				grabbed_object.start_extraction()
 			else:
+				extract_anim.play('RESET')
 				extract_anim.play("extract_negative")
 			glow_opacity = 0.5
+
 		elif current_mode == MODE_4:
 			print("Begin Fusing Object")
 			print('ADD FUNCTIONALITY HERE - Press & Hold for Fusion...grabbed object becomes child of object it is fusing to // objects begin to rumble and glow')
 			fusing_object_active = true
 			glow_opacity = 0.6
+
+		## Set Outline Glow State AFTER Object is Grabbed
 		grabbed_object.set_outline('ENHANCE', glow_color, glow_opacity)
-		collision_layer = 12
-		right_mouse_down = true
+
 	if status == 'released':
 		hover_anim.play()
 		PREM_7.trig_anim.play("trigger_release")
 		PREM_7.trig_anim.play("RESET")
+		collision_layer = 1
+		right_mouse_down = false
+		
+		## Reset Outline Glow State BEFORE Grabbed Object is Released
 		grabbed_object.set_outline('DIM', glow_color, 0.0)
+
 		if current_mode == MODE_1:
 			print("Object has been Shifted!")
 			shifting_object_active = false
+
 		elif current_mode == MODE_2:
 			print("Object has been Suspended!")
 			grabbed_object.gravity_scale = 0.0
 			grab_object()
 			suspending_object_active = false
+
 		elif current_mode == MODE_3:
 			if grabbed_object:
 				if not grabbed_object.is_being_extracted and not grabbed_object.is_assembly_part:
@@ -658,12 +686,10 @@ func control_object(status):
 					if not grabbed_object.is_assembly_part:
 						print("Assembly parts have been Extracted!")
 						grab_object()
-			extracting_object_active = false
+
 		elif current_mode == MODE_4:
 			print("Object has been Fused!")
 			fusing_object_active = false
-		collision_layer = 1
-		right_mouse_down = false
 
 func handle_jetpack(status, timing):
 	# Jetpack Ceiling Clamp
@@ -695,8 +721,8 @@ func handle_jetpack(status, timing):
 		vertical_velocity = lerp(vertical_velocity, -gravity_strength, 1.0 * timing)
 	elif status == '7':
 		hover_bob_time += timing  # use delta to advance time
-		var bob_strength = 0.5    # Amplitude (how far up/down)
-		var bob_speed = 2.0       # Frequency (how fast)
+		var bob_strength = 0.25    # Amplitude (how far up/down)
+		var bob_speed = 1.0      # Frequency (how fast)
 		var bob_offset = sin(hover_bob_time * bob_speed) * bob_strength
 		global_position.y = hover_base_y + bob_offset
 		vertical_velocity = 0.0  # Freeze vertical momentum
@@ -790,7 +816,6 @@ func shortest_angle_diff_value(initial_angle: float, target_angle: float) -> flo
 	return diff
 
 func create_char_obj_shape(grabbed_object: RigidBody3D) -> void:
-	print('hmmmmm')
 	if not is_instance_valid(grabbed_object):
 		return
 
@@ -830,6 +855,18 @@ func clear_char_obj_shape():
 		char_obj_shape.visible = false
 
 func handle_jetpack_logic(delta: float) -> void:
+	if extracting_object_active:
+		if not hover_lock:
+			hover_lock = true
+			hover_base_y = global_position.y
+			hover_bob_time = 0.0
+		if airborne:
+			handle_jetpack('7', delta)
+		return
+	# If extraction has ended or part is grabbed, unlock hover
+	if hover_lock and not extracting_object_active:
+		hover_lock = false
+
 	if jetpack_active:
 		handle_jetpack('1', delta)
 	else:

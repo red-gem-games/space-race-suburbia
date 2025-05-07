@@ -4,10 +4,17 @@ class_name assembly_objects
 @onready var collision_shape: CollisionShape3D = $CollisionShape3D
 
 var object_body: MeshInstance3D
+var machine_name: StringName
+var part_name: StringName
 
 var ASSEMBLY_OBJECT_SCRIPT: Script = preload("res://Objects/assembly_objects.gd")
 var GLOW_SHADER := preload("res://Shaders/grabbed_glow.gdshader")
 
+var grid_positions: Dictionary = {}
+var assigned_grid_position := Vector3.ZERO
+var grid_assigned := false
+var parent_global_position: Vector3
+var extraction_location_set: bool = false
 
 var object_rotation: Vector3
 var is_touching_ground: bool = false
@@ -33,6 +40,8 @@ var is_assembly_part: bool = false
 var is_full_size: bool = false
 var extraction_complete: bool = false
 
+var create_the_grid: bool = false
+
 var base_x_rot: float
 var base_y_rot: float
 var base_z_rot: float
@@ -55,7 +64,7 @@ var grab_particles: GPUParticles3D
 var grab_particles_shader: Shader
 var particles_material: ShaderMaterial
 
-var world_object_container: Node3D
+var extracted_object_container: Node3D
 
 var is_stepladder: bool = false
 var is_rocketship: bool = false
@@ -140,30 +149,25 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	
-	if is_assembly_part and not extraction_complete:
-		extraction_complete = true
+	if is_assembly_part:
+		if not extraction_complete:
+			complete_extraction()
 	
-	#if extraction_complete and not is_full_size:
-		#add_part_to_grid()
-		#visible = true
-	
-	#if is_assembly_part and not is_full_size:
-		#print('huh')
-		#scale_object(self, 5.0, 5.0, 5.0, 2.5, 0.5)
-		#is_full_size = true
+	#if is_assembly_part:
+		#print(position)
 	
 	var up_vector = global_transform.basis.y
 	var alignment = up_vector.dot(Vector3.UP)
 
 	if abs(alignment) < 0.01 and is_touching_ground:
 		if not damp_set:
-			dampen_assembly_object(delta)
+			dampen_assembly_object(delta * 0.025)
 	elif alignment > 0.99 and is_touching_ground:
 		if not damp_set:
-			dampen_assembly_object(delta)
+			dampen_assembly_object(delta * 0.025)
 	elif alignment < -0.99 and is_touching_ground:
 		if not damp_set:
-			dampen_assembly_object(delta)
+			dampen_assembly_object(delta * 0.025)
 
 	if is_grabbed:
 		base_spawn_pos = global_position
@@ -178,7 +182,6 @@ func _physics_process(delta: float) -> void:
 			remove_from_group("Ground")
 
 func _process(delta: float) -> void:
-
 	
 	### Frame Smoothing ###
 	if not is_grabbed and object_body:
@@ -202,14 +205,15 @@ func _process(delta: float) -> void:
 			scale_object(object_body, 1.5, 1.5, 1.5, 0.25, 0.5)
 			scale_object(glow_body, 1.5, 1.5, 1.5, 0.25, 0.5)
 		elif shake_timer < 1.0 and shake_timer > 0.0:
+			create_the_grid = true
 			rotate_object(object_body, 0.0, 0.0, 0.0, 0.0, 0.35)
 			rotate_object(glow_body, 0.0, 0.0, 0.0, 0.0, 0.35)
 			scale_object(object_body, 0.001, 0.001, 0.001, 0.25, 0.15)
 			scale_object(glow_body, 0.001, 0.001, 0.001, 0.25, 0.15)
 		elif shake_timer <= 0.0:
 			is_being_extracted = true
-			is_extracting = false
 			extract_parts()
+			is_extracting = false
 			extract_in_motion = false
 
 
@@ -223,12 +227,12 @@ func dampen_assembly_object(time):
 	if t >= 1.0:
 		add_to_group("Ground")
 		contact_monitor = true
-		damp_set = true
-		linear_damp = 10 * mass
+		linear_damp = 40
 		angular_damp = 0
 		gravity_scale = 1.0
 		damp_elapsed_time = 0.0
 		recently_grabbed = false
+		damp_set = true
 
 func _on_body_shape_entered(body_rid: RID, body: Node, body_shape_index: int, local_shape_index: int) -> void:
 	if body.is_in_group("Ground"):
@@ -274,7 +278,6 @@ func set_outline(status: String, color: Color, opacity: float) -> void:
 	elif status == 'DIM':
 		color.a = 0.25
 		shader_material.set_shader_parameter("glow_color", color)
-		
 
 func create_particles():
 	grab_particles= GPUParticles3D.new()
@@ -322,37 +325,21 @@ func start_extraction():
 	is_extracting = true
 	shake_timer = shake_duration
 
-func cancel_extraction():
-	extract_in_motion = false
-	if position_tween:
-		position_tween.stop()
-	if rotate_tween:
-		rotate_tween.stop()
-	if scale_tween:
-		scale_tween.stop()
-	#move_object(self, base_x_pos, base_y_pos, base_y_pos, 0.0, 0.5)
-	is_extracting = false
-
-func shake():
-	var shake_force = Vector3(randf_range(-1, 1), randf_range(-1, 1), randf_range(-1, 1)) * shake_intensity
-	apply_central_impulse(shake_force)
-
 func extract_parts():
 	var parts = assembly_parts.duplicate()
 	assembly_parts.clear()
-	
+
+	var shared_grid_positions = grid_positions.duplicate()
+
+
 	for part in parts:
 		if not is_instance_valid(part):
 			continue
 
-		part.freeze = false
-		var world_xform = part.global_transform
-		world_xform.origin.y += 0.5
-
 		remove_child(part)
+		extracted_object_container.add_child(part)
 		
-		world_object_container.add_child(part)
-		part.call_deferred("set_global_transform", world_xform)
+		await get_tree().process_frame  # <-- Let it reparent
 		
 		part.set_script(ASSEMBLY_OBJECT_SCRIPT)
 		part.call_deferred("_ready")
@@ -364,13 +351,14 @@ func extract_parts():
 		part.is_released = false
 		part.is_assembly_part = true
 		part.is_full_size = false
-		part.visible = true
+		part.visible = false
 		part.freeze = false
+		#part.parent_global_position = global_position
+		print('Part Pos: ', part.global_position)
+		
+		part.grid_positions = shared_grid_positions
+		part.assign_next_grid_position()
 
-		var rand_x_pos: float = randf_range(-50.0, 50.0)
-		var rand_y_pos: float = randf_range(2.0, 10.0)
-
-		move_object(part, rand_x_pos, rand_y_pos, base_spawn_pos.z - 50, 0.0, 15.0)
 
 		# === Outline logic ===
 		var base_mesh: MeshInstance3D = null
@@ -406,6 +394,7 @@ func extract_parts():
 
 	visible = false
 	await get_tree().create_timer(0.5).timeout
+	extraction_complete = true
 	queue_free()
 
 func extract_object_motion():
@@ -415,8 +404,6 @@ func extract_object_motion():
 		base_x_rot = rotation_degrees.x
 		base_y_rot = rotation_degrees.y
 		base_z_rot = rotation_degrees.z
-		
-		print(base_x_rot)
 
 		base_x_pos = position.x
 		base_y_pos = position.y
@@ -424,6 +411,41 @@ func extract_object_motion():
 		ext_z_pos= base_z_pos + 4.0
 
 	extract_in_motion = true
+
+func complete_extraction():
+	part_name = name.split("_", true, 1)[1]
+	machine_name = name.split("_", true, 1)[0]
+	print("This part is: ", part_name)
+	print("Came from machine: ", machine_name)
+	global_position = assigned_grid_position
+	extraction_complete = true
+
+func cancel_extraction():
+	extract_in_motion = false
+	if position_tween:
+		position_tween.stop()
+	if rotate_tween:
+		rotate_tween.stop()
+	if scale_tween:
+		scale_tween.stop()
+	#move_object(self, base_x_pos, base_y_pos, base_y_pos, 0.0, 0.5)
+	is_extracting = false
+
+func shake():
+	var shake_force = Vector3(randf_range(-1, 1), randf_range(-1, 1), randf_range(-1, 1)) * shake_intensity
+	apply_central_impulse(shake_force)
+
+func assign_next_grid_position():
+	if grid_assigned:
+		return  # already done
+	
+	for key in grid_positions.keys():
+		assigned_grid_position = grid_positions[key]
+		grid_positions.erase(key)  # remove from pool
+		grid_assigned = true
+		break
+
+
 
 
 ##### TWEENS #####
