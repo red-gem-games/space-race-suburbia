@@ -62,13 +62,16 @@ func _process(delta: float) -> void:
 		character.pitch_set = false
 		character.initial_grab = true
 		proxy_is_moving_to_character = true
-		print(grabbed_object.rotation_degrees)
-		grabbed_object.reparent(character.grabbed_container)
 		grabbed_object.extracted_object_container = $Extracted_Object
-		
 		if is_instance_valid(grid_parent):
 			grid_parent.queue_free()
 			grid_parent = null
+		if not character.suspending_object_active:
+			print('simple enough')
+			grabbed_object.reparent(character.grabbed_container)
+		character.suspending_object_active = false
+		
+
 	
 	# When the object is released:
 	elif not character.object_is_grabbed and object_is_grabbed:
@@ -84,6 +87,8 @@ func _process(delta: float) -> void:
 		
 
 	if character.object_is_grabbed and object_is_grabbed and grabbed_object:
+		if grabbed_object.is_suspended:
+			return
 		object_global_position = grabbed_object.global_position
 		char_pos = character.camera.global_transform.origin
 		char_forward = -character.camera.global_transform.basis.z.normalized()

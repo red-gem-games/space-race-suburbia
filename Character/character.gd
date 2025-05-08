@@ -26,7 +26,7 @@ var movement_resistance: float = 0.0
 
 var glow_color: Color
 
-var distance_from_character: float = 6
+var distance_from_character: float = 8
 var previous_height: float
 var rotate_tween: Tween
 
@@ -54,6 +54,8 @@ var grabbed_distance: float = 0.0
 var grabbed_rotation: Vector3
 var grabbed_initial_rotation: Vector3 = Vector3.ZERO
 var grabbed_global_rotation: Vector3
+var grabbed_target_position: Vector3
+
 
 var floor_y: float = -1.5     # The floor level (adjust as needed)
 var max_y: float = 30.0       # The maximum Y allowed (adjust as needed)
@@ -133,8 +135,8 @@ var distance_to_ground: float
 var object_sway_offset: Vector2 = Vector2.ZERO
 var object_sway_decay_x: float = 15.0
 var object_sway_decay_y: float = 5.0
-var object_sway_base_x: float = 0.0001
-var object_sway_base_y: float = 0.0005
+var object_sway_base_x: float = 0.00025
+var object_sway_base_y: float = 0.0004
 var object_sway_strength_x: float = object_sway_base_x
 var object_sway_strength_y: float = object_sway_base_y
 
@@ -198,6 +200,17 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
+	
+	
+	if grabbed_object and grabbed_object.is_suspended:
+		if char_obj_shape:
+			print("Char Obj Shape: ", char_obj_shape)
+			clear_char_obj_shape()
+			
+		print(grabbed_object.collision_layer)
+		print(collision_layer)
+		grabbed_object.position = grabbed_object.position.lerp(grabbed_target_position, delta * 3.0)
+
 	# Update ground distance
 	distance_to_ground = raycast_to_ground()
 
@@ -207,14 +220,32 @@ func _physics_process(delta: float) -> void:
 
 	if not extracting_object_active:
 		if move_input["up"] and not move_input["down"]:
-			vertical = 1
+			if not shifting_object_active:
+				vertical = 1
 		elif move_input["down"] and not move_input["up"]:
-			vertical = -1
-
+			if not shifting_object_active:
+				vertical = -1
 		if move_input["right"] and not move_input["left"]:
-			horizontal = 1
+			if not shifting_object_active:
+				horizontal = 1
 		elif move_input["left"] and not move_input["right"]:
-			horizontal = -1
+			if not shifting_object_active:
+				horizontal = -1
+
+	# Smoothly adjust distance_from_character based on forward/back input
+	if grabbed_object:
+		if not grabbed_object.is_suspended:
+			if vertical == 1:
+				distance_from_character = lerp(distance_from_character, 4.5, delta * 2.5)  # Closer
+			elif vertical == -1:
+				distance_from_character = lerp(distance_from_character, 9.0, delta * 2.5)  # Further
+			else:
+				distance_from_character = lerp(distance_from_character, 6.0, delta * 2.0)  # Neutral
+			# Apply horizontal sway when strafing
+			if horizontal != 0:
+				#object_sway_offset.x += horizontal * object_sway_strength_x * 20.0 * delta
+				var strafe_offset = camera.global_transform.basis.x.normalized() * horizontal * -0.005
+				object_sway_offset.x += strafe_offset.x
 
 	var desired_direction = Vector3.ZERO
 	if vertical != 0 or horizontal != 0:
@@ -335,13 +366,20 @@ func _input(event: InputEvent) -> void:
 				print('cycling up')
 				cycle_mode_direction(true)
 				scroll_cooldown = scroll_cooldown_duration
+			if right_mouse_down and shifting_object_active:
+				if grabbed_object:
+					if grabbed_object.is_suspended:
+						grabbed_object.global_position.y += 0.1
 
 		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
 			if scroll_cooldown <= 0.0 and not middle_mouse_down and not right_mouse_down and not left_mouse_down:
 				print('cycling down')
 				cycle_mode_direction(false)
 				scroll_cooldown = scroll_cooldown_duration
-
+			if right_mouse_down and shifting_object_active:
+				if grabbed_object:
+					if grabbed_object.is_suspended:
+						grabbed_object.global_position.y = clamp(grabbed_object.global_position.y - 0.1, 0.0, 20.0)
 
 		elif event.button_index == MOUSE_BUTTON_MIDDLE:
 			if not right_mouse_down and not left_mouse_down:
@@ -388,16 +426,18 @@ func _input(event: InputEvent) -> void:
 				desired_yaw -= dx
 				desired_pitch -= dy
 				desired_pitch = clamp(desired_pitch, pitch_min, pitch_max)
-				object_sway_offset.x -= event.relative.x * object_sway_strength_x
-				object_sway_offset.y -= event.relative.y * object_sway_strength_y
-				object_sway_offset.x = clamp(object_sway_offset.x, -0.2, 0.2) 
-				object_sway_offset.y = clamp(object_sway_offset.y, -1.75, 1.75) 
+				if grabbed_object:
+					if not grabbed_object.is_suspended:
+						object_sway_offset.x -= event.relative.x * object_sway_strength_x
+						object_sway_offset.y -= event.relative.y * object_sway_strength_y
+						object_sway_offset.x = clamp(object_sway_offset.x, -2.0, 2.0) 
+				#object_sway_offset.y = clamp(object_sway_offset.y, -0.5, 0.5) 
 			else:
 				if grabbed_object:
 					if z_rotate_mode:
 						grabbed_rotation.z += event.relative.x * rotation_sensitivity / 3
 						var local_forward: Vector3 = grabbed_object.global_transform.basis.z
-						grabbed_object.rotate(local_forward, deg_to_rad(event.relative.x * mouse_speed * 10))
+						grabbed_object.rotate(local_forward, deg_to_rad(event.relative.x * mouse_speed * 0))
 					else:
 						grabbed_rotation.y += event.relative.x * rotation_sensitivity / 3
 						grabbed_rotation.x += event.relative.y * rotation_sensitivity / 3
@@ -422,15 +462,25 @@ func _input(event: InputEvent) -> void:
 		# Update movement key states.
 		if event.keycode == KEY_W or event.keycode == KEY_UP:
 			move_input["up"] = pressed
-			#print("Current Player Position: ", position)
+			if shifting_object_active and pressed:
+				if grabbed_object and grabbed_object.is_suspended:
+					grabbed_target_position.z -= 0.2
 		elif event.keycode == KEY_S or event.keycode == KEY_DOWN:
 			move_input["down"] = pressed
-			#print("Current Player Position: ", position)
+			if shifting_object_active and pressed:
+				if grabbed_object and grabbed_object.is_suspended:
+					grabbed_target_position.z += 0.2
 		elif event.keycode == KEY_A or event.keycode == KEY_LEFT:
 			move_input["left"] = pressed
-			#print("Current Player Position: ", position)
+			if shifting_object_active and pressed:
+				if grabbed_object and grabbed_object.is_suspended:
+					grabbed_target_position.x -= 0.2
 		elif event.keycode == KEY_D or event.keycode == KEY_RIGHT:
 			move_input["right"] = pressed
+			if shifting_object_active and pressed:
+				if grabbed_object and grabbed_object.is_suspended:
+					grabbed_target_position.x += 0.2
+
 			#print("Current Player Position: ", position)
 
 		# Process number keys (1-4) to directly change modes, if desired.
@@ -531,6 +581,14 @@ func _input(event: InputEvent) -> void:
 
 
 func grab_object():
+	
+	print('*************DEFECT**************')
+	print('Pick up Object, Suspend it, and then pick up another object while still in Suspend')
+	print('Object will come towards you backwards, but if you drop and pick it up again, will show face')
+	print('Test grabbed_object.is_suspended & suspending_object_active true/false states')
+	print('*************DEFECT**************')
+	
+	
 	left_mouse_down = false
 	PREM_7.trig_anim.play("RESET")
 	PREM_7.trig_anim.play("trigger_pull")
@@ -541,6 +599,9 @@ func grab_object():
 		clear_char_obj_shape()
 		grabbed_object.collision_shape.disabled = false
 		grabbed_object.lock_rotation = false
+		print('----ALERT ALERT ALERT ALERT -----')
+		print('CAN WE CHANGE THESE (angular/linear velocity) TO DAMPEN INSTEAD OF STRAIGHT TO ZERO?????????')
+		print('----ALERT ALERT ALERT ALERT -----')
 		grabbed_object.angular_velocity = Vector3.ZERO
 		grabbed_object.linear_velocity = Vector3.ZERO
 		grabbed_object.set_outline('RELEASE', Color.WHITE, 0.0)
@@ -556,6 +617,9 @@ func grab_object():
 		grabbed_object.is_grabbed = false
 		grabbed_object.recently_grabbed = true
 		grabbed_object.is_released = true
+		if not suspending_object_active:
+			print('why here?')
+			grabbed_object.is_suspended = false
 		#if extracting_object_active and grabbed_object.is_extractable:
 			#grabbed_object.extract_parts()
 		object_is_grabbed = false
@@ -609,8 +673,11 @@ func grab_object():
 				grabbed_rotation.z = shortest_angle_diff_value(grabbed_initial_rotation.z, grabbed_global_rotation.z)
 				object_is_grabbed = true
 				grabbed_object.gravity_scale = 1.75
-				grabbed_object.collision_shape.disabled = true
 				grabbed_object.is_touching_ground = false
+				grabbed_target_position = grabbed_object.position
+				if grabbed_object.is_suspended:
+					return
+				grabbed_object.collision_shape.disabled = true
 				create_char_obj_shape(grabbed_object)
 
 			else:
@@ -625,7 +692,7 @@ func control_object(status):
 		hover_anim.pause()
 		PREM_7.trig_anim.play("RESET")
 		PREM_7.trig_anim.play("trigger_pull")
-		collision_layer = 12
+		collision_layer = 1
 		right_mouse_down = true
 
 		if current_mode == MODE_1:
@@ -636,6 +703,7 @@ func control_object(status):
 		elif current_mode == MODE_2:
 			print("Begin Suspending Object")
 			suspending_object_active = true
+			
 			glow_opacity = 0.7
 
 		elif current_mode == MODE_3:
@@ -675,8 +743,9 @@ func control_object(status):
 		elif current_mode == MODE_2:
 			print("Object has been Suspended!")
 			grabbed_object.gravity_scale = 0.0
+			grabbed_object.is_suspended = true
 			grab_object()
-			suspending_object_active = false
+
 
 		elif current_mode == MODE_3:
 			if grabbed_object:
@@ -853,6 +922,7 @@ func clear_char_obj_shape():
 	if is_instance_valid(char_obj_shape):
 		char_obj_shape.shape = null
 		char_obj_shape.visible = false
+		char_obj_shape = null
 
 func handle_jetpack_logic(delta: float) -> void:
 	if extracting_object_active:
@@ -863,9 +933,6 @@ func handle_jetpack_logic(delta: float) -> void:
 		if airborne:
 			handle_jetpack('7', delta)
 		return
-	# If extraction has ended or part is grabbed, unlock hover
-	if hover_lock and not extracting_object_active:
-		hover_lock = false
 
 	if jetpack_active:
 		handle_jetpack('1', delta)
@@ -910,6 +977,10 @@ func update_reticle_targeting() -> void:
 	if result and not grabbed_object:
 		var collider = result.collider
 		if collider is RigidBody3D and not collider.is_rocketship:
+			if collider.is_suspended:
+				suspending_object_active = true
+			else:
+				suspending_object_active = false
 			match current_mode:
 				MODE_1: hud_reticle.modulate = MODE_1_COLOR
 				MODE_2: hud_reticle.modulate = MODE_2_COLOR
@@ -946,12 +1017,12 @@ func update_grabbed_object_sway(delta: float) -> void:
 	var pitch_factor = 1.0 - clamp(pitch_distance / max_pitch_distance, 0.0, 1.0)
 	object_sway_strength_y = object_sway_base_y * pitch_factor
 	var pitch_offset = clamp(camera.rotation.x, -0.25, 1)
-	var target_y = grabbed_initial_position.y
+	#var target_y = grabbed_initial_position.y
 	var sway_x = camera.global_transform.basis.x.normalized() * object_sway_offset.x
 	var sway_z = camera.global_transform.basis.y.normalized() * -object_sway_offset.y
 	var sway_offset = sway_x + sway_z
-	target_y = clamp(target_y, floor_y, max_y)
-	grabbed_object.position.y = target_y
+	#target_y = clamp(target_y, floor_y, max_y)
+	#grabbed_object.position.y = target_y
 	grabbed_object.global_position += sway_offset
 	grabbed_object.rotation_degrees = grabbed_rotation
 	grabbed_object.object_rotation = grabbed_object.global_rotation_degrees

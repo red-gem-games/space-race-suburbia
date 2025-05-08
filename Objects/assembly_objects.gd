@@ -1,6 +1,12 @@
 extends RigidBody3D
 class_name assembly_objects
 
+
+
+
+
+
+
 @onready var collision_shape: CollisionShape3D = $CollisionShape3D
 
 var object_body: MeshInstance3D
@@ -22,6 +28,8 @@ var is_touching_ground: bool = false
 var is_grabbed: bool = false
 var recently_grabbed: bool = false
 var is_released: bool = false
+
+var is_suspended: bool = false
 
 var base_spawn_pos: Vector3
 
@@ -111,7 +119,6 @@ func _ready() -> void:
 		is_stepladder = true
 		collision_layer = 1
 		collision_mask = 1
-	
 	else:
 		collision_layer = 2
 		collision_mask = 3
@@ -149,6 +156,18 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	
+	if is_suspended:
+		linear_velocity = Vector3(0.0, 0.0, 0.0)
+		##>?>
+		#inertia = Vector3(100.0, 100.0, 100.0)
+		##>?>
+		#collision_layer = 1
+		#collision_mask = 1
+		
+		print('take away the above and Object moves around but you can walk through it...keep it and you can barely move Object')
+		print('---- need to find a way to do both ---- ')
+		
+	
 	if is_assembly_part:
 		if not extraction_complete:
 			complete_extraction()
@@ -168,6 +187,9 @@ func _physics_process(delta: float) -> void:
 	elif alignment < -0.99 and is_touching_ground:
 		if not damp_set:
 			dampen_assembly_object(delta * 0.025)
+	else:
+		linear_damp = 0
+		angular_damp = 0
 
 	if is_grabbed:
 		base_spawn_pos = global_position
@@ -222,17 +244,9 @@ func dampen_assembly_object(time):
 	var t = clamp(damp_elapsed_time / damp_ramp_time, 0.0, 1.0)
 	linear_damp = lerp(starting_damp, target_damp, t)
 	angular_damp = lerp(starting_damp, target_damp, t)
-	gravity_scale = 0.25
-	
-	if t >= 1.0:
-		add_to_group("Ground")
-		contact_monitor = true
-		linear_damp = 40
-		angular_damp = 0
-		gravity_scale = 1.0
-		damp_elapsed_time = 0.0
-		recently_grabbed = false
-		damp_set = true
+	gravity_scale = 1.0
+	linear_damp = 40
+	damp_set = true
 
 func _on_body_shape_entered(body_rid: RID, body: Node, body_shape_index: int, local_shape_index: int) -> void:
 	if body.is_in_group("Ground"):
