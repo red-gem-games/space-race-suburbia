@@ -17,7 +17,7 @@ var colliding_with_assembly_object: bool = false
 var assembly_object_mass: float
 var player_moving_forward: bool = false
 
-var assembly_part_selection: bool = false
+var assembly_component_selection: bool = false
 
 # Moving to physics process
 var desired_direction := Vector3.ZERO
@@ -26,7 +26,7 @@ var movement_resistance: float = 0.0
 
 var glow_color: Color
 
-var distance_from_character: float = 8
+var distance_from_character: float = 7.0
 var previous_height: float
 var rotate_tween: Tween
 
@@ -97,6 +97,8 @@ var extracting_object_active: bool = false
 var suspending_object_active: bool = false
 var fusing_object_active: bool = false
 var inspecting_object_active: bool = false
+
+var extraction_recently_completed: bool = false
 
 var pitch: float = 0.0
 var pitch_set: bool = false
@@ -203,6 +205,7 @@ func _physics_process(delta: float) -> void:
 	
 	
 	if grabbed_object and grabbed_object.is_suspended:
+		print('Hover Lock: ', hover_lock)
 		if char_obj_shape:
 			print("Char Obj Shape: ", char_obj_shape)
 			clear_char_obj_shape()
@@ -236,11 +239,11 @@ func _physics_process(delta: float) -> void:
 	if grabbed_object:
 		if not grabbed_object.is_suspended:
 			if vertical == 1:
-				distance_from_character = lerp(distance_from_character, 4.5, delta * 2.5)  # Closer
+				distance_from_character = lerp(distance_from_character, 5.0, delta * 2.5)  # Closer
 			elif vertical == -1:
-				distance_from_character = lerp(distance_from_character, 9.0, delta * 2.5)  # Further
+				distance_from_character = lerp(distance_from_character, 10.0, delta * 2.5)  # Further
 			else:
-				distance_from_character = lerp(distance_from_character, 6.0, delta * 2.0)  # Neutral
+				distance_from_character = lerp(distance_from_character, 7.0, delta * 2.0)  # Neutral
 			# Apply horizontal sway when strafing
 			if horizontal != 0:
 				#object_sway_offset.x += horizontal * object_sway_strength_x * 20.0 * delta
@@ -264,7 +267,7 @@ func _physics_process(delta: float) -> void:
 		vertical_velocity = 0.0
 		airborne = false
 		grounded = true
-	elif position.y > 2:
+	elif position.y > 2 and jetpack_active:
 		grounded = false
 		airborne = true
 
@@ -325,7 +328,7 @@ func _process(delta: float) -> void:
 
 	if extracting_object_active:
 		desired_pitch = clamp(desired_pitch, 0.0, 0.35)
-		if assembly_part_selection:
+		if assembly_component_selection:
 			var yaw_range = deg_to_rad(30.0)
 			desired_yaw = clamp(desired_yaw, extracting_yaw - yaw_range, extracting_yaw + yaw_range)
 		else:
@@ -521,7 +524,7 @@ func _input(event: InputEvent) -> void:
 			hover_lock = false
 			if not airborne:
 				pitch_set = false
-			if pressed:
+			if pressed and not assembly_component_selection:
 				jetpack_active = true
 			else:
 				jetpack_active = false
@@ -621,13 +624,17 @@ func grab_object():
 			print('why here?')
 			grabbed_object.is_suspended = false
 		#if extracting_object_active and grabbed_object.is_extractable:
-			#grabbed_object.extract_parts()
+			#grabbed_object.extract_components()
 		object_is_grabbed = false
 		grabbed_object = null
 		return
-	else:
+	else: #Grab a new object
 		extracting_object_active = false
-		assembly_part_selection = false
+		if assembly_component_selection:
+			jetpack_active = false
+			vertical_velocity = 0.0
+			hover_lock = false
+			assembly_component_selection = false
 		hover_anim.play("RESET")
 		hover_anim.play("hover")
 		var space_state = get_world_3d().direct_space_state
@@ -708,7 +715,7 @@ func control_object(status):
 
 		elif current_mode == MODE_3:
 			print("Extracting Assembly Parts")
-			if not grabbed_object.is_assembly_part:
+			if not grabbed_object.is_assembly_component:
 				extracting_object_active = true
 				extracting_yaw = desired_yaw
 				grabbed_object.start_extraction()
@@ -749,11 +756,11 @@ func control_object(status):
 
 		elif current_mode == MODE_3:
 			if grabbed_object:
-				if not grabbed_object.is_being_extracted and not grabbed_object.is_assembly_part:
+				if not grabbed_object.is_being_extracted and not grabbed_object.is_assembly_component:
 					grabbed_object.cancel_extraction()
 				else:
-					if not grabbed_object.is_assembly_part:
-						print("Assembly parts have been Extracted!")
+					if not grabbed_object.is_assembly_component:
+						print("Assembly components have been Extracted!")
 						grab_object()
 
 		elif current_mode == MODE_4:
@@ -926,11 +933,11 @@ func clear_char_obj_shape():
 
 func handle_jetpack_logic(delta: float) -> void:
 	if extracting_object_active:
-		if not hover_lock:
-			hover_lock = true
-			hover_base_y = global_position.y
-			hover_bob_time = 0.0
 		if airborne:
+			if not hover_lock:
+				hover_lock = true
+				hover_base_y = global_position.y
+				hover_bob_time = 0.0
 			handle_jetpack('7', delta)
 		return
 

@@ -226,8 +226,9 @@ size = Vector3(2.03436, 2.35641, 1.98682)
 resource_name = "Primary"
 cull_mode = 2
 albedo_color = Color(0.838613, 0.8333, 0.8333, 1)
-metallic = 0.25
-roughness = 0.5
+metallic = 1.0
+metallic_specular = 1.0
+roughness = 0.0
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_2pptx"]
 _surfaces = [{
@@ -531,6 +532,9 @@ shadow_mesh = SubResource("ArrayMesh_7l720")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2pptx"]
 albedo_color = Color(0.264753, 0.264753, 0.264753, 1)
+metallic = 1.0
+metallic_specular = 0.0
+roughness = 0.0
 
 [sub_resource type="BoxMesh" id="BoxMesh_caypu"]
 material = SubResource("StandardMaterial3D_2pptx")
@@ -725,7 +729,7 @@ mesh = SubResource("ArrayMesh_b77fo")
 skeleton = NodePath("")
 
 [node name="Drum" type="MeshInstance3D" parent="Body"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0228525, 0.129764, 0.152355)
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.0228525, -0.133587, 0.152355)
 mesh = SubResource("ArrayMesh_5gch6")
 skeleton = NodePath("")
 surface_material_override/0 = ExtResource("2_yvv8m")
@@ -737,19 +741,25 @@ skeleton = NodePath("")
 surface_material_override/0 = ExtResource("2_yvv8m")
 
 [node name="PlaceholderDoor" type="MeshInstance3D" parent="Body"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.04242, 0.229166)
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.0244058, -0.0592216, 1.02598)
 mesh = SubResource("BoxMesh_caypu")
 skeleton = NodePath("../..")
 
 [node name="Label3D" type="Label3D" parent="Body"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0269287, 0.376274, 1.04923)
-pixel_size = 0.01
-text = "Washer 2
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0143264, 0.758357, 1.0089)
+pixel_size = 0.001
+text = "Drying Machine
 "
+font_size = 210
+outline_size = 10
 
-[node name="Label3D" type="Label3D" parent="Body/Label3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00589311, -0.49898, -0.0340959)
-text = "Placeholder"
+[node name="Label3D2" type="Label3D" parent="Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0143264, 0.383898, 1.0728)
+pixel_size = 0.001
+text = "Door
+Placeholder"
+font_size = 90
+outline_size = 10
 
 [node name="Outline" type="MeshInstance3D" parent="."]
 visible = false

@@ -9,7 +9,7 @@ var grabbed_object: RigidBody3D = null
 var object_is_grabbed: bool = false
 
 var previous_grid_positions := {}
-var assembly_parts_global_position: Vector3
+var assembly_components_global_position: Vector3
 
 var screen_refresh_rate: float
 
@@ -51,7 +51,7 @@ func _process(delta: float) -> void:
 	for child in $Extracted_Object.get_children():
 		if child.extraction_complete:
 			if not child.is_full_size:
-				add_part_to_grid(child)
+				add_component_to_grid(child)
 
 
 	# When an object is grabbed:
@@ -129,7 +129,7 @@ func _process(delta: float) -> void:
 
 				target_transform.origin.y += 1.0
 
-				var interp_transform := current_transform.interpolate_with(target_transform, delta * 10.0)
+				var interp_transform := current_transform.interpolate_with(target_transform, delta * 20.0)
 				character.char_obj_shape.global_transform = interp_transform
 
 				if interp_transform.origin.distance_to(target_transform.origin) < 0.1:
@@ -167,7 +167,7 @@ func spawn_grid():
 	
 	previous_grid_positions.clear()
 	
-	assembly_parts_global_position = grabbed_object.global_position
+	assembly_components_global_position = grabbed_object.global_position
 
 	var spacing = 3.0
 	var cube_size = 1.5
@@ -178,16 +178,16 @@ func spawn_grid():
 	if not is_instance_valid(grabbed_object):
 		return
 
-	var part_count = grabbed_object.assembly_parts.size()
-	if part_count == 0:
+	var component_count = grabbed_object.assembly_components.size()
+	if component_count == 0:
 		return
 
-	var columns = min(5, part_count)
+	var columns = min(5, component_count)
 	var rows = 2
 
 	# Corrected logic: top row gets the extra item if odd
-	var top_row_count = int(ceil(part_count / 2.0))
-	var bottom_row_count = part_count - top_row_count
+	var top_row_count = int(ceil(component_count / 2.0))
+	var bottom_row_count = component_count - top_row_count
 	var row_counts = [bottom_row_count, top_row_count]  # Y = 0 (bottom), Y = 1 (top)
 
 	for y in range(rows):
@@ -232,9 +232,10 @@ func spawn_grid():
 
 	grabbed_object.extracted_object_container.global_position = grid_parent.global_position
 
-func add_part_to_grid(obj):
+func add_component_to_grid(obj):
 	obj.scale = Vector3(0.01, 0.01, 0.01)
-	character.assembly_part_selection = true
+	character.assembly_component_selection = true
+	character.extraction_recently_completed = true
 	await get_tree().create_timer(0.025).timeout
 	obj.visible = true
 	obj.scale = Vector3(1.0, 1.0, 1.0)

@@ -11,7 +11,7 @@ class_name assembly_objects
 
 var object_body: MeshInstance3D
 var machine_name: StringName
-var part_name: StringName
+var component_name: StringName
 
 var ASSEMBLY_OBJECT_SCRIPT: Script = preload("res://Objects/assembly_objects.gd")
 var GLOW_SHADER := preload("res://Shaders/grabbed_glow.gdshader")
@@ -43,8 +43,8 @@ var shake_timer: float = 0.0
 var is_extracting: bool = false
 var is_being_extracted: bool = false
 var extract_in_motion: bool = false
-var assembly_parts: Array[RigidBody3D] = []
-var is_assembly_part: bool = false
+var assembly_components: Array[RigidBody3D] = []
+var is_assembly_component: bool = false
 var is_full_size: bool = false
 var extraction_complete: bool = false
 
@@ -70,7 +70,7 @@ var shader_material: ShaderMaterial
 
 var grab_particles: GPUParticles3D
 var grab_particles_shader: Shader
-var particles_material: ShaderMaterial
+var componenticles_material: ShaderMaterial
 
 var extracted_object_container: Node3D
 
@@ -108,7 +108,7 @@ func _ready() -> void:
 	
 	grab_particles_shader = Shader.new()
 	grab_particles_shader.code = preload("res://Shaders/particle_glow.gdshader").code
-	particles_material = ShaderMaterial.new()
+	componenticles_material = ShaderMaterial.new()
 	
 	contact_monitor = true
 	continuous_cd = true
@@ -144,13 +144,13 @@ func _ready() -> void:
 
 	for child in get_children():
 		if child is RigidBody3D:
-			assembly_parts.append(child)
+			assembly_components.append(child)
 			child.collision_layer = 0
 			child.collision_mask = 0
 			child.freeze = true
 			child.name = "%s_%s" % [name, child.name]  # <--- this is the new line
 
-			print('I, ', child.name, ' am an assembly part!')
+			print('I, ', child.name, ' am an assembly component!')
 
 	set_physics_process(true)
 
@@ -163,16 +163,15 @@ func _physics_process(delta: float) -> void:
 		##>?>
 		#collision_layer = 1
 		#collision_mask = 1
-		
 		print('take away the above and Object moves around but you can walk through it...keep it and you can barely move Object')
 		print('---- need to find a way to do both ---- ')
 		
 	
-	if is_assembly_part:
+	if is_assembly_component:
 		if not extraction_complete:
 			complete_extraction()
 	
-	#if is_assembly_part:
+	#if is_assembly_component:
 		#print(position)
 	
 	var up_vector = global_transform.basis.y
@@ -234,7 +233,7 @@ func _process(delta: float) -> void:
 			scale_object(glow_body, 0.001, 0.001, 0.001, 0.25, 0.15)
 		elif shake_timer <= 0.0:
 			is_being_extracted = true
-			extract_parts()
+			extract_components()
 			is_extracting = false
 			extract_in_motion = false
 
@@ -268,7 +267,7 @@ func set_outline(status: String, color: Color, opacity: float) -> void:
 		shader_material.set_shader_parameter("random_seed", randf())
 		glow_body.material_override = shader_material
 		glow_body.visible = true
-		create_particles()
+		create_componenticles()
 
 
 	elif status == 'RELEASE':
@@ -293,7 +292,7 @@ func set_outline(status: String, color: Color, opacity: float) -> void:
 		color.a = 0.25
 		shader_material.set_shader_parameter("glow_color", color)
 
-func create_particles():
+func create_componenticles():
 	grab_particles= GPUParticles3D.new()
 	grab_particles.name = "GrabParticles"
 	grab_particles.amount = 250
@@ -313,7 +312,7 @@ func create_particles():
 	material.spread = 100
 	grab_particles.process_material = material
 
-	# Use a custom shader material for particle visuals
+	# Use a custom shader material for componenticle visuals
 	var particle_visual_mat := ShaderMaterial.new()
 	particle_visual_mat.shader = grab_particles_shader
 	particle_visual_mat.set_shader_parameter("glow_color", Color(0.0, 1.0, 0.0, 0.5))
@@ -339,70 +338,70 @@ func start_extraction():
 	is_extracting = true
 	shake_timer = shake_duration
 
-func extract_parts():
-	var parts = assembly_parts.duplicate()
-	assembly_parts.clear()
+func extract_components():
+	var components = assembly_components.duplicate()
+	assembly_components.clear()
 
 	var shared_grid_positions = grid_positions.duplicate()
 
 
-	for part in parts:
-		if not is_instance_valid(part):
+	for component in components:
+		if not is_instance_valid(component):
 			continue
 
-		remove_child(part)
-		extracted_object_container.add_child(part)
+		remove_child(component)
+		extracted_object_container.add_child(component)
 		
 		await get_tree().process_frame  # <-- Let it reparent
 		
-		part.set_script(ASSEMBLY_OBJECT_SCRIPT)
-		part.call_deferred("_ready")
+		component.set_script(ASSEMBLY_OBJECT_SCRIPT)
+		component.call_deferred("_ready")
 		await get_tree().create_timer(0.001).timeout
 		
-		part.is_extractable = false
-		part.gravity_scale = 0.0
-		part.is_grabbed = false
-		part.is_released = false
-		part.is_assembly_part = true
-		part.is_full_size = false
-		part.visible = false
-		part.freeze = false
-		#part.parent_global_position = global_position
-		print('Part Pos: ', part.global_position)
+		component.is_extractable = false
+		component.gravity_scale = 0.0
+		component.is_grabbed = false
+		component.is_released = false
+		component.is_assembly_component = true
+		component.is_full_size = false
+		component.visible = false
+		component.freeze = false
+		#component.parent_global_position = global_position
+		print('Component Pos: ', component.global_position)
 		
-		part.grid_positions = shared_grid_positions
-		part.assign_next_grid_position()
+		component.grid_positions = shared_grid_positions
+		component.assign_next_grid_position()
 
 
 		# === Outline logic ===
 		var base_mesh: MeshInstance3D = null
-		for child in part.get_children():
+		for child in component.get_children():
 			if child is MeshInstance3D:
 				base_mesh = child
 				break
 		
 		if base_mesh:
 			var outline_mesh := base_mesh.mesh.create_outline(0.15)
-			part.glow_body = MeshInstance3D.new()
-			part.glow_body.name = "Outline"
-			part.glow_body.mesh = outline_mesh
+			component.glow_body = MeshInstance3D.new()
+			component.glow_body.name = "Outline"
+			component.glow_body.mesh = outline_mesh
 
 			# Create or assign a real shader material
 			var glow_mat := ShaderMaterial.new()
 			glow_mat.shader = GLOW_SHADER
-			part.glow_body.material_override = glow_mat
+			component.glow_body.material_override = glow_mat
 
 			# Match transform/position
-			part.glow_body.transform = base_mesh.transform
-			part.glow_body.visible = false
-			part.add_child(part.glow_body)
+			component.glow_body.transform = base_mesh.transform
+			component.glow_body.visible = false
+			component.add_child(component.glow_body)
 			
 			
 		else:
-			push_warning("%s has no MeshInstance3D child to outline!" % part.name)
+			push_warning("%s has no MeshInstance3D child to outline!" % component.name)
 
-		part.set_physics_process(true)
-		part.set_process(true)
+		component.set_physics_process(true)
+		component.set_process(true)
 
 
 
@@ -427,9 +426,9 @@ func extract_object_motion():
 	extract_in_motion = true
 
 func complete_extraction():
-	part_name = name.split("_", true, 1)[1]
+	component_name = name.split("_", true, 1)[1]
 	machine_name = name.split("_", true, 1)[0]
-	print("This part is: ", part_name)
+	print("This component is: ", component_name)
 	print("Came from machine: ", machine_name)
 	global_position = assigned_grid_position
 	extraction_complete = true

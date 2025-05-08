@@ -10,7 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://cmgbtrrh42i2v" path="res://Assets/Textures/concrete_floor_worn_001_disp_4k.png" id="8_w47uh"]
 [ext_resource type="PackedScene" uid="uid://8y8q1bb5ncvv" path="res://Objects/Rocketship/rocketship.tscn" id="9_oe8m4"]
 [ext_resource type="PackedScene" uid="uid://cf60vyvie043n" path="res://Objects/stepladder.tscn" id="9_w47uh"]
-[ext_resource type="PackedScene" uid="uid://cac4tudwvf15y" path="res://Objects/Prize_Dryer/helios_prize_dryer.tscn" id="10_lo5ox"]
+[ext_resource type="PackedScene" uid="uid://50e0ko7nsyll" path="res://Objects/Tune-O-Matic/tune_o_matic.tscn" id="10_lo5ox"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_f3sb7"]
 size = Vector3(100, 1, 100)
@@ -149,8 +149,8 @@ shape = SubResource("BoxShape3D_dwbse")
 [node name="Stepladder" parent="Garage" instance=ExtResource("9_w47uh")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.1505, -0.0453932, -21.8427)
 
-[node name="Helios_Prize_Dryer" parent="Garage" instance=ExtResource("10_lo5ox")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -6.15524, 0, -1.99949)
+[node name="Tune_O_Matic" parent="Garage" instance=ExtResource("10_lo5ox")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -6.36691, -1.04368, -0.963196)
 
 [node name="Platform" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.31278, 0)
