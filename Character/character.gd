@@ -84,9 +84,9 @@ const MODE_2: String = "SUSPEND"
 const MODE_3: String = "EXTRACT"
 const MODE_4: String = "FUSE"
 const MODE_1_COLOR: Color = Color.GREEN
-const MODE_2_COLOR: Color = Color.CYAN
+const MODE_2_COLOR: Color = Color.BLUE
 const MODE_3_COLOR: Color = Color.RED
-const MODE_4_COLOR: Color = Color.PURPLE
+const MODE_4_COLOR: Color = Color.WEB_PURPLE
 var modes = [MODE_1, MODE_2, MODE_3, MODE_4]
 var current_mode: String = MODE_1
 var pending_mode: String = ""  # Holds the pending mode change
@@ -202,17 +202,13 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
-	
-	
+
 	if grabbed_object and grabbed_object.is_suspended:
-		print('Hover Lock: ', hover_lock)
 		if char_obj_shape:
-			print("Char Obj Shape: ", char_obj_shape)
+			print("Clearing Char Obj Shape: ", char_obj_shape)
 			clear_char_obj_shape()
-			
-		print(grabbed_object.collision_layer)
-		print(collision_layer)
-		grabbed_object.position = grabbed_object.position.lerp(grabbed_target_position, delta * 3.0)
+		grabbed_object.gravity_scale = 0.0
+		grabbed_object.position = grabbed_object.position.lerp(grabbed_target_position, delta * 0.5)
 
 	# Update ground distance
 	distance_to_ground = raycast_to_ground()
@@ -246,10 +242,13 @@ func _physics_process(delta: float) -> void:
 				distance_from_character = lerp(distance_from_character, 7.0, delta * 2.0)  # Neutral
 			# Apply horizontal sway when strafing
 			if horizontal != 0:
-				#object_sway_offset.x += horizontal * object_sway_strength_x * 20.0 * delta
 				var strafe_offset = camera.global_transform.basis.x.normalized() * horizontal * -0.005
 				object_sway_offset.x += strafe_offset.x
-
+		#elif grabbed_object.is_suspended:
+			#if vertical == 1:
+				#print('hmmmmmm')
+				##distance_from_character = lerp(distance_from_character, 5.0, delta * 2.5)  # Closer
+				#grabbed_object.position = grabbed_object.position.lerp(grabbed_target_position, delta * 1.0)
 	var desired_direction = Vector3.ZERO
 	if vertical != 0 or horizontal != 0:
 		desired_direction = ((-transform.basis.z) * vertical + (transform.basis.x) * horizontal).normalized()
@@ -322,10 +321,11 @@ func _process(delta: float) -> void:
 
 	# Update grabbed object sway
 	if grabbed_object:
+		if grabbed_object.is_suspended:
+			return
 		update_grabbed_object_sway(delta)
 		if grabbed_object.is_being_extracted:
 			control_object('released')
-
 	if extracting_object_active:
 		desired_pitch = clamp(desired_pitch, 0.0, 0.35)
 		if assembly_component_selection:
@@ -370,9 +370,10 @@ func _input(event: InputEvent) -> void:
 				cycle_mode_direction(true)
 				scroll_cooldown = scroll_cooldown_duration
 			if right_mouse_down and shifting_object_active:
-				if grabbed_object:
+				if grabbed_target_position.y <= max_y:
 					if grabbed_object.is_suspended:
-						grabbed_object.global_position.y += 0.1
+						grabbed_target_position.y += 0.1
+
 
 		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
 			if scroll_cooldown <= 0.0 and not middle_mouse_down and not right_mouse_down and not left_mouse_down:
@@ -380,9 +381,10 @@ func _input(event: InputEvent) -> void:
 				cycle_mode_direction(false)
 				scroll_cooldown = scroll_cooldown_duration
 			if right_mouse_down and shifting_object_active:
-				if grabbed_object:
+				if grabbed_target_position.y >= 0.5:
 					if grabbed_object.is_suspended:
-						grabbed_object.global_position.y = clamp(grabbed_object.global_position.y - 0.1, 0.0, 20.0)
+						grabbed_target_position.y -= 0.1
+
 
 		elif event.button_index == MOUSE_BUTTON_MIDDLE:
 			if not right_mouse_down and not left_mouse_down:
@@ -438,6 +440,7 @@ func _input(event: InputEvent) -> void:
 			else:
 				if grabbed_object:
 					if z_rotate_mode:
+						print('in z rotate mode')
 						grabbed_rotation.z += event.relative.x * rotation_sensitivity / 3
 						var local_forward: Vector3 = grabbed_object.global_transform.basis.z
 						grabbed_object.rotate(local_forward, deg_to_rad(event.relative.x * mouse_speed * 0))
@@ -527,6 +530,7 @@ func _input(event: InputEvent) -> void:
 			if pressed and not assembly_component_selection:
 				jetpack_active = true
 			else:
+				current_jetpack_thrust = lerp(current_jetpack_accel, 0.0, 1.0)
 				jetpack_active = false
 		if event.keycode == KEY_ALT:
 			if airborne:
@@ -585,19 +589,13 @@ func _input(event: InputEvent) -> void:
 
 func grab_object():
 	
-	print('*************DEFECT**************')
-	print('Pick up Object, Suspend it, and then pick up another object while still in Suspend')
-	print('Object will come towards you backwards, but if you drop and pick it up again, will show face')
-	print('Test grabbed_object.is_suspended & suspending_object_active true/false states')
-	print('*************DEFECT**************')
-	
-	
 	left_mouse_down = false
 	PREM_7.trig_anim.play("RESET")
 	PREM_7.trig_anim.play("trigger_pull")
 
 	if grabbed_object:  # An object is already grabbed; release it.
 		# *Re-enable physics on the object:*
+		print('Release')
 		hover_anim.stop()
 		clear_char_obj_shape()
 		grabbed_object.collision_shape.disabled = false
@@ -613,22 +611,16 @@ func grab_object():
 		object_sway_strength_y = object_sway_base_y
 		distance_factor = 0.0
 		grabbed_distance = 0.0
-		grabbed_object.position.z = 0.0
-		if grabbed_object.is_being_extracted:
-			grabbed_object.position.z += 15.0
-		grabbed_collision.position.z = 0.0
 		grabbed_object.is_grabbed = false
 		grabbed_object.recently_grabbed = true
 		grabbed_object.is_released = true
 		if not suspending_object_active:
-			print('why here?')
 			grabbed_object.is_suspended = false
-		#if extracting_object_active and grabbed_object.is_extractable:
-			#grabbed_object.extract_components()
 		object_is_grabbed = false
 		grabbed_object = null
 		return
 	else: #Grab a new object
+		print('Grab')
 		extracting_object_active = false
 		if assembly_component_selection:
 			jetpack_active = false
@@ -710,13 +702,14 @@ func control_object(status):
 		elif current_mode == MODE_2:
 			print("Begin Suspending Object")
 			suspending_object_active = true
-			
 			glow_opacity = 0.7
 
 		elif current_mode == MODE_3:
 			print("Extracting Assembly Parts")
 			if not grabbed_object.is_assembly_component:
 				extracting_object_active = true
+				suspending_object_active = false
+				grabbed_object.is_suspended = false
 				extracting_yaw = desired_yaw
 				grabbed_object.start_extraction()
 			else:
@@ -944,11 +937,14 @@ func handle_jetpack_logic(delta: float) -> void:
 	if jetpack_active:
 		handle_jetpack('1', delta)
 	else:
-		handle_jetpack('2', delta)
-		if hover_lock:
-			handle_jetpack('7', delta)
-		elif current_jetpack_thrust > min_thrust_threshold:
-			handle_jetpack('3', delta)
+		if position.y > 2:
+			if hover_lock:
+				handle_jetpack('7', delta)
+			elif current_jetpack_thrust > min_thrust_threshold:
+				print('jetpack thrust: ', current_jetpack_thrust)
+				handle_jetpack('3', delta)
+			else:
+				handle_jetpack('2', delta)
 
 func update_vertical_velocity() -> void:
 	if current_jetpack_thrust > min_thrust_threshold:
@@ -1010,13 +1006,15 @@ func handle_prem7_decay(delta: float) -> void:
 func update_grabbed_object_physics(delta: float) -> void:
 	if not grabbed_object:
 		return
-	
+	if grabbed_object.is_suspended: 
+		return
 	var current_position = grabbed_object.global_transform.origin
 	speed_vector = (current_position - last_position) / delta
 	last_position = current_position
 	grabbed_object.object_speed = speed_vector
 
 func update_grabbed_object_sway(delta: float) -> void:
+	print('Is This Stopping Suspended Object from going Up/Down?')
 	var pitch_range = pitch_max - pitch_min
 	var pitch_center = pitch_min + pitch_range / 2.0
 	var pitch_distance = abs(camera.rotation.x - pitch_center)

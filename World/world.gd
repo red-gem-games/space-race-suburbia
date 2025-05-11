@@ -56,6 +56,7 @@ func _process(delta: float) -> void:
 
 	# When an object is grabbed:
 	if character.object_is_grabbed and not object_is_grabbed:
+		print('okay')
 		grabbed_object = character.grabbed_object
 		reset_rotation = true
 		object_is_grabbed = true
@@ -77,9 +78,11 @@ func _process(delta: float) -> void:
 	elif not character.object_is_grabbed and object_is_grabbed:
 		if not is_instance_valid(grabbed_object):
 			return
+		print('okay wow')
 		grabbed_object.reparent(assembly_object_container)
-		grabbed_object.global_position = object_global_position
-		grabbed_object.global_position.y += 0.05
+		if not grabbed_object.is_suspended:
+			grabbed_object.global_position = object_global_position
+			grabbed_object.global_position.y += 0.05
 		character.distance_from_character = base_distance_in_front
 		character.pitch_set = false
 		grabbed_object = null

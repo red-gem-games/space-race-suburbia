@@ -70,7 +70,7 @@ var shader_material: ShaderMaterial
 
 var grab_particles: GPUParticles3D
 var grab_particles_shader: Shader
-var componenticles_material: ShaderMaterial
+var particles_material: ShaderMaterial
 
 var extracted_object_container: Node3D
 
@@ -96,9 +96,6 @@ var scale_tween: Tween
 
 func _ready() -> void:
 	
-	contact_monitor = true
-	continuous_cd = true
-	
 	connect("body_shape_entered", Callable(self, "_on_body_shape_entered"))
 	connect("body_shape_exited",  Callable(self, "_on_body_shape_exited"))
 	
@@ -108,7 +105,7 @@ func _ready() -> void:
 	
 	grab_particles_shader = Shader.new()
 	grab_particles_shader.code = preload("res://Shaders/particle_glow.gdshader").code
-	componenticles_material = ShaderMaterial.new()
+	particles_material = ShaderMaterial.new()
 	
 	contact_monitor = true
 	continuous_cd = true
@@ -126,17 +123,23 @@ func _ready() -> void:
 	var base_mesh : MeshInstance3D = null
 	for child in get_children():
 		if child is MeshInstance3D:
-			if child.name != "Body":
+			if child.name == "Outline":
 				base_mesh = child
 			else:
 				object_body = child 
 
 	if base_mesh:
+		#var outline_mesh = base_mesh.duplicate()
+		#glow_body = outline_mesh
+		#glow_body.scale = Vector3(1.15, 1.15, 1.15)
+		#shader_material.shader = GLOW_SHADER
+		#glow_body.set_surface_override_material(0, shader_material)
 		var outline_mesh : Mesh = base_mesh.mesh.create_outline(0.15)
 		glow_body = MeshInstance3D.new()
 		glow_body.name = "Outline"
 		glow_body.mesh = outline_mesh
 		glow_body.material_override = shader_material
+		shader_material.shader = shader
 		glow_body.visible = false
 		add_child(glow_body)
 	else:
@@ -157,40 +160,40 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	
 	if is_suspended:
-		linear_velocity = Vector3(0.0, 0.0, 0.0)
-		##>?>
-		#inertia = Vector3(100.0, 100.0, 100.0)
-		##>?>
-		#collision_layer = 1
-		#collision_mask = 1
-		print('take away the above and Object moves around but you can walk through it...keep it and you can barely move Object')
-		print('---- need to find a way to do both ---- ')
+		linear_velocity = lerp(linear_velocity, Vector3(0.0, 0.0, 0.0), delta * 1.5)
+		angular_velocity = lerp(angular_velocity, Vector3(0.0, 0.0, 0.0), delta * 0.5)
+		print('4 things to work on: ')
+		print('1. Add an additional collision layer or something here to restrict character hitting suspended object')
+		print('2. Need to be able to move object faster with SHIFT key while...shifting')
+		print('3. Change the movement (left, right, forward, backward) to match what the character is seeing vs. actual position')
+		print('4. Allow for Z rotation...')
 		
 	
 	if is_assembly_component:
 		if not extraction_complete:
 			complete_extraction()
 	
-	#if is_assembly_component:
-		#print(position)
-	
 	var up_vector = global_transform.basis.y
 	var alignment = up_vector.dot(Vector3.UP)
-
-	if abs(alignment) < 0.01 and is_touching_ground:
-		if not damp_set:
-			dampen_assembly_object(delta * 0.025)
-	elif alignment > 0.99 and is_touching_ground:
-		if not damp_set:
-			dampen_assembly_object(delta * 0.025)
-	elif alignment < -0.99 and is_touching_ground:
-		if not damp_set:
-			dampen_assembly_object(delta * 0.025)
-	else:
-		linear_damp = 0
-		angular_damp = 0
+	
+	if not is_suspended:
+		if abs(alignment) < 0.01 and is_touching_ground:
+			if not damp_set:
+				dampen_assembly_object(delta * 0.025)
+		elif alignment > 0.99 and is_touching_ground:
+			if not damp_set:
+				dampen_assembly_object(delta * 0.025)
+		elif alignment < -0.99 and is_touching_ground:
+			if not damp_set:
+				dampen_assembly_object(delta * 0.025)
+		else:
+			linear_damp = 0
+			angular_damp = 0
 
 	if is_grabbed:
+		object_body.top_level = false
+		if is_suspended:
+			return
 		base_spawn_pos = global_position
 		object_body.top_level = false
 		object_body.global_transform = global_transform
@@ -249,6 +252,8 @@ func dampen_assembly_object(time):
 
 func _on_body_shape_entered(body_rid: RID, body: Node, body_shape_index: int, local_shape_index: int) -> void:
 	if body.is_in_group("Ground"):
+		if is_suspended:
+			return
 		is_touching_ground = true
 
 func _on_body_shape_exited(body_rid: RID, body: Node, body_shape_index: int, local_shape_index: int) -> void:
@@ -267,7 +272,7 @@ func set_outline(status: String, color: Color, opacity: float) -> void:
 		shader_material.set_shader_parameter("random_seed", randf())
 		glow_body.material_override = shader_material
 		glow_body.visible = true
-		create_componenticles()
+		create_particles()
 
 
 	elif status == 'RELEASE':
@@ -292,7 +297,7 @@ func set_outline(status: String, color: Color, opacity: float) -> void:
 		color.a = 0.25
 		shader_material.set_shader_parameter("glow_color", color)
 
-func create_componenticles():
+func create_particles():
 	grab_particles= GPUParticles3D.new()
 	grab_particles.name = "GrabParticles"
 	grab_particles.amount = 250
@@ -312,7 +317,7 @@ func create_componenticles():
 	material.spread = 100
 	grab_particles.process_material = material
 
-	# Use a custom shader material for componenticle visuals
+	# Use a custom shader material for particle visuals
 	var particle_visual_mat := ShaderMaterial.new()
 	particle_visual_mat.shader = grab_particles_shader
 	particle_visual_mat.set_shader_parameter("glow_color", Color(0.0, 1.0, 0.0, 0.5))

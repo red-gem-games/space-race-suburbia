@@ -1,4 +1,4 @@
-[gd_scene load_steps=52 format=4 uid="uid://diw15u24g3w3h"]
+[gd_scene load_steps=53 format=4 uid="uid://diw15u24g3w3h"]
 
 [ext_resource type="Script" uid="uid://clwwid0cs6u32" path="res://Objects/assembly_objects.gd" id="1_yvv8m"]
 [ext_resource type="Material" uid="uid://c7xbbfk34fthw" path="res://Shaders/metallic_standard_material.tres" id="2_yvv8m"]
@@ -531,10 +531,10 @@ blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_7l720")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2pptx"]
-albedo_color = Color(0.264753, 0.264753, 0.264753, 1)
+albedo_color = Color(0.0179334, 0.8353, 0.628811, 1)
 metallic = 1.0
-metallic_specular = 0.0
-roughness = 0.0
+metallic_specular = 1.0
+roughness = 0.45
 
 [sub_resource type="BoxMesh" id="BoxMesh_caypu"]
 material = SubResource("StandardMaterial3D_2pptx")
@@ -578,6 +578,8 @@ _surfaces = [{
 }]
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_v3oqm")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_qbtml"]
 
 [node name="DryingMachine" type="RigidBody3D"]
 mass = 75.0
@@ -765,3 +767,4 @@ outline_size = 10
 visible = false
 mesh = SubResource("ArrayMesh_xbj4q")
 skeleton = NodePath("")
+surface_material_override/0 = SubResource("ShaderMaterial_qbtml")
