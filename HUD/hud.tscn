@@ -15,7 +15,6 @@ script = ExtResource("1_64ctp")
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="Reticle" type="Control" parent="CanvasLayer"]
-modulate = Color(0, 1, 1, 1)
 layout_mode = 3
 anchors_preset = 8
 anchor_left = 0.5
@@ -24,7 +23,7 @@ anchor_right = 0.5
 anchor_bottom = 0.5
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(0.15, 0.15)
+scale = Vector2(0.25, 0.25)
 
 [node name="TextureRect" type="TextureRect" parent="CanvasLayer/Reticle"]
 layout_mode = 1

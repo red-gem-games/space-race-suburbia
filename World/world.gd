@@ -70,7 +70,7 @@ func _process(delta: float) -> void:
 		if not character.suspending_object_active:
 			print('simple enough')
 			grabbed_object.reparent(character.grabbed_container)
-		character.suspending_object_active = false
+		#character.suspending_object_active = false
 		
 
 	
@@ -90,9 +90,9 @@ func _process(delta: float) -> void:
 		
 
 	if character.object_is_grabbed and object_is_grabbed and grabbed_object:
+		object_global_position = grabbed_object.global_position
 		if grabbed_object.is_suspended:
 			return
-		object_global_position = grabbed_object.global_position
 		char_pos = character.camera.global_transform.origin
 		char_forward = -character.camera.global_transform.basis.z.normalized()
 		target_pos = char_pos + char_forward * character.distance_from_character

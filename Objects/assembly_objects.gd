@@ -153,7 +153,7 @@ func _ready() -> void:
 			child.freeze = true
 			child.name = "%s_%s" % [name, child.name]  # <--- this is the new line
 
-			print('I, ', child.name, ' am an assembly component!')
+			#print('I, ', child.name, ' am an assembly component!')
 
 	set_physics_process(true)
 
@@ -162,12 +162,6 @@ func _physics_process(delta: float) -> void:
 	if is_suspended:
 		linear_velocity = lerp(linear_velocity, Vector3(0.0, 0.0, 0.0), delta * 1.5)
 		angular_velocity = lerp(angular_velocity, Vector3(0.0, 0.0, 0.0), delta * 0.5)
-		print('4 things to work on: ')
-		print('1. Add an additional collision layer or something here to restrict character hitting suspended object')
-		print('2. Need to be able to move object faster with SHIFT key while...shifting')
-		print('3. Change the movement (left, right, forward, backward) to match what the character is seeing vs. actual position')
-		print('4. Allow for Z rotation...')
-		
 	
 	if is_assembly_component:
 		if not extraction_complete:
@@ -195,7 +189,6 @@ func _physics_process(delta: float) -> void:
 		if is_suspended:
 			return
 		base_spawn_pos = global_position
-		object_body.top_level = false
 		object_body.global_transform = global_transform
 		linear_damp = 0
 		angular_damp = 0

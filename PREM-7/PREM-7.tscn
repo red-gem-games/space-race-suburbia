@@ -1,7 +1,8 @@
-[gd_scene load_steps=100 format=4 uid="uid://bpvm0l41dywjs"]
+[gd_scene load_steps=101 format=4 uid="uid://bpvm0l41dywjs"]
 
 [ext_resource type="Script" uid="uid://so25svauxmkt" path="res://PREM-7/prem_7.gd" id="1_iarxa"]
 [ext_resource type="Shader" uid="uid://cw73tbbh1mfcs" path="res://Shaders/PREM-7_glow.gdshader" id="2_2cjep"]
+[ext_resource type="PackedScene" uid="uid://dvefh4ao2ciyu" path="res://PREM-7/beam.tscn" id="3_8m00m"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_a4na6"]
 resource_name = "Material.003"
@@ -1716,3 +1717,11 @@ libraries = {
 libraries = {
 &"": SubResource("AnimationLibrary_3tjq7")
 }
+
+[node name="Beam" parent="." instance=ExtResource("3_8m00m")]
+transform = Transform3D(0.991779, 0.127965, -6.40305e-09, 0.00474713, -0.0367922, -0.999312, -0.127877, 0.991096, -0.0370972, -0.0414132, 0.0444685, -0.428569)
+
+[node name="SpotLight3D" type="SpotLight3D" parent="."]
+transform = Transform3D(0.498528, 0.142093, -0.855149, -0.0715637, 0.989853, 0.122757, 0.863915, 0, 0.503638, -1.85658, 0.509018, 0.527215)
+light_specular = 1.0
+shadow_enabled = true

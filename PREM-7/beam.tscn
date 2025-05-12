@@ -1,0 +1,25 @@
+[gd_scene load_steps=4 format=3 uid="uid://dvefh4ao2ciyu"]
+
+[ext_resource type="Script" uid="uid://cpv0k2tvyh0d7" path="res://beam.gd" id="1_i0pe4"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8l162"]
+transparency = 1
+albedo_color = Color(1, 0, 0, 0.6)
+emission_enabled = true
+emission = Color(1, 0, 0, 1)
+emission_energy_multiplier = 10.0
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_x6usk"]
+material = SubResource("StandardMaterial3D_8l162")
+flip_faces = true
+top_radius = 0.2
+bottom_radius = 0.05
+height = 0.01
+
+[node name="Beam" type="RayCast3D"]
+target_position = Vector3(0, -10, 0)
+collision_mask = 2
+script = ExtResource("1_i0pe4")
+
+[node name="BeamMesh" type="MeshInstance3D" parent="."]
+mesh = SubResource("CylinderMesh_x6usk")

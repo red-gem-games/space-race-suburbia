@@ -49,7 +49,10 @@ background_color = Color(0.709012, 1, 0.995678, 1)
 sky = SubResource("Sky_fj7yv")
 ambient_light_source = 3
 ambient_light_color = Color(1, 1, 1, 1)
-reflected_light_source = 2
+glow_enabled = true
+glow_normalized = true
+glow_blend_mode = 0
+glow_hdr_threshold = 2.0
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_aqk2v"]
 
