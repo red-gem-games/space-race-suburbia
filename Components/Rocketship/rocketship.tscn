@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://8y8q1bb5ncvv"]
 
-[ext_resource type="Script" uid="uid://cbiinlnk684f" path="res://Objects/Rocketship/rocketship.gd" id="1_7m23k"]
+[ext_resource type="Script" uid="uid://cbiinlnk684f" path="res://Components/Rocketship/rocketship.gd" id="1_7m23k"]
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_2u7x2"]
 top_radius = 1.25

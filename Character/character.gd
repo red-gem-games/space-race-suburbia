@@ -216,10 +216,6 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	
-	print('Active: ', suspending_object_active)
-	if grabbed_object:
-		print('Suspended Object: ', grabbed_object.is_suspended)
-
 	# Update ground distance
 	distance_to_ground = raycast_to_ground()
 
@@ -503,7 +499,7 @@ func _input(event: InputEvent) -> void:
 			if event.pressed:
 				print('add FUSE visuals')
 
-		if event.keycode == KEY_TAB and pressed and not event.is_echo():
+		if event.keycode == KEY_QUOTELEFT and pressed and not event.is_echo():
 			if Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
 				Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 			else:
@@ -646,9 +642,9 @@ func grab_object():
 	PREM_7.trig_anim.play("trigger_pull")
 
 	if grabbed_object:  # An object is already grabbed; release it.
-		# *Re-enable physics on the object:*
 		print('Release')
 		clear_char_obj_shape()
+		PREM_7.beam.retract_beam()
 		grabbed_object.collision_shape.disabled = false
 		grabbed_object.lock_rotation = false
 		print('----ALERT ALERT ALERT ALERT -----')
@@ -673,7 +669,6 @@ func grab_object():
 		suspending_object_active = false
 		object_is_grabbed = false
 		grabbed_object = null
-		
 		return
 	else: #Grab a new object
 		print('Grab')
@@ -697,6 +692,7 @@ func grab_object():
 				grabbed_object = target_body
 				grabbed_object.angular_velocity = Vector3.ZERO
 				grabbed_object.is_grabbed = true
+				PREM_7.beam.cast_beam()
 				var object_children = grabbed_object.get_children()
 				for child in object_children:
 					if child is MeshInstance3D:
@@ -770,7 +766,7 @@ func control_object(status):
 
 		elif current_mode == MODE_3:
 			print("Extracting Assembly Parts")
-			if not grabbed_object.is_assembly_component:
+			if not grabbed_object.is_assembly_component and not grabbed_object.is_stepladder:
 				extracting_object_active = true
 				suspending_object_active = false
 				grabbed_object.is_suspended = false
@@ -1050,11 +1046,6 @@ func update_reticle_targeting() -> void:
 	if result and not grabbed_object:
 		var collider = result.collider
 		if collider is RigidBody3D and not collider.is_rocketship:
-			#if collider.is_suspended:
-				#suspending_object_active = true
-			#else:
-				#print('uhhhh wtf')
-				#suspending_object_active = false
 			match current_mode:
 				MODE_1: hud_reticle.modulate = MODE_1_COLOR
 				MODE_2: hud_reticle.modulate = MODE_2_COLOR

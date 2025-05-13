@@ -13,7 +13,7 @@ var object_body: MeshInstance3D
 var machine_name: StringName
 var component_name: StringName
 
-var ASSEMBLY_OBJECT_SCRIPT: Script = preload("res://Objects/assembly_objects.gd")
+var COMPONENT_SCRIPT: Script = preload("res://Components/components.gd")
 var GLOW_SHADER := preload("res://Shaders/grabbed_glow.gdshader")
 
 var grid_positions: Dictionary = {}
@@ -352,7 +352,7 @@ func extract_components():
 		
 		await get_tree().process_frame  # <-- Let it reparent
 		
-		component.set_script(ASSEMBLY_OBJECT_SCRIPT)
+		component.set_script(COMPONENT_SCRIPT)
 		component.call_deferred("_ready")
 		await get_tree().create_timer(0.001).timeout
 		

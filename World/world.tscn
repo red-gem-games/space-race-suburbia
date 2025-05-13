@@ -1,16 +1,17 @@
-[gd_scene load_steps=24 format=3 uid="uid://dw2grejb4tc3k"]
+[gd_scene load_steps=25 format=3 uid="uid://dw2grejb4tc3k"]
 
 [ext_resource type="PackedScene" uid="uid://f722yn8gdiyj" path="res://Character/character.tscn" id="1_f3sb7"]
 [ext_resource type="Script" uid="uid://cpdnlycwlet2q" path="res://World/world.gd" id="1_tlwt5"]
 [ext_resource type="Shader" uid="uid://dywmpt1g3j23k" path="res://Shaders/grass.gdshader" id="2_fj7yv"]
-[ext_resource type="PackedScene" uid="uid://cvtdsd7mu2wv" path="res://Objects/WashingMachine.tscn" id="4_036b0"]
-[ext_resource type="PackedScene" uid="uid://diw15u24g3w3h" path="res://Objects/DryingMachine.tscn" id="6_dwbse"]
+[ext_resource type="PackedScene" uid="uid://cvtdsd7mu2wv" path="res://Components/WashingMachine.tscn" id="4_036b0"]
+[ext_resource type="PackedScene" uid="uid://diw15u24g3w3h" path="res://Components/DryingMachine.tscn" id="6_dwbse"]
 [ext_resource type="Shader" uid="uid://cgn0qf8wluwxh" path="res://Shaders/garage_floor.gdshader" id="6_eidgh"]
 [ext_resource type="Texture2D" uid="uid://dpi43v27xa8kb" path="res://Assets/Textures/cracked_concrete_disp_1k.png" id="7_oe8m4"]
 [ext_resource type="Texture2D" uid="uid://cmgbtrrh42i2v" path="res://Assets/Textures/concrete_floor_worn_001_disp_4k.png" id="8_w47uh"]
-[ext_resource type="PackedScene" uid="uid://8y8q1bb5ncvv" path="res://Objects/Rocketship/rocketship.tscn" id="9_oe8m4"]
-[ext_resource type="PackedScene" uid="uid://cf60vyvie043n" path="res://Objects/stepladder.tscn" id="9_w47uh"]
-[ext_resource type="PackedScene" uid="uid://50e0ko7nsyll" path="res://Objects/Tune-O-Matic/tune_o_matic.tscn" id="10_lo5ox"]
+[ext_resource type="PackedScene" uid="uid://8y8q1bb5ncvv" path="res://Components/Rocketship/rocketship.tscn" id="9_oe8m4"]
+[ext_resource type="PackedScene" uid="uid://cf60vyvie043n" path="res://Components/Helpers/stepladder.tscn" id="9_w47uh"]
+[ext_resource type="PackedScene" uid="uid://50e0ko7nsyll" path="res://Components/Tune-O-Matic/tune_o_matic.tscn" id="10_lo5ox"]
+[ext_resource type="PackedScene" uid="uid://dvefh4ao2ciyu" path="res://PREM-7/beam.tscn" id="12_h2aik"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_f3sb7"]
 size = Vector3(100, 1, 100)
@@ -171,3 +172,5 @@ shape = SubResource("CylinderShape3D_eidgh")
 [node name="Rocketship" parent="Platform" instance=ExtResource("9_oe8m4")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8.00903, 0)
 sleeping = true
+
+[node name="Beam" parent="." instance=ExtResource("12_h2aik")]

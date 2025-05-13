@@ -122,7 +122,7 @@ script = ExtResource("1_pjt0s")
 [node name="Camera3D" type="Camera3D" parent="."]
 
 [node name="PREM-7" parent="Camera3D" instance=ExtResource("1_glpr6")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.05391, -0.376162, -1.04608)
+transform = Transform3D(0.99947, 0, 0.0325621, 0, 1, 0, -0.0325621, 0, 0.99947, 1.05391, -0.376162, -1.04608)
 
 [node name="Grabbed_Container" type="Node3D" parent="Camera3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.15, 0)
