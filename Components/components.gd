@@ -162,6 +162,9 @@ func _physics_process(delta: float) -> void:
 	if is_suspended:
 		linear_velocity = lerp(linear_velocity, Vector3(0.0, 0.0, 0.0), delta * 1.5)
 		angular_velocity = lerp(angular_velocity, Vector3(0.0, 0.0, 0.0), delta * 0.5)
+		print('Collision Layer: ', collision_layer)
+		print('Collision Mask: ', collision_mask)
+		print('Continuous: ', continuous_cd)
 	
 	if is_assembly_component:
 		if not extraction_complete:

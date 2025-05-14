@@ -7,7 +7,7 @@ transparency = 1
 albedo_color = Color(1, 0, 0, 0.6)
 emission_enabled = true
 emission = Color(1, 0, 0, 1)
-emission_energy_multiplier = 10.0
+emission_energy_multiplier = 5.0
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_x6usk"]
 material = SubResource("StandardMaterial3D_8l162")

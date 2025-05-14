@@ -109,7 +109,7 @@ var pitch_min: float = base_pitch_min
 var pitch_max: float = base_pitch_max
 var base_mouse_speed: float = 0.002
 var mouse_speed: float = base_mouse_speed
-var smoothing: float = 0.05  # Smoothing factor (0-1)
+var smoothing: float = 0.15  # Smoothing factor (0-1)
 var current_mouse_speed_x: float
 var current_mouse_speed_y: float
 
@@ -233,22 +233,26 @@ func _physics_process(delta: float) -> void:
 	if not extracting_object_active:
 		if move_input["up"] and not move_input["down"]:
 			if not shifting_object_active:
-				vertical = 1
+				vertical = lerp(vertical, 1, delta)
+				prem7_rotation_offset.x -= 0.0025
 		elif move_input["down"] and not move_input["up"]:
 			if not shifting_object_active:
-				vertical = -1
+				vertical = lerp(vertical, -1, delta)
+				prem7_rotation_offset.x += 0.0025
 		if move_input["right"] and not move_input["left"]:
 			if not shifting_object_active:
-				horizontal = 1
+				horizontal = lerp(horizontal, 1, delta)
+				prem7_rotation_offset.y += 0.0025
 		elif move_input["left"] and not move_input["right"]:
 			if not shifting_object_active:
-				horizontal = -1
+				horizontal = lerp(horizontal, -1, delta)
+				prem7_rotation_offset.y -= 0.0025
 
 	if grabbed_object:
 		if not grabbed_object.is_suspended:
-			if vertical == 1:
+			if vertical > 0:
 				distance_from_character = lerp(distance_from_character, 5.0, delta * 2.5)  # Closer
-			elif vertical == -1:
+			elif vertical < 0:
 				distance_from_character = lerp(distance_from_character, 10.0, delta * 2.5)  # Further
 			else:
 				distance_from_character = lerp(distance_from_character, 7.0, delta * 2.0)  # Neutral
@@ -262,11 +266,11 @@ func _physics_process(delta: float) -> void:
 		desired_direction = ((-transform.basis.z) * vertical + (transform.basis.x) * horizontal).normalized()
 
 	var desired_velocity = desired_direction * movement_speed
-	current_velocity = current_velocity.lerp(desired_velocity, smoothing)
+	current_velocity = lerp(current_velocity, desired_velocity, smoothing)
 
-	velocity.x = current_velocity.x
-	velocity.z = current_velocity.z
-	velocity.y = vertical_velocity
+	velocity.x = lerp(velocity.x, current_velocity.x, delta * 5)
+	velocity.z = lerp(velocity.z, current_velocity.z, delta * 5)
+	velocity.y = lerp(velocity.y, vertical_velocity, delta * 5)
 
 
 	# Landing check
@@ -284,45 +288,6 @@ func _physics_process(delta: float) -> void:
 
 
 func _process(delta: float) -> void:
-	
-	if grabbed_object and grabbed_object.is_suspended:
-		force_look_at_object = true
-
-		# Step 1: Get direction to object from the camera
-		var cam_pos = camera.global_transform.origin
-		var target_pos = grabbed_object.global_transform.origin
-		var dir = (target_pos - cam_pos).normalized()
-
-		var yaw = atan2(-dir.x, -dir.z)
-		var look_vector = (grabbed_object.global_transform.origin - camera.global_transform.origin).normalized()
-		var target_pitch = asin(look_vector.y)
-		target_pitch = clamp(target_pitch, deg_to_rad(-89), deg_to_rad(89))
-
-		rotation.y = yaw
-		camera.rotation.x = target_pitch
-
-		# 🔐 LOCK camera control vars to match
-		pitch = target_pitch
-		desired_pitch = target_pitch
-		desired_yaw = rotation.y
-		yaw = desired_yaw
-	else:
-		force_look_at_object = false
-
-
-	if force_look_at_object:
-		print(">>> FORCED LOOK MODE <<<")
-		print("Character rotation.y: ", rad_to_deg(rotation.y))
-		print("Camera pitch (x): ", rad_to_deg(camera.rotation.x))
-	else:
-		yaw = lerp(yaw, desired_yaw, smoothing)
-		pitch = lerp(pitch, desired_pitch, smoothing)
-		rotation.y = yaw
-		camera.rotation.x = pitch
-
-		print(">>> FREE LOOK MODE <<<")
-		print("desired_yaw: ", rad_to_deg(desired_yaw), " | current yaw: ", rad_to_deg(yaw))
-		print("desired_pitch: ", rad_to_deg(desired_pitch), " | current pitch: ", rad_to_deg(pitch))
 
 	if abs(delta - previous_delta) > delta_threshold:
 		screen_res_sway_multiplier = 55.0 * delta
@@ -366,8 +331,28 @@ func _process(delta: float) -> void:
 	else:
 		pitch_min = base_pitch_min
 
-	
-	# Smooth camera yaw and pitch
+	if force_look_at_object:
+		var cam_pos = camera.global_transform.origin
+		var target_pos = grabbed_object.global_transform.origin
+		var dir = (target_pos - cam_pos).normalized()
+
+		var target_yaw = atan2(-dir.x, -dir.z)
+		var look_vector = (grabbed_object.global_transform.origin - camera.global_transform.origin).normalized()
+		var target_pitch = asin(look_vector.y)
+		target_pitch = clamp(target_pitch, deg_to_rad(-89), deg_to_rad(89))
+
+		if initial_grab:
+			snap_to_suspended_object(target_yaw, target_pitch, delta)
+
+		else:
+			rotation.y = target_yaw
+			camera.rotation.x = target_pitch
+
+		pitch = target_pitch
+		desired_pitch = target_pitch
+		desired_yaw = target_yaw
+		yaw = desired_yaw
+
 	if not force_look_at_object:
 		desired_pitch = clamp(desired_pitch, pitch_min, pitch_max)
 		yaw = lerp(yaw, desired_yaw, smoothing)
@@ -471,49 +456,39 @@ func _input(event: InputEvent) -> void:
 
 	# Process Mouse Motion events.
 	if event is InputEventMouseMotion:
-		if Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED and not force_look_at_object:
+		if Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
 			
 			var input_strength_x = event.relative.x
 			var speed_factor_x = clamp(abs(input_strength_x) / 20.0, 0.0, 1.0)  # 0 at slow, 1 at fast
-			var resistance_x = lerp(1.0, 0.2, speed_factor_x)  # more resistance at high speed
-			prem7_rotation_offset.y += input_strength_x * prem7_rotation_speed * resistance_x
+			var resistance_x = lerp(1.0, 0.3, speed_factor_x)  # more resistance at high speed
 			
 			var input_strength_y = event.relative.y
 			var speed_factor_y = clamp(abs(input_strength_y) / 20.0, 0.0, 1.0)
-			var resistance_y = lerp(1.0, 0.2, speed_factor_y)
-			prem7_rotation_offset.x += input_strength_y * prem7_rotation_speed * resistance_y
-
+			var resistance_y = lerp(1.0, 0.3, speed_factor_y)
 			var max_offset = deg_to_rad(10.0)
-			prem7_rotation_offset.x = clamp(prem7_rotation_offset.x, -max_offset, max_offset)
-			prem7_rotation_offset.y = clamp(prem7_rotation_offset.y, -max_offset, max_offset)
-			PREM_7.rotation = prem7_original_rotation + prem7_rotation_offset
 			
-			var max_delta: float = 0.11 * screen_res_sway_multiplier  # You can tweak this (in radians); 0.05 ≈ 2.86 degrees
+			var max_delta: float = 0.15 * screen_res_sway_multiplier  # You can tweak this (in radians); 0.05 ≈ 2.86 degrees
 			var dx = clamp(event.relative.x * mouse_speed, -max_delta, max_delta)
 			var dy = clamp(event.relative.y * mouse_speed, -max_delta, max_delta)
 
 			current_mouse_speed_x = event.relative.x
 			current_mouse_speed_y = event.relative.y
 
-			#if grabbed_object:
-				#if grabbed_object.is_touching_rocket:
-					#print(grabbed_object.name, " is touching the rocketship!")
-					#desired_yaw -= -dx * 1.25
-					#desired_pitch -= -dy * 1.25
-					#grabbed_object.is_resetting = true
-					#grabbed_object.is_touching_rocket = false
-					#return
-
 			if not shifting_object_active:
 				desired_yaw -= dx
 				desired_pitch -= dy
 				desired_pitch = clamp(desired_pitch, pitch_min, pitch_max)
+				prem7_rotation_offset.y += input_strength_x * prem7_rotation_speed * resistance_x
+				prem7_rotation_offset.x += input_strength_y * prem7_rotation_speed * resistance_y
+				prem7_rotation_offset.x = clamp(prem7_rotation_offset.x, -max_offset, max_offset)
+				prem7_rotation_offset.y = clamp(prem7_rotation_offset.y, -max_offset, max_offset)
+				PREM_7.rotation = prem7_original_rotation + prem7_rotation_offset
 				if grabbed_object:
 					if not grabbed_object.is_suspended:
-						object_sway_offset.x -= event.relative.x * object_sway_strength_x
-						object_sway_offset.y -= event.relative.y * object_sway_strength_y
-						object_sway_offset.x = clamp(object_sway_offset.x, -2.0, 2.0) 
-				#object_sway_offset.y = clamp(object_sway_offset.y, -0.5, 0.5) 
+						object_sway_offset.x -= lerp(object_sway_offset.x, event.relative.x * object_sway_strength_x, 1.0)
+						object_sway_offset.y -= lerp(object_sway_offset.y, event.relative.y * object_sway_strength_y, 1.0)
+						object_sway_offset.x = clamp(object_sway_offset.x, -1.0, 1.0) 
+						#object_sway_offset.y = clamp(object_sway_offset.y, -0.5, 0.5) 
 			else:
 				if grabbed_object:
 					if z_rotate_mode:
@@ -522,8 +497,13 @@ func _input(event: InputEvent) -> void:
 						var local_forward: Vector3 = grabbed_object.global_transform.basis.z
 						grabbed_object.rotate(local_forward, deg_to_rad(event.relative.x * mouse_speed * 0))
 					else:
+						print(';alskdjfla;sdkfals;dkfa;lskd;lsdf')
 						shift_it = true
-						print('hmmmm')
+						prem7_rotation_offset.y -= input_strength_x * prem7_rotation_speed * resistance_x
+						prem7_rotation_offset.x -= input_strength_y * prem7_rotation_speed * resistance_y
+						prem7_rotation_offset.x = clamp(prem7_rotation_offset.x, -max_offset, max_offset)
+						prem7_rotation_offset.y = clamp(prem7_rotation_offset.y, -max_offset, max_offset)
+						PREM_7.rotation = prem7_original_rotation + prem7_rotation_offset
 						grabbed_rotation.y += event.relative.x * rotation_sensitivity / 3
 						grabbed_rotation.x += event.relative.y * rotation_sensitivity / 3
 						horizontal_delta = event.relative.x * mouse_speed * 10
@@ -543,6 +523,7 @@ func _input(event: InputEvent) -> void:
 				print('add SUSPEND visuals')
 				print('Change the shift movement (left, right, forward, backward) to match what the character is seeing vs. actual position')
 			if not event.pressed:
+				force_look_at_object = false
 				grabbed_object.is_suspended =! grabbed_object.is_suspended
 				grabbed_object.object_rotation = grabbed_object.rotation_degrees
 				grab_object()
@@ -704,6 +685,7 @@ func grab_object():
 
 	if grabbed_object:  # An object is already grabbed; release it.
 		print('Release')
+		initial_grab = false
 		clear_char_obj_shape()
 		PREM_7.beam.retract_beam()
 		grabbed_object.collision_shape.disabled = false
@@ -722,6 +704,7 @@ func grab_object():
 		grabbed_object.is_grabbed = false
 		grabbed_object.recently_grabbed = true
 		grabbed_object.is_released = true
+		force_look_at_object = false
 		if grabbed_object.is_suspended:
 			grabbed_rotation = grabbed_object.global_rotation_degrees
 			grabbed_object.gravity_scale = 0.0
@@ -778,6 +761,7 @@ func grab_object():
 				grabbed_object.is_touching_ground = false
 				grabbed_target_position = grabbed_object.position
 				if grabbed_object.is_suspended:
+					force_look_at_object = true
 					grabbed_rotation = grabbed_object.global_rotation_degrees
 					grabbed_object.gravity_scale = 0.0
 					suspending_object_active = true
@@ -831,9 +815,11 @@ func control_object(status):
 				extracting_object_active = true
 				suspending_object_active = false
 				grabbed_object.is_suspended = false
+				force_look_at_object = false
 				extracting_yaw = desired_yaw
 				grabbed_object.start_extraction()
 				print('Things to work on for EXTRACT: ')
+				print('***BUG*** Try extracting a suspended object...es no bueno ***BUG*** ')
 				print('1. Instead of rotating motion, reduce alpha of main body')
 				print('2. Start by highlighting one assembly component, cycle by rotating mousewheel or using A/D keys')
 				print('3. As a component is highlighted, it becomes fully visible + glow state')
@@ -1171,9 +1157,6 @@ func update_grabbed_object_sway(delta: float) -> void:
 	var sway_offset = sway_x + sway_z
 	grabbed_object.global_position += sway_offset
 
-	print('Object Position: ', grabbed_object.global_position)
-	print('Mouse Position: ', )
-
 
 func _push_away_rigid_bodies():
 	for i in get_slide_collision_count():
@@ -1204,3 +1187,12 @@ func scale_object(object, x_scale: float, y_scale: float, z_scale: float, wait_t
 	
 	scale_tween.set_trans(Tween.TRANS_LINEAR)
 	scale_tween.set_ease(Tween.EASE_IN_OUT)
+
+
+func snap_to_suspended_object(y_target, x_target, time):
+	rotation.y = lerp(rotation.y, y_target, time * 15.0)
+	camera.rotation.x = lerp(camera.rotation.x, x_target, time * 15.0)
+	if abs(rotation.y - y_target) < 0.001 and abs(camera.rotation.x - x_target) < 0.001:
+		initial_grab = false
+	await get_tree().create_timer(0.25).timeout
+	initial_grab = false
