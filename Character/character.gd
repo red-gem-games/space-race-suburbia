@@ -61,7 +61,7 @@ var max_y: float = 30.0       # The maximum Y allowed (adjust as needed)
 var base_pitch_factor: float = 3
 #var pitch_factor: float = base_pitch_factor # How much camera pitch affects the Y offset
 
-var prem7_decay_speed: float = 5.0      # Speed at which the rotation offset decays.
+var prem7_decay_speed: float = 2.5     # Speed at which the rotation offset decays.
 var mouse_speed_threshold: float = 2.0    # Mouse relative motion threshold below which decay occurs.
 var last_mouse_speed: float = 0.0         # Latest mouse movement magnitude.
 var last_mouse_time: float = 0.0          # Timestamp of the last mouse motion event.
@@ -192,7 +192,14 @@ var h_sway_multiplier: float
 var v_sway_multiplier: float
 var shift_it: bool = false
 
-
+var previous_delta: float= 0.0
+var screen_resolution_set: bool = false
+var screen_res_sway_multiplier: float = 1.0
+var delta_threshold: float = 0.001  # sensitivity to delta changes
+var previous_camera_pitch: float = 0.0  # Declare this once somewhere globally (in the class)
+var force_look_at_object: bool = false
+var current_yaw
+var current_pitch
 
 
 
@@ -248,7 +255,7 @@ func _physics_process(delta: float) -> void:
 			# Apply horizontal sway when strafing
 			if horizontal != 0:
 				var camera_right = camera.global_transform.basis.x.normalized()
-				object_sway_offset.x -= horizontal * 0.025
+				object_sway_offset.x -= horizontal * 0.025 * screen_res_sway_multiplier
 
 	var desired_direction = Vector3.ZERO
 	if vertical != 0 or horizontal != 0:
@@ -277,6 +284,51 @@ func _physics_process(delta: float) -> void:
 
 
 func _process(delta: float) -> void:
+	
+	if grabbed_object and grabbed_object.is_suspended:
+		force_look_at_object = true
+
+		# Step 1: Get direction to object from the camera
+		var cam_pos = camera.global_transform.origin
+		var target_pos = grabbed_object.global_transform.origin
+		var dir = (target_pos - cam_pos).normalized()
+
+		var yaw = atan2(-dir.x, -dir.z)
+		var look_vector = (grabbed_object.global_transform.origin - camera.global_transform.origin).normalized()
+		var target_pitch = asin(look_vector.y)
+		target_pitch = clamp(target_pitch, deg_to_rad(-89), deg_to_rad(89))
+
+		rotation.y = yaw
+		camera.rotation.x = target_pitch
+
+		# 🔐 LOCK camera control vars to match
+		pitch = target_pitch
+		desired_pitch = target_pitch
+		desired_yaw = rotation.y
+		yaw = desired_yaw
+	else:
+		force_look_at_object = false
+
+
+	if force_look_at_object:
+		print(">>> FORCED LOOK MODE <<<")
+		print("Character rotation.y: ", rad_to_deg(rotation.y))
+		print("Camera pitch (x): ", rad_to_deg(camera.rotation.x))
+	else:
+		yaw = lerp(yaw, desired_yaw, smoothing)
+		pitch = lerp(pitch, desired_pitch, smoothing)
+		rotation.y = yaw
+		camera.rotation.x = pitch
+
+		print(">>> FREE LOOK MODE <<<")
+		print("desired_yaw: ", rad_to_deg(desired_yaw), " | current yaw: ", rad_to_deg(yaw))
+		print("desired_pitch: ", rad_to_deg(desired_pitch), " | current pitch: ", rad_to_deg(pitch))
+
+	if abs(delta - previous_delta) > delta_threshold:
+		screen_res_sway_multiplier = 55.0 * delta
+		previous_delta = delta
+		screen_resolution_set = true
+		print("Updated sway multiplier: ", screen_res_sway_multiplier)
 	
 	if grabbed_object:
 		#grabbed_object.object_body.top_level = false
@@ -316,11 +368,12 @@ func _process(delta: float) -> void:
 
 	
 	# Smooth camera yaw and pitch
-	desired_pitch = clamp(desired_pitch, pitch_min, pitch_max)
-	yaw = lerp(yaw, desired_yaw, smoothing)
-	pitch = lerp(pitch, desired_pitch, smoothing)
-	rotation.y = yaw
-	camera.rotation.x = pitch
+	if not force_look_at_object:
+		desired_pitch = clamp(desired_pitch, pitch_min, pitch_max)
+		yaw = lerp(yaw, desired_yaw, smoothing)
+		pitch = lerp(pitch, desired_pitch, smoothing)
+		rotation.y = yaw
+		camera.rotation.x = pitch
 
 	#_push_away_rigid_bodies()
 	move_and_slide()
@@ -418,21 +471,29 @@ func _input(event: InputEvent) -> void:
 
 	# Process Mouse Motion events.
 	if event is InputEventMouseMotion:
-		if Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
-			prem7_rotation_offset.y -= event.relative.x * prem7_rotation_speed
-			prem7_rotation_offset.x -= event.relative.y * prem7_rotation_speed
+		if Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED and not force_look_at_object:
+			
+			var input_strength_x = event.relative.x
+			var speed_factor_x = clamp(abs(input_strength_x) / 20.0, 0.0, 1.0)  # 0 at slow, 1 at fast
+			var resistance_x = lerp(1.0, 0.2, speed_factor_x)  # more resistance at high speed
+			prem7_rotation_offset.y += input_strength_x * prem7_rotation_speed * resistance_x
+			
+			var input_strength_y = event.relative.y
+			var speed_factor_y = clamp(abs(input_strength_y) / 20.0, 0.0, 1.0)
+			var resistance_y = lerp(1.0, 0.2, speed_factor_y)
+			prem7_rotation_offset.x += input_strength_y * prem7_rotation_speed * resistance_y
+
 			var max_offset = deg_to_rad(10.0)
 			prem7_rotation_offset.x = clamp(prem7_rotation_offset.x, -max_offset, max_offset)
 			prem7_rotation_offset.y = clamp(prem7_rotation_offset.y, -max_offset, max_offset)
 			PREM_7.rotation = prem7_original_rotation + prem7_rotation_offset
-			var max_delta: float = 0.1  # You can tweak this (in radians); 0.05 ≈ 2.86 degrees
+			
+			var max_delta: float = 0.11 * screen_res_sway_multiplier  # You can tweak this (in radians); 0.05 ≈ 2.86 degrees
 			var dx = clamp(event.relative.x * mouse_speed, -max_delta, max_delta)
 			var dy = clamp(event.relative.y * mouse_speed, -max_delta, max_delta)
 
 			current_mouse_speed_x = event.relative.x
 			current_mouse_speed_y = event.relative.y
-			
-
 
 			#if grabbed_object:
 				#if grabbed_object.is_touching_rocket:
@@ -1076,19 +1137,42 @@ func update_grabbed_object_physics(delta: float) -> void:
 	grabbed_object.object_speed = speed_vector
 
 func update_grabbed_object_sway(delta: float) -> void:
+	# Apply grabbed rotation directly
 	grabbed_object.rotation_degrees = grabbed_rotation
 	grabbed_object.object_rotation = grabbed_object.global_rotation_degrees
+
+	# Track camera pitch movement
+	var pitch_now = camera.rotation.x
+	var pitch_delta = pitch_now - previous_camera_pitch
+	previous_camera_pitch = pitch_now
+
+	# Prevent nonsense at vertical clamp angles
+	var max_pitch_up = deg_to_rad(89.0)
+	var max_pitch_down = deg_to_rad(-89.0)
+	var clamped_pitch = clamp(pitch_now, max_pitch_down, max_pitch_up)
+	var at_pitch_limit = abs(clamped_pitch - pitch_now) > 0.01
+
+	# Adjust vertical sway strength based on pitch proximity
 	var pitch_range = pitch_max - pitch_min
-	var pitch_center = pitch_min + pitch_range / 2.0
-	var pitch_distance = abs(camera.rotation.x - pitch_center)
+	var pitch_center = pitch_min + pitch_range
+	var pitch_distance = abs(pitch_now - pitch_center / 10.0)
 	var max_pitch_distance = pitch_range / 2.0
 	var pitch_factor = 1.0 - clamp(pitch_distance / max_pitch_distance, 0.0, 1.0)
+
 	object_sway_strength_y = object_sway_base_y * pitch_factor
-	var pitch_offset = clamp(camera.rotation.x, -0.25, 1.0)
-	var sway_x = camera.global_transform.basis.x.normalized() * object_sway_offset.x * 0.5
-	var sway_z = camera.global_transform.basis.y.normalized() * -object_sway_offset.y * 0.5
+
+	# Apply sway offsets
+	var sway_x = camera.global_transform.basis.x.normalized() * object_sway_offset.x * 0.4 * screen_res_sway_multiplier
+	var sway_z = Vector3.ZERO
+
+	if abs(pitch_delta) > 0.01 and not at_pitch_limit:
+		sway_z = camera.global_transform.basis.y.normalized() * -object_sway_offset.y * 0.5 * screen_res_sway_multiplier
+
 	var sway_offset = sway_x + sway_z
 	grabbed_object.global_position += sway_offset
+
+	print('Object Position: ', grabbed_object.global_position)
+	print('Mouse Position: ', )
 
 
 func _push_away_rigid_bodies():

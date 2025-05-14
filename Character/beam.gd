@@ -20,7 +20,7 @@ func _process(delta: float) -> void:
 	force_raycast_update()
 	
 	if is_casting:
-		print('add an initial (subtle) shake when grabbing!')
+
 		var target_height = cast_point.y
 		beam_mesh.mesh.height = lerp(beam_height_current, target_height, delta * 2.5)
 		beam_mesh.mesh.top_radius = lerp(beam_mesh.mesh.top_radius, 0.2, delta * 2.5)
@@ -32,7 +32,8 @@ func _process(delta: float) -> void:
 func cast_beam():
 	is_casting = true
 	cast_point = to_local(get_collision_point())
-
+	print('add an initial (subtle) shake when grabbing!')
+	print('can we also add a bend here?????')
 	#beam_mesh.mesh.bottom_radius = 0.05
 	#beam_mesh.mesh.height = cast_point.y
 	#beam_mesh.position.y = cast_point.y / 2
