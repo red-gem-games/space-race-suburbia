@@ -134,7 +134,7 @@ func _ready() -> void:
 		#glow_body.scale = Vector3(1.15, 1.15, 1.15)
 		#shader_material.shader = GLOW_SHADER
 		#glow_body.set_surface_override_material(0, shader_material)
-		var outline_mesh : Mesh = base_mesh.mesh.create_outline(0.15)
+		var outline_mesh : Mesh = base_mesh.mesh.create_outline(0.075)
 		glow_body = MeshInstance3D.new()
 		glow_body.name = "Outline"
 		glow_body.mesh = outline_mesh
@@ -162,9 +162,6 @@ func _physics_process(delta: float) -> void:
 	if is_suspended:
 		linear_velocity = lerp(linear_velocity, Vector3(0.0, 0.0, 0.0), delta * 1.5)
 		angular_velocity = lerp(angular_velocity, Vector3(0.0, 0.0, 0.0), delta * 0.5)
-		print('Collision Layer: ', collision_layer)
-		print('Collision Mask: ', collision_mask)
-		print('Continuous: ', continuous_cd)
 	
 	if is_assembly_component:
 		if not extraction_complete:
@@ -251,6 +248,13 @@ func _on_body_shape_entered(body_rid: RID, body: Node, body_shape_index: int, lo
 		if is_suspended:
 			return
 		is_touching_ground = true
+
+	if body.name == 'Floor':
+		add_to_group('Ground')
+		print('ah haaaa')
+
+	if body is character:
+		body.is_on_floor()
 
 func _on_body_shape_exited(body_rid: RID, body: Node, body_shape_index: int, local_shape_index: int) -> void:
 	pass
@@ -382,7 +386,7 @@ func extract_components():
 				break
 		
 		if base_mesh:
-			var outline_mesh := base_mesh.mesh.create_outline(0.15)
+			var outline_mesh := base_mesh.mesh.create_outline(0.075)
 			component.glow_body = MeshInstance3D.new()
 			component.glow_body.name = "Outline"
 			component.glow_body.mesh = outline_mesh

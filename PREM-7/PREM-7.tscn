@@ -1725,3 +1725,8 @@ transform = Transform3D(0.991779, 0.127965, -6.40305e-09, 0.00474713, -0.0367922
 transform = Transform3D(0.498528, 0.142093, -0.855149, -0.0715637, 0.989853, 0.122757, 0.863915, 0, 0.503638, -1.85658, 0.509018, 0.527215)
 light_specular = 1.0
 shadow_enabled = true
+
+[node name="SpotLight3D2" type="SpotLight3D" parent="."]
+transform = Transform3D(-0.212614, 0.105105, -0.971467, -0.0715637, 0.989853, 0.122757, 0.974512, 0.0956215, -0.202935, -0.197883, -0.25074, -0.0400561)
+light_specular = 1.0
+shadow_enabled = true

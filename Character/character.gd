@@ -197,10 +197,16 @@ var screen_resolution_set: bool = false
 var screen_res_sway_multiplier: float = 1.0
 var delta_threshold: float = 0.001  # sensitivity to delta changes
 var previous_camera_pitch: float = 0.0  # Declare this once somewhere globally (in the class)
-var force_look_at_object: bool = false
+var beam_lock: bool = false
+###force_look_at_object is now beam_lock###
 var current_yaw
 var current_pitch
 
+var orbit_radius: float = 5.0
+var orbit_angle: float = 0.0  # Radians
+var orbit_speed: float = 1.0  # Speed multiplier
+var input_direction_x: float = 0.0
+var input_direction_z: float = 0.0
 
 
 
@@ -259,7 +265,7 @@ func _physics_process(delta: float) -> void:
 			# Apply horizontal sway when strafing
 			if horizontal != 0:
 				var camera_right = camera.global_transform.basis.x.normalized()
-				object_sway_offset.x -= horizontal * 0.025 * screen_res_sway_multiplier
+				object_sway_offset.x -= horizontal * 1.75 * screen_res_sway_multiplier
 
 	var desired_direction = Vector3.ZERO
 	if vertical != 0 or horizontal != 0:
@@ -316,49 +322,11 @@ func _process(delta: float) -> void:
 		scroll_cooldown -= delta
 	
 	# Dynamically adjust pitch_min based on height when grabbing
-	if grabbed_object:
-		var y = position.y
-		var min_y = 2.0       # Ground level threshold
-		var max_y = 10.0      # Max height where full freedom kicks in
 
-		# Calculate blend factor (0 near ground, 1 when high in air)
-		var t = clamp((y - min_y) / (max_y - min_y), 0.0, 1.0)
-		t = smoothstep(min_y, max_y, y)
 
-		# Interpolate between restricted and full downward pitch
-		var clamped_pitch_min = deg_to_rad(-15)
-		pitch_min = lerp(clamped_pitch_min, base_pitch_min, t)
-	else:
-		pitch_min = base_pitch_min
+	handle_pitch_and_yaw(delta)
 
-	if force_look_at_object:
-		var cam_pos = camera.global_transform.origin
-		var target_pos = grabbed_object.global_transform.origin
-		var dir = (target_pos - cam_pos).normalized()
 
-		var target_yaw = atan2(-dir.x, -dir.z)
-		var look_vector = (grabbed_object.global_transform.origin - camera.global_transform.origin).normalized()
-		var target_pitch = asin(look_vector.y)
-		target_pitch = clamp(target_pitch, deg_to_rad(-89), deg_to_rad(89))
-
-		if initial_grab:
-			snap_to_suspended_object(target_yaw, target_pitch, delta)
-
-		else:
-			rotation.y = target_yaw
-			camera.rotation.x = target_pitch
-
-		pitch = target_pitch
-		desired_pitch = target_pitch
-		desired_yaw = target_yaw
-		yaw = desired_yaw
-
-	if not force_look_at_object:
-		desired_pitch = clamp(desired_pitch, pitch_min, pitch_max)
-		yaw = lerp(yaw, desired_yaw, smoothing)
-		pitch = lerp(pitch, desired_pitch, smoothing)
-		rotation.y = yaw
-		camera.rotation.x = pitch
 
 	#_push_away_rigid_bodies()
 	move_and_slide()
@@ -497,7 +465,6 @@ func _input(event: InputEvent) -> void:
 						var local_forward: Vector3 = grabbed_object.global_transform.basis.z
 						grabbed_object.rotate(local_forward, deg_to_rad(event.relative.x * mouse_speed * 0))
 					else:
-						print(';alskdjfla;sdkfals;dkfa;lskd;lsdf')
 						shift_it = true
 						prem7_rotation_offset.y -= input_strength_x * prem7_rotation_speed * resistance_x
 						prem7_rotation_offset.x -= input_strength_y * prem7_rotation_speed * resistance_y
@@ -506,11 +473,11 @@ func _input(event: InputEvent) -> void:
 						PREM_7.rotation = prem7_original_rotation + prem7_rotation_offset
 						grabbed_rotation.y += event.relative.x * rotation_sensitivity / 3
 						grabbed_rotation.x += event.relative.y * rotation_sensitivity / 3
-						horizontal_delta = event.relative.x * mouse_speed * 10
-						vertical_delta = event.relative.y * mouse_speed * 10 
-						grabbed_object.rotate_y(deg_to_rad(horizontal_delta))
-						var local_right: Vector3 = grabbed_object.global_transform.basis.x
-						grabbed_object.rotate(local_right, deg_to_rad(vertical_delta))
+						#horizontal_delta = event.relative.x * mouse_speed * 10
+						#vertical_delta = event.relative.y * mouse_speed * 10 
+						#grabbed_object.rotate_y(deg_to_rad(horizontal_delta))
+						#var local_right: Vector3 = grabbed_object.global_transform.basis.x
+						#grabbed_object.rotate(local_right, deg_to_rad(vertical_delta))
 
 	# Process Keyboard events.
 	if event is InputEventKey:
@@ -523,7 +490,7 @@ func _input(event: InputEvent) -> void:
 				print('add SUSPEND visuals')
 				print('Change the shift movement (left, right, forward, backward) to match what the character is seeing vs. actual position')
 			if not event.pressed:
-				force_look_at_object = false
+				beam_lock = false
 				grabbed_object.is_suspended =! grabbed_object.is_suspended
 				grabbed_object.object_rotation = grabbed_object.rotation_degrees
 				grab_object()
@@ -552,28 +519,32 @@ func _input(event: InputEvent) -> void:
 		# Update movement key states.
 		if event.keycode == KEY_W or event.keycode == KEY_UP:
 			move_input["up"] = pressed
+			print('UP!')
 			if shifting_object_active and pressed:
 				if grabbed_object and grabbed_object.is_suspended:
-					grabbed_target_position.z -= 0.1
+					grabbed_target_position.z -= 0.25
 					print('This should move forward based on direction of object face')
 		elif event.keycode == KEY_S or event.keycode == KEY_DOWN:
 			move_input["down"] = pressed
+			print('DOWN!')
 			if shifting_object_active and pressed:
 				if grabbed_object and grabbed_object.is_suspended:
-					grabbed_target_position.z += 0.1
+					grabbed_target_position.z += 0.25
 					print('This should move backward based on direction of object face')
 		elif event.keycode == KEY_A or event.keycode == KEY_LEFT:
 			move_input["left"] = pressed
+			print('LEFT!')
 			if shifting_object_active and pressed:
 				if grabbed_object and grabbed_object.is_suspended:
-					grabbed_target_position.x -= 0.1
+					grabbed_target_position.x -= 0.25
 					print('***Move Camera with this*** -- Maybe use look_at?')
 					print('This should move left based on direction of object face')
 		elif event.keycode == KEY_D or event.keycode == KEY_RIGHT:
 			move_input["right"] = pressed
+			print('RIGHT!')
 			if shifting_object_active and pressed:
 				if grabbed_object and grabbed_object.is_suspended:
-					grabbed_target_position.x += 0.1
+					grabbed_target_position.x += 0.25
 					print('***Move Camera with this*** -- Maybe use look_at?')
 					print('This should move right based on direction of object face')
 
@@ -704,7 +675,7 @@ func grab_object():
 		grabbed_object.is_grabbed = false
 		grabbed_object.recently_grabbed = true
 		grabbed_object.is_released = true
-		force_look_at_object = false
+		beam_lock = false
 		if grabbed_object.is_suspended:
 			grabbed_rotation = grabbed_object.global_rotation_degrees
 			grabbed_object.gravity_scale = 0.0
@@ -761,7 +732,7 @@ func grab_object():
 				grabbed_object.is_touching_ground = false
 				grabbed_target_position = grabbed_object.position
 				if grabbed_object.is_suspended:
-					force_look_at_object = true
+					beam_lock = true
 					grabbed_rotation = grabbed_object.global_rotation_degrees
 					grabbed_object.gravity_scale = 0.0
 					suspending_object_active = true
@@ -815,7 +786,7 @@ func control_object(status):
 				extracting_object_active = true
 				suspending_object_active = false
 				grabbed_object.is_suspended = false
-				force_look_at_object = false
+				beam_lock = false
 				extracting_yaw = desired_yaw
 				grabbed_object.start_extraction()
 				print('Things to work on for EXTRACT: ')
@@ -872,6 +843,83 @@ func control_object(status):
 		elif current_mode == MODE_4:
 			print("Object has been Fused!")
 			fusing_object_active = false
+
+func handle_pitch_and_yaw(time):
+	if grabbed_object:
+		var y = position.y
+		var min_y = 2.0       # Ground level threshold
+		var max_y = 10.0      # Max height where full freedom kicks in
+
+		# Calculate blend factor (0 near ground, 1 when high in air)
+		var t = clamp((y - min_y) / (max_y - min_y), 0.0, 1.0)
+		t = smoothstep(min_y, max_y, y)
+
+		# Interpolate between restricted and full downward pitch
+		var clamped_pitch_min = deg_to_rad(-15)
+		pitch_min = lerp(clamped_pitch_min, base_pitch_min, t)
+	else:
+		pitch_min = base_pitch_min
+
+	if beam_lock:
+		var cam_pos = camera.global_transform.origin
+		var target_pos = grabbed_object.global_transform.origin
+		var dir = (target_pos - cam_pos).normalized()
+
+		var target_yaw = atan2(-dir.x, -dir.z)
+		var look_vector = (grabbed_object.global_transform.origin - camera.global_transform.origin).normalized()
+		var target_pitch = asin(look_vector.y)
+		target_pitch = clamp(target_pitch, deg_to_rad(-89), deg_to_rad(89))
+
+		if initial_grab:
+			snap_to_suspended_object(target_yaw, target_pitch, time)
+
+		else:
+			rotation.y = target_yaw
+			camera.rotation.x = target_pitch
+
+
+		pitch = target_pitch
+		desired_pitch = target_pitch
+		desired_yaw = target_yaw
+		yaw = desired_yaw
+		
+		velocity.x = 0.0
+		velocity.z = 0.0  # Kill all physics-based movement
+		move_and_slide()  # Just to satisfy the engine
+		input_direction_x = lerp(input_direction_x, 0.0, time * 5.0)
+		input_direction_z = lerp(input_direction_z, 0.0, time * 5.0)
+
+		if move_input["left"] and not shifting_object_active:
+			input_direction_x -= 1.0
+		if move_input["right"] and not shifting_object_active:
+			input_direction_x += 1.0
+
+		# Radial (toward/away from object)
+		if move_input["up"] and not shifting_object_active:
+			input_direction_z -= 1.0  # Move closer
+		if move_input["down"] and not shifting_object_active:
+			input_direction_z += 1.0  # Move away
+
+		orbit_radius = clamp(orbit_radius + input_direction_z * time, 4.0, 15.0)
+		orbit_angle += input_direction_x * orbit_speed * time / orbit_radius
+		orbit_angle = fmod(orbit_angle, TAU)
+
+
+		var obj_pos = grabbed_object.global_transform.origin
+		var orbit_offset = Vector3(
+			orbit_radius * sin(orbit_angle),
+			0.0,
+			orbit_radius * cos(orbit_angle)
+		)
+		global_position.x = obj_pos.x + orbit_offset.x
+		global_position.z = obj_pos.z + orbit_offset.z
+
+	if not beam_lock:
+		desired_pitch = clamp(desired_pitch, pitch_min, pitch_max)
+		yaw = lerp(yaw, desired_yaw, smoothing)
+		pitch = lerp(pitch, desired_pitch, smoothing)
+		rotation.y = yaw
+		camera.rotation.x = pitch
 
 func handle_jetpack(status, timing):
 	# Jetpack Ceiling Clamp
