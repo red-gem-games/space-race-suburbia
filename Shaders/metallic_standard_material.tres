@@ -8,3 +8,4 @@ roughness = 0.0
 emission_enabled = true
 emission_energy_multiplier = 16.0
 emission_operator = 1
+refraction_scale = -0.59

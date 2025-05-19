@@ -414,6 +414,7 @@ func _input(event: InputEvent) -> void:
 					PREM_7.mode_anim.play("shift_mode_down")
 					print("Object is being inspected!")
 					print('Add hologram tablet above PREM-7 that shoots out of top opening')
+					print('THEN, allow player to scroll through different inspection menus for object by scrolling with wheel')
 					inspecting_object_active = true
 				if not event.is_pressed():
 					middle_mouse_down = false

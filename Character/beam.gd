@@ -23,7 +23,7 @@ func _process(delta: float) -> void:
 
 		var target_height = cast_point.y
 		beam_mesh.mesh.height = lerp(beam_height_current, target_height, delta * 2.5)
-		beam_mesh.mesh.top_radius = lerp(beam_mesh.mesh.top_radius, 0.2, delta * 2.5)
+		beam_mesh.mesh.top_radius = lerp(beam_mesh.mesh.top_radius, 0.05, delta * 2.5)
 		beam_mesh.mesh.bottom_radius = lerp(beam_mesh.mesh.bottom_radius, 0.05, delta * 2.5)
 
 		beam_height_current = clamp(beam_mesh.mesh.height, -5.0, 0.0)
