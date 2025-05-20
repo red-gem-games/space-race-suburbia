@@ -1,4 +1,13 @@
-[gd_resource type="ArrayMesh" load_steps=2 format=4 uid="uid://dxs73vc1sll8t"]
+[gd_resource type="ArrayMesh" load_steps=4 format=4 uid="uid://dxs73vc1sll8t"]
+
+[ext_resource type="Shader" uid="uid://d1inei61sb066" path="res://Shaders/deformworld.gdshader" id="1_m1nqk"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ba71q"]
+render_priority = 0
+shader = ExtResource("1_m1nqk")
+shader_parameter/x_axis = -1.35
+shader_parameter/y_axis = 0.0
+shader_parameter/color = Color(0, 0, 0, 1)
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_m8b68"]
 _surfaces = [{
@@ -21,6 +30,7 @@ _surfaces = [{
 "format": 34896613399,
 "index_count": 192,
 "index_data": PackedByteArray("AAABAAIAAgABAAMAAgADAAQABAADAAUABAAFAAYABgAFAAcABgAHAAgACAAHAAkACAAJAAoACgAJAAsACgALAAwADAALAA0ADAANAA4ADgANAA8ADgAPABAAEAAPABEAEAARABIAEgARABMAEgATABQAFAATABUAFAAVABYAFgAVABcAFgAXABgAGAAXABkAGAAZABoAGgAZABsAGgAbABwAHAAbAB0AHAAdAB4AHgAdAB8AHgAfACAAIAAfACEAIAAhACIAIgAhACMAIgAjACQAJAAjACUAJAAlACYAJgAlACcAJgAnACgAKAAnACkAKAApACoAKgApACsAKgArACwALAArAC0ALAAtAC4ALgAtAC8ALgAvADAAMAAvADEAMAAxADIAMgAxADMAMgAzADQANAAzADUANAA1ADYANgA1ADcANgA3ADgAOAA3ADkAOAA5ADoAOgA5ADsAOgA7ADwAPAA7AD0APAA9AD4APgA9AD8APgA/AEAAQAA/AEEA"),
+"material": SubResource("ShaderMaterial_ba71q"),
 "name": "Cylinder",
 "primitive": 3,
 "uv_scale": Vector4(0, 0, 0, 0),

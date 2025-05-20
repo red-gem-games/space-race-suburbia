@@ -1,70 +1,6 @@
-[gd_scene load_steps=17 format=4 uid="uid://dvefh4ao2ciyu"]
+[gd_scene load_steps=5 format=4 uid="uid://dvefh4ao2ciyu"]
 
 [ext_resource type="Script" uid="uid://cpv0k2tvyh0d7" path="res://Character/beam.gd" id="1_i0pe4"]
-[ext_resource type="ArrayMesh" uid="uid://dxs73vc1sll8t" path="res://PREM-7/new_array_mesh.tres" id="2_8l162"]
-[ext_resource type="Shader" uid="uid://c7t57bgvq7aao" path="res://Shaders/beam_dynamic_shader.tres" id="2_x6usk"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8l162"]
-transparency = 1
-albedo_color = Color(1, 0, 0, 0.356863)
-emission_enabled = true
-emission = Color(1, 0, 0, 1)
-emission_energy_multiplier = 16.0
-rim_tint = 1.0
-clearcoat_roughness = 1.0
-anisotropy = 1.0
-refraction_scale = 0.08
-refraction_texture_channel = 3
-detail_blend_mode = 1
-grow_amount = -16.0
-proximity_fade_distance = 6.0
-distance_fade_max_distance = 5.0
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_x6usk"]
-material = SubResource("StandardMaterial3D_8l162")
-flip_faces = true
-top_radius = 0.025
-bottom_radius = 0.025
-height = 0.01
-rings = 16
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_mscii"]
-render_priority = 0
-shader = ExtResource("2_x6usk")
-
-[sub_resource type="Gradient" id="Gradient_x6usk"]
-colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1)
-
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_mscii"]
-gradient = SubResource("Gradient_x6usk")
-
-[sub_resource type="Curve" id="Curve_x6usk"]
-_limits = [0.0, 5.0, 0.0, 1.0]
-_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 5), 0.0, 0.0, 0, 0]
-point_count = 2
-
-[sub_resource type="Curve" id="Curve_mscii"]
-_limits = [0.0, 0.11, 0.0, 1.0]
-_data = [Vector2(0, 0.11), 0.0, 0.0, 0, 0, Vector2(1, 0.11), 0.0, 0.0, 0, 0]
-point_count = 2
-
-[sub_resource type="Curve" id="Curve_vxkva"]
-_limits = [0.0, 0.11, 0.0, 1.0]
-_data = [Vector2(0, 0.11), 0.0, 0.0, 0, 0, Vector2(1, 0.11), 0.0, 0.0, 0, 0]
-point_count = 2
-metadata/_snap_count = 92
-
-[sub_resource type="CurveXYZTexture" id="CurveXYZTexture_vuyi1"]
-curve_x = SubResource("Curve_x6usk")
-curve_y = SubResource("Curve_mscii")
-curve_z = SubResource("Curve_vxkva")
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_i0pe4"]
-gravity = Vector3(0, 0, 0)
-scale_curve = SubResource("CurveXYZTexture_vuyi1")
-color = Color(1.26103e-05, 0.840319, 1.15514e-06, 1)
-color_ramp = SubResource("GradientTexture1D_mscii")
-turbulence_noise_strength = 10.89
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_x6usk"]
 transparency = 1
@@ -102,22 +38,11 @@ blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_kx5wm")
 
 [node name="Beam" type="RayCast3D"]
-target_position = Vector3(0, -10, 0)
+target_position = Vector3(0, 0, 10)
 collision_mask = 2
 script = ExtResource("1_i0pe4")
 
-[node name="BeamMesh" type="MeshInstance3D" parent="."]
-mesh = SubResource("CylinderMesh_x6usk")
-
-[node name="GPUParticles3D" type="GPUParticles3D" parent="."]
-transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0.11, 0)
-material_override = SubResource("ShaderMaterial_mscii")
-amount = 1
-lifetime = 0.04
-speed_scale = 10.0
-process_material = SubResource("ParticleProcessMaterial_i0pe4")
-draw_pass_1 = ExtResource("2_8l162")
-
 [node name="BeamShell" type="MeshInstance3D" parent="."]
-transform = Transform3D(-5.90104e-09, -0.11, 0, 0.135, -4.80825e-09, 0, 0, 0, 0.11, 0, 0.108204, 0)
+transform = Transform3D(-5.90104e-09, 0, 0.11, 0, 0.11, 0, -0.135, 0, -4.80825e-09, 0, 0, 0)
+visible = false
 mesh = SubResource("ArrayMesh_x6usk")

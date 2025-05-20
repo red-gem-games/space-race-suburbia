@@ -8,6 +8,7 @@ class_name PREM_7
 @onready var photon_glow: MeshInstance3D = $Multitool/Photon_Glow
 
 @onready var beam: RayCast3D = $Beam
+@onready var beam_mesh: MeshInstance3D = $Multitool/Beam_Mesh
 
 func _ready() -> void:
 	pass

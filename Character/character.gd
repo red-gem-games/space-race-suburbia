@@ -11,6 +11,8 @@ var start_day: bool = false
 @onready var PREM_7: Node3D = $"Camera3D/PREM-7"
 @onready var hud_reticle: Control = $HUD.hud_reticle
 @onready var char_obj_shape: CollisionShape3D
+@onready var beam_mesh: MeshInstance3D = PREM_7.beam_mesh
+@onready var beam_shader_mat := beam_mesh.get_active_material(0) as ShaderMaterial
 
 var colliding_with_assembly_object: bool = false
 var assembly_object_mass: float
@@ -104,7 +106,7 @@ var pitch_set: bool = false
 var base_pitch_min: float = -PI/2
 var base_pitch_max: float = PI/2
 var grab_pitch_min: float = -0.25
-var grab_pitch_max: float = 1
+var grab_pitch_max: float = 1.0
 var pitch_min: float = base_pitch_min
 var pitch_max: float = base_pitch_max
 var base_mouse_speed: float = 0.002
@@ -134,13 +136,12 @@ var fall_sensitivity: float = 0.01  # You can tweak this to make pitch change mo
 var distance_to_ground: float
 
 var object_sway_offset: Vector2 = Vector2.ZERO
-var object_sway_decay_x: float = 15.0
-var object_sway_decay_y: float = 5.0
+var object_sway_decay_x: float = 10.0
+var object_sway_decay_y: float = 10.0
 var object_sway_base_x: float = 0.00025
 var object_sway_base_y: float = 0.0004
 var object_sway_strength_x: float = object_sway_base_x
 var object_sway_strength_y: float = object_sway_base_y
-
 
 # Variables for player movement
 var base_movement_speed: float = 14.0
@@ -207,6 +208,13 @@ var orbit_angle: float = 0.0  # Radians
 var orbit_speed: float = 1.0  # Speed multiplier
 var input_direction_x: float = 0.0
 var input_direction_z: float = 0.0
+
+
+var target_curve_x: float = 0.0
+var target_curve_y: float = 0.0
+var current_curve_x: float = 0.0
+var current_curve_y: float = 0.0
+var beam_decay_speed: float = 1.0  # Tweak this: Higher = faster snap-back
 
 
 
@@ -301,17 +309,6 @@ func _process(delta: float) -> void:
 		screen_resolution_set = true
 		print("Updated sway multiplier: ", screen_res_sway_multiplier)
 	
-	if grabbed_object:
-		#grabbed_object.object_body.top_level = false
-		if grabbed_object.is_suspended:
-			if char_obj_shape:
-				print("Clearing Char Obj Shape: ", char_obj_shape)
-				clear_char_obj_shape()
-			grabbed_object.gravity_scale = 0.0
-			grabbed_object.position = grabbed_object.position.lerp(grabbed_target_position, delta * 0.5)
-			if shifting_object_active:
-				grabbed_object.rotation_degrees = grabbed_rotation
-	
 	# Update jetpack thrust, hover, ceiling logic
 	handle_jetpack_logic(delta)
 
@@ -320,13 +317,8 @@ func _process(delta: float) -> void:
 	
 	if scroll_cooldown > 0.0:
 		scroll_cooldown -= delta
-	
-	# Dynamically adjust pitch_min based on height when grabbing
-
 
 	handle_pitch_and_yaw(delta)
-
-
 
 	#_push_away_rigid_bodies()
 	move_and_slide()
@@ -339,9 +331,28 @@ func _process(delta: float) -> void:
 
 	# Update grabbed object sway
 	if grabbed_object:
+		grabbed_object.rotation_degrees = grabbed_rotation
 		if grabbed_object.is_suspended:
+			if char_obj_shape:
+				print("Clearing Char Obj Shape: ", char_obj_shape)
+				clear_char_obj_shape()
+			grabbed_object.gravity_scale = 0.0
+			grabbed_object.position = grabbed_object.position.lerp(grabbed_target_position, delta * 0.5)
 			return
-		update_grabbed_object_sway(delta)
+
+		if not shifting_object_active:
+			object_sway_offset.x -= lerp(object_sway_offset.x, current_mouse_speed_x * object_sway_strength_x, 1.0)
+			object_sway_offset.y -= lerp(object_sway_offset.y, current_mouse_speed_y * object_sway_strength_y, 1.0)
+			object_sway_offset.x = clamp(object_sway_offset.x, -1.0, 1.0) 
+			object_sway_offset.y = clamp(object_sway_offset.y, -2.0, 2.0)
+			update_grabbed_object_sway(delta)
+
+			current_curve_x = lerp(current_curve_x, target_curve_x, delta * beam_decay_speed / screen_res_sway_multiplier)
+			current_curve_y = lerp(current_curve_y, target_curve_y, delta * beam_decay_speed / screen_res_sway_multiplier)
+			update_beam_bend(current_curve_x, current_curve_y)
+			
+			print(current_curve_x)
+
 		if grabbed_object.is_being_extracted:
 			control_object('released')
 	if extracting_object_active:
@@ -432,7 +443,7 @@ func _input(event: InputEvent) -> void:
 			var resistance_x = lerp(1.0, 0.3, speed_factor_x)  # more resistance at high speed
 			
 			var input_strength_y = event.relative.y
-			var speed_factor_y = clamp(abs(input_strength_y) / 20.0, 0.0, 1.0)
+			var speed_factor_y = clamp(abs(input_strength_y) / 20.0, 0.0, 0.5)
 			var resistance_y = lerp(1.0, 0.3, speed_factor_y)
 			var max_offset = deg_to_rad(10.0)
 			
@@ -442,6 +453,12 @@ func _input(event: InputEvent) -> void:
 
 			current_mouse_speed_x = event.relative.x
 			current_mouse_speed_y = event.relative.y
+
+			target_curve_x = clamp(input_strength_x * 0.05, -7.5 / screen_res_sway_multiplier, 7.5 / screen_res_sway_multiplier) * -resistance_x
+			target_curve_y = clamp(input_strength_y * 0.05, -5.5 / screen_res_sway_multiplier, 5.5 / screen_res_sway_multiplier) * resistance_y
+			
+			print(screen_res_sway_multiplier)
+
 
 			if not shifting_object_active:
 				desired_yaw -= dx
@@ -454,9 +471,7 @@ func _input(event: InputEvent) -> void:
 				PREM_7.rotation = prem7_original_rotation + prem7_rotation_offset
 				if grabbed_object:
 					if not grabbed_object.is_suspended:
-						object_sway_offset.x -= lerp(object_sway_offset.x, event.relative.x * object_sway_strength_x, 1.0)
-						object_sway_offset.y -= lerp(object_sway_offset.y, event.relative.y * object_sway_strength_y, 1.0)
-						object_sway_offset.x = clamp(object_sway_offset.x, -1.0, 1.0) 
+						pass
 						#object_sway_offset.y = clamp(object_sway_offset.y, -0.5, 0.5) 
 			else:
 				if grabbed_object:
@@ -521,6 +536,7 @@ func _input(event: InputEvent) -> void:
 		if event.keycode == KEY_W or event.keycode == KEY_UP:
 			move_input["up"] = pressed
 			print('UP!')
+			target_curve_y -= 1.0
 			if shifting_object_active and pressed:
 				if grabbed_object and grabbed_object.is_suspended:
 					grabbed_target_position.z -= 0.25
@@ -528,6 +544,7 @@ func _input(event: InputEvent) -> void:
 		elif event.keycode == KEY_S or event.keycode == KEY_DOWN:
 			move_input["down"] = pressed
 			print('DOWN!')
+			target_curve_y += 1.0
 			if shifting_object_active and pressed:
 				if grabbed_object and grabbed_object.is_suspended:
 					grabbed_target_position.z += 0.25
@@ -535,6 +552,7 @@ func _input(event: InputEvent) -> void:
 		elif event.keycode == KEY_A or event.keycode == KEY_LEFT:
 			move_input["left"] = pressed
 			print('LEFT!')
+			target_curve_x += 1.0
 			if shifting_object_active and pressed:
 				if grabbed_object and grabbed_object.is_suspended:
 					grabbed_target_position.x -= 0.25
@@ -543,6 +561,7 @@ func _input(event: InputEvent) -> void:
 		elif event.keycode == KEY_D or event.keycode == KEY_RIGHT:
 			move_input["right"] = pressed
 			print('RIGHT!')
+			target_curve_x -= 1.0
 			if shifting_object_active and pressed:
 				if grabbed_object and grabbed_object.is_suspended:
 					grabbed_target_position.x += 0.25
@@ -734,6 +753,8 @@ func grab_object():
 				grabbed_target_position = grabbed_object.position
 				if grabbed_object.is_suspended:
 					beam_lock = true
+					orbit_radius = 4.0
+					print('When grabbing a suspended object, this needs to be a more gradual movement in terms of both moving towards the object and the direction in which you are looking')
 					grabbed_rotation = grabbed_object.global_rotation_degrees
 					grabbed_object.gravity_scale = 0.0
 					suspending_object_active = true
@@ -849,7 +870,7 @@ func handle_pitch_and_yaw(time):
 	if grabbed_object:
 		var y = position.y
 		var min_y = 2.0       # Ground level threshold
-		var max_y = 10.0      # Max height where full freedom kicks in
+		var max_y = 5.0      # Max height where full freedom kicks in
 
 		# Calculate blend factor (0 near ground, 1 when high in air)
 		var t = clamp((y - min_y) / (max_y - min_y), 0.0, 1.0)
@@ -1153,6 +1174,11 @@ func update_reticle_targeting() -> void:
 	else:
 		hud_reticle.modulate = Color.WHITE
 
+func update_beam_bend(x: float, y: float):
+	if is_instance_valid(beam_mesh):
+		beam_shader_mat.set_shader_parameter("x_axis", x)
+		beam_shader_mat.set_shader_parameter("y_axis", y)
+
 func handle_prem7_decay(delta: float) -> void:
 	var time_since_last = (Time.get_ticks_msec() - last_mouse_time) / 1000.0
 	if last_mouse_speed < mouse_speed_threshold or time_since_last > 0.05:
@@ -1189,10 +1215,11 @@ func update_grabbed_object_sway(delta: float) -> void:
 
 	# Adjust vertical sway strength based on pitch proximity
 	var pitch_range = pitch_max - pitch_min
-	var pitch_center = pitch_min + pitch_range
-	var pitch_distance = abs(pitch_now - pitch_center / 10.0)
+	var pitch_center = pitch_min + pitch_range * 0.5
+	var pitch_distance = abs(pitch_now - pitch_center)
 	var max_pitch_distance = pitch_range / 2.0
 	var pitch_factor = 1.0 - clamp(pitch_distance / max_pitch_distance, 0.0, 1.0)
+
 
 	object_sway_strength_y = object_sway_base_y * pitch_factor
 

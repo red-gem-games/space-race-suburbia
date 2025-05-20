@@ -1,8 +1,23 @@
-[gd_scene load_steps=101 format=4 uid="uid://bpvm0l41dywjs"]
+[gd_scene load_steps=112 format=4 uid="uid://bpvm0l41dywjs"]
 
 [ext_resource type="Script" uid="uid://so25svauxmkt" path="res://PREM-7/prem_7.gd" id="1_iarxa"]
 [ext_resource type="Shader" uid="uid://cw73tbbh1mfcs" path="res://Shaders/PREM-7_glow.gdshader" id="2_2cjep"]
 [ext_resource type="PackedScene" uid="uid://dvefh4ao2ciyu" path="res://PREM-7/beam.tscn" id="3_8m00m"]
+[ext_resource type="Shader" uid="uid://d1inei61sb066" path="res://Shaders/deformworld.gdshader" id="4_4qq6n"]
+[ext_resource type="ArrayMesh" uid="uid://dxs73vc1sll8t" path="res://PREM-7/new_array_mesh.tres" id="5_t05xm"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_t05xm"]
+bottom_radius = 0.05
+height = 8.78
+radial_segments = 16
+rings = 1912
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_l5ika"]
+render_priority = 0
+shader = ExtResource("4_4qq6n")
+shader_parameter/x_axis = 0.0
+shader_parameter/y_axis = 0.0
+shader_parameter/color = Color(1, 0, 0, 1)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_a4na6"]
 resource_name = "Material.003"
@@ -1493,11 +1508,53 @@ _data = {
 &"shift_mode_up": SubResource("Animation_d8k6r")
 }
 
+[sub_resource type="Gradient" id="Gradient_6dr8p"]
+colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_mscii"]
+gradient = SubResource("Gradient_6dr8p")
+
+[sub_resource type="Curve" id="Curve_3nktn"]
+_limits = [0.0, 5.0, 0.0, 1.0]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 5), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Curve" id="Curve_61m6q"]
+_limits = [0.0, 0.11, 0.0, 1.0]
+_data = [Vector2(0, 0.11), 0.0, 0.0, 0, 0, Vector2(1, 0.11), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Curve" id="Curve_5hhbi"]
+_limits = [0.0, 0.11, 0.0, 1.0]
+_data = [Vector2(0, 0.11), 0.0, 0.0, 0, 0, Vector2(1, 0.11), 0.0, 0.0, 0, 0]
+point_count = 2
+metadata/_snap_count = 92
+
+[sub_resource type="CurveXYZTexture" id="CurveXYZTexture_vuyi1"]
+curve_x = SubResource("Curve_3nktn")
+curve_y = SubResource("Curve_61m6q")
+curve_z = SubResource("Curve_5hhbi")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_s7cmo"]
+gravity = Vector3(0, 0, 0)
+scale_curve = SubResource("CurveXYZTexture_vuyi1")
+color = Color(1.26103e-05, 0.840319, 1.15514e-06, 1)
+color_ramp = SubResource("GradientTexture1D_mscii")
+turbulence_noise_strength = 10.89
+
 [node name="PREM-7" type="Node3D"]
 script = ExtResource("1_iarxa")
 
 [node name="Multitool" type="Node3D" parent="."]
 transform = Transform3D(-0.246939, -0.00781692, -0.022926, -0.00958782, 0.249578, 0.00654291, 0.0378046, 0.0122367, -0.148093, 0.00330822, -0.113262, 0.064556)
+
+[node name="Beam_Mesh" type="MeshInstance3D" parent="Multitool"]
+transform = Transform3D(4.08152, 0.115333, -0.000611184, 0, -0.0576708, -4.01291, -0.0712431, 6.60742, -0.0350147, 0.38, 0.25, 31.96)
+transparency = 0.28
+cast_shadow = 0
+mesh = SubResource("CylinderMesh_t05xm")
+skeleton = NodePath("")
+surface_material_override/0 = SubResource("ShaderMaterial_l5ika")
 
 [node name="Button" type="MeshInstance3D" parent="Multitool"]
 transform = Transform3D(0, 4.47035e-08, 1, -1, 1.2666e-07, 9.31323e-10, -3.72529e-08, -2.5, 0, -0.1072, 0.0198131, 0.292164)
@@ -1719,7 +1776,7 @@ libraries = {
 }
 
 [node name="Beam" parent="." instance=ExtResource("3_8m00m")]
-transform = Transform3D(0.991779, 0.127965, -6.40305e-09, 0.00474713, -0.0367922, -0.999312, -0.127877, 0.991096, -0.0370972, -0.0414132, 0.0444685, -0.428569)
+transform = Transform3D(0.985099, 0.127942, -0.114937, 0.128796, -0.991671, 0, -0.11398, -0.0148034, -0.993373, -0.03, 0.05, -0.35)
 
 [node name="SpotLight3D" type="SpotLight3D" parent="."]
 transform = Transform3D(0.498528, 0.142093, -0.855149, -0.0715637, 0.989853, 0.122757, 0.863915, 0, 0.503638, -1.85658, 0.509018, 0.527215)
@@ -1730,3 +1787,13 @@ shadow_enabled = true
 transform = Transform3D(-0.212614, 0.105105, -0.971467, -0.0715637, 0.989853, 0.122757, 0.974512, 0.0956215, -0.202935, -0.197883, -0.25074, -0.0400561)
 light_specular = 1.0
 shadow_enabled = true
+
+[node name="GPUParticles3D" type="GPUParticles3D" parent="."]
+transform = Transform3D(0.0173955, -0.586107, 0.810032, 0.0240309, -0.809676, -0.586365, 0.999559, 0.029666, -3.54076e-08, 0, 0, -0.4)
+visible = false
+emitting = false
+amount = 1
+lifetime = 5.58
+speed_scale = 1.65
+process_material = SubResource("ParticleProcessMaterial_s7cmo")
+draw_pass_1 = ExtResource("5_t05xm")
