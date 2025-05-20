@@ -11,7 +11,8 @@ var start_day: bool = false
 @onready var PREM_7: Node3D = $"Camera3D/PREM-7"
 @onready var hud_reticle: Control = $HUD.hud_reticle
 @onready var char_obj_shape: CollisionShape3D
-@onready var beam_mesh: MeshInstance3D = PREM_7.beam_mesh
+@onready var beam: Node3D = PREM_7.beam
+@onready var beam_mesh: Node3D = PREM_7.beam_mesh
 @onready var beam_shader_mat := beam_mesh.get_active_material(0) as ShaderMaterial
 
 var colliding_with_assembly_object: bool = false
@@ -23,7 +24,7 @@ var assembly_component_selection: bool = false
 # Moving to physics process
 var desired_direction := Vector3.ZERO
 var desired_velocity := Vector3.ZERO
-var movement_resistance: float = 0.0
+var movement_resistance: float = 1.0
 
 var glow_color: Color
 
@@ -208,13 +209,9 @@ var orbit_angle: float = 0.0  # Radians
 var orbit_speed: float = 1.0  # Speed multiplier
 var input_direction_x: float = 0.0
 var input_direction_z: float = 0.0
+var grabbed_pos_set: bool = false
 
 
-var target_curve_x: float = 0.0
-var target_curve_y: float = 0.0
-var current_curve_x: float = 0.0
-var current_curve_y: float = 0.0
-var beam_decay_speed: float = 1.0  # Tweak this: Higher = faster snap-back
 
 
 
@@ -332,26 +329,33 @@ func _process(delta: float) -> void:
 	# Update grabbed object sway
 	if grabbed_object:
 		grabbed_object.rotation_degrees = grabbed_rotation
+		var z_offset = abs((grabbed_object.position.z - 3.0) / 10.0)
 		if grabbed_object.is_suspended:
 			if char_obj_shape:
 				print("Clearing Char Obj Shape: ", char_obj_shape)
 				clear_char_obj_shape()
 			grabbed_object.gravity_scale = 0.0
 			grabbed_object.position = grabbed_object.position.lerp(grabbed_target_position, delta * 0.5)
+			#prem7_rotation_offset.y = -grabbed_object.position.x / 4.5 
+			#prem7_rotation_offset.x = grabbed_object.position.y / 6.0
+			print('Figure out how to alter the above 2 lines')
 			return
 
 		if not shifting_object_active:
+			if z_offset >= 0.95 and z_offset <= 1.05:
+				grabbed_pos_set = true
+			if not grabbed_pos_set:
+				prem7_rotation_offset.y = lerp(prem7_rotation_offset.y, -grabbed_object.position.x / 4.5 / (z_offset * 1.25), delta * 25.0)
+				prem7_rotation_offset.x = lerp(prem7_rotation_offset.x, grabbed_object.position.y / 6.0 / z_offset, delta * 25.0)
+			elif grabbed_pos_set:
+				prem7_rotation_offset.y = lerp(prem7_rotation_offset.y, -grabbed_object.position.x / 4.5 / (z_offset * 1.25), delta * 50.0)
+				prem7_rotation_offset.x = lerp(prem7_rotation_offset.x, grabbed_object.position.y / 6.0 / z_offset, delta * 50.0)
 			object_sway_offset.x -= lerp(object_sway_offset.x, current_mouse_speed_x * object_sway_strength_x, 1.0)
 			object_sway_offset.y -= lerp(object_sway_offset.y, current_mouse_speed_y * object_sway_strength_y, 1.0)
 			object_sway_offset.x = clamp(object_sway_offset.x, -1.0, 1.0) 
 			object_sway_offset.y = clamp(object_sway_offset.y, -2.0, 2.0)
 			update_grabbed_object_sway(delta)
-
-			current_curve_x = lerp(current_curve_x, target_curve_x, delta * beam_decay_speed / screen_res_sway_multiplier)
-			current_curve_y = lerp(current_curve_y, target_curve_y, delta * beam_decay_speed / screen_res_sway_multiplier)
-			update_beam_bend(current_curve_x, current_curve_y)
-			
-			print(current_curve_x)
+			print('*** Bug *** --- Figure out how to re-introduce auto pitch up when falling...')
 
 		if grabbed_object.is_being_extracted:
 			control_object('released')
@@ -439,56 +443,55 @@ func _input(event: InputEvent) -> void:
 		if Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
 			
 			var input_strength_x = event.relative.x
-			var speed_factor_x = clamp(abs(input_strength_x) / 20.0, 0.0, 1.0)  # 0 at slow, 1 at fast
+			var speed_factor_x = clamp(abs(input_strength_x), 0.0, 1.0)  # 0 at slow, 1 at fast
 			var resistance_x = lerp(1.0, 0.3, speed_factor_x)  # more resistance at high speed
 			
 			var input_strength_y = event.relative.y
-			var speed_factor_y = clamp(abs(input_strength_y) / 20.0, 0.0, 0.5)
+			var speed_factor_y = clamp(abs(input_strength_y), 0.0, 0.5)
 			var resistance_y = lerp(1.0, 0.3, speed_factor_y)
+
 			var max_offset = deg_to_rad(10.0)
-			
-			var max_delta: float = 0.15 * screen_res_sway_multiplier  # You can tweak this (in radians); 0.05 ≈ 2.86 degrees
+			var max_delta: float = 0.15 * screen_res_sway_multiplier / movement_resistance #max look speed
 			var dx = clamp(event.relative.x * mouse_speed, -max_delta, max_delta)
 			var dy = clamp(event.relative.y * mouse_speed, -max_delta, max_delta)
 
 			current_mouse_speed_x = event.relative.x
 			current_mouse_speed_y = event.relative.y
 
-			target_curve_x = clamp(input_strength_x * 0.05, -7.5 / screen_res_sway_multiplier, 7.5 / screen_res_sway_multiplier) * -resistance_x
-			target_curve_y = clamp(input_strength_y * 0.05, -5.5 / screen_res_sway_multiplier, 5.5 / screen_res_sway_multiplier) * resistance_y
-			
-			print(screen_res_sway_multiplier)
-
-
 			if not shifting_object_active:
 				desired_yaw -= dx
 				desired_pitch -= dy
 				desired_pitch = clamp(desired_pitch, pitch_min, pitch_max)
-				prem7_rotation_offset.y += input_strength_x * prem7_rotation_speed * resistance_x
-				prem7_rotation_offset.x += input_strength_y * prem7_rotation_speed * resistance_y
-				prem7_rotation_offset.x = clamp(prem7_rotation_offset.x, -max_offset, max_offset)
-				prem7_rotation_offset.y = clamp(prem7_rotation_offset.y, -max_offset, max_offset)
-				PREM_7.rotation = prem7_original_rotation + prem7_rotation_offset
+				if grabbed_object:
+					###Any way to get the PREM-7 to be STAY pointed at the grabbed object's position???
+					
+					return
+				else:
+					prem7_rotation_offset.y += input_strength_x * prem7_rotation_speed * resistance_x
+					prem7_rotation_offset.x += input_strength_y * prem7_rotation_speed * resistance_y
+					prem7_rotation_offset.x = clamp(prem7_rotation_offset.x, -max_offset, max_offset)
+					prem7_rotation_offset.y = clamp(prem7_rotation_offset.y, -max_offset, max_offset)
+					#PREM_7.rotation = prem7_original_rotation + prem7_rotation_offset
 				if grabbed_object:
 					if not grabbed_object.is_suspended:
 						pass
 						#object_sway_offset.y = clamp(object_sway_offset.y, -0.5, 0.5) 
 			else:
 				if grabbed_object:
+					shift_it = true
+					prem7_rotation_offset.y -= input_strength_x * prem7_rotation_speed * resistance_x / 15.0
 					if z_rotate_mode:
 						print('in z rotate mode')
 						grabbed_rotation.z += event.relative.x * rotation_sensitivity / 3
 						var local_forward: Vector3 = grabbed_object.global_transform.basis.z
 						grabbed_object.rotate(local_forward, deg_to_rad(event.relative.x * mouse_speed * 0))
 					else:
-						shift_it = true
-						prem7_rotation_offset.y -= input_strength_x * prem7_rotation_speed * resistance_x
-						prem7_rotation_offset.x -= input_strength_y * prem7_rotation_speed * resistance_y
-						prem7_rotation_offset.x = clamp(prem7_rotation_offset.x, -max_offset, max_offset)
-						prem7_rotation_offset.y = clamp(prem7_rotation_offset.y, -max_offset, max_offset)
-						PREM_7.rotation = prem7_original_rotation + prem7_rotation_offset
+						prem7_rotation_offset.x -= input_strength_y * prem7_rotation_speed * resistance_y / 15.0
 						grabbed_rotation.y += event.relative.x * rotation_sensitivity / 3
 						grabbed_rotation.x += event.relative.y * rotation_sensitivity / 3
+						#prem7_rotation_offset.x = clamp(prem7_rotation_offset.x, -max_offset, max_offset)
+						#prem7_rotation_offset.y = clamp(prem7_rotation_offset.y, -max_offset, max_offset)
+						#PREM_7.rotation = prem7_original_rotation + prem7_rotation_offset
 						#horizontal_delta = event.relative.x * mouse_speed * 10
 						#vertical_delta = event.relative.y * mouse_speed * 10 
 						#grabbed_object.rotate_y(deg_to_rad(horizontal_delta))
@@ -536,7 +539,6 @@ func _input(event: InputEvent) -> void:
 		if event.keycode == KEY_W or event.keycode == KEY_UP:
 			move_input["up"] = pressed
 			print('UP!')
-			target_curve_y -= 1.0
 			if shifting_object_active and pressed:
 				if grabbed_object and grabbed_object.is_suspended:
 					grabbed_target_position.z -= 0.25
@@ -544,7 +546,6 @@ func _input(event: InputEvent) -> void:
 		elif event.keycode == KEY_S or event.keycode == KEY_DOWN:
 			move_input["down"] = pressed
 			print('DOWN!')
-			target_curve_y += 1.0
 			if shifting_object_active and pressed:
 				if grabbed_object and grabbed_object.is_suspended:
 					grabbed_target_position.z += 0.25
@@ -552,7 +553,6 @@ func _input(event: InputEvent) -> void:
 		elif event.keycode == KEY_A or event.keycode == KEY_LEFT:
 			move_input["left"] = pressed
 			print('LEFT!')
-			target_curve_x += 1.0
 			if shifting_object_active and pressed:
 				if grabbed_object and grabbed_object.is_suspended:
 					grabbed_target_position.x -= 0.25
@@ -561,7 +561,6 @@ func _input(event: InputEvent) -> void:
 		elif event.keycode == KEY_D or event.keycode == KEY_RIGHT:
 			move_input["right"] = pressed
 			print('RIGHT!')
-			target_curve_x -= 1.0
 			if shifting_object_active and pressed:
 				if grabbed_object and grabbed_object.is_suspended:
 					grabbed_target_position.x += 0.25
@@ -676,9 +675,11 @@ func grab_object():
 
 	if grabbed_object:  # An object is already grabbed; release it.
 		print('Release')
+		movement_resistance = 1.0
+		grabbed_pos_set = false
 		initial_grab = false
 		clear_char_obj_shape()
-		PREM_7.beam.retract_beam()
+		PREM_7.retract_beam()
 		grabbed_object.collision_shape.disabled = false
 		grabbed_object.lock_rotation = false
 		print('----ALERT ALERT ALERT ALERT -----')
@@ -727,7 +728,8 @@ func grab_object():
 				grabbed_object = target_body
 				grabbed_object.angular_velocity = Vector3.ZERO
 				grabbed_object.is_grabbed = true
-				PREM_7.beam.cast_beam()
+				PREM_7.cast_beam()
+				movement_resistance = 2.0
 				var object_children = grabbed_object.get_children()
 				for child in object_children:
 					if child is MeshInstance3D:
@@ -1174,11 +1176,6 @@ func update_reticle_targeting() -> void:
 	else:
 		hud_reticle.modulate = Color.WHITE
 
-func update_beam_bend(x: float, y: float):
-	if is_instance_valid(beam_mesh):
-		beam_shader_mat.set_shader_parameter("x_axis", x)
-		beam_shader_mat.set_shader_parameter("y_axis", y)
-
 func handle_prem7_decay(delta: float) -> void:
 	var time_since_last = (Time.get_ticks_msec() - last_mouse_time) / 1000.0
 	if last_mouse_speed < mouse_speed_threshold or time_since_last > 0.05:
@@ -1224,7 +1221,7 @@ func update_grabbed_object_sway(delta: float) -> void:
 	object_sway_strength_y = object_sway_base_y * pitch_factor
 
 	# Apply sway offsets
-	var sway_x = camera.global_transform.basis.x.normalized() * object_sway_offset.x * 0.4 * screen_res_sway_multiplier
+	var sway_x = camera.global_transform.basis.x.normalized() * object_sway_offset.x * 0.275 * screen_res_sway_multiplier
 	var sway_z = Vector3.ZERO
 
 	if abs(pitch_delta) > 0.01 and not at_pitch_limit:

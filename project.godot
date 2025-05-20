@@ -20,7 +20,6 @@ config/icon="res://Assets/icon.svg"
 
 window/size/viewport_width=2560
 window/size/viewport_height=1440
-window/size/initial_position_type=3
 window/size/always_on_top=true
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
