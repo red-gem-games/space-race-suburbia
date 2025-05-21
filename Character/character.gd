@@ -204,7 +204,8 @@ var beam_lock: bool = false
 var current_yaw
 var current_pitch
 
-var orbit_radius: float = 5.0
+var orbit_radius: float = 7.0
+var target_orbit_radius: float = orbit_radius
 var orbit_angle: float = 0.0  # Radians
 var orbit_speed: float = 1.0  # Speed multiplier
 var input_direction_x: float = 0.0
@@ -298,8 +299,23 @@ func _physics_process(delta: float) -> void:
 	update_grabbed_object_physics(delta)
 
 
-func _process(delta: float) -> void:
+var _last_grabbed_pos := Vector3.ZERO
 
+func _process(delta: float) -> void:
+	
+	if grabbed_object:
+		var current_pos = grabbed_object.global_transform.origin
+		var delta_pos = current_pos - _last_grabbed_pos
+		var velocity_vec = delta_pos / delta      # world-space directional velocity
+		_last_grabbed_pos = current_pos
+
+		# if you only care about direction:
+		var direction = delta_pos.normalized()
+
+		print("Velocity:", velocity_vec)
+		print("Direction:", direction)
+
+	
 	if abs(delta - previous_delta) > delta_threshold:
 		screen_res_sway_multiplier = 55.0 * delta
 		previous_delta = delta
@@ -336,9 +352,6 @@ func _process(delta: float) -> void:
 				clear_char_obj_shape()
 			grabbed_object.gravity_scale = 0.0
 			grabbed_object.position = grabbed_object.position.lerp(grabbed_target_position, delta * 0.5)
-			#prem7_rotation_offset.y = -grabbed_object.position.x / 4.5 
-			#prem7_rotation_offset.x = grabbed_object.position.y / 6.0
-			print('Figure out how to alter the above 2 lines')
 			return
 
 		if not shifting_object_active:
@@ -355,7 +368,6 @@ func _process(delta: float) -> void:
 			object_sway_offset.x = clamp(object_sway_offset.x, -1.0, 1.0) 
 			object_sway_offset.y = clamp(object_sway_offset.y, -2.0, 2.0)
 			update_grabbed_object_sway(delta)
-			print('*** Bug *** --- Figure out how to re-introduce auto pitch up when falling...')
 
 		if grabbed_object.is_being_extracted:
 			control_object('released')
@@ -463,19 +475,12 @@ func _input(event: InputEvent) -> void:
 				desired_pitch -= dy
 				desired_pitch = clamp(desired_pitch, pitch_min, pitch_max)
 				if grabbed_object:
-					###Any way to get the PREM-7 to be STAY pointed at the grabbed object's position???
-					
 					return
 				else:
 					prem7_rotation_offset.y += input_strength_x * prem7_rotation_speed * resistance_x
 					prem7_rotation_offset.x += input_strength_y * prem7_rotation_speed * resistance_y
 					prem7_rotation_offset.x = clamp(prem7_rotation_offset.x, -max_offset, max_offset)
 					prem7_rotation_offset.y = clamp(prem7_rotation_offset.y, -max_offset, max_offset)
-					#PREM_7.rotation = prem7_original_rotation + prem7_rotation_offset
-				if grabbed_object:
-					if not grabbed_object.is_suspended:
-						pass
-						#object_sway_offset.y = clamp(object_sway_offset.y, -0.5, 0.5) 
 			else:
 				if grabbed_object:
 					shift_it = true
@@ -675,6 +680,7 @@ func grab_object():
 
 	if grabbed_object:  # An object is already grabbed; release it.
 		print('Release')
+		orbit_radius = target_orbit_radius
 		movement_resistance = 1.0
 		grabbed_pos_set = false
 		initial_grab = false
@@ -685,8 +691,10 @@ func grab_object():
 		print('----ALERT ALERT ALERT ALERT -----')
 		print('CAN WE CHANGE THESE (angular/linear velocity) TO DAMPEN INSTEAD OF STRAIGHT TO ZERO?????????')
 		print('----ALERT ALERT ALERT ALERT -----')
-		grabbed_object.angular_velocity = Vector3.ZERO
-		grabbed_object.linear_velocity = Vector3.ZERO
+		grabbed_object.angular_velocity = lerp(grabbed_object.angular_velocity, Vector3.ZERO, 1.0)
+		grabbed_object.linear_velocity = lerp(grabbed_object.linear_velocity, Vector3.ZERO, 1.0)
+		#grabbed_object.angular_velocity = Vector3.ZERO
+		#grabbed_object.linear_velocity = Vector3.ZERO
 		grabbed_object.set_outline('RELEASE', Color.WHITE, 0.0)
 		hud_reticle.visible = true
 		object_sway_strength_x = object_sway_base_x
@@ -755,11 +763,12 @@ func grab_object():
 				grabbed_target_position = grabbed_object.position
 				if grabbed_object.is_suspended:
 					beam_lock = true
-					orbit_radius = 4.0
 					print('When grabbing a suspended object, this needs to be a more gradual movement in terms of both moving towards the object and the direction in which you are looking')
 					grabbed_rotation = grabbed_object.global_rotation_degrees
 					grabbed_object.gravity_scale = 0.0
 					suspending_object_active = true
+					var dir = (grabbed_object.global_transform.origin - camera.global_transform.origin)
+					orbit_angle = atan2(dir.x, dir.z) + PI
 					return
 				suspending_object_active = false
 				grabbed_object.gravity_scale = 1.75
@@ -773,6 +782,7 @@ func grab_object():
 				grabbed_rotation.z = shortest_angle_diff_value(grabbed_initial_rotation.z, grabbed_global_rotation.z)
 				print('how are you working???')
 				grabbed_object.collision_shape.disabled = true
+				_last_grabbed_pos = grabbed_object.global_transform.origin
 				create_char_obj_shape(grabbed_object)
 
 			else:
@@ -856,6 +866,7 @@ func control_object(status):
 
 
 		elif current_mode == MODE_3:
+			print('***BUG*** Move Suspended Object up in air and then extract, shit goes crazyyy')
 			if grabbed_object:
 				if not grabbed_object.is_being_extracted and not grabbed_object.is_assembly_component:
 					grabbed_object.cancel_extraction()
@@ -872,7 +883,7 @@ func handle_pitch_and_yaw(time):
 	if grabbed_object:
 		var y = position.y
 		var min_y = 2.0       # Ground level threshold
-		var max_y = 5.0      # Max height where full freedom kicks in
+		var max_y = 10.0      # Max height where full freedom kicks in
 
 		# Calculate blend factor (0 near ground, 1 when high in air)
 		var t = clamp((y - min_y) / (max_y - min_y), 0.0, 1.0)
@@ -923,11 +934,13 @@ func handle_pitch_and_yaw(time):
 			input_direction_z -= 1.0  # Move closer
 		if move_input["down"] and not shifting_object_active:
 			input_direction_z += 1.0  # Move away
-
-		orbit_radius = clamp(orbit_radius + input_direction_z * time, 4.0, 15.0)
+		
+		
+		orbit_radius = clamp(orbit_radius + input_direction_z * time / 2, 5.0, 15.0)
 		orbit_angle += input_direction_x * orbit_speed * time / orbit_radius
 		orbit_angle = fmod(orbit_angle, TAU)
-
+		
+		print(orbit_angle)
 
 		var obj_pos = grabbed_object.global_transform.origin
 		var orbit_offset = Vector3(
@@ -935,8 +948,9 @@ func handle_pitch_and_yaw(time):
 			0.0,
 			orbit_radius * cos(orbit_angle)
 		)
-		global_position.x = obj_pos.x + orbit_offset.x
-		global_position.z = obj_pos.z + orbit_offset.z
+
+		global_position.x = lerp(global_position.x, obj_pos.x + orbit_offset.x, time * 5.0)
+		global_position.z = lerp(global_position.z, obj_pos.z + orbit_offset.z, time * 5.0)
 
 	if not beam_lock:
 		desired_pitch = clamp(desired_pitch, pitch_min, pitch_max)

@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://dw2grejb4tc3k"]
+[gd_scene load_steps=28 format=3 uid="uid://dw2grejb4tc3k"]
 
 [ext_resource type="PackedScene" uid="uid://f722yn8gdiyj" path="res://Character/character.tscn" id="1_f3sb7"]
 [ext_resource type="Script" uid="uid://cpdnlycwlet2q" path="res://World/world.gd" id="1_tlwt5"]
@@ -32,6 +32,18 @@ shader_parameter/color5 = Vector4(0.274, 0.45, 0.12, 1)
 [sub_resource type="PlaneMesh" id="PlaneMesh_fj7yv"]
 material = SubResource("ShaderMaterial_tlwt5")
 size = Vector2(100, 100)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_lo5ox"]
+size = Vector3(0.5, 50, 100)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_h2aik"]
+size = Vector3(0.5, 50, 100)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_0wqet"]
+size = Vector3(0.5, 50, 100)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_awrha"]
+size = Vector3(0.5, 50, 100)
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_f3sb7"]
 sky_top_color = Color(1, 1, 1, 1)
@@ -117,6 +129,26 @@ debug_color = Color(0, 0.6, 0.701961, 1)
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Floor"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.858479, 0)
 mesh = SubResource("PlaneMesh_fj7yv")
+
+[node name="Walls" type="StaticBody3D" parent="."]
+
+[node name="Fence" type="Node3D" parent="Walls"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -50, 23.14, 0)
+shape = SubResource("BoxShape3D_lo5ox")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 50, 23.14, 0)
+shape = SubResource("BoxShape3D_h2aik")
+
+[node name="CollisionShape3D3" type="CollisionShape3D" parent="Walls"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 23.14, 50)
+shape = SubResource("BoxShape3D_0wqet")
+
+[node name="CollisionShape3D4" type="CollisionShape3D" parent="Walls"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 23.14, -50)
+shape = SubResource("BoxShape3D_awrha")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_tlwt5")

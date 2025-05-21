@@ -199,7 +199,7 @@ func _physics_process(delta: float) -> void:
 			remove_from_group("Ground")
 
 func _process(delta: float) -> void:
-	
+
 	### Frame Smoothing ###
 	if not is_grabbed and object_body:
 		object_body.top_level = true
