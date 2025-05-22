@@ -8,6 +8,11 @@ var assembly_object_array: Array[RigidBody3D]
 var grabbed_object: RigidBody3D = null
 var object_is_grabbed: bool = false
 
+var last_held_object: RigidBody3D = null
+var _last_grabbed_pos := Vector3.ZERO
+var _release_velocity := Vector3.ZERO
+
+
 var previous_grid_positions := {}
 var assembly_components_global_position: Vector3
 
@@ -47,6 +52,15 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
+	
+	if grabbed_object:
+		var current_pos = grabbed_object.global_transform.origin
+		var delta_pos = current_pos - _last_grabbed_pos
+		var velocity_vec = delta_pos / delta      # world-space directional velocity
+		_last_grabbed_pos = current_pos
+		
+		_release_velocity = velocity_vec
+
 
 	for child in $Extracted_Object.get_children():
 		if child.extraction_complete:
@@ -57,7 +71,9 @@ func _process(delta: float) -> void:
 	# When an object is grabbed:
 	if character.object_is_grabbed and not object_is_grabbed:
 		print('okay')
+		last_held_object = null
 		grabbed_object = character.grabbed_object
+		_last_grabbed_pos = grabbed_object.global_transform.origin
 		reset_rotation = true
 		object_is_grabbed = true
 		character.pitch_set = false
@@ -70,8 +86,6 @@ func _process(delta: float) -> void:
 		if not character.suspending_object_active:
 			print('simple enough')
 			grabbed_object.reparent(character.grabbed_container)
-		#character.suspending_object_active = false
-		
 
 	
 	# When the object is released:
@@ -85,6 +99,7 @@ func _process(delta: float) -> void:
 			grabbed_object.global_position.y += 0.05
 		character.distance_from_character = base_distance_in_front
 		character.pitch_set = false
+		grabbed_object.linear_velocity = _release_velocity
 		grabbed_object = null
 		object_is_grabbed = false
 		

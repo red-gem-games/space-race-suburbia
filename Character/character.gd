@@ -24,7 +24,6 @@ var assembly_component_selection: bool = false
 # Moving to physics process
 var desired_direction := Vector3.ZERO
 var desired_velocity := Vector3.ZERO
-var movement_resistance: float = 1.0
 
 var glow_color: Color
 
@@ -298,23 +297,7 @@ func _physics_process(delta: float) -> void:
 	# Grabbed object physics update
 	update_grabbed_object_physics(delta)
 
-
-var _last_grabbed_pos := Vector3.ZERO
-
 func _process(delta: float) -> void:
-	
-	if grabbed_object:
-		var current_pos = grabbed_object.global_transform.origin
-		var delta_pos = current_pos - _last_grabbed_pos
-		var velocity_vec = delta_pos / delta      # world-space directional velocity
-		_last_grabbed_pos = current_pos
-
-		# if you only care about direction:
-		var direction = delta_pos.normalized()
-
-		print("Velocity:", velocity_vec)
-		print("Direction:", direction)
-
 	
 	if abs(delta - previous_delta) > delta_threshold:
 		screen_res_sway_multiplier = 55.0 * delta
@@ -463,7 +446,7 @@ func _input(event: InputEvent) -> void:
 			var resistance_y = lerp(1.0, 0.3, speed_factor_y)
 
 			var max_offset = deg_to_rad(10.0)
-			var max_delta: float = 0.15 * screen_res_sway_multiplier / movement_resistance #max look speed
+			var max_delta: float = 0.15 * screen_res_sway_multiplier #max look speed
 			var dx = clamp(event.relative.x * mouse_speed, -max_delta, max_delta)
 			var dy = clamp(event.relative.y * mouse_speed, -max_delta, max_delta)
 
@@ -681,7 +664,6 @@ func grab_object():
 	if grabbed_object:  # An object is already grabbed; release it.
 		print('Release')
 		orbit_radius = target_orbit_radius
-		movement_resistance = 1.0
 		grabbed_pos_set = false
 		initial_grab = false
 		clear_char_obj_shape()
@@ -737,7 +719,6 @@ func grab_object():
 				grabbed_object.angular_velocity = Vector3.ZERO
 				grabbed_object.is_grabbed = true
 				PREM_7.cast_beam()
-				movement_resistance = 2.0
 				var object_children = grabbed_object.get_children()
 				for child in object_children:
 					if child is MeshInstance3D:
@@ -780,9 +761,7 @@ func grab_object():
 				grabbed_rotation.y = shortest_angle_diff_value(sanitized_initial_y, sanitized_global_y)
 				grabbed_rotation.y = shortest_angle_diff_value(grabbed_initial_rotation.y, grabbed_global_rotation.y)
 				grabbed_rotation.z = shortest_angle_diff_value(grabbed_initial_rotation.z, grabbed_global_rotation.z)
-				print('how are you working???')
 				grabbed_object.collision_shape.disabled = true
-				_last_grabbed_pos = grabbed_object.global_transform.origin
 				create_char_obj_shape(grabbed_object)
 
 			else:
