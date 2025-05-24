@@ -2,7 +2,8 @@
 
 [resource]
 resource_name = "Primary"
-albedo_color = Color(0, 0.980392, 0.694118, 1)
+transparency = 1
+albedo_color = Color(0, 0.980392, 0.694118, 0.556863)
 metallic = 0.51
 roughness = 0.0
 emission_enabled = true

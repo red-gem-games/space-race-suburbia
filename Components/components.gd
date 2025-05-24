@@ -288,14 +288,20 @@ func set_outline(status: String, color: Color, opacity: float) -> void:
 	elif status == 'UPDATE':
 		color.a = 0.25
 		shader_material.set_shader_parameter("glow_color", color)
+		glow_body.visible = true
 
 	elif status == 'ENHANCE':
 		color.a = opacity
 		shader_material.set_shader_parameter("glow_color", color)
+		glow_body.visible = true
 
 	elif status == 'DIM':
 		color.a = 0.25
 		shader_material.set_shader_parameter("glow_color", color)
+		glow_body.visible = true
+		
+	elif status == "EXTRACT":
+		glow_body.visible = false
 
 func create_particles():
 	grab_particles= GPUParticles3D.new()

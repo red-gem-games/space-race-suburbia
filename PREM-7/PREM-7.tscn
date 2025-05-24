@@ -1,24 +1,27 @@
-[gd_scene load_steps=70 format=4 uid="uid://bpvm0l41dywjs"]
+[gd_scene load_steps=72 format=4 uid="uid://bpvm0l41dywjs"]
 
 [ext_resource type="Script" uid="uid://so25svauxmkt" path="res://PREM-7/prem_7.gd" id="1_iarxa"]
 [ext_resource type="Shader" uid="uid://cw73tbbh1mfcs" path="res://Shaders/PREM-7_glow.gdshader" id="2_2cjep"]
 [ext_resource type="ArrayMesh" uid="uid://dxs73vc1sll8t" path="res://PREM-7/new_array_mesh.tres" id="5_t05xm"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_t05xm"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4qq6n"]
 albedo_color = Color(1, 0, 0, 1)
 emission_enabled = true
 emission = Color(1, 0, 0, 1)
 emission_energy_multiplier = 16.0
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_t05xm"]
-material = SubResource("StandardMaterial3D_t05xm")
+material = SubResource("StandardMaterial3D_4qq6n")
 top_radius = 0.1
 bottom_radius = 0.1
 height = 4.5
-radial_segments = 16
+radial_segments = 100
 rings = 1912
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_l5ika"]
+transparency = 3
+alpha_hash_scale = 1.0
+alpha_antialiasing_mode = 0
 albedo_color = Color(0, 1, 0, 1)
 emission_enabled = true
 emission = Color(0.188074, 1, 0.168543, 1)
@@ -32,12 +35,19 @@ height = 4.5
 radial_segments = 16
 rings = 1912
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_t05xm"]
+transparency = 1
+albedo_color = Color(1, 0, 0, 1)
+emission_enabled = true
+emission = Color(1, 0, 0, 1)
+emission_energy_multiplier = 16.0
+
 [sub_resource type="CylinderMesh" id="CylinderMesh_6dr8p"]
 material = SubResource("StandardMaterial3D_t05xm")
 top_radius = 0.1
 bottom_radius = 0.1
 height = 4.5
-radial_segments = 16
+radial_segments = 100
 rings = 1912
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_a4na6"]
@@ -893,7 +903,7 @@ tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
 "handle_modes": PackedInt32Array(0, 0),
-"points": PackedFloat32Array(0, -0.25, 0, 0.25, 0, 1, -0.25, 0, 0.25, 0),
+"points": PackedFloat32Array(0.01, -0.25, 0, 0.25, 0, 1, -0.25, 0, 0.25, 0),
 "times": PackedFloat32Array(0, 0.5)
 }
 tracks/3/type = "bezier"
@@ -962,7 +972,7 @@ tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
 "handle_modes": PackedInt32Array(0),
-"points": PackedFloat32Array(0, -0.25, 0, 0.25, 0),
+"points": PackedFloat32Array(0.01, -0.25, 0, 0.25, 0),
 "times": PackedFloat32Array(0)
 }
 tracks/3/type = "bezier"
@@ -998,11 +1008,64 @@ tracks/5/keys = {
 "points": PackedFloat32Array(2.89, -0.25, 0, 0.25, 0),
 "times": PackedFloat32Array(0)
 }
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("Multitool/Beam/Beam_Mesh:visible")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("Multitool/Beam/Beam_Mesh_3:visible")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+
+[sub_resource type="Animation" id="Animation_t05xm"]
+resource_name = "control_object"
+length = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Multitool/Beam/Beam_Mesh:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Multitool/Beam/Beam_Mesh_3:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_t05xm"]
 _data = {
 &"RESET": SubResource("Animation_4qq6n"),
-&"cast_beam": SubResource("Animation_8m00m")
+&"cast_beam": SubResource("Animation_8m00m"),
+&"control_object": SubResource("Animation_t05xm")
 }
 
 [sub_resource type="Gradient" id="Gradient_6dr8p"]
@@ -1046,7 +1109,7 @@ script = ExtResource("1_iarxa")
 transform = Transform3D(-0.246939, -0.00781692, -0.022926, -0.00958782, 0.249578, 0.00654291, 0.0378046, 0.0122367, -0.148093, 0.00330822, -0.113262, 0.064556)
 
 [node name="Beam" type="Node3D" parent="Multitool"]
-transform = Transform3D(0, 0, 0, 0, 0, 0, 0, 0, 0, -0.13, 0.51, 2.89)
+transform = Transform3D(0, 0, 1.30104e-19, 0, 0, -7.45058e-11, 0, 0, 0.01, -0.13, 0.51, 2.89)
 
 [node name="Beam_Mesh" type="MeshInstance3D" parent="Multitool/Beam"]
 transform = Transform3D(4.08152, 0.115334, -0.000610789, 5.37541e-09, -0.0576332, -4.01291, -0.071244, 6.60742, -0.0349919, 0.125, 0.4, 17.57)
@@ -1055,13 +1118,15 @@ cast_shadow = 0
 mesh = SubResource("CylinderMesh_t05xm")
 skeleton = NodePath("")
 
-[node name="Beam_Mesh_Sub1" type="MeshInstance3D" parent="Multitool/Beam/Beam_Mesh"]
+[node name="Beam_Mesh_2" type="MeshInstance3D" parent="Multitool/Beam"]
+transform = Transform3D(4.08152, 0.115334, -0.000610765, 2.6077e-08, -0.0576332, -4.01291, -0.071244, 6.60742, -0.0349919, 0.124999, 0.4, 17.57)
 transparency = 0.28
 cast_shadow = 0
 mesh = SubResource("CylinderMesh_l5ika")
 skeleton = NodePath("")
 
-[node name="Beam_Mesh_Sub2" type="MeshInstance3D" parent="Multitool/Beam/Beam_Mesh"]
+[node name="Beam_Mesh_3" type="MeshInstance3D" parent="Multitool/Beam"]
+transform = Transform3D(4.08152, 0.115334, -0.000610765, 2.6077e-08, -0.0576332, -4.01291, -0.071244, 6.60742, -0.0349919, 0.124999, 0.4, 17.57)
 transparency = 0.28
 cast_shadow = 0
 mesh = SubResource("CylinderMesh_6dr8p")

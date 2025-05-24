@@ -9,6 +9,7 @@ var start_day: bool = false
 @onready var camera: Camera3D = $Camera3D
 @onready var grabbed_container: Node3D = $Camera3D/Grabbed_Container
 @onready var PREM_7: Node3D = $"Camera3D/PREM-7"
+@onready var hud_control_object: Control = $HUD.control_object
 @onready var hud_reticle: Control = $HUD.hud_reticle
 @onready var char_obj_shape: CollisionShape3D
 @onready var beam: Node3D = PREM_7.beam
@@ -26,6 +27,7 @@ var desired_direction := Vector3.ZERO
 var desired_velocity := Vector3.ZERO
 
 var glow_color: Color
+var glow_opacity: float
 
 var distance_from_character: float = 7.0
 var previous_height: float
@@ -327,6 +329,17 @@ func _process(delta: float) -> void:
 
 	# Update grabbed object sway
 	if grabbed_object:
+		if right_mouse_down or extracting_object_active or suspending_object_active:
+			camera.fov = lerp(camera.fov, 55.0, delta * 10)
+			if not PREM_7.controlling_object:
+				PREM_7.control_object()
+				hud_control_object.visible = true
+				print('***   Make sure to lerp these shaders / standard materials   ***')
+		else:
+			camera.fov = lerp(camera.fov, 75.0, delta * 10)
+			if PREM_7.controlling_object:
+				hud_control_object.visible = false
+				PREM_7.release_control()
 		grabbed_object.rotation_degrees = grabbed_rotation
 		var z_offset = abs((grabbed_object.position.z - 3.0) / 10.0)
 		if grabbed_object.is_suspended:
@@ -494,6 +507,7 @@ func _input(event: InputEvent) -> void:
 			if not grabbed_object:
 				return
 			if event.pressed:
+				suspending_object_active = true
 				print('add SUSPEND visuals')
 				print('Change the shift movement (left, right, forward, backward) to match what the character is seeing vs. actual position')
 			if not event.pressed:
@@ -503,11 +517,17 @@ func _input(event: InputEvent) -> void:
 				grab_object()
 				
 
-		if event.keycode == KEY_E:
+		if event.keycode == KEY_E and not event.is_echo():
 			if not grabbed_object:
 				return
 			if event.pressed:
-				print('add EXTRACT visuals')
+				extracting_object_active =! extracting_object_active
+				if extracting_object_active:
+					print('Start Extracting')
+					grabbed_object.set_outline('EXTRACT', glow_color, 0.0)
+				else:
+					print('Stop Extracting')
+					grabbed_object.set_outline('GRAB', glow_color, glow_opacity)
 
 		if event.keycode == KEY_F:
 			if not grabbed_object:
@@ -772,7 +792,6 @@ func grab_object():
 
 func control_object(status):
 	if status == 'pressed':
-		var glow_opacity: float
 		PREM_7.trig_anim.play("RESET")
 		PREM_7.trig_anim.play("trigger_pull")
 		collision_layer = 1
@@ -830,7 +849,10 @@ func control_object(status):
 		right_mouse_down = false
 		
 		## Reset Outline Glow State BEFORE Grabbed Object is Released
-		grabbed_object.set_outline('DIM', glow_color, 0.0)
+		if not extracting_object_active:
+			grabbed_object.set_outline('DIM', glow_color, 0.0)
+		else:
+			grabbed_object.set_outline('EXTRACT', glow_color, 0.0)
 
 		if current_mode == MODE_1:
 			print("Object has been Shifted!")
@@ -857,6 +879,8 @@ func control_object(status):
 		elif current_mode == MODE_4:
 			print("Object has been Fused!")
 			fusing_object_active = false
+		
+
 
 func handle_pitch_and_yaw(time):
 	if grabbed_object:
