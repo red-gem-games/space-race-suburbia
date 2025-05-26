@@ -9,12 +9,15 @@ var start_day: bool = false
 @onready var camera: Camera3D = $Camera3D
 @onready var grabbed_container: Node3D = $Camera3D/Grabbed_Container
 @onready var PREM_7: Node3D = $"Camera3D/PREM-7"
-@onready var hud_control_object: Control = $HUD.control_object
-@onready var hud_reticle: Control = $HUD.hud_reticle
+@onready var HUD: Control = $HUD
 @onready var char_obj_shape: CollisionShape3D
 @onready var beam: Node3D = PREM_7.beam
 @onready var beam_mesh: Node3D = PREM_7.beam_mesh
 @onready var beam_shader_mat := beam_mesh.get_active_material(0) as ShaderMaterial
+
+var control_RED: Color = Color(1, 0, 0)
+var control_GREEN: Color = Color(0, 1, 0)
+var control_BLUE: Color = Color(0, 0, 1)
 
 var colliding_with_assembly_object: bool = false
 var assembly_object_mass: float
@@ -219,15 +222,27 @@ var grabbed_pos_set: bool = false
 
 
 func _ready() -> void:
-	print('General To Do List:')
-	print('------ ALWAYS MAKE SURE THINGS WORK ON BOTH SCREENS ------')
-	print('SUSPEND Changes')
-	print('EXTRACT Changes')
-	print('KEY_R: Reset Values (Which Ones?)')
-	print('Right Click: SHIFT - Click and drag to rotate object, hold CTRL to rotate on Z axis. If object is suspended, WASD keys move object Up/Left/Down/Right while Shifting')
-	print('KEY_Q: SUSPEND - Press Once to Suspend Object in Place - Press again to remove Suspension [Make the freeze JUICY]')
-	print('KEY_E: EXTRACT - Press Once to Begin Extraction Process - Press again to Extract Selected Component [Make the Snap JUICY]')
-	print('KEY_F: FUSE - Press & Hold to initiate Fuse process - 3, 2, 1 [Make the Snap JUICY]')
+	push_warning('General To Do List:')
+	push_warning('------ ALWAYS MAKE SURE THINGS WORK ON BOTH SCREENS ------')
+	push_warning('SUSPEND Changes')
+	push_warning('EXTRACT Changes')
+	push_warning('KEY_R: Reset Values (Which Ones?)')
+	push_warning('Right Click: SHIFT - Click and drag to rotate object, hold CTRL to rotate on Z axis. If object is suspended, WASD keys move object Up/Left/Down/Right while Shifting')
+	push_warning('KEY_Q: THIS IS NOW THE DESIGNATED ACTION BUTTON WHEN EITHER EXTRACTING OR FUSING...originally was (((SUSPEND - Press Once to Suspend Object in Place - Press again to remove Suspension [Make the freeze JUICY])))')
+	push_warning('KEY_E: EXTRACT - Press Once to Begin Extraction Process - Press again to Extract Selected Component [Make the Snap JUICY]')
+	push_warning('KEY_F: FUSE - Press & Hold to initiate Fuse process - 3, 2, 1 [Make the Snap JUICY]')
+	push_warning('----------------------------------------')
+	push_warning('----------------------------------------')
+	push_warning("-----------More Requirements------------")
+	push_warning('----------------------------------------')
+	push_warning('----------------------------------------')
+	push_warning('RIGHT KEY will ALWAYS be used to Rotate the object, no matter which mode')
+	push_warning("When in Fuse Process, object will be SUSPENDED. The player must then walk around to find what they'd like to Fuse that object to. Items will only light up if there is an ability to fuse. Once that second Assembly Component -or- Core System is selected, the object can be Fused by pressing and holding KEY_Q (this works because we are removing the ability to simply Suspend an item, and it now becomes part of FUSE instead...making KEY_Q the initially designated 'Action Key')")
+	push_warning('-*-*-*-')
+	push_warning("The player can initiate Fuse mode with the object as far away or as close to the object as they'd like (the closer is obviously the better), because they will then control the initial object and can move it by Right-Clicking and rotating or moving with WASD. The goal will be to align the object you are fusing as close to perfect as possible, because that will alter the integrity of your ship")
+	push_warning('-*-*-*-')
+	push_warning("In order to fuse with a Core System, the player will also need to have already extracted it from the ship, which will allow things to be removed and/or extracted to change as well")
+	
 
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	# Store the original rotation of PREM-7.
@@ -329,16 +344,22 @@ func _process(delta: float) -> void:
 
 	# Update grabbed object sway
 	if grabbed_object:
-		if right_mouse_down or extracting_object_active or suspending_object_active:
+		if shifting_object_active or extracting_object_active or fusing_object_active:
 			camera.fov = lerp(camera.fov, 55.0, delta * 10)
 			if not PREM_7.controlling_object:
 				PREM_7.control_object()
-				hud_control_object.visible = true
+				if shifting_object_active:
+					HUD.set_highlight_color(control_GREEN, 0.4)
+				elif extracting_object_active:
+					HUD.set_highlight_color(control_RED, 0.7)
+				elif fusing_object_active:
+					HUD.set_highlight_color(control_BLUE, 0.7)
+				HUD.control_color.visible = true
 				print('***   Make sure to lerp these shaders / standard materials   ***')
 		else:
 			camera.fov = lerp(camera.fov, 75.0, delta * 10)
 			if PREM_7.controlling_object:
-				hud_control_object.visible = false
+				HUD.control_color.visible = false
 				PREM_7.release_control()
 		grabbed_object.rotation_degrees = grabbed_rotation
 		var z_offset = abs((grabbed_object.position.z - 3.0) / 10.0)
@@ -533,7 +554,14 @@ func _input(event: InputEvent) -> void:
 			if not grabbed_object:
 				return
 			if event.pressed:
-				print('add FUSE visuals')
+				fusing_object_active =! fusing_object_active
+				if fusing_object_active:
+					fuse_mode_active()
+					suspending_object_active = true
+					beam_lock = false
+					grabbed_object.is_suspended =! grabbed_object.is_suspended
+					grabbed_object.object_rotation = grabbed_object.rotation_degrees
+					grab_object()
 
 		if event.keycode == KEY_QUOTELEFT and pressed and not event.is_echo():
 			if Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
@@ -698,7 +726,7 @@ func grab_object():
 		#grabbed_object.angular_velocity = Vector3.ZERO
 		#grabbed_object.linear_velocity = Vector3.ZERO
 		grabbed_object.set_outline('RELEASE', Color.WHITE, 0.0)
-		hud_reticle.visible = true
+		HUD.reticle.visible = true
 		object_sway_strength_x = object_sway_base_x
 		object_sway_strength_y = object_sway_base_y
 		distance_factor = 0.0
@@ -745,7 +773,7 @@ func grab_object():
 						grabbed_mesh = child
 					elif child is CollisionShape3D:
 						grabbed_collision = child
-				hud_reticle.visible = false
+				HUD.reticle.visible = false
 				match current_mode:
 					MODE_1:
 						glow_color = MODE_1_COLOR
@@ -881,6 +909,8 @@ func control_object(status):
 			fusing_object_active = false
 		
 
+func fuse_mode_active():
+	print("add some logic here...release object but keep it as 'fused object' until the object player is fusing to is selected...or something like that?")
 
 func handle_pitch_and_yaw(time):
 	if grabbed_object:
@@ -1070,10 +1100,10 @@ func cycle_mode_direction(forward: bool = true) -> void:
 		new_index = modes.size() - 1
 	change_mode(modes[new_index])
 	match current_mode:
-		MODE_1: hud_reticle.modulate = MODE_1_COLOR
-		MODE_2: hud_reticle.modulate = MODE_2_COLOR
-		MODE_3: hud_reticle.modulate = MODE_3_COLOR
-		MODE_4: hud_reticle.modulate = MODE_4_COLOR
+		MODE_1: HUD.reticle.modulate = MODE_1_COLOR
+		MODE_2: HUD.reticle.modulate = MODE_2_COLOR
+		MODE_3: HUD.reticle.modulate = MODE_3_COLOR
+		MODE_4: HUD.reticle.modulate = MODE_4_COLOR
 
 func shortest_angle_diff_value(initial_angle: float, target_angle: float) -> float:
 	initial_angle = wrapf(initial_angle, -180.0, 180.0)
@@ -1183,15 +1213,15 @@ func update_reticle_targeting() -> void:
 		var collider = result.collider
 		if collider is RigidBody3D and not collider.is_rocketship:
 			match current_mode:
-				MODE_1: hud_reticle.modulate = MODE_1_COLOR
-				MODE_2: hud_reticle.modulate = MODE_2_COLOR
-				MODE_3: hud_reticle.modulate = MODE_3_COLOR
-				MODE_4: hud_reticle.modulate = MODE_4_COLOR
-				_: hud_reticle.modulate = Color.WHITE
+				MODE_1: HUD.reticle.modulate = MODE_1_COLOR
+				MODE_2: HUD.reticle.modulate = MODE_2_COLOR
+				MODE_3: HUD.reticle.modulate = MODE_3_COLOR
+				MODE_4: HUD.reticle.modulate = MODE_4_COLOR
+				_: HUD.reticle.modulate = Color.WHITE
 		else:
-			hud_reticle.modulate = Color.WHITE
+			HUD.reticle.modulate = Color.WHITE
 	else:
-		hud_reticle.modulate = Color.WHITE
+		HUD.reticle.modulate = Color.WHITE
 
 func handle_prem7_decay(delta: float) -> void:
 	var time_since_last = (Time.get_ticks_msec() - last_mouse_time) / 1000.0

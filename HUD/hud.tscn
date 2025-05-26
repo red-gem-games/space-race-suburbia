@@ -2,7 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://dj7bpyq468f67" path="res://Assets/UI/Reticle.png" id="1_37p78"]
 [ext_resource type="Script" uid="uid://bi78c7lvurqh7" path="res://HUD/hud.gd" id="1_64ctp"]
-[ext_resource type="Shader" uid="uid://dh6juv5sqkcvo" path="res://HUD/control_object.gdshader" id="3_yu8mg"]
+[ext_resource type="Shader" uid="uid://dh6juv5sqkcvo" path="res://Shaders/control_object.gdshader" id="3_yu8mg"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_jvmdh"]
 shader = ExtResource("3_yu8mg")
@@ -58,15 +58,8 @@ grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("1_37p78")
 
-[node name="Control_Object" type="Control" parent="CanvasLayer"]
-layout_mode = 3
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
-
-[node name="ColorRect" type="ColorRect" parent="CanvasLayer/Control_Object"]
+[node name="Control_Color" type="ColorRect" parent="CanvasLayer"]
 material = SubResource("ShaderMaterial_jvmdh")
-layout_mode = 1
 offset_right = 2563.0
 offset_bottom = 1445.0
 color = Color(1, 0, 0, 0.133333)
