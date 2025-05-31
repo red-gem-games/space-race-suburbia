@@ -92,16 +92,19 @@ func _process(delta: float) -> void:
 	elif not character.object_is_grabbed and object_is_grabbed:
 		if not is_instance_valid(grabbed_object):
 			return
-		print('okay wow')
-		grabbed_object.reparent(assembly_object_container)
+		if not grabbed_object.is_controlled:
+			grabbed_object.reparent(assembly_object_container)
 		if not grabbed_object.is_suspended:
 			grabbed_object.global_position = object_global_position
 			grabbed_object.global_position.y += 0.05
 		character.distance_from_character = base_distance_in_front
 		character.pitch_set = false
 		grabbed_object.linear_velocity = _release_velocity
+		if grabbed_object.is_controlled:
+			grabbed_object.queue_free()
 		grabbed_object = null
 		object_is_grabbed = false
+		print('still happening')
 		
 
 	if character.object_is_grabbed and object_is_grabbed and grabbed_object:

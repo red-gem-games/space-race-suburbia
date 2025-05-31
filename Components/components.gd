@@ -90,6 +90,9 @@ var position_tween: Tween
 var scale_tween: Tween
 
 
+var is_controlled: bool = false
+
+
 
 
 
@@ -126,7 +129,7 @@ func _ready() -> void:
 			if child.name == "Outline":
 				base_mesh = child
 			else:
-				object_body = child 
+				object_body = child
 
 	if base_mesh:
 		#var outline_mesh = base_mesh.duplicate()

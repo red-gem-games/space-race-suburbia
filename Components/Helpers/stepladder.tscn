@@ -7,10 +7,10 @@ albedo_color = Color(0.298039, 0.27451, 0.298039, 1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_oe8m4"]
 material = SubResource("StandardMaterial3D_w47uh")
-size = Vector3(10, 0.3, 1)
+size = Vector3(4.06, 0.3, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_w47uh"]
-size = Vector3(9.968, 5.713, 0.028)
+size = Vector3(3.988, 5.713, 0.028)
 
 [node name="Stepladder" type="RigidBody3D" groups=["Stepladder"]]
 collision_layer = 0
@@ -46,9 +46,9 @@ mesh = SubResource("BoxMesh_oe8m4")
 skeleton = NodePath("../..")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.37451, 0.927223, 0, -0.927223, 0.37451, 0.0262451, 0.940501, -2.1008)
+transform = Transform3D(1, 0, 0, 0, 0.302054, 0.953291, 0, -0.953291, 0.302054, 0, 0.729388, -2.101)
 shape = SubResource("BoxShape3D_w47uh")
 
 [node name="CollisionShape3D2" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.0262451, -0.357357, -2.31797)
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.0262451, -0.178062, -2.31797)
 shape = SubResource("BoxShape3D_w47uh")

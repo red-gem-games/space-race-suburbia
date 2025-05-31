@@ -1,4 +1,4 @@
-[gd_scene load_steps=72 format=4 uid="uid://bpvm0l41dywjs"]
+[gd_scene load_steps=76 format=4 uid="uid://bpvm0l41dywjs"]
 
 [ext_resource type="Script" uid="uid://so25svauxmkt" path="res://PREM-7/prem_7.gd" id="1_iarxa"]
 [ext_resource type="Shader" uid="uid://cw73tbbh1mfcs" path="res://Shaders/PREM-7_glow.gdshader" id="2_2cjep"]
@@ -1068,6 +1068,73 @@ _data = {
 &"control_object": SubResource("Animation_t05xm")
 }
 
+[sub_resource type="Animation" id="Animation_l5ika"]
+resource_name = "spin_hologram"
+length = 10.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Hologram:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 10),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, -0.174533, 0), Vector3(0, -6.45772, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_6dr8p"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Hologram:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, -0.174533, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Hologram:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="Animation" id="Animation_3nktn"]
+resource_name = "cast_hologram"
+step = 0.01
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Hologram:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.01, 0.02, 0.03, 0.04, 0.2),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [false, true, false, true, false, true]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_3nktn"]
+_data = {
+&"RESET": SubResource("Animation_6dr8p"),
+&"cast_hologram": SubResource("Animation_3nktn"),
+&"spin_hologram": SubResource("Animation_l5ika")
+}
+
 [sub_resource type="Gradient" id="Gradient_6dr8p"]
 colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1)
 
@@ -1273,6 +1340,11 @@ libraries = {
 }
 speed_scale = 1.75
 
+[node name="Hologram_Animation" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_3nktn")
+}
+
 [node name="SpotLight3D" type="SpotLight3D" parent="."]
 transform = Transform3D(0.498528, 0.142093, -0.855149, -0.0715637, 0.989853, 0.122757, 0.863915, 0, 0.503638, -1.85658, 0.509018, 0.527215)
 light_specular = 1.0
@@ -1292,3 +1364,9 @@ lifetime = 5.58
 speed_scale = 1.65
 process_material = SubResource("ParticleProcessMaterial_s7cmo")
 draw_pass_1 = ExtResource("5_t05xm")
+
+[node name="Hologram" type="Node3D" parent="."]
+transform = Transform3D(0.0984808, 0, -0.0173648, 0, 0.1, 0, 0.0173648, 0, 0.0984808, 0, 0.416997, -0.0664346)
+visible = false
+
+[connection signal="animation_finished" from="Hologram_Animation" to="." method="_on_hologram_animation_animation_finished"]

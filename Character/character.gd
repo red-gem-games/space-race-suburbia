@@ -62,6 +62,10 @@ var grabbed_initial_rotation: Vector3 = Vector3.ZERO
 var grabbed_global_rotation: Vector3
 var grabbed_target_position: Vector3
 
+var grab_timer: Timer = Timer.new()
+var control_timer: Timer = Timer.new()
+var controlled_object: RigidBody3D
+
 
 var floor_y: float = -1.5     # The floor level (adjust as needed)
 var max_y: float = 30.0       # The maximum Y allowed (adjust as needed)
@@ -243,9 +247,11 @@ func _ready() -> void:
 	push_warning('-*-*-*-')
 	push_warning("In order to fuse with a Core System, the player will also need to have already extracted it from the ship, which will allow things to be removed and/or extracted to change as well")
 	
-
+	add_child(grab_timer)
+	grab_timer.one_shot = true
+	add_child(control_timer)
+	control_timer.one_shot = true
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-	# Store the original rotation of PREM-7.
 	prem7_original_rotation = PREM_7.rotation
 
 
@@ -315,7 +321,7 @@ func _physics_process(delta: float) -> void:
 	update_grabbed_object_physics(delta)
 
 func _process(delta: float) -> void:
-	
+
 	if abs(delta - previous_delta) > delta_threshold:
 		screen_res_sway_multiplier = 55.0 * delta
 		previous_delta = delta
@@ -337,7 +343,12 @@ func _process(delta: float) -> void:
 	move_and_slide()
 
 	# PREM-7 mouse decay effect
-	handle_prem7_decay(delta)
+	if control_timer.time_left == 0.0:
+		handle_prem7_decay(delta)
+	
+	else:
+		prem7_rotation_offset = Vector3.ZERO
+		PREM_7.rotation = PREM_7.rotation.lerp(prem7_original_rotation, prem7_decay_speed * delta)
 
 	# Update HUD Reticle target and color
 	update_reticle_targeting()
@@ -346,21 +357,22 @@ func _process(delta: float) -> void:
 	if grabbed_object:
 		if shifting_object_active or extracting_object_active or fusing_object_active:
 			camera.fov = lerp(camera.fov, 55.0, delta * 10)
-			if not PREM_7.controlling_object:
-				PREM_7.control_object()
+			if not PREM_7.handling_object:
+				PREM_7.handle_object()
 				if shifting_object_active:
 					HUD.set_highlight_color(control_GREEN, 0.4)
 				elif extracting_object_active:
 					HUD.set_highlight_color(control_RED, 0.7)
 				elif fusing_object_active:
+					print('?????????????')
 					HUD.set_highlight_color(control_BLUE, 0.7)
 				HUD.control_color.visible = true
 				print('***   Make sure to lerp these shaders / standard materials   ***')
 		else:
 			camera.fov = lerp(camera.fov, 75.0, delta * 10)
-			if PREM_7.controlling_object:
+			if PREM_7.handling_object:
 				HUD.control_color.visible = false
-				PREM_7.release_control()
+				PREM_7.release_handle()
 		grabbed_object.rotation_degrees = grabbed_rotation
 		var z_offset = abs((grabbed_object.position.z - 3.0) / 10.0)
 		if grabbed_object.is_suspended:
@@ -387,15 +399,21 @@ func _process(delta: float) -> void:
 			update_grabbed_object_sway(delta)
 
 		if grabbed_object.is_being_extracted:
-			control_object('released')
-	if extracting_object_active:
-		desired_pitch = clamp(desired_pitch, 0.0, 0.35)
-		if assembly_component_selection:
-			var yaw_range = deg_to_rad(30.0)
-			desired_yaw = clamp(desired_yaw, extracting_yaw - yaw_range, extracting_yaw + yaw_range)
-		else:
-			desired_yaw = extracting_yaw
-
+			handle_object('released')
+	#if extracting_object_active:
+		#desired_pitch = clamp(desired_pitch, 0.0, 0.35)
+		#if assembly_component_selection:
+			#var yaw_range = deg_to_rad(30.0)
+			#desired_yaw = clamp(desired_yaw, extracting_yaw - yaw_range, extracting_yaw + yaw_range)
+		#else:
+			#desired_yaw = extracting_yaw
+	if not grabbed_object and (extracting_object_active or fusing_object_active):
+		camera.fov = lerp(camera.fov, 75.0, delta * 10)
+		HUD.control_color.visible = false
+		PREM_7.release_handle()
+		if camera.fov >= 74.9:
+			extracting_object_active = false
+			fusing_object_active = false
 
 ##--------------------------------------##
 ##------------INPUT RESPONSE------------##
@@ -422,32 +440,30 @@ func _input(event: InputEvent) -> void:
 		elif event.button_index == MOUSE_BUTTON_RIGHT and grabbed_object:
 			if not middle_mouse_down and not left_mouse_down:
 				if event.is_pressed():
-					control_object('pressed')
+					handle_object('pressed')
 				else:
-					control_object('released')
+					handle_object('released')
 
 		elif event.button_index == MOUSE_BUTTON_WHEEL_UP:
 			if scroll_cooldown <= 0.0 and not middle_mouse_down and not right_mouse_down and not left_mouse_down:
-				print('cycling up')
-				cycle_mode_direction(true)
+				PREM_7.switch_hologram('Up')
 				scroll_cooldown = scroll_cooldown_duration
-			if right_mouse_down and shifting_object_active:
-				if grabbed_target_position.y <= max_y:
-					if grabbed_object.is_suspended:
-						print('***Move Camera with this***')
-						grabbed_target_position.y += 0.1
+			#if right_mouse_down and shifting_object_active:
+				#if grabbed_target_position.y <= max_y:
+					#if grabbed_object.is_suspended:
+						#print('***Move Camera with this***')
+						#grabbed_target_position.y += 0.1
 
 
 		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
 			if scroll_cooldown <= 0.0 and not middle_mouse_down and not right_mouse_down and not left_mouse_down:
-				print('cycling down')
-				cycle_mode_direction(false)
+				PREM_7.switch_hologram('Down')
 				scroll_cooldown = scroll_cooldown_duration
-			if right_mouse_down and shifting_object_active:
-				if grabbed_target_position.y >= 0.5:
-					if grabbed_object.is_suspended:
-						print('***Move Camera with this***')
-						grabbed_target_position.y -= 0.1
+			#if right_mouse_down and shifting_object_active:
+				#if grabbed_target_position.y >= 0.5:
+					#if grabbed_object.is_suspended:
+						#print('***Move Camera with this***')
+						#grabbed_target_position.y -= 0.1
 
 
 		elif event.button_index == MOUSE_BUTTON_MIDDLE:
@@ -525,21 +541,20 @@ func _input(event: InputEvent) -> void:
 		var pressed = event.is_pressed()
 		
 		if event.keycode == KEY_Q:
-			if not grabbed_object:
-				return
-			if event.pressed:
-				suspending_object_active = true
-				print('add SUSPEND visuals')
-				print('Change the shift movement (left, right, forward, backward) to match what the character is seeing vs. actual position')
-			if not event.pressed:
-				beam_lock = false
-				grabbed_object.is_suspended =! grabbed_object.is_suspended
-				grabbed_object.object_rotation = grabbed_object.rotation_degrees
-				grab_object()
+			print('Add action logic here :)')
+			#if event.pressed:
+				#suspending_object_active = true
+				#print('add SUSPEND visuals')
+				#print('Change the shift movement (left, right, forward, backward) to match what the character is seeing vs. actual position')
+			#if not event.pressed:
+				#beam_lock = false
+				#grabbed_object.is_suspended =! grabbed_object.is_suspended
+				#grabbed_object.object_rotation = grabbed_object.rotation_degrees
+				#grab_object()
 				
 
 		if event.keycode == KEY_E and not event.is_echo():
-			if not grabbed_object:
+			if not grabbed_object or fusing_object_active:
 				return
 			if event.pressed:
 				extracting_object_active =! extracting_object_active
@@ -551,17 +566,17 @@ func _input(event: InputEvent) -> void:
 					grabbed_object.set_outline('GRAB', glow_color, glow_opacity)
 
 		if event.keycode == KEY_F:
-			if not grabbed_object:
+			if not grabbed_object or extracting_object_active:
 				return
 			if event.pressed:
 				fusing_object_active =! fusing_object_active
 				if fusing_object_active:
 					fuse_mode_active()
-					suspending_object_active = true
+					#suspending_object_active = true
 					beam_lock = false
-					grabbed_object.is_suspended =! grabbed_object.is_suspended
-					grabbed_object.object_rotation = grabbed_object.rotation_degrees
-					grab_object()
+					#grabbed_object.is_suspended =! grabbed_object.is_suspended
+					#grabbed_object.object_rotation = grabbed_object.rotation_degrees
+					#grab_object()
 
 		if event.keycode == KEY_QUOTELEFT and pressed and not event.is_echo():
 			if Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
@@ -674,8 +689,19 @@ func _input(event: InputEvent) -> void:
 				current_jetpack_thrust = current_jetpack_thrust / 2
 
 		if event.keycode == KEY_CTRL:
+			if not grabbed_object:
+				return
+			if grabbed_object.is_stepladder or grabbed_object.is_rocketship:
+				return
+			if pressed and grab_timer.time_left == 0.0:
+				control_object()
+			else:
+				pass
+
+		if event.keycode == KEY_Z:
 			if pressed:
-				z_rotate_mode = true
+				if shifting_object_active:
+					z_rotate_mode = true
 			else:
 				z_rotate_mode = false
 
@@ -715,12 +741,10 @@ func grab_object():
 		grabbed_pos_set = false
 		initial_grab = false
 		clear_char_obj_shape()
-		PREM_7.retract_beam()
+		if not grabbed_object.is_controlled:
+			PREM_7.retract_beam()
 		grabbed_object.collision_shape.disabled = false
 		grabbed_object.lock_rotation = false
-		print('----ALERT ALERT ALERT ALERT -----')
-		print('CAN WE CHANGE THESE (angular/linear velocity) TO DAMPEN INSTEAD OF STRAIGHT TO ZERO?????????')
-		print('----ALERT ALERT ALERT ALERT -----')
 		grabbed_object.angular_velocity = lerp(grabbed_object.angular_velocity, Vector3.ZERO, 1.0)
 		grabbed_object.linear_velocity = lerp(grabbed_object.linear_velocity, Vector3.ZERO, 1.0)
 		#grabbed_object.angular_velocity = Vector3.ZERO
@@ -738,6 +762,10 @@ func grab_object():
 		if grabbed_object.is_suspended:
 			grabbed_rotation = grabbed_object.global_rotation_degrees
 			grabbed_object.gravity_scale = 0.0
+		#elif grabbed_object.is_controlled:
+			##grabbed_object.gravity_scale = 0.0
+			##grabbed_object.visible = false
+			#grabbed_object.queue_free()
 		else:
 			grabbed_object.gravity_scale = 1.75
 		suspending_object_active = false
@@ -747,6 +775,7 @@ func grab_object():
 	else: #Grab a new object
 		print('Grab')
 		extracting_object_active = false
+		fusing_object_active = false
 		if assembly_component_selection:
 			jetpack_active = false
 			vertical_velocity = 0.0
@@ -811,6 +840,7 @@ func grab_object():
 				grabbed_rotation.z = shortest_angle_diff_value(grabbed_initial_rotation.z, grabbed_global_rotation.z)
 				grabbed_object.collision_shape.disabled = true
 				create_char_obj_shape(grabbed_object)
+				grab_timer.start(0.25)
 
 			else:
 				print("Object hit, but no MeshInstance3D child found!")
@@ -818,7 +848,7 @@ func grab_object():
 			print("Object is not RigidBody3D")
 			return
 
-func control_object(status):
+func handle_object(status):
 	if status == 'pressed':
 		PREM_7.trig_anim.play("RESET")
 		PREM_7.trig_anim.play("trigger_pull")
@@ -907,6 +937,26 @@ func control_object(status):
 		elif current_mode == MODE_4:
 			print("Object has been Fused!")
 			fusing_object_active = false
+
+func control_object():
+	if grabbed_object:
+		control_timer.start(1.0)
+		clear_char_obj_shape()
+		grabbed_object.is_controlled = true
+		controlled_object = grabbed_object
+		var current_pos = controlled_object.position
+		PREM_7.controlled_object = grabbed_object
+		
+		grabbed_object.reparent(PREM_7.beam)
+		grabbed_object.collision_layer = 0
+		grabbed_object.collision_mask = 0
+		grabbed_object.scale_object(grabbed_object.object_body, 0.25, 0.25, 0.25, 0.0, 0.15)
+		grabbed_object.scale_object(grabbed_object.glow_body, 0.25, 0.25, 0.25, 0.0, 0.15)
+		PREM_7.retract_beam()
+
+		await get_tree().create_timer(0.15).timeout
+		grab_object()
+
 		
 
 func fuse_mode_active():
@@ -1224,12 +1274,16 @@ func update_reticle_targeting() -> void:
 		HUD.reticle.modulate = Color.WHITE
 
 func handle_prem7_decay(delta: float) -> void:
-	var time_since_last = (Time.get_ticks_msec() - last_mouse_time) / 1000.0
-	if last_mouse_speed < mouse_speed_threshold or time_since_last > 0.05:
-		prem7_rotation_offset = prem7_rotation_offset.lerp(Vector3.ZERO, prem7_decay_speed * delta)
-		PREM_7.rotation = prem7_original_rotation + prem7_rotation_offset
-		object_sway_offset.x = lerp(object_sway_offset.x, 0.0, object_sway_decay_x * delta)
-		object_sway_offset.y = lerp(object_sway_offset.y, 0.0, object_sway_decay_y * delta)
+	
+	#if PREM_7.hologram_active:
+		#prem7_rotation_offset.x = lerp(prem7_rotation_offset.x, 0.025, prem7_decay_speed * delta)
+		#prem7_rotation_offset.y = lerp(prem7_rotation_offset.y, 0.005, prem7_decay_speed * delta)
+
+	prem7_rotation_offset = prem7_rotation_offset.lerp(Vector3.ZERO, prem7_decay_speed * delta)
+	PREM_7.rotation = prem7_original_rotation + prem7_rotation_offset
+	object_sway_offset.x = lerp(object_sway_offset.x, 0.0, object_sway_decay_x * delta)
+	object_sway_offset.y = lerp(object_sway_offset.y, 0.0, object_sway_decay_y * delta)
+	#print(prem7_rotation_offset)
 
 func update_grabbed_object_physics(delta: float) -> void:
 	if not grabbed_object:
@@ -1240,6 +1294,7 @@ func update_grabbed_object_physics(delta: float) -> void:
 	speed_vector = (current_position - last_position) / delta
 	last_position = current_position
 	grabbed_object.object_speed = speed_vector
+	print(current_position)
 
 func update_grabbed_object_sway(delta: float) -> void:
 	# Apply grabbed rotation directly
@@ -1266,6 +1321,7 @@ func update_grabbed_object_sway(delta: float) -> void:
 
 
 	object_sway_strength_y = object_sway_base_y * pitch_factor
+	
 
 	# Apply sway offsets
 	var sway_x = camera.global_transform.basis.x.normalized() * object_sway_offset.x * 0.275 * screen_res_sway_multiplier
