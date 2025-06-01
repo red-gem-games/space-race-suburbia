@@ -49,6 +49,9 @@ var grid_parent = Node3D.new()
 
 func _ready() -> void:
 	add_child(object_position_timer)
+	var somn = assembly_object_container.get_children()
+	for child in somn:
+		child.character_body = character
 
 
 func _process(delta: float) -> void:

@@ -363,15 +363,18 @@ func _process(delta: float) -> void:
 					HUD.set_highlight_color(control_GREEN, 0.4)
 				elif extracting_object_active:
 					HUD.set_highlight_color(control_RED, 0.7)
+					grabbed_object.extract_active = true
 				elif fusing_object_active:
-					print('?????????????')
 					HUD.set_highlight_color(control_BLUE, 0.7)
+					grabbed_object.fuse_active = true
 				HUD.control_color.visible = true
 				print('***   Make sure to lerp these shaders / standard materials   ***')
 		else:
 			camera.fov = lerp(camera.fov, 75.0, delta * 10)
 			if PREM_7.handling_object:
 				HUD.control_color.visible = false
+				grabbed_object.extract_active = false
+				grabbed_object.fuse_active = false
 				PREM_7.release_handle()
 		grabbed_object.rotation_degrees = grabbed_rotation
 		var z_offset = abs((grabbed_object.position.z - 3.0) / 10.0)
@@ -574,9 +577,14 @@ func _input(event: InputEvent) -> void:
 					fuse_mode_active()
 					#suspending_object_active = true
 					beam_lock = false
+					grabbed_object.set_outline('FUSE', glow_color, 0.0)
+					
 					#grabbed_object.is_suspended =! grabbed_object.is_suspended
 					#grabbed_object.object_rotation = grabbed_object.rotation_degrees
 					#grab_object()
+				else:
+					print('Stop Extracting')
+					grabbed_object.set_outline('GRAB', glow_color, glow_opacity)
 
 		if event.keycode == KEY_QUOTELEFT and pressed and not event.is_echo():
 			if Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
@@ -689,6 +697,7 @@ func _input(event: InputEvent) -> void:
 				current_jetpack_thrust = current_jetpack_thrust / 2
 
 		if event.keycode == KEY_CTRL:
+			print('IF YOU WAIT A FEW SECONDS BEFORE CONTROLLING, IT"S LIKE THE OBJECT SINKS???')
 			if not grabbed_object:
 				return
 			if grabbed_object.is_stepladder or grabbed_object.is_rocketship:
@@ -747,8 +756,7 @@ func grab_object():
 		grabbed_object.lock_rotation = false
 		grabbed_object.angular_velocity = lerp(grabbed_object.angular_velocity, Vector3.ZERO, 1.0)
 		grabbed_object.linear_velocity = lerp(grabbed_object.linear_velocity, Vector3.ZERO, 1.0)
-		#grabbed_object.angular_velocity = Vector3.ZERO
-		#grabbed_object.linear_velocity = Vector3.ZERO
+		PREM_7.retract_hologram()
 		grabbed_object.set_outline('RELEASE', Color.WHITE, 0.0)
 		HUD.reticle.visible = true
 		object_sway_strength_x = object_sway_base_x
@@ -839,6 +847,10 @@ func grab_object():
 				grabbed_rotation.y = shortest_angle_diff_value(grabbed_initial_rotation.y, grabbed_global_rotation.y)
 				grabbed_rotation.z = shortest_angle_diff_value(grabbed_initial_rotation.z, grabbed_global_rotation.z)
 				grabbed_object.collision_shape.disabled = true
+				grabbed_object.sleeping = false
+				PREM_7.holo_anim.play("RESET")
+				PREM_7.grabbed_object_name = grabbed_object.name
+				PREM_7.cast_hologram('Grabbed')
 				create_char_obj_shape(grabbed_object)
 				grab_timer.start(0.25)
 
@@ -973,7 +985,7 @@ func handle_pitch_and_yaw(time):
 		t = smoothstep(min_y, max_y, y)
 
 		# Interpolate between restricted and full downward pitch
-		var clamped_pitch_min = deg_to_rad(-15)
+		var clamped_pitch_min = deg_to_rad(-10)
 		pitch_min = lerp(clamped_pitch_min, base_pitch_min, t)
 	else:
 		pitch_min = base_pitch_min
@@ -1345,11 +1357,11 @@ func _push_away_rigid_bodies():
 			
 			velocity_diff_in_push_dir = max(0.0, velocity_diff_in_push_dir)
 			
-			const CHAR_MASS_KG = 80.0
+			const CHAR_MASS_KG = 25.0
 			var mass_ratio = min(1.0, CHAR_MASS_KG / object.mass)
 			push_dir.y = 0
 			
-			var push_force = mass_ratio * 10.0
+			var push_force = mass_ratio
 			
 			object.apply_impulse(push_dir * velocity_diff_in_push_dir * push_force, c.get_position() - object.global_position)
 

@@ -24,6 +24,11 @@ var extraction_location_set: bool = false
 
 var object_rotation: Vector3
 var is_touching_ground: bool = false
+var touching_wall_count: int = 0
+var touching_left_wall: bool = false
+var touching_right_wall: bool = false
+var touching_back_wall: bool = false
+var touching_front_wall: bool = false
 
 var is_grabbed: bool = false
 var recently_grabbed: bool = false
@@ -93,6 +98,11 @@ var scale_tween: Tween
 var is_controlled: bool = false
 
 
+var character_body: CharacterBody3D
+var character_force: Vector3
+
+var extract_active: bool = false
+var fuse_active: bool = false
 
 
 
@@ -112,7 +122,7 @@ func _ready() -> void:
 	
 	contact_monitor = true
 	continuous_cd = true
-	max_contacts_reported = 100
+	max_contacts_reported = 1000
 	gravity_scale = 1.25
 	
 	if is_in_group("Stepladder"):
@@ -202,6 +212,14 @@ func _physics_process(delta: float) -> void:
 			remove_from_group("Ground")
 
 func _process(delta: float) -> void:
+	
+	if fuse_active or extract_active:
+		print('basically need to adjust the transparancy and alpha of grabbed object while in one of these two modes')
+	
+	#print(touching_wall_count)
+	
+	if touching_wall_count >= 2:
+		sleeping = true
 
 	### Frame Smoothing ###
 	if not is_grabbed and object_body:
@@ -256,11 +274,43 @@ func _on_body_shape_entered(body_rid: RID, body: Node, body_shape_index: int, lo
 		add_to_group('Ground')
 		print('ah haaaa')
 
+	if body.name == "Left_Wall" and not touching_left_wall:
+		touching_wall_count += 1
+		touching_left_wall = true
+
+	elif body.name == "Right_Wall" and not touching_right_wall:
+		touching_wall_count += 1
+		touching_right_wall = true
+
+	elif body.name == "Back_Wall" and not touching_back_wall:
+		touching_wall_count += 1
+		touching_back_wall = true
+
+	elif body.name == "Front_Wall" and not touching_front_wall:
+		touching_wall_count += 1
+		touching_front_wall = true
+
 	if body is character:
 		body.is_on_floor()
+		character_force = character_body.current_velocity
+		print(character_force)
 
 func _on_body_shape_exited(body_rid: RID, body: Node, body_shape_index: int, local_shape_index: int) -> void:
-	pass
+	if body.name == "Left_Wall" and touching_left_wall:
+		touching_wall_count -= 1
+		touching_left_wall = false
+
+	elif body.name == "Right_Wall" and touching_right_wall:
+		touching_wall_count -= 1
+		touching_right_wall = false
+
+	elif body.name == "Back_Wall" and touching_back_wall:
+		touching_wall_count -= 1
+		touching_back_wall = false
+
+	elif body.name == "Front_Wall" and touching_front_wall:
+		touching_wall_count -= 1
+		touching_front_wall = false
 
 func set_outline(status: String, color: Color, opacity: float) -> void:
 	if not is_instance_valid(glow_body):
@@ -304,6 +354,9 @@ func set_outline(status: String, color: Color, opacity: float) -> void:
 		glow_body.visible = true
 		
 	elif status == "EXTRACT":
+		glow_body.visible = false
+
+	elif status == "FUSE":
 		glow_body.visible = false
 
 func create_particles():

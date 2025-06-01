@@ -4,10 +4,6 @@
 [ext_resource type="Script" uid="uid://sw8eis2eqpyj" path="res://Character/character.gd" id="1_pjt0s"]
 [ext_resource type="PackedScene" uid="uid://baomcogkgkbvv" path="res://HUD/hud.tscn" id="3_wa5vi"]
 
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_jkkns"]
-radius = 1.25
-height = 4.5
-
 [sub_resource type="Animation" id="Animation_1l6l2"]
 length = 0.001
 tracks/0/type = "bezier"
@@ -113,10 +109,15 @@ _data = {
 &"extract_positive": SubResource("Animation_q4sqr")
 }
 
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_jkkns"]
+radius = 1.25
+height = 4.5
+
 [sub_resource type="SphereShape3D" id="SphereShape3D_jkkns"]
 radius = 1.16
 
 [node name="Character" type="CharacterBody3D"]
+safe_margin = 0.25
 script = ExtResource("1_pjt0s")
 
 [node name="Camera3D" type="Camera3D" parent="."]
@@ -127,11 +128,6 @@ transform = Transform3D(0.999848, 0.000700396, 0.0174384, 0, 0.999194, -0.040131
 [node name="Grabbed_Container" type="Node3D" parent="Camera3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.15, 0)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.085, 0)
-shape = SubResource("CapsuleShape3D_jkkns")
-debug_color = Color(1, 0.264211, 0.231967, 1)
-
 [node name="Extract_Animation" type="AnimationPlayer" parent="."]
 libraries = {
 &"": SubResource("AnimationLibrary_twwou")
@@ -139,7 +135,12 @@ libraries = {
 
 [node name="HUD" parent="." instance=ExtResource("3_wa5vi")]
 
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.416348, 0.188805)
+shape = SubResource("CapsuleShape3D_jkkns")
+debug_color = Color(1, 0.264211, 0.231967, 1)
+
 [node name="PREM_7_Collision" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.06511, -0.365046, -0.956097)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.06511, -0.365046, -0.767292)
 shape = SubResource("SphereShape3D_jkkns")
 debug_color = Color(0.843472, 0.664469, 7.70092e-07, 1)

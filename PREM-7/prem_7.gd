@@ -15,20 +15,26 @@ class_name PREM_7
 @onready var beam_mesh_2: MeshInstance3D = $Multitool/Beam/Beam_Mesh_2
 @onready var beam_mesh_3: MeshInstance3D = $Multitool/Beam/Beam_Mesh_3
 
+@onready var hologram_shader: Shader = preload("res://Shaders/hologram.gdshader")
+
+var grabbed_object_name: StringName
+
 var handling_object: bool = false
+
+var hol_body
 
 var controlled_object: RigidBody3D
 var controlled_objects: Array[StringName] = []
 
 @onready var hologram: Node3D = $Hologram
-var hologram_active: bool = false
-var hologram_timer: Timer = Timer.new()
+var control_hologram_active: bool = false
+var control_hologram_timer: Timer = Timer.new()
 
 
 func _ready() -> void:
 	beam.scale = Vector3(0.0, 0.0, 0.0)
-	add_child(hologram_timer)
-	hologram_timer.one_shot = true
+	add_child(control_hologram_timer)
+	control_hologram_timer.one_shot = true
 
 func _input(event: InputEvent) -> void:
 	pass
@@ -36,10 +42,10 @@ func _input(event: InputEvent) -> void:
 func _process(delta: float) -> void:
 	if controlled_object:
 		controlled_objects.insert(0, controlled_object.name)
-		cast_hologram()
+		cast_hologram('Controlled')
 		controlled_object = null
 
-	if hologram_timer.time_left == 0.0 and hologram_active:
+	if control_hologram_timer.time_left == 0.0 and control_hologram_active:
 		retract_hologram()
 
 func cast_beam():
@@ -61,32 +67,55 @@ func release_handle():
 
 
 
-func cast_hologram():
-	var comp_name = controlled_objects[0]
+func cast_hologram(type: String):
+	var comp_name
+	if hol_body:
+		hol_body.queue_free()
+	if type == "Controlled":
+		comp_name = controlled_objects[0]
+		control_hologram_timer.start(5.0)
+		control_hologram_active = true
+	elif type == "Grabbed":
+		comp_name = grabbed_object_name
 	var new_component = _instance_component_by_name(comp_name)
 	if new_component:
 		hologram.add_child(new_component)
-		var hol_body = new_component.object_body.duplicate()
+		hol_body = new_component.object_body.duplicate()
 		hologram.add_child(hol_body)
-		print(hol_body)
+		# ── Create a ShaderMaterial from your .gdshader ──
+		var holo_mat = ShaderMaterial.new()
+		holo_mat.shader = hologram_shader
+
+		# ── Assign that ShaderMaterial to every MeshInstance3D inside hol_body ──
+		for child in hol_body.get_children():
+			if child is MeshInstance3D:
+				child.set_surface_override_material(0, holo_mat)
+				for extra_child in child.get_children():
+					if extra_child is MeshInstance3D:
+						extra_child.set_surface_override_material(0, holo_mat)
+					
 		new_component.visible = false
 		new_component.collision_shape.disabled = true
 		new_component.object_body.scale = Vector3(0.1, 0.1, 0.1)
-	hologram_timer.start(5.0)
 	holo_anim.play("cast_hologram")
-	hologram_active = true
 	print('Cast hologram of ', comp_name,'!')
 
 func switch_hologram(dir):
-	hologram_timer.start(5.0)
+	if not control_hologram_active:
+		retract_hologram()
+		await get_tree().create_timer(0.5).timeout
+		holo_anim.play("cast_details")
+		return
+	control_hologram_timer.start(5.0)
 	if dir == 'Up':
 		print('Switching hologram Up!')
 	if dir == 'Down':
 		print('Switching hologram Down!')
 
 func retract_hologram():
-	hologram_timer.stop()
-	hologram_active = false
+	control_hologram_timer.stop()
+	control_hologram_active = false
+	holo_anim.play("retract_hologram")
 	print('Retracting hologram!')
 
 func _instance_component_by_name(name: StringName) -> RigidBody3D:

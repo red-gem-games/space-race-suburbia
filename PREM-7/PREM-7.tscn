@@ -1,7 +1,8 @@
-[gd_scene load_steps=76 format=4 uid="uid://bpvm0l41dywjs"]
+[gd_scene load_steps=82 format=4 uid="uid://bpvm0l41dywjs"]
 
 [ext_resource type="Script" uid="uid://so25svauxmkt" path="res://PREM-7/prem_7.gd" id="1_iarxa"]
 [ext_resource type="Shader" uid="uid://cw73tbbh1mfcs" path="res://Shaders/PREM-7_glow.gdshader" id="2_2cjep"]
+[ext_resource type="Shader" uid="uid://br2myqtxwu35" path="res://Shaders/hologram.gdshader" id="4_4qq6n"]
 [ext_resource type="ArrayMesh" uid="uid://dxs73vc1sll8t" path="res://PREM-7/new_array_mesh.tres" id="5_t05xm"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4qq6n"]
@@ -1070,8 +1071,9 @@ _data = {
 
 [sub_resource type="Animation" id="Animation_l5ika"]
 resource_name = "spin_hologram"
-length = 10.0
+length = 25.0
 loop_mode = 1
+step = 0.01
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -1079,7 +1081,7 @@ tracks/0/path = NodePath("Hologram:rotation")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 10),
+"times": PackedFloat32Array(0, 25),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector3(0, -0.174533, 0), Vector3(0, -6.45772, 0)]
@@ -1111,9 +1113,121 @@ tracks/1/keys = {
 "update": 1,
 "values": [false]
 }
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Hologram:scale:x")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(0.001, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/3/type = "bezier"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Hologram:scale:y")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(0.001, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/4/type = "bezier"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Hologram:scale:z")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(0.001, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/5/type = "bezier"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Hologram:rotation:x")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(0, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/6/type = "bezier"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("Hologram:rotation:y")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(-0.174533, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/7/type = "bezier"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("Hologram:rotation:z")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(0, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/8/type = "bezier"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("Details:scale:x")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(0.01, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/9/type = "bezier"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("Details:scale:y")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(0.01, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/10/type = "bezier"
+tracks/10/imported = false
+tracks/10/enabled = true
+tracks/10/path = NodePath("Details:scale:z")
+tracks/10/interp = 1
+tracks/10/loop_wrap = true
+tracks/10/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(0.01, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/11/type = "value"
+tracks/11/imported = false
+tracks/11/enabled = true
+tracks/11/path = NodePath("Details:visible")
+tracks/11/interp = 1
+tracks/11/loop_wrap = true
+tracks/11/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
 
 [sub_resource type="Animation" id="Animation_3nktn"]
 resource_name = "cast_hologram"
+length = 0.5
 step = 0.01
 tracks/0/type = "value"
 tracks/0/imported = false
@@ -1122,16 +1236,184 @@ tracks/0/path = NodePath("Hologram:visible")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.01, 0.02, 0.03, 0.04, 0.2),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [false, true, false, true, false, true]
+"values": [true]
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Hologram:scale:x")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(0.001, -0.25, 0, 0.25, 0, 0.085, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0, 0.5)
+}
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Hologram:scale:y")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(0.001, -0.25, 0, 0.25, 0, 0.085, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0, 0.5)
+}
+tracks/3/type = "bezier"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Hologram:scale:z")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(0.001, -0.25, 0, 0.25, 0, 0.085, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0, 0.5)
+}
+tracks/4/type = "bezier"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Hologram:rotation:x")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(0, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/5/type = "bezier"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Hologram:rotation:y")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(-0.174533, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/6/type = "bezier"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("Hologram:rotation:z")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(0, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+
+[sub_resource type="Animation" id="Animation_61m6q"]
+resource_name = "retract_hologram"
+length = 0.5
+step = 0.01
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Hologram:scale:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(0.085, -0.25, 0, 0.25, 0, 0.001, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0, 0.5)
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Hologram:scale:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(0.085, -0.25, 0, 0.25, 0, 0.001, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0, 0.5)
+}
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Hologram:scale:z")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(0.085, -0.25, 0, 0.25, 0, 0.001, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0, 0.5)
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Hologram:visible")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0.5),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="Animation" id="Animation_5hhbi"]
+resource_name = "cast_details"
+length = 0.5
+step = 0.01
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Details:scale:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(0.01, -0.25, 0, 0.25, 0, 0.9, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0, 0.5)
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Details:scale:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(0.01, -0.25, 0, 0.25, 0, 0.9, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0, 0.5)
+}
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Details:scale:z")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(0.01, -0.25, 0, 0.25, 0, 0.9, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0, 0.5)
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Details:visible")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_3nktn"]
 _data = {
 &"RESET": SubResource("Animation_6dr8p"),
+&"cast_details": SubResource("Animation_5hhbi"),
 &"cast_hologram": SubResource("Animation_3nktn"),
+&"retract_hologram": SubResource("Animation_61m6q"),
 &"spin_hologram": SubResource("Animation_l5ika")
 }
 
@@ -1168,6 +1450,41 @@ scale_curve = SubResource("CurveXYZTexture_vuyi1")
 color = Color(1.26103e-05, 0.840319, 1.15514e-06, 1)
 color_ramp = SubResource("GradientTexture1D_mscii")
 turbulence_noise_strength = 10.89
+
+[sub_resource type="Curve" id="Curve_4qq6n"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.786787, 0.62984), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="TubeTrailMesh" id="TubeTrailMesh_t05xm"]
+radius = 0.31
+radial_steps = 6
+sections = 3
+section_length = 0.1
+curve = SubResource("Curve_4qq6n")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_t05xm"]
+render_priority = 0
+shader = ExtResource("4_4qq6n")
+shader_parameter/albedo_alpha = 0.4
+shader_parameter/tint_color = Color(0.5, 0, 1, 1)
+shader_parameter/edge_color = Color(1, 0.9, 1, 1)
+shader_parameter/edge_power = 1.0
+shader_parameter/edge_size = 5.0
+shader_parameter/edge_intensity = 0.25
+shader_parameter/scanline_tint = Color(1, 1, 1, 0)
+shader_parameter/scanline_intensity = 0.0
+shader_parameter/scanline_density = 5.0
+shader_parameter/scanline_thickness = 1.0
+shader_parameter/scanline_spacing = 1.0
+shader_parameter/scanline_angle = 0.0
+shader_parameter/scanline_speed = 0.2
+shader_parameter/enable_glitch = true
+shader_parameter/glitch_intensity = 1.0
+shader_parameter/shake_power = 0.3
+shader_parameter/shake_rate = 0.175
+shader_parameter/shake_speed = 2.0
+shader_parameter/shake_block_size = 100.0
+shader_parameter/shake_color_rate = 0.5
 
 [node name="PREM-7" type="Node3D"]
 script = ExtResource("1_iarxa")
@@ -1366,7 +1683,24 @@ process_material = SubResource("ParticleProcessMaterial_s7cmo")
 draw_pass_1 = ExtResource("5_t05xm")
 
 [node name="Hologram" type="Node3D" parent="."]
-transform = Transform3D(0.0984808, 0, -0.0173648, 0, 0.1, 0, 0.0173648, 0, 0.0984808, 0, 0.416997, -0.0664346)
+transform = Transform3D(0.000984808, 0, -0.000173648, 0, 0.001, 0, 0.000173648, 0, 0.000984808, 0, 0.364234, -0.0664346)
 visible = false
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0.281279, -0.0958633)
+visible = false
+mesh = SubResource("TubeTrailMesh_t05xm")
+surface_material_override/0 = SubResource("ShaderMaterial_t05xm")
+
+[node name="Details" type="Label3D" parent="."]
+transform = Transform3D(0.00965926, 0, 0.00258819, 0, 0.01, 0, -0.00258819, 0, 0.00965926, 0.0143264, 0.38144, -0.116609)
+visible = false
+pixel_size = 0.001
+modulate = Color(0.752941, 0, 1, 0.729412)
+text = "Remaining Life: 100%
+Durability: 6/10
+Mass: 85 kg"
+font_size = 80
+outline_size = 5
 
 [connection signal="animation_finished" from="Hologram_Animation" to="." method="_on_hologram_animation_animation_finished"]

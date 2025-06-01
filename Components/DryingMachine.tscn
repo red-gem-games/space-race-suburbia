@@ -581,6 +581,7 @@ shadow_mesh = SubResource("ArrayMesh_v3oqm")
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_qbtml"]
 
 [node name="DryingMachine" type="RigidBody3D"]
+collision_priority = 100.0
 mass = 75.0
 script = ExtResource("1_yvv8m")
 

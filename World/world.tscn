@@ -14,7 +14,7 @@
 [ext_resource type="PackedScene" uid="uid://50e0ko7nsyll" path="res://Components/Tune-O-Matic/tune_o_matic.tscn" id="10_lo5ox"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_f3sb7"]
-size = Vector3(100, 1, 100)
+size = Vector3(100, 10, 100)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_tlwt5"]
 render_priority = 0
@@ -52,10 +52,10 @@ size = Vector3(0.5, 50, 100)
 [sub_resource type="BoxShape3D" id="BoxShape3D_h2aik"]
 size = Vector3(0.5, 50, 100)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_0wqet"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_awrha"]
 size = Vector3(0.5, 50, 100)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_awrha"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_0wqet"]
 size = Vector3(0.5, 50, 100)
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_f3sb7"]
@@ -132,10 +132,11 @@ directional_shadow_pancake_size = 80.0
 
 [node name="Floor" type="StaticBody3D" parent="." groups=["Ground"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+collision_priority = 100.0
 input_ray_pickable = false
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Floor"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.17535, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -5.705, 0)
 shape = SubResource("BoxShape3D_f3sb7")
 debug_color = Color(0, 0.6, 0.701961, 1)
 
@@ -143,39 +144,47 @@ debug_color = Color(0, 0.6, 0.701961, 1)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.858479, 0)
 mesh = SubResource("PlaneMesh_fj7yv")
 
-[node name="Walls" type="StaticBody3D" parent="."]
+[node name="Fence" type="Node3D" parent="."]
 
-[node name="Fence" type="Node3D" parent="Walls"]
-
-[node name="Left" type="Node3D" parent="Walls/Fence"]
-
-[node name="Fence" type="MultiMeshInstance3D" parent="Walls/Fence/Left"]
+[node name="Fence" type="MultiMeshInstance3D" parent="Fence"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -50, 0, 50)
 material_override = SubResource("StandardMaterial3D_h2aik")
 multimesh = SubResource("MultiMesh_awrha")
 script = ExtResource("3_h2aik")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Walls"]
+[node name="Left_Wall" type="StaticBody3D" parent="."]
+collision_priority = 100.0
+
+[node name="Left_Wall" type="CollisionShape3D" parent="Left_Wall"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -50, 23.14, 0)
 shape = SubResource("BoxShape3D_lo5ox")
 
-[node name="CollisionShape3D2" type="CollisionShape3D" parent="Walls"]
+[node name="Right Wall" type="StaticBody3D" parent="."]
+collision_priority = 100.0
+
+[node name="Right_Wall" type="CollisionShape3D" parent="Right Wall"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 50, 23.14, 0)
 shape = SubResource("BoxShape3D_h2aik")
 
-[node name="CollisionShape3D3" type="CollisionShape3D" parent="Walls"]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 23.14, 50)
-shape = SubResource("BoxShape3D_0wqet")
+[node name="Back_Wall" type="StaticBody3D" parent="."]
+collision_priority = 100.0
 
-[node name="CollisionShape3D4" type="CollisionShape3D" parent="Walls"]
+[node name="Back_Wall" type="CollisionShape3D" parent="Back_Wall"]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 23.14, -50)
 shape = SubResource("BoxShape3D_awrha")
+
+[node name="Front_Wall" type="StaticBody3D" parent="."]
+collision_priority = 100.0
+
+[node name="Front_Wall" type="CollisionShape3D" parent="Front_Wall"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 23.14, 50)
+shape = SubResource("BoxShape3D_0wqet")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_tlwt5")
 
 [node name="Character" parent="." instance=ExtResource("1_f3sb7")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.383, 2.48471, 46.6999)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.383, 1.28761, 46.7)
 
 [node name="Extracted_Object" type="Node3D" parent="."]
 
