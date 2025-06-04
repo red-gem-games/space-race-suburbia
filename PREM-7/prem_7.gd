@@ -12,8 +12,6 @@ class_name PREM_7
 #@onready var beam: RayCast3D = $Beam
 @onready var beam: Node3D = $Multitool/Beam
 @onready var beam_mesh: MeshInstance3D = $Multitool/Beam/Beam_Mesh
-@onready var beam_mesh_2: MeshInstance3D = $Multitool/Beam/Beam_Mesh_2
-@onready var beam_mesh_3: MeshInstance3D = $Multitool/Beam/Beam_Mesh_3
 
 @onready var hologram_shader: Shader = preload("res://Shaders/hologram.gdshader")
 
@@ -32,7 +30,7 @@ var control_hologram_timer: Timer = Timer.new()
 
 
 func _ready() -> void:
-	beam.scale = Vector3(0.0, 0.0, 0.0)
+	beam.scale = Vector3(0.01, 0.01, 0.01)
 	add_child(control_hologram_timer)
 	control_hologram_timer.one_shot = true
 
@@ -57,12 +55,10 @@ func retract_beam():
 
 func handle_object():
 	beam_mesh.visible = false
-	beam_mesh_3.visible = false
 	handling_object = true
 
 func release_handle():
 	beam_mesh.visible = true
-	beam_mesh_3.visible = true
 	handling_object = false
 
 

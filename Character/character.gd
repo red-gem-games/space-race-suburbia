@@ -222,9 +222,6 @@ var grabbed_pos_set: bool = false
 
 
 
-
-
-
 func _ready() -> void:
 	push_warning('General To Do List:')
 	push_warning('------ ALWAYS MAKE SURE THINGS WORK ON BOTH SCREENS ------')
@@ -758,7 +755,7 @@ func grab_object():
 		grabbed_object.angular_velocity = lerp(grabbed_object.angular_velocity, Vector3.ZERO, 1.0)
 		grabbed_object.linear_velocity = lerp(grabbed_object.linear_velocity, Vector3.ZERO, 1.0)
 		PREM_7.retract_hologram()
-		grabbed_object.set_outline('RELEASE', Color.WHITE, 0.0)
+		#grabbed_object.set_outline('RELEASE', Color.WHITE, 0.0)
 		HUD.reticle.visible = true
 		object_sway_strength_x = object_sway_base_x
 		object_sway_strength_y = object_sway_base_y
@@ -821,7 +818,7 @@ func grab_object():
 						glow_color = MODE_3_COLOR
 					MODE_4:
 						glow_color = MODE_4_COLOR
-				grabbed_object.set_outline('GRAB', glow_color, 0.0)
+				#grabbed_object.set_outline('GRAB', glow_color, 0.0)
 				grabbed_initial_mouse = get_viewport().get_mouse_position()
 				grabbed_distance = (grabbed_object.global_transform.origin - camera.global_transform.origin).length()
 				object_is_grabbed = true

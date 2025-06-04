@@ -1,7 +1,8 @@
-[gd_scene load_steps=52 format=4 uid="uid://cvtdsd7mu2wv"]
+[gd_scene load_steps=54 format=4 uid="uid://cvtdsd7mu2wv"]
 
 [ext_resource type="Script" uid="uid://clwwid0cs6u32" path="res://Components/components.gd" id="1_hnuj6"]
 [ext_resource type="Material" uid="uid://c7xbbfk34fthw" path="res://Shaders/metallic_standard_material.tres" id="2_hnuj6"]
+[ext_resource type="Shader" uid="uid://vetnq53dk60g" path="res://Shaders/grabbed_glow.gdshader" id="3_ypo5v"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_s6kqv"]
 size = Vector3(1.925, 0.04, 1.98)
@@ -541,10 +542,11 @@ top_radius = 0.6
 bottom_radius = 0.6
 height = 0.1
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_t3w28"]
-resource_name = "Material"
-cull_mode = 2
-roughness = 0.5
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vfuh5"]
+transparency = 1
+emission_enabled = true
+emission = Color(0, 1, 1, 1)
+emission_energy_multiplier = 0.35
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_yuwrr"]
 _surfaces = [{
@@ -570,7 +572,7 @@ _surfaces = [{
 "index_count": 348,
 "index_data": PackedByteArray("AABPAFAAAABRAE8AAQBPAFEATwABAFIATwBSAFMABwBUAFIAVAAHAAoAVAAKAAsAVQBWAA4AVQBXAFYAWABZAFoAWABbAFkAXAAwAF0AXAAvADAAMgBcAF0AMgBdADEAMwBeAF8AMwA2AF4ANwA4AGAANwA6ADgAOAA5AGAAOAA7ADkAHQAbAB4AGwAdAGEAYQAdABwAGwBhAGIAGgBjAGQAYwAaABkAYwAZABcAFwBlAAwAFwBmAGUAZgAXABUAZgBnAGUAZgAWAGcAaABpAGoAaABrAGkAaABsAGsAbABoAG0AbQBoAG4AbgBoABgABQBvAHAABQBxAG8ABQAGAHEABgAFAHIAcgAFAAgACAAFAAkAcwB0AHUAcwB2AHQAEQASAA0AEQATABIANQB3ADQANQB4AHcAeQB6AHsAeQB8AHoAfQB+AH8AfQCAAH4AgQCCAIMAgQCEAIIAhQAUAIYAhQCHABQAiACJAIoAiACLAIkAjACNAI4AjACPAI0AkACRAJIAkACTAJEAlACVAJYAlACXAJUAmAAPAJkAmAAQAA8AAgADAAQAAgCaAAMAmwCcAJ0AmwCeAJwAnwCgAKEAnwCiAKAAowCkAKUAowCmAKQApwCoAKkApwCqAKgAqwAqAKwAqwArACoAQABBAEIAQABDAEEARABFAK0ARABGAEUArgCvALAArgCxAK8AsgCzALQAsgC1ALMAJwAoACUAJwApACgAPgC2AD8APgC3ALYAPAC4AD0APAC5ALgAugC7ALwAugC9ALsAvgC/AMAAvgDBAL8AwgDDAMQAwgAuAMMARwBIAEkARwBKAEgASwBMAE0ASwBOAEwAxQAfACAAxQAhAB8AxgAjACQAxgAiACMALQDHACwALQAmAMcAyADJAMoAyADLAMkAzADNAM4AzADPAM0A"),
 "lods": [0.0840837, PackedByteArray("AAABAAIAAgABAAMAAgADAAQABQADAAEABQAGAAMAAQAHAAUABgAFAAgACAAFAAkABQAHAAoABQAKAAsADAANAA4ADQAPAA4ADQAQAA8ADAARAA0AEQASAA0AEQATABIADAAUABEAFQAUAAwAFQAWABQAFwAVAAwAGAAZABcAGAAaABkAGwAcABgAGwAdABwAHQAbAB4AHQAfACAAHQAhAB8AIQAiACMAIQAjACQAJQAmACcAJwAoACUAJwApACgAJgAqACcAJgArACoAJQAsACYALQAmACwAJQAuACwALwAwADEAMgAvADEAMwA0ADUAMwA2ADQANwA4ADkANwA6ADgAOAA7ADkAPAA5ADsAPAA7AD0APgA8AD0APgA9AD8AQABBAEIAQABDAEEARABFAEEARABGAEUARwBIAEkARwBKAEgASwBMAE0ASwBOAEwA")],
-"material": SubResource("StandardMaterial3D_t3w28"),
+"material": SubResource("StandardMaterial3D_vfuh5"),
 "name": "Material",
 "primitive": 3,
 "uv_scale": Vector4(0, 0, 0, 0),
@@ -579,6 +581,17 @@ _surfaces = [{
 }]
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_yuwrr")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_lrf6t"]
+render_priority = 0
+shader = ExtResource("3_ypo5v")
+shader_parameter/speed = 0.06
+shader_parameter/ring_scale = 3.1
+shader_parameter/wave_scale = 6.83
+shader_parameter/random_scale = -13.15
+shader_parameter/noise_scale = 0.29
+shader_parameter/fade_min_y = -5.0
+shader_parameter/fade_max_y = 5.0
 
 [node name="WashingMachine" type="RigidBody3D"]
 collision_priority = 100.0
@@ -764,6 +777,7 @@ font_size = 90
 outline_size = 10
 
 [node name="Outline" type="MeshInstance3D" parent="."]
-visible = false
+transform = Transform3D(1.1, 0, 0, 0, 1.1, 0, 0, 0, 1.1, 0, 0, 0)
 mesh = SubResource("ArrayMesh_ap0ed")
 skeleton = NodePath("")
+surface_material_override/0 = SubResource("ShaderMaterial_lrf6t")

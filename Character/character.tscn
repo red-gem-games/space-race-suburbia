@@ -117,13 +117,12 @@ height = 4.5
 radius = 1.16
 
 [node name="Character" type="CharacterBody3D"]
-safe_margin = 0.25
 script = ExtResource("1_pjt0s")
 
 [node name="Camera3D" type="Camera3D" parent="."]
 
 [node name="PREM-7" parent="Camera3D" instance=ExtResource("1_glpr6")]
-transform = Transform3D(0.999848, 0.000700396, 0.0174384, 0, 0.999194, -0.0401318, -0.0174524, 0.0401257, 0.999042, 1.05, -0.376, -1.1)
+transform = Transform3D(0.999048, 0.00175052, 0.0435842, 0, 0.999194, -0.0401318, -0.0436194, 0.0400936, 0.998243, 1.05, -0.376, -1.1)
 
 [node name="Grabbed_Container" type="Node3D" parent="Camera3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.15, 0)

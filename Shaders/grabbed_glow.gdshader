@@ -1,115 +1,101 @@
-//shader_type spatial;
-//render_mode unshaded, cull_front, depth_draw_always, blend_premul_alpha;
-//
-//uniform vec4 glow_color : source_color = vec4(0.0, 1.0, 0.0, 0.5);
-//uniform float time_offset = 0.5;
-//
-//uniform float fresnel_power = 0.5;
-//
-//// Power surge / distortion pulse
-//uniform float surge_strength = 0.2;
-//uniform float surge_frequency = 0.5;
-//uniform float surge_thickness = 0.06;
-//
-//float surge_wave(vec2 uv, float offset) {
-	//// Pulse wave oscillates between 0 and 1
-	//float pulse = sin(TIME * surge_frequency + offset) * 0.5;
-//
-	//// Create a soft radial surge that grows outward from center
-	//float radius = length(uv - vec2(0.5));
-	//float ring = smoothstep(pulse - surge_thickness, pulse, radius) *
-	             //(1.0 - smoothstep(pulse, pulse + surge_thickness, radius));
-//
-	//return ring;
-//}
-//
-//void fragment() {
-	//// Base color + Fresnel edge glow
-	//vec3 base = glow_color.rgb;
-	//float fresnel = pow(abs(dot(NORMAL, VIEW)), fresnel_power);
-	//vec3 fresnel_glow = base * fresnel;
-//
-	//// Surge distortion
-	//float surge = surge_wave(UV, time_offset);
-	//vec3 surge_flash = vec3(surge_strength) * surge;
-//
-	//vec3 final_color = base + fresnel_glow + surge_flash;
-	//float final_alpha = glow_color.a + surge * 0.2;
-//
-	//ALBEDO = final_color;
-	//ALPHA = clamp(final_alpha, 0.0, 1.0);
-//}
-//
-
-
-
-
-
-
-
-/*
-	ゆらゆらシェーダー by あるる（きのもと 結衣）
-	Yurayura Shader by Yui Kinomoto @arlez80
-
-	MIT License
-*/
 shader_type spatial;
-// render_mode;
+render_mode unshaded, blend_mix, cull_disabled;
 
-uniform float speed = 0.6;
-uniform float ring_scale = 4.4;
-uniform float wave_scale = 8.454;
-uniform float random_scale = 4.6;
-uniform float noise_scale = 0.03;
+// your existing “scroll + noise” parameters
+uniform float speed         = 0.3;
+uniform float ring_scale    = 0.5;
+uniform float wave_scale    = 60.0;
+uniform float random_scale  = 7.5;
+uniform float noise_scale   = 0.1;
 
+// new: where the fade starts/ends in local‐space Y
+// (for a typical Godot CylinderMesh of height=2.0, Y ranges from -1.0 to +1.0)
+uniform float fade_min_y    =  0.0;  // fully opaque at or below this Y
+uniform float fade_max_y    =  1.0;  // fully transparent at or above this Y
 
-vec3 hsv2rgb( float h, float s, float v )
-{
-	return (
-		(
-			clamp(
-				abs( fract( h + vec3( 0.0, 2.0, 1.0 ) / 3.0 ) * 6.0 - 3.0 ) - 1.0
-			,	0.0
-			,	1.0
-			) - 1.0
-		) * s + 1.0
-	) * v;
+// ----------------------------------------------
+// 1) A little override of hsv2rgb for wide stripes
+//    (unchanged, but included here for completeness)
+// ----------------------------------------------
+vec3 hsv2rgb(float h, float s, float v) {
+    return (
+        (
+            clamp(
+                abs(fract(h + vec3(0.0, 1.25, 1.0)/2.0) * 3.0 - 3.0) - 1.5,
+                0.0,
+                1.5
+            ) - 1.0
+        ) * s + 1.25
+    ) * v;
 }
 
-vec2 random( vec2 pos )
-{
-	return fract(
-		sin(
-			vec2(
-				dot(pos, vec2(12.9898,78.233))
-			,	dot(pos, vec2(-148.998,-65.233))
-			)
-		) * 43758.5453
-	);
+// ----------------------------------------------
+// 2) The same value_noise / random functions
+// ----------------------------------------------
+vec2 random(vec2 pos) {
+    return fract(
+        sin(
+            vec2(
+                dot(pos, vec2(12.9898, 78.233)),
+                dot(pos, vec2(-148.998, -65.233))
+            )
+        ) * 43758.5453
+    );
 }
 
-float value_noise( vec2 pos )
-{
-	vec2 p = floor( pos );
-	vec2 f = fract( pos );
+float value_noise(vec2 pos) {
+    vec2 p = floor(pos);
+    vec2 f = fract(pos);
 
-	float v00 = random( p + vec2( 0.0, 0.0 ) ).x;
-	float v10 = random( p + vec2( 1.0, 0.0 ) ).x;
-	float v01 = random( p + vec2( 0.0, 1.0 ) ).x;
-	float v11 = random( p + vec2( 1.0, 1.0 ) ).x;
+    float v00 = random(p + vec2(0.0, 0.0)).x;
+    float v10 = random(p + vec2(1.0, 0.0)).x;
+    float v01 = random(p + vec2(0.0, 1.0)).x;
+    float v11 = random(p + vec2(1.0, 1.0)).x;
 
-	vec2 u = f * f * ( 3.0 - 2.0 * f );
-
-	return mix( mix( v00, v10, u.x ), mix( v01, v11, u.x ), u.y );
+    vec2 u = f * f * (3.0 - 2.0 * f);
+    return mix(
+        mix(v00, v10, u.x),
+        mix(v01, v11, u.x),
+        u.y
+    );
 }
 
-void fragment( )
-{
-	vec2 shift_uv = UV;
-	shift_uv.x += value_noise( UV * random_scale + sin( TIME * speed ) );
-	shift_uv.y += sin( cos( TIME ) * speed );
-	float x = shift_uv.x + sin( shift_uv.y * wave_scale );
-	float f = mod( x * ring_scale + random( UV ).x * noise_scale, 1.0 );
+// ----------------------------------------------
+// 3) We want each fragment to know its local‐space Y.
+//    Use a varying to pass it from the vertex stage.
+// ----------------------------------------------
+varying float v_local_y;
 
-	ALBEDO = hsv2rgb( f, 1.0, 1.0 );
+void vertex() {
+    // VERTEX is the mesh's local‐space position of each vertex.
+    // Store its Y for use in the fragment() stage.
+    v_local_y = VERTEX.y;
+    // Let Godot perform its usual transform_to_screen() and such
+    // by leaving the built‐in code intact.
+}
+
+// ----------------------------------------------
+// 4) In the fragment(), we calculate a 0→1 alpha
+//    based on how “close to the top” this Y is.
+// ----------------------------------------------
+void fragment() {
+    // ——— A) Scroll & warp your UV exactly as before ———
+    vec2 shift_uv = UV;
+    shift_uv.x += value_noise(UV * random_scale + TIME * speed);
+    shift_uv.y += TIME * speed;
+    float x = shift_uv.x + sin(shift_uv.y * wave_scale);
+    float f = mod(x * ring_scale + random(UV).x * noise_scale, 1.0);
+
+    vec3 col = hsv2rgb(f, 1.0, 1.0);
+
+    // ——— B) Compute alpha based on local Y vs fade_min_y/fade_max_y ———
+    //    Anything at or below fade_min_y → alpha = 1.0 (fully opaque)
+    //    Anything at or above fade_max_y → alpha = 0.0 (fully transparent)
+    //    Linear interpolation in between.
+    float alpha = clamp((fade_max_y - v_local_y) / (fade_max_y - fade_min_y), 0.0, 1.0);
+
+    // ——— C) Output color + transparency ———
+    ALBEDO = col;       // base color
+    EMISSION = col;     // keep it glowing
+    ALPHA   = alpha;    // apply our fade
 }
