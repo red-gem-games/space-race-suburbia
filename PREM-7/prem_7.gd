@@ -40,6 +40,7 @@ func _input(event: InputEvent) -> void:
 	pass
 
 func _process(delta: float) -> void:
+
 	if controlled_object:
 		controlled_objects.insert(0, controlled_object.name)
 		cast_hologram('Controlled')
@@ -63,8 +64,6 @@ func release_handle():
 	beam_mesh.visible = true
 	beam_mesh_3.visible = true
 	handling_object = false
-
-
 
 
 func cast_hologram(type: String):

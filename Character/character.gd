@@ -698,6 +698,7 @@ func _input(event: InputEvent) -> void:
 
 		if event.keycode == KEY_CTRL:
 			print('IF YOU WAIT A FEW SECONDS BEFORE CONTROLLING, IT"S LIKE THE OBJECT SINKS???')
+			print('Also...next up...control video :)')
 			if not grabbed_object:
 				return
 			if grabbed_object.is_stepladder or grabbed_object.is_rocketship:
@@ -956,9 +957,7 @@ func control_object():
 		clear_char_obj_shape()
 		grabbed_object.is_controlled = true
 		controlled_object = grabbed_object
-		var current_pos = controlled_object.position
-		PREM_7.controlled_object = grabbed_object
-		
+
 		grabbed_object.reparent(PREM_7.beam)
 		grabbed_object.collision_layer = 0
 		grabbed_object.collision_mask = 0
@@ -967,6 +966,7 @@ func control_object():
 		PREM_7.retract_beam()
 
 		await get_tree().create_timer(0.15).timeout
+		#grabbed_object.queue_free()
 		grab_object()
 
 		
@@ -1035,7 +1035,7 @@ func handle_pitch_and_yaw(time):
 		orbit_angle += input_direction_x * orbit_speed * time / orbit_radius
 		orbit_angle = fmod(orbit_angle, TAU)
 		
-		print(orbit_angle)
+		print('Orbit Angle: ', orbit_angle)
 
 		var obj_pos = grabbed_object.global_transform.origin
 		var orbit_offset = Vector3(
@@ -1306,7 +1306,6 @@ func update_grabbed_object_physics(delta: float) -> void:
 	speed_vector = (current_position - last_position) / delta
 	last_position = current_position
 	grabbed_object.object_speed = speed_vector
-	print(current_position)
 
 func update_grabbed_object_sway(delta: float) -> void:
 	# Apply grabbed rotation directly

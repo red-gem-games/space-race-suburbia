@@ -1,8 +1,8 @@
-[gd_scene load_steps=82 format=4 uid="uid://bpvm0l41dywjs"]
+[gd_scene load_steps=83 format=4 uid="uid://bpvm0l41dywjs"]
 
 [ext_resource type="Script" uid="uid://so25svauxmkt" path="res://PREM-7/prem_7.gd" id="1_iarxa"]
 [ext_resource type="Shader" uid="uid://cw73tbbh1mfcs" path="res://Shaders/PREM-7_glow.gdshader" id="2_2cjep"]
-[ext_resource type="Shader" uid="uid://br2myqtxwu35" path="res://Shaders/hologram.gdshader" id="4_4qq6n"]
+[ext_resource type="Shader" uid="uid://vetnq53dk60g" path="res://Shaders/grabbed_glow.gdshader" id="2_4qq6n"]
 [ext_resource type="ArrayMesh" uid="uid://dxs73vc1sll8t" path="res://PREM-7/new_array_mesh.tres" id="5_t05xm"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4qq6n"]
@@ -18,6 +18,15 @@ bottom_radius = 0.1
 height = 4.5
 radial_segments = 100
 rings = 1912
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_t05xm"]
+render_priority = 0
+shader = ExtResource("2_4qq6n")
+shader_parameter/speed = 0.6
+shader_parameter/ring_scale = 4.4
+shader_parameter/wave_scale = 8.454
+shader_parameter/random_scale = 4.6
+shader_parameter/noise_scale = 0.03
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_l5ika"]
 transparency = 3
@@ -1179,46 +1188,13 @@ tracks/7/keys = {
 "points": PackedFloat32Array(0, -0.25, 0, 0.25, 0),
 "times": PackedFloat32Array(0)
 }
-tracks/8/type = "bezier"
+tracks/8/type = "value"
 tracks/8/imported = false
 tracks/8/enabled = true
-tracks/8/path = NodePath("Details:scale:x")
+tracks/8/path = NodePath("Details:visible")
 tracks/8/interp = 1
 tracks/8/loop_wrap = true
 tracks/8/keys = {
-"handle_modes": PackedInt32Array(0),
-"points": PackedFloat32Array(0.01, -0.25, 0, 0.25, 0),
-"times": PackedFloat32Array(0)
-}
-tracks/9/type = "bezier"
-tracks/9/imported = false
-tracks/9/enabled = true
-tracks/9/path = NodePath("Details:scale:y")
-tracks/9/interp = 1
-tracks/9/loop_wrap = true
-tracks/9/keys = {
-"handle_modes": PackedInt32Array(0),
-"points": PackedFloat32Array(0.01, -0.25, 0, 0.25, 0),
-"times": PackedFloat32Array(0)
-}
-tracks/10/type = "bezier"
-tracks/10/imported = false
-tracks/10/enabled = true
-tracks/10/path = NodePath("Details:scale:z")
-tracks/10/interp = 1
-tracks/10/loop_wrap = true
-tracks/10/keys = {
-"handle_modes": PackedInt32Array(0),
-"points": PackedFloat32Array(0.01, -0.25, 0, 0.25, 0),
-"times": PackedFloat32Array(0)
-}
-tracks/11/type = "value"
-tracks/11/imported = false
-tracks/11/enabled = true
-tracks/11/path = NodePath("Details:visible")
-tracks/11/interp = 1
-tracks/11/loop_wrap = true
-tracks/11/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
@@ -1452,39 +1428,29 @@ color_ramp = SubResource("GradientTexture1D_mscii")
 turbulence_noise_strength = 10.89
 
 [sub_resource type="Curve" id="Curve_4qq6n"]
-_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.786787, 0.62984), 0.0, 0.0, 0, 0]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.668168, 0.457143), 0.0, 0.0, 0, 0]
 point_count = 2
 
 [sub_resource type="TubeTrailMesh" id="TubeTrailMesh_t05xm"]
+flip_faces = true
 radius = 0.31
 radial_steps = 6
 sections = 3
 section_length = 0.1
 curve = SubResource("Curve_4qq6n")
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_t05xm"]
-render_priority = 0
-shader = ExtResource("4_4qq6n")
-shader_parameter/albedo_alpha = 0.4
-shader_parameter/tint_color = Color(0.5, 0, 1, 1)
-shader_parameter/edge_color = Color(1, 0.9, 1, 1)
-shader_parameter/edge_power = 1.0
-shader_parameter/edge_size = 5.0
-shader_parameter/edge_intensity = 0.25
-shader_parameter/scanline_tint = Color(1, 1, 1, 0)
-shader_parameter/scanline_intensity = 0.0
-shader_parameter/scanline_density = 5.0
-shader_parameter/scanline_thickness = 1.0
-shader_parameter/scanline_spacing = 1.0
-shader_parameter/scanline_angle = 0.0
-shader_parameter/scanline_speed = 0.2
-shader_parameter/enable_glitch = true
-shader_parameter/glitch_intensity = 1.0
-shader_parameter/shake_power = 0.3
-shader_parameter/shake_rate = 0.175
-shader_parameter/shake_speed = 2.0
-shader_parameter/shake_block_size = 100.0
-shader_parameter/shake_color_rate = 0.5
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6dr8p"]
+transparency = 1
+albedo_color = Color(0.815686, 0, 1, 0.164706)
+emission = Color(0.65098, 0, 1, 1)
+emission_energy_multiplier = 21.5
+rim = 0.0
+clearcoat_roughness = 1.0
+backlight = Color(0.717647, 0, 1, 1)
+refraction_scale = 0.4
+proximity_fade_distance = 0.01
+distance_fade_min_distance = 99.3
+distance_fade_max_distance = 109.29
 
 [node name="PREM-7" type="Node3D"]
 script = ExtResource("1_iarxa")
@@ -1501,6 +1467,7 @@ transparency = 0.28
 cast_shadow = 0
 mesh = SubResource("CylinderMesh_t05xm")
 skeleton = NodePath("")
+surface_material_override/0 = SubResource("ShaderMaterial_t05xm")
 
 [node name="Beam_Mesh_2" type="MeshInstance3D" parent="Multitool/Beam"]
 transform = Transform3D(4.08152, 0.115334, -0.000610765, 2.6077e-08, -0.0576332, -4.01291, -0.071244, 6.60742, -0.0349919, 0.124999, 0.4, 17.57)
@@ -1687,10 +1654,9 @@ transform = Transform3D(0.000984808, 0, -0.000173648, 0, 0.001, 0, 0.000173648, 
 visible = false
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0.281279, -0.0958633)
-visible = false
+transform = Transform3D(1, 0, 0, 0, -1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0.241579, -0.0958633)
 mesh = SubResource("TubeTrailMesh_t05xm")
-surface_material_override/0 = SubResource("ShaderMaterial_t05xm")
+surface_material_override/0 = SubResource("StandardMaterial3D_6dr8p")
 
 [node name="Details" type="Label3D" parent="."]
 transform = Transform3D(0.00965926, 0, 0.00258819, 0, 0.01, 0, -0.00258819, 0, 0.00965926, 0.0143264, 0.38144, -0.116609)
