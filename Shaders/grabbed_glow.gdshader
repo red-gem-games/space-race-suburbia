@@ -1,36 +1,43 @@
 shader_type spatial;
 render_mode unshaded, blend_mix, cull_disabled;
 
+
 // your existing “scroll + noise” parameters
-uniform float speed         = 0.3;
-uniform float ring_scale    = 0.5;
-uniform float wave_scale    = 60.0;
-uniform float random_scale  = 7.5;
+uniform float speed         = 0.1;
+uniform float ring_scale    = 1.5;
+uniform float wave_scale    = 4.0;
+uniform float random_scale  = 10.0;
 uniform float noise_scale   = 0.1;
+uniform float c1 = 0.18;
+uniform float c2 = 0.5;
+uniform float c3 = 2.98;
+uniform float c4 = 3.25;
+
 
 // new: where the fade starts/ends in local‐space Y
-// (for a typical Godot CylinderMesh of height=2.0, Y ranges from -1.0 to +1.0)
-uniform float fade_min_y    =  0.0;  // fully opaque at or below this Y
-uniform float fade_max_y    =  1.0;  // fully transparent at or above this Y
+uniform float fade_min_y    =  -3.0;  // fully opaque at or below this Y
+uniform float fade_max_y    =  3.0;  // fully transparent at or above this Y
+
+// new: emission (glow) control
+uniform float emission_strength = 1.0; // how “bright” the glow is
 
 // ----------------------------------------------
-// 1) A little override of hsv2rgb for wide stripes
-//    (unchanged, but included here for completeness)
+// 1) hsv2rgb (unchanged)
 // ----------------------------------------------
 vec3 hsv2rgb(float h, float s, float v) {
     return (
         (
             clamp(
-                abs(fract(h + vec3(0.0, 1.25, 1.0)/2.0) * 3.0 - 3.0) - 1.5,
+                abs(fract(h + vec3(c1, c2, c3)/1.0) * 3.0 - c4) - 1.5,
                 0.0,
                 1.5
             ) - 1.0
-        ) * s + 1.25
+        ) * s + 1.0
     ) * v;
 }
 
 // ----------------------------------------------
-// 2) The same value_noise / random functions
+// 2) value_noise / random (unchanged)
 // ----------------------------------------------
 vec2 random(vec2 pos) {
     return fract(
@@ -61,22 +68,17 @@ float value_noise(vec2 pos) {
 }
 
 // ----------------------------------------------
-// 3) We want each fragment to know its local‐space Y.
-//    Use a varying to pass it from the vertex stage.
+// 3) Pass local‐space Y from vertex→fragment
 // ----------------------------------------------
 varying float v_local_y;
 
 void vertex() {
-    // VERTEX is the mesh's local‐space position of each vertex.
-    // Store its Y for use in the fragment() stage.
     v_local_y = VERTEX.y;
-    // Let Godot perform its usual transform_to_screen() and such
-    // by leaving the built‐in code intact.
+    // Godot’s built-ins handle the rest of the transforms
 }
 
 // ----------------------------------------------
-// 4) In the fragment(), we calculate a 0→1 alpha
-//    based on how “close to the top” this Y is.
+// 4) Compute UV warping, color, fade, and emission
 // ----------------------------------------------
 void fragment() {
     // ——— A) Scroll & warp your UV exactly as before ———
@@ -86,16 +88,17 @@ void fragment() {
     float x = shift_uv.x + sin(shift_uv.y * wave_scale);
     float f = mod(x * ring_scale + random(UV).x * noise_scale, 1.0);
 
-    vec3 col = hsv2rgb(f, 1.0, 1.0);
+    vec3 base_col = hsv2rgb(f, 1.0, 1.0);
 
     // ——— B) Compute alpha based on local Y vs fade_min_y/fade_max_y ———
-    //    Anything at or below fade_min_y → alpha = 1.0 (fully opaque)
-    //    Anything at or above fade_max_y → alpha = 0.0 (fully transparent)
-    //    Linear interpolation in between.
     float alpha = clamp((fade_max_y - v_local_y) / (fade_max_y - fade_min_y), 0.0, 1.0);
 
     // ——— C) Output color + transparency ———
-    ALBEDO = col;       // base color
-    EMISSION = col;     // keep it glowing
-    ALPHA   = alpha;    // apply our fade
+    ALBEDO = base_col;
+    ALPHA  = alpha;
+
+    // ——— D) Emission (glow) ———
+    // Multiply your base color by an emission strength
+    // Optionally, you can also let glow fade out along with alpha
+    EMISSION = base_col * emission_strength * alpha;
 }

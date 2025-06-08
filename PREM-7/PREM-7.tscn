@@ -1,4 +1,4 @@
-[gd_scene load_steps=78 format=4 uid="uid://bpvm0l41dywjs"]
+[gd_scene load_steps=82 format=4 uid="uid://bpvm0l41dywjs"]
 
 [ext_resource type="Script" uid="uid://so25svauxmkt" path="res://PREM-7/prem_7.gd" id="1_iarxa"]
 [ext_resource type="Shader" uid="uid://cw73tbbh1mfcs" path="res://Shaders/PREM-7_glow.gdshader" id="2_2cjep"]
@@ -6,21 +6,27 @@
 [ext_resource type="ArrayMesh" uid="uid://dxs73vc1sll8t" path="res://PREM-7/new_array_mesh.tres" id="5_t05xm"]
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_t05xm"]
-top_radius = 0.05
-bottom_radius = 0.1
+top_radius = 0.01
+bottom_radius = 0.095
 height = 4.5
-rings = 814
+radial_segments = 100
+rings = 100
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_t05xm"]
 render_priority = 0
 shader = ExtResource("2_4qq6n")
-shader_parameter/speed = 0.3
-shader_parameter/ring_scale = 0.5
-shader_parameter/wave_scale = 60.0
-shader_parameter/random_scale = 7.5
+shader_parameter/speed = 0.15
+shader_parameter/ring_scale = 1.5
+shader_parameter/wave_scale = 11.06
+shader_parameter/random_scale = 4.15
 shader_parameter/noise_scale = 0.1
+shader_parameter/c1 = 0.18
+shader_parameter/c2 = 0.5
+shader_parameter/c3 = 2.98
+shader_parameter/c4 = 3.25
 shader_parameter/fade_min_y = -0.3
-shader_parameter/fade_max_y = 0.3
+shader_parameter/fade_max_y = 0.5
+shader_parameter/emission_strength = 1.0
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_a4na6"]
 resource_name = "Material.003"
@@ -109,8 +115,13 @@ shader_parameter/ring_scale = 0.5
 shader_parameter/wave_scale = 2.69
 shader_parameter/random_scale = 37.92
 shader_parameter/noise_scale = 0.1
+shader_parameter/c1 = 0.0
+shader_parameter/c2 = 1.0
+shader_parameter/c3 = 1.0
+shader_parameter/c4 = 1.0
 shader_parameter/fade_min_y = 0.0
 shader_parameter/fade_max_y = 1.0
+shader_parameter/emission_strength = 1.0
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_ahiym"]
 _surfaces = [{
@@ -765,9 +776,9 @@ tracks/2/keys = {
 }
 
 [sub_resource type="Animation" id="Animation_iarxa"]
-resource_name = "shift_mode_down"
-length = 0.06
-step = 0.125
+resource_name = "control_down"
+length = 0.12
+step = 0.001
 tracks/0/type = "bezier"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -775,9 +786,9 @@ tracks/0/path = NodePath("Multitool/Button:position:x")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"handle_modes": PackedInt32Array(0, 0),
-"points": PackedFloat32Array(-0.1072, -0.03, 0, 0.03, 0, -0.109147, -0.03, 0, 0.03, 0),
-"times": PackedFloat32Array(0, 0.06)
+"handle_modes": PackedInt32Array(0, 0, 0),
+"points": PackedFloat32Array(-0.1072, -0.03, 0, 0.03, 0, -0.109147, -0.03, 0, 0.03, 0, -0.1072, -0.03, 0, 0.03, 0),
+"times": PackedFloat32Array(0, 0.06, 0.12)
 }
 tracks/1/type = "bezier"
 tracks/1/imported = false
@@ -786,9 +797,9 @@ tracks/1/path = NodePath("Multitool/Button:position:y")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"handle_modes": PackedInt32Array(0, 0),
-"points": PackedFloat32Array(0.0198131, -0.03, 0, 0.03, 0, -0.0780031, -0.03, 0, 0.03, 0),
-"times": PackedFloat32Array(0, 0.06)
+"handle_modes": PackedInt32Array(0, 0, 0),
+"points": PackedFloat32Array(0.0198131, -0.03, 0, 0.03, 0, -0.0780031, -0.03, 0, 0.03, 0, 0.0198131, -0.03, 0, 0.03, 0),
+"times": PackedFloat32Array(0, 0.06, 0.12)
 }
 tracks/2/type = "bezier"
 tracks/2/imported = false
@@ -797,13 +808,13 @@ tracks/2/path = NodePath("Multitool/Button:position:z")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
-"handle_modes": PackedInt32Array(0, 0),
-"points": PackedFloat32Array(0.292164, -0.03, 0, 0.03, 0, 0.346491, -0.03, 0, 0.03, 0),
-"times": PackedFloat32Array(0, 0.06)
+"handle_modes": PackedInt32Array(0, 0, 0),
+"points": PackedFloat32Array(0.292164, -0.03, 0, 0.03, 0, 0.346491, -0.03, 0, 0.03, 0, 0.292164, -0.03, 0, 0.03, 0),
+"times": PackedFloat32Array(0, 0.06, 0.12)
 }
 
 [sub_resource type="Animation" id="Animation_d8k6r"]
-resource_name = "shift_mode_up"
+resource_name = "control_up"
 length = 0.06
 step = 0.125
 tracks/0/type = "bezier"
@@ -843,8 +854,8 @@ tracks/2/keys = {
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_3tjq7"]
 _data = {
 &"RESET": SubResource("Animation_yppce"),
-&"shift_mode_down": SubResource("Animation_iarxa"),
-&"shift_mode_up": SubResource("Animation_d8k6r")
+&"control_down": SubResource("Animation_iarxa"),
+&"control_up": SubResource("Animation_d8k6r")
 }
 
 [sub_resource type="Animation" id="Animation_4qq6n"]
@@ -1382,18 +1393,65 @@ sections = 3
 section_length = 0.1
 curve = SubResource("Curve_4qq6n")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6dr8p"]
-transparency = 1
-albedo_color = Color(0.815686, 0, 1, 0.164706)
-emission = Color(0.65098, 0, 1, 1)
-emission_energy_multiplier = 21.5
-rim = 0.0
-clearcoat_roughness = 1.0
-backlight = Color(0.717647, 0, 1, 1)
-refraction_scale = 0.4
-proximity_fade_distance = 0.01
-distance_fade_min_distance = 99.3
-distance_fade_max_distance = 109.29
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_l5ika"]
+render_priority = 0
+shader = ExtResource("2_4qq6n")
+shader_parameter/speed = -0.1
+shader_parameter/ring_scale = 0.21
+shader_parameter/wave_scale = 9.19
+shader_parameter/random_scale = 34.6
+shader_parameter/noise_scale = 0.1
+shader_parameter/c1 = 0.0
+shader_parameter/c2 = 1.0
+shader_parameter/c3 = 1.0
+shader_parameter/c4 = 1.0
+shader_parameter/fade_min_y = 1.12
+shader_parameter/fade_max_y = -0.14
+shader_parameter/emission_strength = 1.0
+
+[sub_resource type="TorusMesh" id="TorusMesh_4qq6n"]
+inner_radius = 0.181
+outer_radius = 0.227
+rings = 250
+ring_segments = 250
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_6dr8p"]
+render_priority = 0
+shader = ExtResource("2_4qq6n")
+shader_parameter/speed = 0.1
+shader_parameter/ring_scale = 1.5
+shader_parameter/wave_scale = 4.0
+shader_parameter/random_scale = 10.0
+shader_parameter/noise_scale = 0.1
+shader_parameter/c1 = 0.18
+shader_parameter/c2 = 0.5
+shader_parameter/c3 = 2.98
+shader_parameter/c4 = 3.25
+shader_parameter/fade_min_y = -3.0
+shader_parameter/fade_max_y = 3.0
+shader_parameter/emission_strength = 1.0
+
+[sub_resource type="TorusMesh" id="TorusMesh_3nktn"]
+inner_radius = 0.181
+outer_radius = 0.227
+rings = 250
+ring_segments = 250
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_61m6q"]
+render_priority = 0
+shader = ExtResource("2_4qq6n")
+shader_parameter/speed = 0.1
+shader_parameter/ring_scale = 1.5
+shader_parameter/wave_scale = 4.0
+shader_parameter/random_scale = 10.0
+shader_parameter/noise_scale = 0.1
+shader_parameter/c1 = 0.18
+shader_parameter/c2 = 0.5
+shader_parameter/c3 = 2.98
+shader_parameter/c4 = 3.25
+shader_parameter/fade_min_y = -34.59
+shader_parameter/fade_max_y = 17.31
+shader_parameter/emission_strength = 1.0
 
 [node name="PREM-7" type="Node3D"]
 script = ExtResource("1_iarxa")
@@ -1405,7 +1463,7 @@ transform = Transform3D(-0.246939, -0.00781692, -0.022926, -0.00958782, 0.249578
 transform = Transform3D(0.00996917, 0, 0.000784591, 0, 0.01, 0, -0.000784591, 0, 0.00996917, -0.13, 0.51, 2.89)
 
 [node name="Beam_Mesh" type="MeshInstance3D" parent="Multitool/Beam"]
-transform = Transform3D(4.08152, 0.115334, -0.000610789, 5.37541e-09, -0.0576332, -4.01291, -0.071244, 6.60742, -0.0349919, 0.125, 0.4, 17.57)
+transform = Transform3D(4.08152, 0.115334, -0.000610789, 5.37541e-09, -0.0576332, -4.01291, -0.071244, 6.60742, -0.0349919, 0.125, 0.4, 18)
 cast_shadow = 0
 mesh = SubResource("CylinderMesh_t05xm")
 skeleton = NodePath("")
@@ -1541,7 +1599,7 @@ libraries = {
 &"": SubResource("AnimationLibrary_yppce")
 }
 
-[node name="Mode_Animation" type="AnimationPlayer" parent="."]
+[node name="Control_Animation" type="AnimationPlayer" parent="."]
 libraries = {
 &"": SubResource("AnimationLibrary_3tjq7")
 }
@@ -1584,7 +1642,7 @@ visible = false
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0.241579, -0.0958633)
 mesh = SubResource("TubeTrailMesh_t05xm")
-surface_material_override/0 = SubResource("StandardMaterial3D_6dr8p")
+surface_material_override/0 = SubResource("ShaderMaterial_l5ika")
 
 [node name="Details" type="Label3D" parent="."]
 transform = Transform3D(0.00965926, 0, 0.00258819, 0, 0.01, 0, -0.00258819, 0, 0.00965926, 0.0143264, 0.38144, -0.116609)
@@ -1596,5 +1654,253 @@ Durability: 6/10
 Mass: 85 kg"
 font_size = 80
 outline_size = 5
+
+[node name="Bubble_Beam" type="Node3D" parent="."]
+transform = Transform3D(0.967709, 0, 0.252069, 0, 1, 0, -0.252069, 0, 0.967709, -0.033, 0.034, -0.372033)
+visible = false
+
+[node name="1" type="MeshInstance3D" parent="Bubble_Beam"]
+transform = Transform3D(-0.211417, -0.25312, -1.3606, -1.38371, 0.0132287, 0.212547, -0.025572, 1.37686, -0.252172, 0, 0, -3.14)
+mesh = SubResource("TorusMesh_4qq6n")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("ShaderMaterial_6dr8p")
+
+[node name="2" type="MeshInstance3D" parent="Bubble_Beam"]
+transform = Transform3D(-0.181215, -0.21696, -1.16623, -1.18604, 0.0113389, 0.182183, -0.0219189, 1.18017, -0.216148, 0, 0, -3.1)
+mesh = SubResource("TorusMesh_3nktn")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
+
+[node name="3" type="MeshInstance3D" parent="Bubble_Beam"]
+transform = Transform3D(-0.151012, -0.1808, -0.971857, -0.988363, 0.0094491, 0.151819, -0.0182657, 0.983474, -0.180123, 0, 0, -3.08)
+mesh = SubResource("TorusMesh_3nktn")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
+
+[node name="4" type="MeshInstance3D" parent="Bubble_Beam"]
+transform = Transform3D(-0.135911, -0.16272, -0.874672, -0.889527, 0.00850419, 0.136637, -0.0164392, 0.885127, -0.162111, 0, 0, -3.06)
+mesh = SubResource("TorusMesh_3nktn")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
+
+[node name="5" type="MeshInstance3D" parent="Bubble_Beam"]
+transform = Transform3D(-0.113259, -0.1356, -0.728893, -0.741272, 0.00708683, 0.113864, -0.0136993, 0.737606, -0.135092, 0, 0, -3.057)
+mesh = SubResource("TorusMesh_3nktn")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
+
+[node name="6" type="MeshInstance3D" parent="Bubble_Beam"]
+transform = Transform3D(-0.203867, -0.24408, -1.31201, -1.33429, 0.0127563, 0.204956, -0.0246587, 1.32769, -0.243166, 0, 0, -3.115)
+visible = false
+mesh = SubResource("TorusMesh_3nktn")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
+
+[node name="7" type="MeshInstance3D" parent="Bubble_Beam"]
+transform = Transform3D(-0.203867, -0.24408, -1.31201, -1.33429, 0.0127563, 0.204956, -0.0246587, 1.32769, -0.243166, 0, 0, -3.11)
+visible = false
+mesh = SubResource("TorusMesh_3nktn")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
+
+[node name="8" type="MeshInstance3D" parent="Bubble_Beam"]
+transform = Transform3D(-0.203867, -0.24408, -1.31201, -1.33429, 0.0127563, 0.204956, -0.0246587, 1.32769, -0.243166, 0, 0, -3.105)
+visible = false
+mesh = SubResource("TorusMesh_3nktn")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
+
+[node name="9" type="MeshInstance3D" parent="Bubble_Beam"]
+transform = Transform3D(-0.203867, -0.24408, -1.31201, -1.33429, 0.0127563, 0.204956, -0.0246587, 1.32769, -0.243166, 0, 0, -3.1)
+visible = false
+mesh = SubResource("TorusMesh_3nktn")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
+
+[node name="10" type="MeshInstance3D" parent="Bubble_Beam"]
+transform = Transform3D(-0.0151012, -0.01808, -0.0971857, -0.0988363, 0.00094491, 0.0151819, -0.00182657, 0.0983474, -0.0180123, 0, 0, 0)
+mesh = SubResource("TorusMesh_3nktn")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
+
+[node name="11" type="MeshInstance3D" parent="Bubble_Beam"]
+transform = Transform3D(-0.0151012, -0.01808, -0.0971857, -0.0988363, 0.00094491, 0.0151819, -0.00182657, 0.0983474, -0.0180123, 0, 0, 0)
+mesh = SubResource("TorusMesh_3nktn")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
+
+[node name="12" type="MeshInstance3D" parent="Bubble_Beam"]
+transform = Transform3D(-0.0151012, -0.01808, -0.0971857, -0.0988363, 0.00094491, 0.0151819, -0.00182657, 0.0983474, -0.0180123, 0, 0, 0)
+mesh = SubResource("TorusMesh_3nktn")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
+
+[node name="13" type="MeshInstance3D" parent="Bubble_Beam"]
+transform = Transform3D(-0.0151012, -0.01808, -0.0971857, -0.0988363, 0.00094491, 0.0151819, -0.00182657, 0.0983474, -0.0180123, 0, 0, 0)
+mesh = SubResource("TorusMesh_3nktn")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
+
+[node name="14" type="MeshInstance3D" parent="Bubble_Beam"]
+transform = Transform3D(-0.0151012, -0.01808, -0.0971857, -0.0988363, 0.00094491, 0.0151819, -0.00182657, 0.0983474, -0.0180123, 0, 0, 0)
+mesh = SubResource("TorusMesh_3nktn")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
+
+[node name="15" type="MeshInstance3D" parent="Bubble_Beam"]
+transform = Transform3D(-0.0151012, -0.01808, -0.0971857, -0.0988363, 0.00094491, 0.0151819, -0.00182657, 0.0983474, -0.0180123, 0, 0, 0)
+mesh = SubResource("TorusMesh_3nktn")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
+
+[node name="16" type="MeshInstance3D" parent="Bubble_Beam"]
+transform = Transform3D(-0.0151012, -0.01808, -0.0971857, -0.0988363, 0.00094491, 0.0151819, -0.00182657, 0.0983474, -0.0180123, 0, 0, 0)
+mesh = SubResource("TorusMesh_3nktn")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
+
+[node name="17" type="MeshInstance3D" parent="Bubble_Beam"]
+transform = Transform3D(-0.0151012, -0.01808, -0.0971857, -0.0988363, 0.00094491, 0.0151819, -0.00182657, 0.0983474, -0.0180123, 0, 0, 0)
+mesh = SubResource("TorusMesh_3nktn")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
+
+[node name="18" type="MeshInstance3D" parent="Bubble_Beam"]
+transform = Transform3D(-0.0151012, -0.01808, -0.0971857, -0.0988363, 0.00094491, 0.0151819, -0.00182657, 0.0983474, -0.0180123, 0, 0, 0)
+mesh = SubResource("TorusMesh_3nktn")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
+
+[node name="19" type="MeshInstance3D" parent="Bubble_Beam"]
+transform = Transform3D(-0.0151012, -0.01808, -0.0971857, -0.0988363, 0.00094491, 0.0151819, -0.00182657, 0.0983474, -0.0180123, 0, 0, 0)
+mesh = SubResource("TorusMesh_3nktn")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
+
+[node name="20" type="MeshInstance3D" parent="Bubble_Beam"]
+transform = Transform3D(-0.0151012, -0.01808, -0.0971857, -0.0988363, 0.00094491, 0.0151819, -0.00182657, 0.0983474, -0.0180123, 0, 0, 0)
+mesh = SubResource("TorusMesh_3nktn")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
+
+[node name="21" type="MeshInstance3D" parent="Bubble_Beam"]
+transform = Transform3D(-0.0151012, -0.01808, -0.0971857, -0.0988363, 0.00094491, 0.0151819, -0.00182657, 0.0983474, -0.0180123, 0, 0, 0)
+mesh = SubResource("TorusMesh_3nktn")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
+
+[node name="22" type="MeshInstance3D" parent="Bubble_Beam"]
+transform = Transform3D(-0.0151012, -0.01808, -0.0971857, -0.0988363, 0.00094491, 0.0151819, -0.00182657, 0.0983474, -0.0180123, 0, 0, 0)
+mesh = SubResource("TorusMesh_3nktn")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
+
+[node name="23" type="MeshInstance3D" parent="Bubble_Beam"]
+transform = Transform3D(-0.0151012, -0.01808, -0.0971857, -0.0988363, 0.00094491, 0.0151819, -0.00182657, 0.0983474, -0.0180123, 0, 0, 0)
+mesh = SubResource("TorusMesh_3nktn")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
+
+[node name="24" type="MeshInstance3D" parent="Bubble_Beam"]
+transform = Transform3D(-0.0151012, -0.01808, -0.0971857, -0.0988363, 0.00094491, 0.0151819, -0.00182657, 0.0983474, -0.0180123, 0, 0, 0)
+mesh = SubResource("TorusMesh_3nktn")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
+
+[node name="25" type="MeshInstance3D" parent="Bubble_Beam"]
+transform = Transform3D(-0.0151012, -0.01808, -0.0971857, -0.0988363, 0.00094491, 0.0151819, -0.00182657, 0.0983474, -0.0180123, 0, 0, 0)
+mesh = SubResource("TorusMesh_3nktn")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
+
+[node name="26" type="MeshInstance3D" parent="Bubble_Beam"]
+transform = Transform3D(-0.0151012, -0.01808, -0.0971857, -0.0988363, 0.00094491, 0.0151819, -0.00182657, 0.0983474, -0.0180123, 0, 0, 0)
+mesh = SubResource("TorusMesh_3nktn")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
+
+[node name="27" type="MeshInstance3D" parent="Bubble_Beam"]
+transform = Transform3D(-0.0151012, -0.01808, -0.0971857, -0.0988363, 0.00094491, 0.0151819, -0.00182657, 0.0983474, -0.0180123, 0, 0, 0)
+mesh = SubResource("TorusMesh_3nktn")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
+
+[node name="28" type="MeshInstance3D" parent="Bubble_Beam"]
+transform = Transform3D(-0.0151012, -0.01808, -0.0971857, -0.0988363, 0.00094491, 0.0151819, -0.00182657, 0.0983474, -0.0180123, 0, 0, 0)
+mesh = SubResource("TorusMesh_3nktn")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
+
+[node name="29" type="MeshInstance3D" parent="Bubble_Beam"]
+transform = Transform3D(-0.0151012, -0.01808, -0.0971857, -0.0988363, 0.00094491, 0.0151819, -0.00182657, 0.0983474, -0.0180123, 0, 0, 0)
+mesh = SubResource("TorusMesh_3nktn")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
+
+[node name="30" type="MeshInstance3D" parent="Bubble_Beam"]
+transform = Transform3D(-0.0151012, -0.01808, -0.0971857, -0.0988363, 0.00094491, 0.0151819, -0.00182657, 0.0983474, -0.0180123, 0, 0, 0)
+mesh = SubResource("TorusMesh_3nktn")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
+
+[node name="31" type="MeshInstance3D" parent="Bubble_Beam"]
+transform = Transform3D(-0.0151012, -0.01808, -0.0971857, -0.0988363, 0.00094491, 0.0151819, -0.00182657, 0.0983474, -0.0180123, 0, 0, 0)
+mesh = SubResource("TorusMesh_3nktn")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
+
+[node name="32" type="MeshInstance3D" parent="Bubble_Beam"]
+transform = Transform3D(-0.0151012, -0.01808, -0.0971857, -0.0988363, 0.00094491, 0.0151819, -0.00182657, 0.0983474, -0.0180123, 0, 0, 0)
+mesh = SubResource("TorusMesh_3nktn")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
+
+[node name="33" type="MeshInstance3D" parent="Bubble_Beam"]
+transform = Transform3D(-0.0151012, -0.01808, -0.0971857, -0.0988363, 0.00094491, 0.0151819, -0.00182657, 0.0983474, -0.0180123, 0, 0, 0)
+mesh = SubResource("TorusMesh_3nktn")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
+
+[node name="34" type="MeshInstance3D" parent="Bubble_Beam"]
+transform = Transform3D(-0.0151012, -0.01808, -0.0971857, -0.0988363, 0.00094491, 0.0151819, -0.00182657, 0.0983474, -0.0180123, 0, 0, 0)
+mesh = SubResource("TorusMesh_3nktn")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
+
+[node name="35" type="MeshInstance3D" parent="Bubble_Beam"]
+transform = Transform3D(-0.0151012, -0.01808, -0.0971857, -0.0988363, 0.00094491, 0.0151819, -0.00182657, 0.0983474, -0.0180123, 0, 0, 0)
+mesh = SubResource("TorusMesh_3nktn")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
+
+[node name="36" type="MeshInstance3D" parent="Bubble_Beam"]
+transform = Transform3D(-0.0151012, -0.01808, -0.0971857, -0.0988363, 0.00094491, 0.0151819, -0.00182657, 0.0983474, -0.0180123, 0, 0, 0)
+mesh = SubResource("TorusMesh_3nktn")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
+
+[node name="37" type="MeshInstance3D" parent="Bubble_Beam"]
+transform = Transform3D(-0.0151012, -0.01808, -0.0971857, -0.0988363, 0.00094491, 0.0151819, -0.00182657, 0.0983474, -0.0180123, 0, 0, 0)
+mesh = SubResource("TorusMesh_3nktn")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
+
+[node name="38" type="MeshInstance3D" parent="Bubble_Beam"]
+transform = Transform3D(-0.0151012, -0.01808, -0.0971857, -0.0988363, 0.00094491, 0.0151819, -0.00182657, 0.0983474, -0.0180123, 0, 0, 0)
+mesh = SubResource("TorusMesh_3nktn")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
+
+[node name="39" type="MeshInstance3D" parent="Bubble_Beam"]
+transform = Transform3D(-0.0151012, -0.01808, -0.0971857, -0.0988363, 0.00094491, 0.0151819, -0.00182657, 0.0983474, -0.0180123, 0, 0, 0)
+mesh = SubResource("TorusMesh_3nktn")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
+
+[node name="40" type="MeshInstance3D" parent="Bubble_Beam"]
+transform = Transform3D(-0.0151012, -0.01808, -0.0971857, -0.0988363, 0.00094491, 0.0151819, -0.00182657, 0.0983474, -0.0180123, 0, 0, 0)
+mesh = SubResource("TorusMesh_3nktn")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
 
 [connection signal="animation_finished" from="Hologram_Animation" to="." method="_on_hologram_animation_animation_finished"]

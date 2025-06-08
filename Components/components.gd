@@ -15,6 +15,8 @@ var component_name: StringName
 
 var COMPONENT_SCRIPT: Script = preload("res://Components/components.gd")
 var GLOW_SHADER := preload("res://Shaders/grabbed_glow.gdshader")
+var MANIPULATION_SHADER:= preload("res://Shaders/manipulation.gdshader")
+var manipulation_material: ShaderMaterial = ShaderMaterial.new()
 
 var grid_positions: Dictionary = {}
 var assigned_grid_position := Vector3.ZERO
@@ -101,9 +103,11 @@ var is_controlled: bool = false
 var character_body: CharacterBody3D
 var character_force: Vector3
 
+var manipulation_active: bool = false
 var extract_active: bool = false
 var fuse_active: bool = false
 
+var extractables: Array[RigidBody3D] = []
 
 
 
@@ -119,6 +123,8 @@ func _ready() -> void:
 	grab_particles_shader = Shader.new()
 	grab_particles_shader.code = preload("res://Shaders/particle_glow.gdshader").code
 	particles_material = ShaderMaterial.new()
+	
+	manipulation_material.shader = MANIPULATION_SHADER
 	
 	contact_monitor = true
 	continuous_cd = true
@@ -147,7 +153,7 @@ func _ready() -> void:
 		#glow_body.scale = Vector3(1.15, 1.15, 1.15)
 		#shader_material.shader = GLOW_SHADER
 		#glow_body.set_surface_override_material(0, shader_material)
-		var outline_mesh : Mesh = base_mesh.mesh.create_outline(0.075)
+		var outline_mesh : Mesh = base_mesh.mesh.create_outline(0.1)
 		glow_body = MeshInstance3D.new()
 		glow_body.name = "Outline"
 		glow_body.mesh = outline_mesh
@@ -213,10 +219,6 @@ func _physics_process(delta: float) -> void:
 
 func _process(delta: float) -> void:
 	
-	if fuse_active or extract_active:
-		print('basically need to adjust the transparancy and alpha of grabbed object while in one of these two modes')
-	
-	#print(touching_wall_count)
 	
 	if touching_wall_count >= 2:
 		sleeping = true
@@ -233,26 +235,26 @@ func _process(delta: float) -> void:
 			extract_object_motion()
 
 
-	if extract_in_motion:
-		if shake_timer < 3.0 and shake_timer > 2.0:
-			rotate_object(object_body, 0.0, -360.0, 0.0, 0.0, 0.35)
-			rotate_object(glow_body, 0.0, -360.0, 0.0, 0.0, 0.35)
-		elif shake_timer < 2.0 and shake_timer > 1.0:
-			rotate_object(object_body, -360.0, -360.0, 0.0, 0.0, 0.35)
-			rotate_object(glow_body, -360.0, -360.0, 0.0, 0.0, 0.35)
-			scale_object(object_body, 1.5, 1.5, 1.5, 0.25, 0.5)
-			scale_object(glow_body, 1.5, 1.5, 1.5, 0.25, 0.5)
-		elif shake_timer < 1.0 and shake_timer > 0.0:
-			create_the_grid = true
-			rotate_object(object_body, 0.0, 0.0, 0.0, 0.0, 0.35)
-			rotate_object(glow_body, 0.0, 0.0, 0.0, 0.0, 0.35)
-			scale_object(object_body, 0.001, 0.001, 0.001, 0.25, 0.15)
-			scale_object(glow_body, 0.001, 0.001, 0.001, 0.25, 0.15)
-		elif shake_timer <= 0.0:
-			is_being_extracted = true
-			extract_components()
-			is_extracting = false
-			extract_in_motion = false
+	#if extract_in_motion:
+		#if shake_timer < 3.0 and shake_timer > 2.0:
+			#rotate_object(object_body, 0.0, -360.0, 0.0, 0.0, 0.35)
+			#rotate_object(glow_body, 0.0, -360.0, 0.0, 0.0, 0.35)
+		#elif shake_timer < 2.0 and shake_timer > 1.0:
+			#rotate_object(object_body, -360.0, -360.0, 0.0, 0.0, 0.35)
+			#rotate_object(glow_body, -360.0, -360.0, 0.0, 0.0, 0.35)
+			#scale_object(object_body, 1.5, 1.5, 1.5, 0.25, 0.5)
+			#scale_object(glow_body, 1.5, 1.5, 1.5, 0.25, 0.5)
+		#elif shake_timer < 1.0 and shake_timer > 0.0:
+			#create_the_grid = true
+			#rotate_object(object_body, 0.0, 0.0, 0.0, 0.0, 0.35)
+			#rotate_object(glow_body, 0.0, 0.0, 0.0, 0.0, 0.35)
+			#scale_object(object_body, 0.001, 0.001, 0.001, 0.25, 0.15)
+			#scale_object(glow_body, 0.001, 0.001, 0.001, 0.25, 0.15)
+		#elif shake_timer <= 0.0:
+			#is_being_extracted = true
+			#extract_components()
+			#is_extracting = false
+			#extract_in_motion = false
 
 
 func dampen_assembly_object(time):
@@ -292,8 +294,9 @@ func _on_body_shape_entered(body_rid: RID, body: Node, body_shape_index: int, lo
 
 	if body is character:
 		body.is_on_floor()
-		character_force = character_body.current_velocity
-		print(character_force)
+		if not is_stepladder and not is_rocketship:
+			character_force = character_body.current_velocity
+			print(character_force)
 
 func _on_body_shape_exited(body_rid: RID, body: Node, body_shape_index: int, local_shape_index: int) -> void:
 	if body.name == "Left_Wall" and touching_left_wall:
@@ -402,10 +405,21 @@ func create_particles():
 	grab_particles.restart()
 
 func start_extraction():
-	is_extracting = true
-	shake_timer = shake_duration
+	
+	var extractable_children = get_children()
+	for child in extractable_children:
+		if child is RigidBody3D:
+			print('hm')
+			extractables.append(child)
+	for child in extractables:
+		print(child.name)
+		
+	#print('Extractables: ', extractables)
 
-func extract_components():
+func cycle_extraction_component():
+	pass
+
+func extract_component():
 	var components = assembly_components.duplicate()
 	assembly_components.clear()
 
@@ -559,3 +573,15 @@ func scale_object(object, x_scale: float, y_scale: float, z_scale: float, wait_t
 	
 	scale_tween.set_trans(Tween.TRANS_LINEAR)
 	scale_tween.set_ease(Tween.EASE_IN_OUT)
+
+func manipulation_mode(type):
+	if type == "Active":
+		for child in object_body.get_children():
+			if child is MeshInstance3D:
+				child.set_surface_override_material(0, manipulation_material)
+	
+	elif type == "Inactive":
+		for child in object_body.get_children():
+			if child is MeshInstance3D:
+				child.set_surface_override_material(0, null)
+				

@@ -171,10 +171,17 @@ func _input(event: InputEvent) -> void:
 
 	if event is InputEventKey:
 		if event.keycode == KEY_R:
+			print('Resetting Rotation here, genius...')
 			reset_rotation = true
 			character.distance_from_character = base_distance_in_front
+	
+		if event.keycode == KEY_E or event.keycode == KEY_F or event.keycode == KEY_Q:
+			if not character.extracting_object_active and not character.fusing_object_active:
+				print('Resetting Rotation here, genius...')
+				reset_rotation = true
+				character.distance_from_character = base_distance_in_front
 
-		elif event.keycode == KEY_SHIFT:
+		if event.keycode == KEY_SHIFT:
 			if event.is_pressed():
 				movement_speed = 2
 			else:

@@ -1,4 +1,4 @@
-[gd_scene load_steps=32 format=3 uid="uid://dw2grejb4tc3k"]
+[gd_scene load_steps=35 format=3 uid="uid://dw2grejb4tc3k"]
 
 [ext_resource type="PackedScene" uid="uid://f722yn8gdiyj" path="res://Character/character.tscn" id="1_f3sb7"]
 [ext_resource type="Script" uid="uid://cpdnlycwlet2q" path="res://World/world.gd" id="1_tlwt5"]
@@ -10,8 +10,9 @@
 [ext_resource type="Texture2D" uid="uid://dpi43v27xa8kb" path="res://Assets/Textures/cracked_concrete_disp_1k.png" id="7_oe8m4"]
 [ext_resource type="Texture2D" uid="uid://cmgbtrrh42i2v" path="res://Assets/Textures/concrete_floor_worn_001_disp_4k.png" id="8_w47uh"]
 [ext_resource type="PackedScene" uid="uid://8y8q1bb5ncvv" path="res://Components/Rocketship/rocketship.tscn" id="9_oe8m4"]
-[ext_resource type="PackedScene" uid="uid://cf60vyvie043n" path="res://Components/Helpers/stepladder.tscn" id="9_w47uh"]
+[ext_resource type="PackedScene" uid="uid://cf60vyvie043n" path="res://Components/stepladder.tscn" id="9_w47uh"]
 [ext_resource type="PackedScene" uid="uid://50e0ko7nsyll" path="res://Components/Tune-O-Matic/tune_o_matic.tscn" id="10_lo5ox"]
+[ext_resource type="Shader" uid="uid://c8yt2eubijwap" path="res://Shaders/teleport.gdshader" id="13_0wqet"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_f3sb7"]
 size = Vector3(100, 10, 100)
@@ -110,6 +111,22 @@ rings = 6
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_eidgh"]
 height = 1.065
 radius = 5.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_0wqet"]
+render_priority = 0
+shader = ExtResource("13_0wqet")
+shader_parameter/progress = 0.602
+shader_parameter/noise_density = 500.0
+shader_parameter/beam_size = 0.5
+shader_parameter/base_color = Vector3(1, 1, 1)
+shader_parameter/base_alpha = 1.0
+shader_parameter/beam_color = Vector3(0, 1.02, 1.2)
+shader_parameter/emission_strength = 5.0
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_f23eu"]
+material = SubResource("ShaderMaterial_0wqet")
+radius = 0.783
+height = 5.801
 
 [node name="World" type="Node3D"]
 script = ExtResource("1_tlwt5")
@@ -233,3 +250,7 @@ shape = SubResource("CylinderShape3D_eidgh")
 [node name="Rocketship" parent="Platform" instance=ExtResource("9_oe8m4")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8.00903, 0)
 sleeping = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.89102, 1.83552, 27.5496)
+mesh = SubResource("CapsuleMesh_f23eu")

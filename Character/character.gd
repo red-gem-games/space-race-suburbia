@@ -14,10 +14,11 @@ var start_day: bool = false
 @onready var beam: Node3D = PREM_7.beam
 @onready var beam_mesh: Node3D = PREM_7.beam_mesh
 @onready var beam_shader_mat := beam_mesh.get_active_material(0) as ShaderMaterial
+@onready var manipulation_cloud: MeshInstance3D = $Manipulation_Cloud
 
-var control_RED: Color = Color(1, 0, 0)
-var control_GREEN: Color = Color(0, 1, 0)
-var control_BLUE: Color = Color(0, 0, 1)
+var manipulate_ORANGE: Color = Color(1, 0.33, 0)
+var manipulate_GREEN: Color = Color(0, 1, 0)
+var manipulate_BLUE: Color = Color(0, 0, 1)
 
 var colliding_with_assembly_object: bool = false
 var assembly_object_mass: float
@@ -250,6 +251,7 @@ func _ready() -> void:
 	control_timer.one_shot = true
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	prem7_original_rotation = PREM_7.rotation
+	manipulation_cloud.visible = false
 
 
 func _physics_process(delta: float) -> void:
@@ -323,7 +325,6 @@ func _process(delta: float) -> void:
 		screen_res_sway_multiplier = 55.0 * delta
 		previous_delta = delta
 		screen_resolution_set = true
-		print("Updated sway multiplier: ", screen_res_sway_multiplier)
 	
 	# Update jetpack thrust, hover, ceiling logic
 	handle_jetpack_logic(delta)
@@ -357,12 +358,12 @@ func _process(delta: float) -> void:
 			if not PREM_7.handling_object:
 				PREM_7.handle_object()
 				if shifting_object_active:
-					HUD.set_highlight_color(control_GREEN, 0.4)
+					HUD.set_highlight_color(manipulate_GREEN, 0.4)
 				elif extracting_object_active:
-					HUD.set_highlight_color(control_RED, 0.7)
+					HUD.set_highlight_color(manipulate_ORANGE, 0.7)
 					grabbed_object.extract_active = true
 				elif fusing_object_active:
-					HUD.set_highlight_color(control_BLUE, 0.7)
+					HUD.set_highlight_color(manipulate_BLUE, 0.7)
 					grabbed_object.fuse_active = true
 				HUD.control_color.visible = true
 				print('***   Make sure to lerp these shaders / standard materials   ***')
@@ -432,8 +433,9 @@ func _input(event: InputEvent) -> void:
 			if not middle_mouse_down and not right_mouse_down:
 				if event.is_pressed():
 					left_mouse_down = true
-				else:
+					PREM_7.trig_anim.play("trigger_pull")
 					grab_object()
+				else:
 					PREM_7.trig_anim.play("trigger_release")
 					PREM_7.trig_anim.play("RESET")
 
@@ -470,16 +472,16 @@ func _input(event: InputEvent) -> void:
 			if not right_mouse_down and not left_mouse_down:
 				if event.is_pressed():
 					middle_mouse_down = true
-					PREM_7.mode_anim.play("RESET")
-					PREM_7.mode_anim.play("shift_mode_down")
+					PREM_7.ctrl_anim.play("RESET")
+					PREM_7.ctrl_anim.play("control_down")
 					print("Object is being inspected!")
 					print('Add hologram tablet above PREM-7 that shoots out of top opening')
 					print('THEN, allow player to scroll through different inspection menus for object by scrolling with wheel')
 					inspecting_object_active = true
 				if not event.is_pressed():
 					middle_mouse_down = false
-					PREM_7.mode_anim.play("RESET")
-					PREM_7.mode_anim.play("shift_mode_up")
+					PREM_7.ctrl_anim.play("RESET")
+					PREM_7.ctrl_anim.play("control_up")
 					print("Object is no longer being inspected!")
 					inspecting_object_active = false
 
@@ -537,8 +539,15 @@ func _input(event: InputEvent) -> void:
 						#grabbed_object.rotate(local_right, deg_to_rad(vertical_delta))
 
 	# Process Keyboard events.
-	if event is InputEventKey:
+	if event is InputEventKey and not event.is_echo():
 		var pressed = event.is_pressed()
+
+		var down = event.pressed
+
+		if event.keycode == KEY_E and pressed:
+			_on_extract_key(down)
+		if event.keycode == KEY_R and pressed:
+			_on_reset_key()
 		
 		if event.keycode == KEY_Q:
 			print('Add action logic here :)')
@@ -552,18 +561,6 @@ func _input(event: InputEvent) -> void:
 				#grabbed_object.object_rotation = grabbed_object.rotation_degrees
 				#grab_object()
 				
-
-		if event.keycode == KEY_E and not event.is_echo():
-			if not grabbed_object or fusing_object_active:
-				return
-			if event.pressed:
-				extracting_object_active =! extracting_object_active
-				if extracting_object_active:
-					print('Start Extracting')
-					grabbed_object.set_outline('EXTRACT', glow_color, 0.0)
-				else:
-					print('Stop Extracting')
-					grabbed_object.set_outline('GRAB', glow_color, glow_opacity)
 
 		if event.keycode == KEY_F:
 			if not grabbed_object or extracting_object_active:
@@ -580,8 +577,9 @@ func _input(event: InputEvent) -> void:
 					#grabbed_object.object_rotation = grabbed_object.rotation_degrees
 					#grab_object()
 				else:
-					print('Stop Extracting')
+					print('Stop Fusing')
 					grabbed_object.set_outline('GRAB', glow_color, glow_opacity)
+					_on_reset_key()
 
 		if event.keycode == KEY_QUOTELEFT and pressed and not event.is_echo():
 			if Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
@@ -627,6 +625,8 @@ func _input(event: InputEvent) -> void:
 
 		# Process number keys (1-4) to directly change modes, if desired.
 		if event.keycode in [KEY_1, KEY_2, KEY_3, KEY_4]:
+			print('Need to use these to bring up components in specific slots, returning for now')
+			return
 			if not right_mouse_down and not left_mouse_down and not middle_mouse_down:
 				if pressed and not event.is_echo():
 					if pending_mode != "" and event.keycode != pending_mode_key:
@@ -645,14 +645,14 @@ func _input(event: InputEvent) -> void:
 						if new_mode == current_mode:
 							print("Already in mode: " + new_mode)
 							return
-						PREM_7.mode_anim.play("RESET")
-						PREM_7.mode_anim.play("shift_mode_down")
+						PREM_7.ctrl_anim.play("RESET")
+						PREM_7.ctrl_anim.play("shift_mode_down")
 						pending_mode = new_mode
 						pending_mode_key = event.keycode
 				elif not pressed:
 					if pending_mode != "" and event.keycode == pending_mode_key:
-						PREM_7.mode_anim.play("RESET")
-						PREM_7.mode_anim.play("shift_mode_up")
+						PREM_7.ctrl_anim.play("RESET")
+						PREM_7.ctrl_anim.play("shift_mode_up")
 						change_mode(pending_mode)
 						pending_mode = ""
 						pending_mode_key = 0
@@ -702,8 +702,11 @@ func _input(event: InputEvent) -> void:
 				return
 			if pressed and grab_timer.time_left == 0.0:
 				control_object()
+				PREM_7.ctrl_anim.play("RESET")
+				PREM_7.ctrl_anim.play("control_down")
 			else:
 				pass
+
 
 		if event.keycode == KEY_Z:
 			if pressed:
@@ -712,29 +715,45 @@ func _input(event: InputEvent) -> void:
 			else:
 				z_rotate_mode = false
 
-		if event.keycode == KEY_R and pressed and not event.is_echo():
-			print('RESETTING')
-			desired_pitch = 0
-			if grabbed_object:
-				var current_rot = grabbed_object.rotation_degrees
-				grabbed_rotation.x = shortest_angle_diff_value(-current_rot.x, 0)
-				grabbed_rotation.y = shortest_angle_diff_value(-current_rot.y, 0)
-				grabbed_rotation.z = shortest_angle_diff_value(-current_rot.z, 0)
-
-				pitch_min = grab_pitch_min
-				pitch_max = grab_pitch_max
-				distance_factor = 0
-			else:
-				pitch_min = base_pitch_min
-				pitch_max = base_pitch_max
-				distance_factor = 0
 
 
 ##---------------------------------------##
 ##------------GAME MECHANICS-------------##
 ##---------------------------------------##
 
+func _on_extract_key(down: bool) -> void:
+	if not grabbed_object or fusing_object_active:
+		return
+	if down:
+		extracting_object_active =! extracting_object_active
+		
+	if extracting_object_active:
+		grabbed_object.extract_active = true
+		grabbed_object.manipulation_mode('Active')
+		right_mouse_down = true
+		handle_object('pressed')
+		print('Start Extracting - Make all other objects invisible?')
+		manipulation_cloud.visible = true
+		grabbed_object.set_outline('EXTRACT', glow_color, 0.0)
+		grabbed_object.start_extraction()
+	else:
+		grabbed_object.manipulation_mode('Inactive')
+		grabbed_object.extract_active = false
+		handle_object('released')
+		right_mouse_down = false
+		print('Stop Extracting')
+		manipulation_cloud.visible = false
+		grabbed_object.set_outline('GRAB', glow_color, glow_opacity)
 
+func _on_reset_key() -> void:
+	print('RESETTING')
+	desired_pitch = 0
+	if grabbed_object:
+		reset_object_position()
+	else:
+		pitch_min = base_pitch_min
+		pitch_max = base_pitch_max
+		distance_factor = 0
 
 func grab_object():
 	
@@ -754,8 +773,7 @@ func grab_object():
 		grabbed_object.lock_rotation = false
 		grabbed_object.angular_velocity = lerp(grabbed_object.angular_velocity, Vector3.ZERO, 1.0)
 		grabbed_object.linear_velocity = lerp(grabbed_object.linear_velocity, Vector3.ZERO, 1.0)
-		PREM_7.retract_hologram()
-		#grabbed_object.set_outline('RELEASE', Color.WHITE, 0.0)
+		grabbed_object.set_outline('RELEASE', Color.WHITE, 0.0)
 		HUD.reticle.visible = true
 		object_sway_strength_x = object_sway_base_x
 		object_sway_strength_y = object_sway_base_y
@@ -818,7 +836,7 @@ func grab_object():
 						glow_color = MODE_3_COLOR
 					MODE_4:
 						glow_color = MODE_4_COLOR
-				#grabbed_object.set_outline('GRAB', glow_color, 0.0)
+				grabbed_object.set_outline('GRAB', glow_color, 0.0)
 				grabbed_initial_mouse = get_viewport().get_mouse_position()
 				grabbed_distance = (grabbed_object.global_transform.origin - camera.global_transform.origin).length()
 				object_is_grabbed = true
@@ -915,6 +933,7 @@ func handle_object(status):
 		PREM_7.trig_anim.play("RESET")
 		collision_layer = 1
 		right_mouse_down = false
+		_on_reset_key()
 		
 		## Reset Outline Glow State BEFORE Grabbed Object is Released
 		if not extracting_object_active:
@@ -954,14 +973,13 @@ func control_object():
 		clear_char_obj_shape()
 		grabbed_object.is_controlled = true
 		controlled_object = grabbed_object
-
+		PREM_7.controlled_object = grabbed_object
 		grabbed_object.reparent(PREM_7.beam)
 		grabbed_object.collision_layer = 0
 		grabbed_object.collision_mask = 0
 		grabbed_object.scale_object(grabbed_object.object_body, 0.25, 0.25, 0.25, 0.0, 0.15)
 		grabbed_object.scale_object(grabbed_object.glow_body, 0.25, 0.25, 0.25, 0.0, 0.15)
 		PREM_7.retract_beam()
-
 		await get_tree().create_timer(0.15).timeout
 		#grabbed_object.queue_free()
 		grab_object()
@@ -1380,3 +1398,13 @@ func snap_to_suspended_object(y_target, x_target, time):
 		initial_grab = false
 	await get_tree().create_timer(0.25).timeout
 	initial_grab = false
+
+func reset_object_position():
+	var current_rot = grabbed_object.rotation_degrees
+	grabbed_rotation.x = shortest_angle_diff_value(-current_rot.x, 0)
+	grabbed_rotation.y = shortest_angle_diff_value(-current_rot.y, 0)
+	grabbed_rotation.z = shortest_angle_diff_value(-current_rot.z, 0)
+
+	pitch_min = grab_pitch_min
+	pitch_max = grab_pitch_max
+	distance_factor = 0

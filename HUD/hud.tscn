@@ -59,6 +59,7 @@ grow_vertical = 2
 texture = ExtResource("1_37p78")
 
 [node name="Control_Color" type="ColorRect" parent="CanvasLayer"]
+visible = false
 material = SubResource("ShaderMaterial_jvmdh")
 offset_right = 2563.0
 offset_bottom = 1445.0

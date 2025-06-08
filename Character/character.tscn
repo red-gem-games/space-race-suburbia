@@ -1,8 +1,9 @@
-[gd_scene load_steps=10 format=3 uid="uid://f722yn8gdiyj"]
+[gd_scene load_steps=13 format=3 uid="uid://f722yn8gdiyj"]
 
 [ext_resource type="PackedScene" uid="uid://bpvm0l41dywjs" path="res://PREM-7/PREM-7.tscn" id="1_glpr6"]
 [ext_resource type="Script" uid="uid://sw8eis2eqpyj" path="res://Character/character.gd" id="1_pjt0s"]
 [ext_resource type="PackedScene" uid="uid://baomcogkgkbvv" path="res://HUD/hud.tscn" id="3_wa5vi"]
+[ext_resource type="Shader" uid="uid://vetnq53dk60g" path="res://Shaders/grabbed_glow.gdshader" id="4_twwou"]
 
 [sub_resource type="Animation" id="Animation_1l6l2"]
 length = 0.001
@@ -116,6 +117,27 @@ height = 4.5
 [sub_resource type="SphereShape3D" id="SphereShape3D_jkkns"]
 radius = 1.16
 
+[sub_resource type="SphereMesh" id="SphereMesh_a23tb"]
+flip_faces = true
+radius = 6.996
+height = 12.192
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_uerqc"]
+render_priority = 0
+shader = ExtResource("4_twwou")
+shader_parameter/speed = 0.1
+shader_parameter/ring_scale = 1.5
+shader_parameter/wave_scale = 4.0
+shader_parameter/random_scale = 10.0
+shader_parameter/noise_scale = 0.1
+shader_parameter/c1 = 0.18
+shader_parameter/c2 = 0.5
+shader_parameter/c3 = 2.98
+shader_parameter/c4 = 3.25
+shader_parameter/fade_min_y = -109.1
+shader_parameter/fade_max_y = 6.32
+shader_parameter/emission_strength = 1.0
+
 [node name="Character" type="CharacterBody3D"]
 script = ExtResource("1_pjt0s")
 
@@ -143,3 +165,8 @@ debug_color = Color(1, 0.264211, 0.231967, 1)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.06511, -0.365046, -0.767292)
 shape = SubResource("SphereShape3D_jkkns")
 debug_color = Color(0.843472, 0.664469, 7.70092e-07, 1)
+
+[node name="Manipulation_Cloud" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.10524, 0.919412, 0.378954, -0.77564, 0.31437, -0.547314, -0.622339, -0.236333, 0.746217, 0.28, 4.5, -4.687)
+mesh = SubResource("SphereMesh_a23tb")
+surface_material_override/0 = SubResource("ShaderMaterial_uerqc")
