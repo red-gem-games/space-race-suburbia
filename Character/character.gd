@@ -222,7 +222,6 @@ var input_direction_z: float = 0.0
 var grabbed_pos_set: bool = false
 
 
-
 func _ready() -> void:
 	push_warning('General To Do List:')
 	push_warning('------ ALWAYS MAKE SURE THINGS WORK ON BOTH SCREENS ------')
@@ -319,7 +318,18 @@ func _physics_process(delta: float) -> void:
 	# Grabbed object physics update
 	update_grabbed_object_physics(delta)
 
+
+
+
 func _process(delta: float) -> void:
+	
+	if extracting_object_active:
+		grabbed_object.position.x = lerp(grabbed_object.position.x, -2.0, delta * 2.5)
+		grabbed_object.position.z = lerp(grabbed_object.position.z, -5.5, delta * 2.5)
+		grabbed_rotation.x = lerp(grabbed_rotation.x, 15.0, delta * 2.5)
+		grabbed_rotation.y = lerp(grabbed_rotation.y, 25.0, delta * 2.5)
+		grabbed_rotation.z = lerp(grabbed_rotation.z, 0.0, delta * 2.5)
+
 
 	if abs(delta - previous_delta) > delta_threshold:
 		screen_res_sway_multiplier = 55.0 * delta
@@ -357,9 +367,7 @@ func _process(delta: float) -> void:
 			camera.fov = lerp(camera.fov, 55.0, delta * 10)
 			if not PREM_7.handling_object:
 				PREM_7.handle_object()
-				if shifting_object_active:
-					HUD.set_highlight_color(manipulate_GREEN, 0.4)
-				elif extracting_object_active:
+				if extracting_object_active:
 					HUD.set_highlight_color(manipulate_ORANGE, 0.7)
 					grabbed_object.extract_active = true
 				elif fusing_object_active:
@@ -440,11 +448,12 @@ func _input(event: InputEvent) -> void:
 					PREM_7.trig_anim.play("RESET")
 
 		elif event.button_index == MOUSE_BUTTON_RIGHT and grabbed_object:
-			if not middle_mouse_down and not left_mouse_down:
-				if event.is_pressed():
-					handle_object('pressed')
-				else:
-					handle_object('released')
+			print('This will be used somewhere else down the line...')
+			#if not middle_mouse_down and not left_mouse_down:
+				#if event.is_pressed():
+					#handle_object('pressed')
+				#else:
+					#handle_object('released')
 
 		elif event.button_index == MOUSE_BUTTON_WHEEL_UP:
 			if scroll_cooldown <= 0.0 and not middle_mouse_down and not right_mouse_down and not left_mouse_down:
@@ -695,7 +704,7 @@ func _input(event: InputEvent) -> void:
 
 		if event.keycode == KEY_CTRL:
 			print('IF YOU WAIT A FEW SECONDS BEFORE CONTROLLING, IT"S LIKE THE OBJECT SINKS???')
-			print('Also...next up...control video :)')
+			print('Instead...lets do a teleport effect here - dissolve out and reappear in the PREM-7')
 			if not grabbed_object:
 				return
 			if grabbed_object.is_stepladder or grabbed_object.is_rocketship:
@@ -724,6 +733,8 @@ func _input(event: InputEvent) -> void:
 func _on_extract_key(down: bool) -> void:
 	if not grabbed_object or fusing_object_active:
 		return
+	if grabbed_object.is_stepladder or grabbed_object.is_rocketship:
+		return
 	if down:
 		extracting_object_active =! extracting_object_active
 		
@@ -736,6 +747,7 @@ func _on_extract_key(down: bool) -> void:
 		manipulation_cloud.visible = true
 		grabbed_object.set_outline('EXTRACT', glow_color, 0.0)
 		grabbed_object.start_extraction()
+		grabbed_target_position.x -= 10
 	else:
 		grabbed_object.manipulation_mode('Inactive')
 		grabbed_object.extract_active = false
@@ -793,6 +805,7 @@ func grab_object():
 		else:
 			grabbed_object.gravity_scale = 1.75
 		suspending_object_active = false
+		mouse_speed = base_mouse_speed
 		object_is_grabbed = false
 		grabbed_object = null
 		return
@@ -869,6 +882,7 @@ func grab_object():
 				PREM_7.cast_hologram('Grabbed')
 				create_char_obj_shape(grabbed_object)
 				grab_timer.start(0.25)
+				mouse_speed = base_mouse_speed / grabbed_object.mass * 15.0
 
 			else:
 				print("Object hit, but no MeshInstance3D child found!")

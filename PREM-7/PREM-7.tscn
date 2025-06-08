@@ -1,4 +1,4 @@
-[gd_scene load_steps=82 format=4 uid="uid://bpvm0l41dywjs"]
+[gd_scene load_steps=84 format=4 uid="uid://bpvm0l41dywjs"]
 
 [ext_resource type="Script" uid="uid://so25svauxmkt" path="res://PREM-7/prem_7.gd" id="1_iarxa"]
 [ext_resource type="Shader" uid="uid://cw73tbbh1mfcs" path="res://Shaders/PREM-7_glow.gdshader" id="2_2cjep"]
@@ -9,8 +9,8 @@
 top_radius = 0.01
 bottom_radius = 0.095
 height = 4.5
-radial_segments = 100
-rings = 100
+radial_segments = 1000
+rings = 1000
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_t05xm"]
 render_priority = 0
@@ -1453,6 +1453,14 @@ shader_parameter/fade_min_y = -34.59
 shader_parameter/fade_max_y = 17.31
 shader_parameter/emission_strength = 1.0
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4qq6n"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_4qq6n"]
+material = SubResource("StandardMaterial3D_4qq6n")
+top_radius = 0.01
+bottom_radius = 0.01
+height = 1.25
+
 [node name="PREM-7" type="Node3D"]
 script = ExtResource("1_iarxa")
 
@@ -1902,5 +1910,131 @@ transform = Transform3D(-0.0151012, -0.01808, -0.0971857, -0.0988363, 0.00094491
 mesh = SubResource("TorusMesh_3nktn")
 skeleton = NodePath("../..")
 surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
+
+[node name="Object_Info" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.801669, 0.872407, 0.798682)
+
+[node name="Main_Code" type="Label3D" parent="Object_Info"]
+transform = Transform3D(0.00984807, -0.000151344, -0.00172987, 0, 0.00996194, -0.000871557, 0.00173648, 0.000858316, 0.0098106, 0, 0.915, -3.536)
+pixel_size = 0.15
+modulate = Color(0, 1, 0.729412, 1)
+text = "###-AA"
+font_size = 80
+outline_size = 5
+horizontal_alignment = 0
+uppercase = true
+
+[node name="Main_Name" type="Label3D" parent="Object_Info"]
+transform = Transform3D(0.00984807, -0.000151344, -0.00172987, 0, 0.00996194, -0.000871557, 0.00173648, 0.000858316, 0.0098106, 0, 0.737, -3.536)
+pixel_size = 0.25
+modulate = Color(0, 1, 0.729412, 1)
+text = "Machine Name"
+font_size = 80
+outline_size = 5
+horizontal_alignment = 0
+uppercase = true
+
+[node name="Main_Type" type="Label3D" parent="Object_Info"]
+transform = Transform3D(0.00984807, -0.000151344, -0.00172987, 0, 0.00996194, -0.000871557, 0.00173648, 0.000858316, 0.0098106, 0, 0.393, -3.536)
+pixel_size = 0.15
+modulate = Color(0, 1, 0.729412, 1)
+text = "Machine Type"
+font_size = 80
+outline_size = 5
+horizontal_alignment = 0
+uppercase = true
+
+[node name="Middle_Bar" type="MeshInstance3D" parent="Object_Info"]
+transform = Transform3D(0.984808, -0.0151344, -0.172987, 0, 0.996195, -0.0871557, 0.173648, 0.0858316, 0.98106, 1.05412, -0.492026, -3.43081)
+mesh = SubResource("CylinderMesh_4qq6n")
+
+[node name="Information" type="Label3D" parent="Object_Info"]
+transform = Transform3D(0.00984807, -0.000151344, -0.00172987, 0, 0.00996194, -0.000871557, 0.00173648, 0.000858316, 0.0098106, 1.26018, -0.427685, -3.53628)
+pixel_size = 0.25
+modulate = Color(0, 1, 0.729412, 1)
+text = "Description
+Stats
+Compatability"
+font_size = 80
+outline_size = 5
+horizontal_alignment = 0
+
+[node name="Component_1" type="Label3D" parent="Object_Info"]
+transform = Transform3D(0.00984807, -0.000151344, -0.00172987, 0, 0.00996194, -0.000871557, 0.00173648, 0.000858316, 0.0098106, 0, 0.0867527, -3.53628)
+transparency = 0.53
+pixel_size = 0.15
+modulate = Color(0, 1, 0.729412, 1)
+text = "Component"
+font_size = 80
+outline_size = 5
+horizontal_alignment = 0
+
+[node name="Component_Code_1" type="Label3D" parent="Object_Info"]
+transform = Transform3D(0.00984807, -0.000151344, -0.00172987, 0, 0.00996194, -0.000871557, 0.00173648, 0.000858316, 0.0098106, 0, -0.021153, -3.53628)
+transparency = 0.53
+pixel_size = 0.075
+modulate = Color(0, 1, 0.729412, 1)
+text = "###-AA"
+font_size = 80
+outline_size = 5
+horizontal_alignment = 0
+
+[node name="Component_2" type="Label3D" parent="Object_Info"]
+transform = Transform3D(0.00984807, -0.000151344, -0.00172987, 0, 0.00996194, -0.000871557, 0.00173648, 0.000858316, 0.0098106, 0, -0.265705, -3.53628)
+pixel_size = 0.15
+modulate = Color(0, 1, 0.729412, 1)
+text = "Component"
+font_size = 80
+outline_size = 5
+horizontal_alignment = 0
+
+[node name="Component_Code_2" type="Label3D" parent="Object_Info"]
+transform = Transform3D(0.00984807, -0.000151344, -0.00172987, 0, 0.00996194, -0.000871557, 0.00173648, 0.000858316, 0.0098106, 0, -0.37361, -3.53628)
+pixel_size = 0.075
+modulate = Color(0, 1, 0.729412, 1)
+text = "###-AA"
+font_size = 80
+outline_size = 5
+horizontal_alignment = 0
+
+[node name="Component_3" type="Label3D" parent="Object_Info"]
+transform = Transform3D(0.00984807, -0.000151344, -0.00172987, 0, 0.00996194, -0.000871557, 0.00173648, 0.000858316, 0.0098106, 0, -0.633603, -3.53628)
+transparency = 0.53
+pixel_size = 0.15
+modulate = Color(0, 1, 0.729412, 1)
+text = "Component"
+font_size = 80
+outline_size = 5
+horizontal_alignment = 0
+
+[node name="Component_Code_3" type="Label3D" parent="Object_Info"]
+transform = Transform3D(0.00984807, -0.000151344, -0.00172987, 0, 0.00996194, -0.000871557, 0.00173648, 0.000858316, 0.0098106, 0, -0.741508, -3.53628)
+transparency = 0.53
+pixel_size = 0.075
+modulate = Color(0, 1, 0.729412, 1)
+text = "###-AA"
+font_size = 80
+outline_size = 5
+horizontal_alignment = 0
+
+[node name="Component_4" type="Label3D" parent="Object_Info"]
+transform = Transform3D(0.00984807, -0.000151344, -0.00172987, 0, 0.00996194, -0.000871557, 0.00173648, 0.000858316, 0.0098106, 0, -0.999629, -3.53628)
+transparency = 0.53
+pixel_size = 0.15
+modulate = Color(0, 1, 0.729412, 1)
+text = "Component"
+font_size = 80
+outline_size = 5
+horizontal_alignment = 0
+
+[node name="Component_Code_4" type="Label3D" parent="Object_Info"]
+transform = Transform3D(0.00984807, -0.000151344, -0.00172987, 0, 0.00996194, -0.000871557, 0.00173648, 0.000858316, 0.0098106, 0, -1.10754, -3.53628)
+transparency = 0.53
+pixel_size = 0.075
+modulate = Color(0, 1, 0.729412, 1)
+text = "###-AA"
+font_size = 80
+outline_size = 5
+horizontal_alignment = 0
 
 [connection signal="animation_finished" from="Hologram_Animation" to="." method="_on_hologram_animation_animation_finished"]

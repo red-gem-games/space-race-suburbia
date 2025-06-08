@@ -120,9 +120,9 @@ func _process(delta: float) -> void:
 		var custom_up = Vector3(0, 1, 0.001).normalized()
 		target_transform = Transform3D().looking_at(char_pos, custom_up)
 		target_transform.origin = target_pos
-		if character.grounded:
+		if character.grounded and not character.extracting_object_active:
 			grabbed_object.global_transform = grabbed_object.global_transform.interpolate_with(target_transform, delta * grounded_interp_speed)
-		elif not character.grounded:
+		elif not character.grounded and not character.extracting_object_active:
 			grabbed_object.global_transform = grabbed_object.global_transform.interpolate_with(target_transform, delta * airborne_interp_speed)
 		if reset_rotation:
 			character.grabbed_rotation = character.grabbed_rotation.lerp(target_grabbed_rotation, delta * 2.0)

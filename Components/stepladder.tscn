@@ -14,7 +14,7 @@ size = Vector3(3.988, 5.713, 0.028)
 
 [node name="Stepladder" type="RigidBody3D" groups=["Stepladder"]]
 collision_layer = 0
-mass = 1000.0
+mass = 150.0
 script = ExtResource("1_ibwmm")
 
 [node name="Body" type="MeshInstance3D" parent="."]

@@ -168,5 +168,6 @@ debug_color = Color(0.843472, 0.664469, 7.70092e-07, 1)
 
 [node name="Manipulation_Cloud" type="MeshInstance3D" parent="."]
 transform = Transform3D(0.10524, 0.919412, 0.378954, -0.77564, 0.31437, -0.547314, -0.622339, -0.236333, 0.746217, 0.28, 4.5, -4.687)
+visible = false
 mesh = SubResource("SphereMesh_a23tb")
 surface_material_override/0 = SubResource("ShaderMaterial_uerqc")

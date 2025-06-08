@@ -582,7 +582,7 @@ shader_parameter/emission_strength = 1.0
 
 [node name="WashingMachine" type="RigidBody3D"]
 collision_priority = 100.0
-mass = 500.0
+mass = 75.0
 script = ExtResource("1_hnuj6")
 
 [node name="FrontWall" type="RigidBody3D" parent="."]
@@ -667,6 +667,7 @@ skeleton = NodePath("")
 shape = SubResource("ConvexPolygonShape3D_ce3dm")
 
 [node name="Drum" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, -0.147879, 0.041605)
 visible = false
 mass = 20.0
 
@@ -741,14 +742,6 @@ skeleton = NodePath("")
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -0.0156775, -0.0934135, 0.990823)
 mesh = SubResource("CylinderMesh_lhcno")
 skeleton = NodePath("../..")
-
-[node name="Label3D" type="Label3D" parent="Body"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0143264, 0.731504, 1.00551)
-pixel_size = 0.001
-text = "Washing Machine
-"
-font_size = 210
-outline_size = 10
 
 [node name="Label3D2" type="Label3D" parent="Body"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0204447, 0.23887, 1.06941)

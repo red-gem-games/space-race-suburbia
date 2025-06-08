@@ -676,6 +676,7 @@ skeleton = NodePath("")
 shape = SubResource("ConvexPolygonShape3D_ky0ec")
 
 [node name="Drum" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, -0.124724, 0.0355275)
 mass = 20.0
 
 [node name="Body" type="MeshInstance3D" parent="Drum"]
@@ -750,14 +751,6 @@ transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.0244
 mesh = SubResource("BoxMesh_8u7dv")
 skeleton = NodePath("../..")
 surface_material_override/0 = SubResource("StandardMaterial3D_fmixr")
-
-[node name="Label3D" type="Label3D" parent="Body"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0143264, 0.758357, 1.0089)
-pixel_size = 0.001
-text = "Drying Machine
-"
-font_size = 210
-outline_size = 10
 
 [node name="Label3D2" type="Label3D" parent="Body"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0143264, 0.383898, 1.0728)
