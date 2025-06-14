@@ -134,7 +134,7 @@ shader_parameter/c1 = 0.18
 shader_parameter/c2 = 0.5
 shader_parameter/c3 = 2.98
 shader_parameter/c4 = 3.25
-shader_parameter/fade_min_y = -109.1
+shader_parameter/fade_min_y = -90.0
 shader_parameter/fade_max_y = 6.32
 shader_parameter/emission_strength = 1.0
 
@@ -144,7 +144,7 @@ script = ExtResource("1_pjt0s")
 [node name="Camera3D" type="Camera3D" parent="."]
 
 [node name="PREM-7" parent="Camera3D" instance=ExtResource("1_glpr6")]
-transform = Transform3D(0.999048, 0.00175052, 0.0435842, 0, 0.999194, -0.0401318, -0.0436194, 0.0400936, 0.998243, 1.05, -0.376, -1.1)
+transform = Transform3D(0.993768, 0.00447345, 0.111379, 0, 0.999194, -0.0401318, -0.111469, 0.0398817, 0.992967, 0.951227, -0.376, -1.1)
 
 [node name="Grabbed_Container" type="Node3D" parent="Camera3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.15, 0)

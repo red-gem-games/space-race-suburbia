@@ -1,0 +1,73 @@
+[gd_scene load_steps=10 format=3 uid="uid://ccesmg52dnwh5"]
+
+[ext_resource type="Script" uid="uid://cm4pjgv3oiw5m" path="res://PREM-7/beam.gd" id="1_8l162"]
+[ext_resource type="Shader" uid="uid://bfisf5ks2k6pj" path="res://PREM-7/beam.gdshader" id="2_x6usk"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_6dr8p"]
+lightmap_size_hint = Vector2i(4, 6)
+flip_faces = true
+top_radius = 0.005
+bottom_radius = 0.005
+height = 0.001
+radial_segments = 150
+rings = 150
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_3nktn"]
+render_priority = 0
+shader = ExtResource("2_x6usk")
+shader_parameter/beam_color = Color(0.560784, 0.678431, 0.964706, 1)
+shader_parameter/fresnel_power = 2.0
+shader_parameter/emission_strength = 2.303
+
+[sub_resource type="Curve" id="Curve_l5ika"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.252595, 0.120801), -1.09758, -1.09758, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_6dr8p"]
+curve = SubResource("Curve_l5ika")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_3nktn"]
+spread = 20.0
+initial_velocity_min = 5.0
+initial_velocity_max = 10.0
+gravity = Vector3(0, 0, 0)
+scale_curve = SubResource("CurveTexture_6dr8p")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_61m6q"]
+transparency = 1
+emission_enabled = true
+emission = Color(1, 1, 1, 1)
+emission_energy_multiplier = 10.0
+billboard_mode = 3
+billboard_keep_scale = true
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="SphereMesh" id="SphereMesh_5hhbi"]
+material = SubResource("StandardMaterial3D_61m6q")
+radius = 0.2
+height = 0.4
+
+[node name="Beam" type="RayCast3D"]
+transform = Transform3D(0.996707, 0.0810895, 0.00037707, 0.00096425, -0.00720211, -0.999974, -0.0810846, 0.996681, -0.00725657, 0, 0, 0)
+target_position = Vector3(0, -10, 0)
+debug_shape_custom_color = Color(1, 0, 0, 1)
+debug_shape_thickness = 5
+script = ExtResource("1_8l162")
+
+[node name="BeamMesh" type="MeshInstance3D" parent="."]
+transform = Transform3D(16.4811, 0, -9.31323e-10, 1.19209e-07, 43.8643, 1.49012e-08, 9.31323e-10, -2.98023e-08, 16.097, 0, 0, 0)
+mesh = SubResource("CylinderMesh_6dr8p")
+skeleton = NodePath("")
+surface_material_override/0 = SubResource("ShaderMaterial_3nktn")
+
+[node name="EndParticles" type="GPUParticles3D" parent="."]
+transform = Transform3D(-4.47035e-08, -1, 0, 0.999999, -4.47035e-08, 0, 0, 0, 0.999998, 0, 0, 0)
+amount = 500
+lifetime = 0.25
+speed_scale = 15.0
+randomness = 1.0
+trail_lifetime = 10.0
+process_material = SubResource("ParticleProcessMaterial_3nktn")
+draw_pass_1 = SubResource("SphereMesh_5hhbi")

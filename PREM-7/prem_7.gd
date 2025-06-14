@@ -9,11 +9,15 @@ class_name PREM_7
 @onready var back_glow: MeshInstance3D = $Multitool/Back_Glow
 @onready var photon_glow: MeshInstance3D = $Multitool/Photon_Glow
 
-#@onready var beam: RayCast3D = $Beam
-@onready var beam: Node3D = $Multitool/Beam
-@onready var beam_mesh: MeshInstance3D = $Multitool/Beam/Beam_Mesh
+@onready var object_inventory: Node3D = $Multitool/Object_Inventory
+
+@onready var beam: RayCast3D = $Beam
+#@onready var beam: Node3D = $Multitool/Beam
+#@onready var beam_mesh: MeshInstance3D = $Multitool/Beam/Beam_Mesh
 
 @onready var hologram_shader: Shader = preload("res://Shaders/hologram.gdshader")
+
+@onready var object_info: Node3D = $Object_Info
 
 var grabbed_object_name: StringName
 
@@ -45,17 +49,18 @@ var position_tween: Tween
 
 
 func _ready() -> void:
-	beam.scale = Vector3(0.01, 0.01, 0.01)
+	object_info.visible = false
+	object_info.scale = Vector3(0.001, 0.001, 0.001)
 	add_child(control_hologram_timer)
 	control_hologram_timer.one_shot = true
 
 func _input(event: InputEvent) -> void:
 	pass
 
+
+
+
 func _process(delta: float) -> void:
-	
-	#beam_in()
-	
 
 	if controlled_object:
 		controlled_objects.insert(0, controlled_object.name)
@@ -73,11 +78,11 @@ func retract_beam():
 	beam_anim.play_backwards("cast_beam")
 
 func handle_object():
-	beam_mesh.visible = false
+	#beam_mesh.visible = false
 	handling_object = true
 
 func release_handle():
-	beam_mesh.visible = true
+	#beam_mesh.visible = true
 	handling_object = false
 
 

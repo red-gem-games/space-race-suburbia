@@ -12,8 +12,8 @@ var start_day: bool = false
 @onready var HUD: Control = $HUD
 @onready var char_obj_shape: CollisionShape3D
 @onready var beam: Node3D = PREM_7.beam
-@onready var beam_mesh: Node3D = PREM_7.beam_mesh
-@onready var beam_shader_mat := beam_mesh.get_active_material(0) as ShaderMaterial
+#@onready var beam_mesh: Node3D = PREM_7.beam_mesh
+#@onready var beam_shader_mat := beam_mesh.get_active_material(0) as ShaderMaterial
 @onready var manipulation_cloud: MeshInstance3D = $Manipulation_Cloud
 
 var manipulate_ORANGE: Color = Color(1, 0.33, 0)
@@ -324,6 +324,7 @@ func _physics_process(delta: float) -> void:
 func _process(delta: float) -> void:
 	
 	if extracting_object_active:
+		scale_object(PREM_7.object_info, 1.0, 1.0, 1.0, 0.0, delta)
 		grabbed_object.position.x = lerp(grabbed_object.position.x, -2.0, delta * 2.5)
 		grabbed_object.position.z = lerp(grabbed_object.position.z, -5.5, delta * 2.5)
 		grabbed_rotation.x = lerp(grabbed_rotation.x, 15.0, delta * 2.5)
@@ -368,7 +369,7 @@ func _process(delta: float) -> void:
 			if not PREM_7.handling_object:
 				PREM_7.handle_object()
 				if extracting_object_active:
-					HUD.set_highlight_color(manipulate_ORANGE, 0.7)
+					HUD.set_highlight_color(manipulate_ORANGE, 0.5)
 					grabbed_object.extract_active = true
 				elif fusing_object_active:
 					HUD.set_highlight_color(manipulate_BLUE, 0.7)
@@ -556,6 +557,7 @@ func _input(event: InputEvent) -> void:
 		if event.keycode == KEY_E and pressed:
 			_on_extract_key(down)
 		if event.keycode == KEY_R and pressed:
+			desired_pitch = 0
 			_on_reset_key()
 		
 		if event.keycode == KEY_Q:
@@ -739,6 +741,7 @@ func _on_extract_key(down: bool) -> void:
 		extracting_object_active =! extracting_object_active
 		
 	if extracting_object_active:
+		PREM_7.object_info.visible = true
 		grabbed_object.extract_active = true
 		grabbed_object.manipulation_mode('Active')
 		right_mouse_down = true
@@ -747,9 +750,10 @@ func _on_extract_key(down: bool) -> void:
 		manipulation_cloud.visible = true
 		grabbed_object.set_outline('EXTRACT', glow_color, 0.0)
 		grabbed_object.start_extraction()
-		grabbed_target_position.x -= 10
+		#grabbed_target_position.x -= 10
 	else:
 		grabbed_object.manipulation_mode('Inactive')
+		PREM_7.object_info.visible = false
 		grabbed_object.extract_active = false
 		handle_object('released')
 		right_mouse_down = false
@@ -759,7 +763,6 @@ func _on_extract_key(down: bool) -> void:
 
 func _on_reset_key() -> void:
 	print('RESETTING')
-	desired_pitch = 0
 	if grabbed_object:
 		reset_object_position()
 	else:
@@ -775,6 +778,7 @@ func grab_object():
 
 	if grabbed_object:  # An object is already grabbed; release it.
 		print('Release')
+		beam.object_is_grabbed = false
 		orbit_radius = target_orbit_radius
 		grabbed_pos_set = false
 		initial_grab = false
@@ -808,11 +812,14 @@ func grab_object():
 		mouse_speed = base_mouse_speed
 		object_is_grabbed = false
 		grabbed_object = null
+		
 		return
 	else: #Grab a new object
 		print('Grab')
 		extracting_object_active = false
 		fusing_object_active = false
+		beam.set_process(true)
+		beam.object_is_grabbed = true
 		if assembly_component_selection:
 			jetpack_active = false
 			vertical_velocity = 0.0
@@ -988,7 +995,7 @@ func control_object():
 		grabbed_object.is_controlled = true
 		controlled_object = grabbed_object
 		PREM_7.controlled_object = grabbed_object
-		grabbed_object.reparent(PREM_7.beam)
+		grabbed_object.reparent(PREM_7.object_inventory)
 		grabbed_object.collision_layer = 0
 		grabbed_object.collision_mask = 0
 		grabbed_object.scale_object(grabbed_object.object_body, 0.25, 0.25, 0.25, 0.0, 0.15)

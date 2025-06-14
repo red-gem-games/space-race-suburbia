@@ -115,7 +115,7 @@ radius = 5.0
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_0wqet"]
 render_priority = 0
 shader = ExtResource("13_0wqet")
-shader_parameter/progress = 0.602
+shader_parameter/progress = 0.725
 shader_parameter/noise_density = 500.0
 shader_parameter/beam_size = 0.5
 shader_parameter/base_color = Vector3(1, 1, 1)
@@ -251,6 +251,6 @@ shape = SubResource("CylinderShape3D_eidgh")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8.00903, 0)
 sleeping = true
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+[node name="TELEPORT_EXAMPLE" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.89102, 1.83552, 27.5496)
 mesh = SubResource("CapsuleMesh_f23eu")

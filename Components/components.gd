@@ -328,7 +328,7 @@ func set_outline(status: String, color: Color, opacity: float) -> void:
 		shader_material.set_shader_parameter("random_seed", randf())
 		glow_body.material_override = shader_material
 		glow_body.visible = true
-		create_particles()
+		#create_particles()
 
 
 	elif status == 'RELEASE':
@@ -337,8 +337,9 @@ func set_outline(status: String, color: Color, opacity: float) -> void:
 			glow_body.material_override = null
 			glow_body.visible = false
 		
-		grab_particles.queue_free()
-		grab_particles = null
+		if grab_particles:
+			grab_particles.queue_free()
+			grab_particles = null
 
 
 	elif status == 'UPDATE':

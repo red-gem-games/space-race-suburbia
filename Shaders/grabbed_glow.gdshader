@@ -1,5 +1,5 @@
 shader_type spatial;
-render_mode unshaded, blend_mix, cull_disabled;
+render_mode unshaded, blend_mix, cull_front;
 
 
 // your existing “scroll + noise” parameters

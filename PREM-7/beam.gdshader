@@ -1,21 +1,16 @@
 shader_type spatial;
 
-uniform float curve_strength = 1.0;
-uniform float beam_length = 5.0;
+uniform vec3 beam_color : source_color = vec3(1.0, 1.0, 0.5); // warm yellow
+uniform float fresnel_power = 2.0;
+uniform float emission_strength : hint_range(0.0, 10.0) = 1.0;
 
-void vertex() {
-    // Normalize z (0 to 1 along beam)
-    float t = VERTEX.z / beam_length;
+void fragment() {
+    vec3 normal_dir = normalize(NORMAL);
+    vec3 view_dir = normalize(-VIEW);
 
-    // Basic parabolic bend: like a beam that arcs downward
-    VERTEX.y -= pow(t, 2.0) * curve_strength;
+    float fresnel = pow(1.0 - dot(normal_dir, view_dir), fresnel_power);
 
-    // Optional: pinch or scale based on distance
-    // VERTEX.x *= mix(1.0, 0.5, t);
+    ALBEDO = beam_color;
+    EMISSION = beam_color * (emission_strength + fresnel * 0.5);
 }
 
-
-//void light() {
-//	// Called for every pixel for every light affecting the material.
-//	// Uncomment to replace the default light processing function with this one.
-//}
