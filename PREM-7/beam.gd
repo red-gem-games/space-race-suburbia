@@ -28,10 +28,10 @@ func _process(delta: float) -> void:
 		
 		cast_point = to_local(get_collision_point())
 		
-		end_particles.position.y = lerp(end_particles.position.y, cast_point.y, delta * 4.0)
+		end_particles.position.y = lerp(end_particles.position.y, cast_point.y, delta * 10.0)
 		
-		beam_mesh.mesh.height = lerp(beam_mesh.mesh.height, cast_point.y / 45.0, delta * 4.0)
-		beam_mesh.position.y = lerp(beam_mesh.position.y, cast_point.y / 2.0, delta * 4.0)
+		beam_mesh.mesh.height = lerp(beam_mesh.mesh.height, cast_point.y / 45.0, delta * 5.0)
+		beam_mesh.position.y = lerp(beam_mesh.position.y, cast_point.y / 2.0, delta * 5.0)
 		
 		await get_tree().create_timer(0.25).timeout
 		end_particles.emitting = true

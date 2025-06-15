@@ -129,7 +129,7 @@ func _ready() -> void:
 	contact_monitor = true
 	continuous_cd = true
 	max_contacts_reported = 1000
-	gravity_scale = 1.25
+	gravity_scale = 140.0
 	
 	if is_in_group("Stepladder"):
 		is_stepladder = true
@@ -324,7 +324,7 @@ func set_outline(status: String, color: Color, opacity: float) -> void:
 		shader_material.shader = shader
 		color.a = 0.25
 		shader_material.set_shader_parameter("glow_color", color)
-		shader_material.set_shader_parameter("fresnel_power", 0.01)
+		shader_material.set_shader_parameter("fresnel_power", 0.1)
 		shader_material.set_shader_parameter("random_seed", randf())
 		glow_body.material_override = shader_material
 		glow_body.visible = true

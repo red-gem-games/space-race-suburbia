@@ -1,4 +1,4 @@
-[gd_scene load_steps=50 format=4 uid="uid://cvtdsd7mu2wv"]
+[gd_scene load_steps=52 format=4 uid="uid://cvtdsd7mu2wv"]
 
 [ext_resource type="Script" uid="uid://clwwid0cs6u32" path="res://Components/components.gd" id="1_hnuj6"]
 [ext_resource type="Material" uid="uid://c7xbbfk34fthw" path="res://Shaders/metallic_standard_material.tres" id="2_hnuj6"]
@@ -10,15 +10,11 @@ size = Vector3(1.925, 0.04, 1.98)
 [sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_kbxlq"]
 points = PackedVector3Array(-0.978214, -0.035702, -1.00532, 0.970357, 0.0271306, 1.00532, 0.970357, -0.035702, 1.00532, 0.970357, 0.0271306, -1.00532, -0.978214, 0.0271306, 1.00532, -0.978214, -0.035702, 1.00532, 0.970357, -0.035702, -1.00532, -0.978214, 0.0271306, -1.00532)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_al7wt"]
-transparency = 1
-albedo_color = Color(0.372549, 0.372549, 0.372549, 1)
-metallic = 1.0
-metallic_specular = 1.0
-roughness = 0.0
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ypo5v"]
+albedo_color = Color(0, 1, 0, 1)
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_lhcno"]
-material = SubResource("StandardMaterial3D_al7wt")
+material = SubResource("StandardMaterial3D_ypo5v")
 top_radius = 0.6
 bottom_radius = 0.6
 height = 0.1
@@ -232,7 +228,7 @@ points = PackedVector3Array(-0.64, -0.755, 0, -0.627721, -0.755, -0.124918, -0.6
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_uhtd6"]
 custom_solver_bias = 1.0
-size = Vector3(2.03436, 2.35641, 1.98682)
+size = Vector3(2.034, 2.416, 2.097)
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_gxhrt"]
 _surfaces = [{
@@ -525,6 +521,11 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_c7wlp")
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lrf6t"]
+albedo_color = Color(0, 0, 0, 1)
+metallic = 1.0
+metallic_specular = 1.0
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_t3w28"]
 resource_name = "Material"
 cull_mode = 2
@@ -580,6 +581,8 @@ shader_parameter/fade_min_y = -3.0
 shader_parameter/fade_max_y = 3.0
 shader_parameter/emission_strength = 1.0
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_ypo5v"]
+
 [node name="WashingMachine" type="RigidBody3D"]
 collision_priority = 100.0
 mass = 75.0
@@ -588,6 +591,9 @@ script = ExtResource("1_hnuj6")
 [node name="FrontWall" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, -0.00484157, 0.898047)
 visible = false
+axis_lock_linear_x = true
+axis_lock_linear_y = true
+axis_lock_linear_z = true
 mass = 10.0
 
 [node name="Body" type="MeshInstance3D" parent="FrontWall"]
@@ -625,17 +631,17 @@ surface_material_override/0 = ExtResource("2_hnuj6")
 shape = SubResource("ConvexPolygonShape3D_kbxlq")
 
 [node name="Door" type="RigidBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.00834, 0.0484515)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0939652, 1.01994)
 visible = false
 mass = 10.0
 
 [node name="Body" type="MeshInstance3D" parent="Door"]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -0.0156775, -1.10393, 0.94451)
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
 mesh = SubResource("CylinderMesh_lhcno")
 skeleton = NodePath("../..")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Door"]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -0.0156775, -1.10393, 0.94451)
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
 shape = SubResource("ConvexPolygonShape3D_ypo5v")
 
 [node name="BackPanel" type="RigidBody3D" parent="."]
@@ -692,7 +698,7 @@ surface_material_override/0 = ExtResource("2_hnuj6")
 shape = SubResource("ConvexPolygonShape3D_kbxlq")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00570679, 0.193962, -0.00463867)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.006, 0.242813, 0.035)
 shape = SubResource("BoxShape3D_uhtd6")
 debug_color = Color(0.98438, 0.578333, 0.63001, 1)
 
@@ -739,9 +745,10 @@ mesh = SubResource("ArrayMesh_hfssr")
 skeleton = NodePath("")
 
 [node name="Door" type="MeshInstance3D" parent="Body"]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -0.0156775, -0.0934135, 0.990823)
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -0.0156775, -0.0934135, 0.992772)
 mesh = SubResource("CylinderMesh_lhcno")
 skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("StandardMaterial3D_lrf6t")
 
 [node name="Label3D2" type="Label3D" parent="Body"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0204447, 0.23887, 1.06941)
@@ -757,3 +764,6 @@ visible = false
 mesh = SubResource("ArrayMesh_ypo5v")
 skeleton = NodePath("")
 surface_material_override/0 = SubResource("ShaderMaterial_lrf6t")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_ypo5v")
