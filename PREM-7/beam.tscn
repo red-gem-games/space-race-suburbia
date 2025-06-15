@@ -58,12 +58,15 @@ script = ExtResource("1_8l162")
 
 [node name="BeamMesh" type="MeshInstance3D" parent="."]
 transform = Transform3D(16.4811, 0, -9.31323e-10, 1.19209e-07, 43.8643, 1.49012e-08, 9.31323e-10, -2.98023e-08, 16.097, 0, 0, 0)
+visible = false
 mesh = SubResource("CylinderMesh_6dr8p")
 skeleton = NodePath("")
 surface_material_override/0 = SubResource("ShaderMaterial_3nktn")
 
 [node name="EndParticles" type="GPUParticles3D" parent="."]
 transform = Transform3D(-4.47035e-08, -1, 0, 0.999999, -4.47035e-08, 0, 0, 0, 0.999998, 0, 0, 0)
+visible = false
+emitting = false
 amount = 500
 lifetime = 0.25
 speed_scale = 15.0

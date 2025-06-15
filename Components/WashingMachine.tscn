@@ -1,4 +1,4 @@
-[gd_scene load_steps=52 format=4 uid="uid://cvtdsd7mu2wv"]
+[gd_scene load_steps=51 format=4 uid="uid://cvtdsd7mu2wv"]
 
 [ext_resource type="Script" uid="uid://clwwid0cs6u32" path="res://Components/components.gd" id="1_hnuj6"]
 [ext_resource type="Material" uid="uid://c7xbbfk34fthw" path="res://Shaders/metallic_standard_material.tres" id="2_hnuj6"]
@@ -228,7 +228,8 @@ points = PackedVector3Array(-0.64, -0.755, 0, -0.627721, -0.755, -0.124918, -0.6
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_uhtd6"]
 custom_solver_bias = 1.0
-size = Vector3(2.034, 2.416, 2.097)
+margin = 1.509
+size = Vector3(2.03396, 2.39674, 2.07438)
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_gxhrt"]
 _surfaces = [{
@@ -581,11 +582,9 @@ shader_parameter/fade_min_y = -3.0
 shader_parameter/fade_max_y = 3.0
 shader_parameter/emission_strength = 1.0
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_ypo5v"]
-
 [node name="WashingMachine" type="RigidBody3D"]
-collision_priority = 100.0
 mass = 75.0
+freeze_mode = 1
 script = ExtResource("1_hnuj6")
 
 [node name="FrontWall" type="RigidBody3D" parent="."]
@@ -631,7 +630,7 @@ surface_material_override/0 = ExtResource("2_hnuj6")
 shape = SubResource("ConvexPolygonShape3D_kbxlq")
 
 [node name="Door" type="RigidBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0939652, 1.01994)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00708556, -0.0939652, 0.992645)
 visible = false
 mass = 10.0
 
@@ -698,7 +697,7 @@ surface_material_override/0 = ExtResource("2_hnuj6")
 shape = SubResource("ConvexPolygonShape3D_kbxlq")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.006, 0.242813, 0.035)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00289897, 0.200752, 0.0194177)
 shape = SubResource("BoxShape3D_uhtd6")
 debug_color = Color(0.98438, 0.578333, 0.63001, 1)
 
@@ -764,6 +763,3 @@ visible = false
 mesh = SubResource("ArrayMesh_ypo5v")
 skeleton = NodePath("")
 surface_material_override/0 = SubResource("ShaderMaterial_lrf6t")
-
-[node name="CollisionShape3D2" type="CollisionShape3D" parent="."]
-shape = SubResource("BoxShape3D_ypo5v")

@@ -54,7 +54,7 @@ func _ready() -> void:
 		child.character_body = character
 
 
-func _process(delta: float) -> void:
+func _physics_process(delta: float) -> void:
 	
 	if grabbed_object:
 		var current_pos = grabbed_object.global_transform.origin
@@ -117,6 +117,13 @@ func _process(delta: float) -> void:
 		char_pos = character.camera.global_transform.origin
 		char_forward = -character.camera.global_transform.basis.z.normalized()
 		target_pos = char_pos + char_forward * character.distance_from_character
+		
+		
+		print('OH MY FUCKING GOD I DID IT')
+		grabbed_object.position.x += grabbed_object.add_to_x
+		
+		
+		
 		var custom_up = Vector3(0, 1, 0.001).normalized()
 		target_transform = Transform3D().looking_at(char_pos, custom_up)
 		target_transform.origin = target_pos

@@ -129,15 +129,17 @@ func _ready() -> void:
 	contact_monitor = true
 	continuous_cd = true
 	max_contacts_reported = 1000
-	gravity_scale = 140.0
+	gravity_scale = 1.0
 	
 	if is_in_group("Stepladder"):
 		is_stepladder = true
 		collision_layer = 1
 		collision_mask = 1
 	else:
-		collision_layer = 2
-		collision_mask = 3
+		collision_layer = 1
+		collision_mask = 1
+	
+	freeze = true
 
 	var base_mesh : MeshInstance3D = null
 	for child in get_children():
@@ -178,6 +180,11 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	
+	if not is_grabbed and is_touching_ground:
+		if linear_velocity == Vector3.ZERO and angular_velocity == Vector3.ZERO:
+			freeze = true
+			print('-------- ', name, ' is frozen! --------')
+	
 	if is_suspended:
 		linear_velocity = lerp(linear_velocity, Vector3(0.0, 0.0, 0.0), delta * 1.5)
 		angular_velocity = lerp(angular_velocity, Vector3(0.0, 0.0, 0.0), delta * 0.5)
@@ -189,19 +196,19 @@ func _physics_process(delta: float) -> void:
 	var up_vector = global_transform.basis.y
 	var alignment = up_vector.dot(Vector3.UP)
 	
-	if not is_suspended:
-		if abs(alignment) < 0.01 and is_touching_ground:
-			if not damp_set:
-				dampen_assembly_object(delta * 0.025)
-		elif alignment > 0.99 and is_touching_ground:
-			if not damp_set:
-				dampen_assembly_object(delta * 0.025)
-		elif alignment < -0.99 and is_touching_ground:
-			if not damp_set:
-				dampen_assembly_object(delta * 0.025)
-		else:
-			linear_damp = 0
-			angular_damp = 0
+	#if not is_suspended:
+		#if abs(alignment) < 0.01 and is_touching_ground:
+			#if not damp_set:
+				#dampen_assembly_object(delta * 0.025)
+		#elif alignment > 0.99 and is_touching_ground:
+			#if not damp_set:
+				#dampen_assembly_object(delta * 0.025)
+		#elif alignment < -0.99 and is_touching_ground:
+			#if not damp_set:
+				#dampen_assembly_object(delta * 0.025)
+		#else:
+			#linear_damp = 0
+			#angular_damp = 0
 
 	if is_grabbed:
 		object_body.top_level = false
@@ -216,9 +223,9 @@ func _physics_process(delta: float) -> void:
 		damp_set = false
 		if is_in_group("Ground"):
 			remove_from_group("Ground")
+			is_touching_ground = false
 
 func _process(delta: float) -> void:
-	
 	
 	if touching_wall_count >= 2:
 		sleeping = true
@@ -266,6 +273,9 @@ func dampen_assembly_object(time):
 	linear_damp = 40
 	damp_set = true
 
+
+var add_to_x: float
+
 func _on_body_shape_entered(body_rid: RID, body: Node, body_shape_index: int, local_shape_index: int) -> void:
 	if body.is_in_group("Ground"):
 		if is_suspended:
@@ -275,22 +285,28 @@ func _on_body_shape_entered(body_rid: RID, body: Node, body_shape_index: int, lo
 	if body.name == 'Floor':
 		add_to_group('Ground')
 		print('ah haaaa')
+	
+	if is_grabbed:
+		if not body.name == 'Floor' and not body.name == 'Garage_Floor':
+			print(body.name, ' is being touched')
+			add_to_x += 0.01
+			#position.x = lerp(position.x, position.x + 0.1, 1.0)
 
-	if body.name == "Left_Wall" and not touching_left_wall:
-		touching_wall_count += 1
-		touching_left_wall = true
-
-	elif body.name == "Right_Wall" and not touching_right_wall:
-		touching_wall_count += 1
-		touching_right_wall = true
-
-	elif body.name == "Back_Wall" and not touching_back_wall:
-		touching_wall_count += 1
-		touching_back_wall = true
-
-	elif body.name == "Front_Wall" and not touching_front_wall:
-		touching_wall_count += 1
-		touching_front_wall = true
+	#if body.name == "Left_Wall" and not touching_left_wall:
+		#touching_wall_count += 1
+		#touching_left_wall = true
+#
+	#elif body.name == "Right_Wall" and not touching_right_wall:
+		#touching_wall_count += 1
+		#touching_right_wall = true
+#
+	#elif body.name == "Back_Wall" and not touching_back_wall:
+		#touching_wall_count += 1
+		#touching_back_wall = true
+#
+	#elif body.name == "Front_Wall" and not touching_front_wall:
+		#touching_wall_count += 1
+		#touching_front_wall = true
 
 	if body is character:
 		body.is_on_floor()
@@ -299,21 +315,22 @@ func _on_body_shape_entered(body_rid: RID, body: Node, body_shape_index: int, lo
 			print(character_force)
 
 func _on_body_shape_exited(body_rid: RID, body: Node, body_shape_index: int, local_shape_index: int) -> void:
-	if body.name == "Left_Wall" and touching_left_wall:
-		touching_wall_count -= 1
-		touching_left_wall = false
-
-	elif body.name == "Right_Wall" and touching_right_wall:
-		touching_wall_count -= 1
-		touching_right_wall = false
-
-	elif body.name == "Back_Wall" and touching_back_wall:
-		touching_wall_count -= 1
-		touching_back_wall = false
-
-	elif body.name == "Front_Wall" and touching_front_wall:
-		touching_wall_count -= 1
-		touching_front_wall = false
+	pass
+	#if body.name == "Left_Wall" and touching_left_wall:
+		#touching_wall_count -= 1
+		#touching_left_wall = false
+#
+	#elif body.name == "Right_Wall" and touching_right_wall:
+		#touching_wall_count -= 1
+		#touching_right_wall = false
+#
+	#elif body.name == "Back_Wall" and touching_back_wall:
+		#touching_wall_count -= 1
+		#touching_back_wall = false
+#
+	#elif body.name == "Front_Wall" and touching_front_wall:
+		#touching_wall_count -= 1
+		#touching_front_wall = false
 
 func set_outline(status: String, color: Color, opacity: float) -> void:
 	if not is_instance_valid(glow_body):

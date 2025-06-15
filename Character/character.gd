@@ -806,8 +806,9 @@ func grab_object():
 			##grabbed_object.gravity_scale = 0.0
 			##grabbed_object.visible = false
 			#grabbed_object.queue_free()
-		else:
-			grabbed_object.gravity_scale = 1.75
+		#grabbed_object.gravity_scale = 0.0
+		#grabbed_object.collision_layer = 2
+		#grabbed_object.collision_mask = 3
 		suspending_object_active = false
 		mouse_speed = base_mouse_speed
 		object_is_grabbed = false
@@ -881,7 +882,8 @@ func grab_object():
 				grabbed_rotation.y = shortest_angle_diff_value(sanitized_initial_y, sanitized_global_y)
 				grabbed_rotation.y = shortest_angle_diff_value(grabbed_initial_rotation.y, grabbed_global_rotation.y)
 				grabbed_rotation.z = shortest_angle_diff_value(grabbed_initial_rotation.z, grabbed_global_rotation.z)
-				grabbed_object.collision_shape.disabled = true
+				#grabbed_object.collision_shape.disabled = true
+				grabbed_object.freeze = false
 				grabbed_object.sleeping = false
 				PREM_7.holo_anim.play("RESET")
 				PREM_7.grabbed_object_name = grabbed_object.name
@@ -1215,21 +1217,14 @@ func shortest_angle_diff_value(initial_angle: float, target_angle: float) -> flo
 
 func create_char_obj_shape(grabbed_object: RigidBody3D) -> void:
 	
+	return
+	
 	if not is_instance_valid(grabbed_object):
 		return
 
-	# Find first visible mesh
+	# Find Mesh instance
 	var mesh_node: MeshInstance3D = MeshInstance3D.new()
-	var box_mesh = BoxMesh.new()
-	box_mesh.size = Vector3(1.5, 1.5, 1.5)
-	mesh_node.mesh = box_mesh
-	#for child in grabbed_object.get_children():
-		#if child is MeshInstance3D and child.name != "Body":
-			#mesh_node = child
-			#break
-	
-	#mesh_node = grabbed_object.glow_body
-	
+	mesh_node = grabbed_object.glow_body
 
 	if mesh_node == null or mesh_node.mesh == null:
 		print("No valid mesh found on grabbed object.")
@@ -1238,24 +1233,20 @@ func create_char_obj_shape(grabbed_object: RigidBody3D) -> void:
 	# Create a more accurate collision shape from mesh
 	var shape := mesh_node.mesh.create_trimesh_shape()
 	if not is_instance_valid(char_obj_shape):
+		await get_tree().create_timer(0.1).timeout
 		char_obj_shape = CollisionShape3D.new()
 		add_child(char_obj_shape)
 
-	char_obj_shape.shape = BoxShape3D.new()
-	char_obj_shape.shape.size = Vector3(3.0, 3.0, 3.0)
+	char_obj_shape.shape = shape
 	char_obj_shape.visible = true
 	char_obj_shape.debug_color = Color.RED
-	#char_obj_shape.scale = Vector3(0.1, 0.1, 0.1)
-	
-
 
 	var object_pos = grabbed_object.global_transform.origin
 	char_obj_shape.global_transform.origin = object_pos
 	char_obj_shape.visible = true
 	char_obj_shape.debug_fill = true
 	char_obj_shape.debug_color = Color.RED
-	#scale_object(char_obj_shape, 1.0, 1.0, 1.0, 0.0, 1.0)
-	
+
 
 func clear_char_obj_shape():
 	if is_instance_valid(char_obj_shape):

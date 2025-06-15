@@ -40,6 +40,9 @@ toggle_window={
 [physics]
 
 3d/physics_engine="Jolt Physics"
+jolt_physics_3d/simulation/velocity_steps=50
+jolt_physics_3d/simulation/position_steps=5
+jolt_physics_3d/simulation/penetration_slop=0.0
 3d/default_gravity=19.6
 3d/default_linear_damp=0.25
 3d/default_angular_damp=0.25
