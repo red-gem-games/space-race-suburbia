@@ -318,7 +318,15 @@ func _physics_process(delta: float) -> void:
 	# Grabbed object physics update
 	update_grabbed_object_physics(delta)
 
+	move_and_slide()
+	
+	handle_pitch_and_yaw(delta)
 
+	# Update jetpack thrust, hover, ceiling logic
+	handle_jetpack_logic(delta)
+
+	# Handle grounded/airborne vertical velocity
+	update_vertical_velocity()
 
 
 func _process(delta: float) -> void:
@@ -337,19 +345,15 @@ func _process(delta: float) -> void:
 		previous_delta = delta
 		screen_resolution_set = true
 	
-	# Update jetpack thrust, hover, ceiling logic
-	handle_jetpack_logic(delta)
 
-	# Handle grounded/airborne vertical velocity
-	update_vertical_velocity()
 	
 	if scroll_cooldown > 0.0:
 		scroll_cooldown -= delta
 
-	handle_pitch_and_yaw(delta)
+	
 
-	#_push_away_rigid_bodies()
-	move_and_slide()
+	# Character movement
+	#move_and_slide()
 
 	# PREM-7 mouse decay effect
 	if control_timer.time_left == 0.0:
@@ -443,7 +447,7 @@ func _input(event: InputEvent) -> void:
 				if event.is_pressed():
 					left_mouse_down = true
 					PREM_7.trig_anim.play("trigger_pull")
-					grab_object()
+					#grab_object()
 				else:
 					PREM_7.trig_anim.play("trigger_release")
 					PREM_7.trig_anim.play("RESET")

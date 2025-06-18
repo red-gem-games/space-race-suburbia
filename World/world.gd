@@ -40,11 +40,8 @@ var movement_speed: float = 1.0
 var grid_parent = Node3D.new()
 
 
-
-
-
-
-
+var target
+var grabbable_object: RigidBody3D
 
 
 func _ready() -> void:
@@ -52,10 +49,51 @@ func _ready() -> void:
 	var somn = assembly_object_container.get_children()
 	for child in somn:
 		child.character_body = character
+	
 
+
+const GRAB_STIFFNESS := 8000.0
+const GRAB_DAMPING := 1200.0
+const ROTATE_SPEED := 8.0  # Increase this for snappier rotation
 
 func _physics_process(delta: float) -> void:
+	target = character.PREM_7.beam.collider
+	if target is RigidBody3D:
+		if target.is_rocketship:
+			return
+		grabbable_object = target
+	else:
+		grabbable_object = null
 	
+	if grabbed_object:
+		# --- Force Movement Toward Target ---
+		var cam_pos = character.camera.global_transform.origin
+		var cam_dir = -character.camera.global_transform.basis.z
+		var target_pos = cam_pos + cam_dir * 7.0
+
+		var obj_pos = grabbed_object.global_transform.origin
+		var direction = target_pos - obj_pos
+		var vel = grabbed_object.linear_velocity
+
+		var force = (direction * GRAB_STIFFNESS) - (vel * GRAB_DAMPING)
+		grabbed_object.apply_central_force(force)
+
+
+		## --- Smooth LookAt Rotation ---
+		var object_pos = grabbed_object.global_transform.origin
+		var look_dir = -(character.global_position - object_pos).normalized()
+
+		var desired_basis = Basis().looking_at(look_dir, Vector3.UP)
+		var current_basis = grabbed_object.global_transform.basis
+		var smoothed_basis = lerp(current_basis, desired_basis, delta * 10.0)
+
+		var transform = grabbed_object.global_transform
+		transform.basis = smoothed_basis
+		grabbed_object.global_transform = transform
+		
+
+
+		
 	if grabbed_object:
 		var current_pos = grabbed_object.global_transform.origin
 		var delta_pos = current_pos - _last_grabbed_pos
@@ -63,6 +101,8 @@ func _physics_process(delta: float) -> void:
 		_last_grabbed_pos = current_pos
 		
 		_release_velocity = velocity_vec
+		
+		#grabbed_object.linear_velocity = _release_velocity
 
 
 	for child in $Extracted_Object.get_children():
@@ -72,109 +112,146 @@ func _physics_process(delta: float) -> void:
 
 
 	# When an object is grabbed:
-	if character.object_is_grabbed and not object_is_grabbed:
-		print('okay')
-		last_held_object = null
-		grabbed_object = character.grabbed_object
-		_last_grabbed_pos = grabbed_object.global_transform.origin
-		reset_rotation = true
-		object_is_grabbed = true
-		character.pitch_set = false
-		character.initial_grab = true
-		proxy_is_moving_to_character = true
-		grabbed_object.extracted_object_container = $Extracted_Object
-		if is_instance_valid(grid_parent):
-			grid_parent.queue_free()
-			grid_parent = null
-		if not character.suspending_object_active:
-			print('simple enough')
-			grabbed_object.reparent(character.grabbed_container)
+	#if character.object_is_grabbed and not object_is_grabbed:
+		#print('okay')
+		#last_held_object = null
+		#grabbed_object = character.grabbed_object
+		#_last_grabbed_pos = grabbed_object.global_transform.origin
+		#reset_rotation = true
+		#object_is_grabbed = true
+		#character.pitch_set = false
+		#character.initial_grab = true
+		#proxy_is_moving_to_character = true
+		#grabbed_object.extracted_object_container = $Extracted_Object
+		#if is_instance_valid(grid_parent):
+			#grid_parent.queue_free()
+			#grid_parent = null
+		#if not character.suspending_object_active:
+			#print('simple enough')
+			#grabbed_object.reparent(character.grabbed_container)
+#
+	#
+	## When the object is released:
+	#elif not character.object_is_grabbed and object_is_grabbed:
+		#if not is_instance_valid(grabbed_object):
+			#return
+		#if not grabbed_object.is_controlled:
+			#grabbed_object.reparent(assembly_object_container)
+		#if not grabbed_object.is_suspended:
+			#grabbed_object.global_position = object_global_position
+			#grabbed_object.global_position.y += 0.05
+		#character.distance_from_character = base_distance_in_front
+		#character.pitch_set = false
+		#grabbed_object.linear_velocity = _release_velocity
+		#if grabbed_object.is_controlled:
+			#grabbed_object.queue_free()
+		#grabbed_object = null
+		#object_is_grabbed = false
+		#print('still happening')
+		#
 
-	
-	# When the object is released:
-	elif not character.object_is_grabbed and object_is_grabbed:
-		if not is_instance_valid(grabbed_object):
-			return
-		if not grabbed_object.is_controlled:
-			grabbed_object.reparent(assembly_object_container)
-		if not grabbed_object.is_suspended:
-			grabbed_object.global_position = object_global_position
-			grabbed_object.global_position.y += 0.05
-		character.distance_from_character = base_distance_in_front
-		character.pitch_set = false
-		grabbed_object.linear_velocity = _release_velocity
-		if grabbed_object.is_controlled:
-			grabbed_object.queue_free()
-		grabbed_object = null
-		object_is_grabbed = false
-		print('still happening')
-		
+	#if character.object_is_grabbed and object_is_grabbed and grabbed_object:
+		#object_global_position = grabbed_object.global_position
+		#if grabbed_object.is_suspended:
+			#return
+		#char_pos = character.camera.global_transform.origin
+		#char_forward = -character.camera.global_transform.basis.z.normalized()
+		#target_pos = char_pos + char_forward * character.distance_from_character
+		#
+		#
+		#print('OH MY FUCKING GOD I DID IT')
+		#grabbed_object.position.x += grabbed_object.add_to_x
+		#
+		#
+		#print("After working all the way through the new possible grabbed_object living in the world, it can't happen -- when the object is grabbed and you're calculating the global_position, you still will need to mimic the collision a la what you just did with the original method...pointless to change and now you can focus on making it look great!")
+		#
+		#
+		#
+		#var custom_up = Vector3(0, 1, 0.001).normalized()
+		#target_transform = Transform3D().looking_at(char_pos, custom_up)
+		#target_transform.origin = target_pos
+		#if character.grounded and not character.extracting_object_active:
+			#grabbed_object.global_transform = grabbed_object.global_transform.interpolate_with(target_transform, delta * grounded_interp_speed)
+		#elif not character.grounded and not character.extracting_object_active:
+			#grabbed_object.global_transform = grabbed_object.global_transform.interpolate_with(target_transform, delta * airborne_interp_speed)
+		#if reset_rotation:
+			#character.grabbed_rotation = character.grabbed_rotation.lerp(target_grabbed_rotation, delta * 2.0)
+			#grabbed_object.rotation_degrees = character.grabbed_rotation
+			#if character.grabbed_rotation.distance_to(target_grabbed_rotation) < 0.05:
+				#reset_rotation = false
+#
+		#if character.shifting_object_active:
+			#reset_rotation = false
+#
+		#if is_instance_valid(grid_parent) and is_instance_valid(grabbed_object):
+			#var raw_forward = -character.camera.global_transform.basis.z.normalized()
+			#var flattened_forward = Vector3(raw_forward.x, 0, raw_forward.z).normalized()
+			#var vertical_influence = clamp(raw_forward.y, 0, 0)  # limits up/down range
+			#var adjusted_forward = (flattened_forward + Vector3(0, vertical_influence, 0)).normalized()
+#
+			## Position grid a fixed distance in front of the object (relative to camera)
+			#grid_parent.global_position = char_pos + adjusted_forward * base_distance_in_front
+			#var camera_pos = character.camera.global_transform.origin
+			#var grid_pos = grid_parent.global_transform.origin
+			#camera_pos.y = grid_pos.y
+			#grid_parent.look_at(camera_pos, Vector3.UP)
+#
+		#if is_instance_valid(character.char_obj_shape):
+			#if proxy_is_moving_to_character:
+				#var current_transform: Transform3D = character.char_obj_shape.global_transform
+				#var target_transform := grabbed_object.global_transform
+#
+				#target_transform.origin.y += 1.0
+#
+				#var interp_transform := current_transform.interpolate_with(target_transform, delta * 20.0)
+				#character.char_obj_shape.global_transform = interp_transform
+#
+				#if interp_transform.origin.distance_to(target_transform.origin) < 0.1:
+					#proxy_is_moving_to_character = false
+			#else:
+				#var proxy_transform := grabbed_object.global_transform
+				#proxy_transform.origin = target_pos
+				#character.char_obj_shape.global_transform = grabbed_object.global_transform
+#
+		#if grabbed_object.create_the_grid and not grid_parent:
+			#spawn_grid()
+			#grabbed_object.create_the_grid = false
 
-	if character.object_is_grabbed and object_is_grabbed and grabbed_object:
-		object_global_position = grabbed_object.global_position
-		if grabbed_object.is_suspended:
-			return
-		char_pos = character.camera.global_transform.origin
-		char_forward = -character.camera.global_transform.basis.z.normalized()
-		target_pos = char_pos + char_forward * character.distance_from_character
-		
-		
-		print('OH MY FUCKING GOD I DID IT')
-		grabbed_object.position.x += grabbed_object.add_to_x
-		
-		
-		
-		var custom_up = Vector3(0, 1, 0.001).normalized()
-		target_transform = Transform3D().looking_at(char_pos, custom_up)
-		target_transform.origin = target_pos
-		if character.grounded and not character.extracting_object_active:
-			grabbed_object.global_transform = grabbed_object.global_transform.interpolate_with(target_transform, delta * grounded_interp_speed)
-		elif not character.grounded and not character.extracting_object_active:
-			grabbed_object.global_transform = grabbed_object.global_transform.interpolate_with(target_transform, delta * airborne_interp_speed)
-		if reset_rotation:
-			character.grabbed_rotation = character.grabbed_rotation.lerp(target_grabbed_rotation, delta * 2.0)
-			grabbed_object.rotation_degrees = character.grabbed_rotation
-			if character.grabbed_rotation.distance_to(target_grabbed_rotation) < 0.05:
-				reset_rotation = false
+func grab_object():
+	grabbed_object = grabbable_object
+	character.mouse_speed = character.base_mouse_speed / grabbed_object.mass * 15.0
+	grabbed_object.is_grabbed = true
+	grabbed_object.freeze = false
+	grabbed_object.physics_mat.friction = 0.0
+	grabbed_object.axis_lock_angular_x = true
+	grabbed_object.axis_lock_angular_y = true
+	grabbed_object.axis_lock_angular_z = true
 
-		if character.shifting_object_active:
-			reset_rotation = false
 
-		if is_instance_valid(grid_parent) and is_instance_valid(grabbed_object):
-			var raw_forward = -character.camera.global_transform.basis.z.normalized()
-			var flattened_forward = Vector3(raw_forward.x, 0, raw_forward.z).normalized()
-			var vertical_influence = clamp(raw_forward.y, 0, 0)  # limits up/down range
-			var adjusted_forward = (flattened_forward + Vector3(0, vertical_influence, 0)).normalized()
-
-			# Position grid a fixed distance in front of the object (relative to camera)
-			grid_parent.global_position = char_pos + adjusted_forward * base_distance_in_front
-			var camera_pos = character.camera.global_transform.origin
-			var grid_pos = grid_parent.global_transform.origin
-			camera_pos.y = grid_pos.y
-			grid_parent.look_at(camera_pos, Vector3.UP)
-
-		if is_instance_valid(character.char_obj_shape):
-			if proxy_is_moving_to_character:
-				var current_transform: Transform3D = character.char_obj_shape.global_transform
-				var target_transform := grabbed_object.global_transform
-
-				target_transform.origin.y += 1.0
-
-				var interp_transform := current_transform.interpolate_with(target_transform, delta * 20.0)
-				character.char_obj_shape.global_transform = interp_transform
-
-				if interp_transform.origin.distance_to(target_transform.origin) < 0.1:
-					proxy_is_moving_to_character = false
-			else:
-				var proxy_transform := grabbed_object.global_transform
-				proxy_transform.origin = target_pos
-				character.char_obj_shape.global_transform = grabbed_object.global_transform
-
-		if grabbed_object.create_the_grid and not grid_parent:
-			spawn_grid()
-			grabbed_object.create_the_grid = false
+func release_object():
+	grabbed_object.is_grabbed = false
+	grabbed_object.physics_mat.friction = 1.0
+	grabbed_object.axis_lock_angular_x = false
+	grabbed_object.axis_lock_angular_y = false
+	grabbed_object.axis_lock_angular_z = false
+	character.mouse_speed = character.base_mouse_speed
+	grabbed_object = null
 
 func _input(event: InputEvent) -> void:
+	
+	# Process Mouse Button events.
+	if event is InputEventMouseButton:
+
+		if event.button_index == MOUSE_BUTTON_LEFT:
+			if event.is_pressed():
+				if grabbed_object:
+					release_object()
+					return
+				if grabbable_object:
+					print('yay')
+					grab_object()
+					return
+
 
 	if event is InputEventKey:
 		if event.keycode == KEY_R:

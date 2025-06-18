@@ -593,7 +593,6 @@ shader_parameter/emission_strength = 1.0
 
 [node name="DryingMachine" type="RigidBody3D"]
 mass = 75.0
-freeze_mode = 1
 script = ExtResource("1_yvv8m")
 
 [node name="Door" type="RigidBody3D" parent="."]

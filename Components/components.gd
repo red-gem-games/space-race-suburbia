@@ -109,6 +109,10 @@ var fuse_active: bool = false
 
 var extractables: Array[RigidBody3D] = []
 
+var physics_mat = PhysicsMaterial.new()
+
+
+
 
 
 func _ready() -> void:
@@ -129,7 +133,8 @@ func _ready() -> void:
 	contact_monitor = true
 	continuous_cd = true
 	max_contacts_reported = 1000
-	gravity_scale = 1.0
+	gravity_scale = 1.5
+	#freeze = true
 	
 	if is_in_group("Stepladder"):
 		is_stepladder = true
@@ -139,7 +144,9 @@ func _ready() -> void:
 		collision_layer = 1
 		collision_mask = 1
 	
-	freeze = true
+	physics_mat.friction = 1.0
+	physics_mat.bounce = 0.0
+	self.physics_material_override = physics_mat
 
 	var base_mesh : MeshInstance3D = null
 	for child in get_children():
@@ -180,10 +187,10 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	
-	if not is_grabbed and is_touching_ground:
-		if linear_velocity == Vector3.ZERO and angular_velocity == Vector3.ZERO:
-			freeze = true
-			print('-------- ', name, ' is frozen! --------')
+	#if not is_grabbed and is_touching_ground:
+		#if linear_velocity == Vector3.ZERO and angular_velocity == Vector3.ZERO:
+			#freeze = true
+			#print('-------- ', name, ' is frozen! --------')
 	
 	if is_suspended:
 		linear_velocity = lerp(linear_velocity, Vector3(0.0, 0.0, 0.0), delta * 1.5)
@@ -230,11 +237,6 @@ func _process(delta: float) -> void:
 	if touching_wall_count >= 2:
 		sleeping = true
 
-	### Frame Smoothing ###
-	if not is_grabbed and object_body:
-		object_body.top_level = true
-		object_body.global_transform = object_body.global_transform.interpolate_with(self.global_transform, delta * 25.0)
-	
 	if is_extracting:
 		print('is currently extracting')
 		shake_timer -= delta
@@ -289,6 +291,7 @@ func _on_body_shape_entered(body_rid: RID, body: Node, body_shape_index: int, lo
 	if is_grabbed:
 		if not body.name == 'Floor' and not body.name == 'Garage_Floor':
 			print(body.name, ' is being touched')
+			#apply_central_force(Vector3(0.0, 0.0, -1.0))
 			add_to_x += 0.01
 			#position.x = lerp(position.x, position.x + 0.1, 1.0)
 
