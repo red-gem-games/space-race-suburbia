@@ -104,6 +104,12 @@ glow_enabled = true
 glow_normalized = true
 glow_blend_mode = 0
 glow_hdr_threshold = 2.0
+fog_mode = 1
+fog_sun_scatter = 0.95
+fog_density = 0.646
+fog_sky_affect = 0.41
+volumetric_fog_density = 0.01
+volumetric_fog_emission_energy = 0.0
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_aqk2v"]
 

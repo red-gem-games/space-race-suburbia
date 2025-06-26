@@ -134,7 +134,7 @@ func _ready() -> void:
 	continuous_cd = true
 	max_contacts_reported = 1000
 	gravity_scale = 1.5
-	#freeze = true
+	freeze = true
 	
 	if is_in_group("Stepladder"):
 		is_stepladder = true
@@ -187,10 +187,10 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	
-	#if not is_grabbed and is_touching_ground:
-		#if linear_velocity == Vector3.ZERO and angular_velocity == Vector3.ZERO:
-			#freeze = true
-			#print('-------- ', name, ' is frozen! --------')
+	if not is_grabbed and is_touching_ground:
+		if linear_velocity == Vector3.ZERO and angular_velocity == Vector3.ZERO:
+			freeze = true
+			print('-------- ', name, ' is frozen! --------')
 	
 	if is_suspended:
 		linear_velocity = lerp(linear_velocity, Vector3(0.0, 0.0, 0.0), delta * 1.5)

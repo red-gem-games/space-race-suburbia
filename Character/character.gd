@@ -280,18 +280,18 @@ func _physics_process(delta: float) -> void:
 				horizontal = lerp(horizontal, -1, delta)
 				prem7_rotation_offset.y -= 0.0025
 
-	if grabbed_object:
-		if not grabbed_object.is_suspended:
-			if vertical > 0:
-				distance_from_character = lerp(distance_from_character, 5.0, delta * 2.5)  # Closer
-			elif vertical < 0:
-				distance_from_character = lerp(distance_from_character, 10.0, delta * 2.5)  # Further
-			else:
-				distance_from_character = lerp(distance_from_character, 7.0, delta * 2.0)  # Neutral
-			# Apply horizontal sway when strafing
-			if horizontal != 0:
-				var camera_right = camera.global_transform.basis.x.normalized()
-				object_sway_offset.x -= horizontal * 1.75 * screen_res_sway_multiplier
+	#if grabbed_object:
+		#if not grabbed_object.is_suspended:
+			#if vertical > 0:
+				#distance_from_character = lerp(distance_from_character, 5.0, delta * 2.5)  # Closer
+			#elif vertical < 0:
+				#distance_from_character = lerp(distance_from_character, 10.0, delta * 2.5)  # Further
+			#else:
+				#distance_from_character = lerp(distance_from_character, 7.0, delta * 2.0)  # Neutral
+			## Apply horizontal sway when strafing
+			#if horizontal != 0:
+				#var camera_right = camera.global_transform.basis.x.normalized()
+				#object_sway_offset.x -= horizontal * 1.75 * screen_res_sway_multiplier
 
 	var desired_direction = Vector3.ZERO
 	if vertical != 0 or horizontal != 0:
@@ -316,7 +316,7 @@ func _physics_process(delta: float) -> void:
 
 
 	# Grabbed object physics update
-	update_grabbed_object_physics(delta)
+	#update_grabbed_object_physics(delta)
 
 	move_and_slide()
 	
@@ -330,6 +330,7 @@ func _physics_process(delta: float) -> void:
 
 
 func _process(delta: float) -> void:
+	
 	
 	if extracting_object_active:
 		scale_object(PREM_7.object_info, 1.0, 1.0, 1.0, 0.0, delta)
@@ -350,10 +351,6 @@ func _process(delta: float) -> void:
 	if scroll_cooldown > 0.0:
 		scroll_cooldown -= delta
 
-	
-
-	# Character movement
-	#move_and_slide()
 
 	# PREM-7 mouse decay effect
 	if control_timer.time_left == 0.0:
@@ -366,7 +363,6 @@ func _process(delta: float) -> void:
 	# Update HUD Reticle target and color
 	update_reticle_targeting()
 
-	# Update grabbed object sway
 	if grabbed_object:
 		if shifting_object_active or extracting_object_active or fusing_object_active:
 			camera.fov = lerp(camera.fov, 55.0, delta * 10)
@@ -387,33 +383,33 @@ func _process(delta: float) -> void:
 				grabbed_object.extract_active = false
 				grabbed_object.fuse_active = false
 				PREM_7.release_handle()
-		grabbed_object.rotation_degrees = grabbed_rotation
-		var z_offset = abs((grabbed_object.position.z - 3.0) / 10.0)
-		if grabbed_object.is_suspended:
-			if char_obj_shape:
-				print("Clearing Char Obj Shape: ", char_obj_shape)
-				clear_char_obj_shape()
-			grabbed_object.gravity_scale = 0.0
-			grabbed_object.position = grabbed_object.position.lerp(grabbed_target_position, delta * 0.5)
-			return
+		#grabbed_object.rotation_degrees = grabbed_rotation
+		#var z_offset = abs((grabbed_object.position.z - 3.0) / 10.0)
+		#if grabbed_object.is_suspended:
+			#if char_obj_shape:
+				#print("Clearing Char Obj Shape: ", char_obj_shape)
+				#clear_char_obj_shape()
+			#grabbed_object.gravity_scale = 0.0
+			#grabbed_object.position = grabbed_object.position.lerp(grabbed_target_position, delta * 0.5)
+			#return
 
-		if not shifting_object_active:
-			if z_offset >= 0.95 and z_offset <= 1.05:
-				grabbed_pos_set = true
-			if not grabbed_pos_set:
-				prem7_rotation_offset.y = lerp(prem7_rotation_offset.y, -grabbed_object.position.x / 4.5 / (z_offset * 1.25), delta * 25.0)
-				prem7_rotation_offset.x = lerp(prem7_rotation_offset.x, grabbed_object.position.y / 6.0 / z_offset, delta * 25.0)
-			elif grabbed_pos_set:
-				prem7_rotation_offset.y = lerp(prem7_rotation_offset.y, -grabbed_object.position.x / 4.5 / (z_offset * 1.25), delta * 50.0)
-				prem7_rotation_offset.x = lerp(prem7_rotation_offset.x, grabbed_object.position.y / 6.0 / z_offset, delta * 50.0)
-			object_sway_offset.x -= lerp(object_sway_offset.x, current_mouse_speed_x * object_sway_strength_x, 1.0)
-			object_sway_offset.y -= lerp(object_sway_offset.y, current_mouse_speed_y * object_sway_strength_y, 1.0)
-			object_sway_offset.x = clamp(object_sway_offset.x, -1.0, 1.0) 
-			object_sway_offset.y = clamp(object_sway_offset.y, -2.0, 2.0)
-			update_grabbed_object_sway(delta)
+		#if not shifting_object_active:
+			#if z_offset >= 0.95 and z_offset <= 1.05:
+				#grabbed_pos_set = true
+			#if not grabbed_pos_set:
+				#prem7_rotation_offset.y = lerp(prem7_rotation_offset.y, -grabbed_object.position.x / 4.5 / (z_offset * 1.25), delta * 25.0)
+				#prem7_rotation_offset.x = lerp(prem7_rotation_offset.x, grabbed_object.position.y / 6.0 / z_offset, delta * 25.0)
+			#elif grabbed_pos_set:
+				#prem7_rotation_offset.y = lerp(prem7_rotation_offset.y, -grabbed_object.position.x / 4.5 / (z_offset * 1.25), delta * 50.0)
+				#prem7_rotation_offset.x = lerp(prem7_rotation_offset.x, grabbed_object.position.y / 6.0 / z_offset, delta * 50.0)
+			#object_sway_offset.x -= lerp(object_sway_offset.x, current_mouse_speed_x * object_sway_strength_x, 1.0)
+			#object_sway_offset.y -= lerp(object_sway_offset.y, current_mouse_speed_y * object_sway_strength_y, 1.0)
+			#object_sway_offset.x = clamp(object_sway_offset.x, -1.0, 1.0) 
+			#object_sway_offset.y = clamp(object_sway_offset.y, -2.0, 2.0)
+			#update_grabbed_object_sway(delta)
 
-		if grabbed_object.is_being_extracted:
-			handle_object('released')
+		#if grabbed_object.is_being_extracted:
+			#handle_object('released')
 	#if extracting_object_active:
 		#desired_pitch = clamp(desired_pitch, 0.0, 0.35)
 		#if assembly_component_selection:
@@ -518,31 +514,29 @@ func _input(event: InputEvent) -> void:
 
 			current_mouse_speed_x = event.relative.x
 			current_mouse_speed_y = event.relative.y
+			
+			desired_yaw -= dx
+			desired_pitch -= dy
+			desired_pitch = clamp(desired_pitch, pitch_min, pitch_max)
 
-			if not shifting_object_active:
-				desired_yaw -= dx
-				desired_pitch -= dy
-				desired_pitch = clamp(desired_pitch, pitch_min, pitch_max)
-				if grabbed_object:
-					return
-				else:
-					prem7_rotation_offset.y += input_strength_x * prem7_rotation_speed * resistance_x
-					prem7_rotation_offset.x += input_strength_y * prem7_rotation_speed * resistance_y
-					prem7_rotation_offset.x = clamp(prem7_rotation_offset.x, -max_offset, max_offset)
-					prem7_rotation_offset.y = clamp(prem7_rotation_offset.y, -max_offset, max_offset)
-			else:
-				if grabbed_object:
-					shift_it = true
-					prem7_rotation_offset.y -= input_strength_x * prem7_rotation_speed * resistance_x / 15.0
-					if z_rotate_mode:
-						print('in z rotate mode')
-						grabbed_rotation.z += event.relative.x * rotation_sensitivity / 3
-						var local_forward: Vector3 = grabbed_object.global_transform.basis.z
-						grabbed_object.rotate(local_forward, deg_to_rad(event.relative.x * mouse_speed * 0))
-					else:
-						prem7_rotation_offset.x -= input_strength_y * prem7_rotation_speed * resistance_y / 15.0
-						grabbed_rotation.y += event.relative.x * rotation_sensitivity / 3
-						grabbed_rotation.x += event.relative.y * rotation_sensitivity / 3
+			prem7_rotation_offset.y += input_strength_x * prem7_rotation_speed * resistance_x
+			prem7_rotation_offset.x += input_strength_y * prem7_rotation_speed * resistance_y
+			prem7_rotation_offset.x = clamp(prem7_rotation_offset.x, -max_offset, max_offset)
+			prem7_rotation_offset.y = clamp(prem7_rotation_offset.y, -max_offset, max_offset)
+
+			#else:
+				#if grabbed_object:
+					#shift_it = true
+					#prem7_rotation_offset.y -= input_strength_x * prem7_rotation_speed * resistance_x / 15.0
+					#if z_rotate_mode:
+						#print('in z rotate mode')
+						#grabbed_rotation.z += event.relative.x * rotation_sensitivity / 3
+						#var local_forward: Vector3 = grabbed_object.global_transform.basis.z
+						#grabbed_object.rotate(local_forward, deg_to_rad(event.relative.x * mouse_speed * 0))
+					#else:
+						#prem7_rotation_offset.x -= input_strength_y * prem7_rotation_speed * resistance_y / 15.0
+						#grabbed_rotation.y += event.relative.x * rotation_sensitivity / 3
+						#grabbed_rotation.x += event.relative.y * rotation_sensitivity / 3
 						#prem7_rotation_offset.x = clamp(prem7_rotation_offset.x, -max_offset, max_offset)
 						#prem7_rotation_offset.y = clamp(prem7_rotation_offset.y, -max_offset, max_offset)
 						#PREM_7.rotation = prem7_original_rotation + prem7_rotation_offset
@@ -776,131 +770,128 @@ func _on_reset_key() -> void:
 
 func grab_object():
 	
-	left_mouse_down = false
-	PREM_7.trig_anim.play("RESET")
-	PREM_7.trig_anim.play("trigger_pull")
+	#left_mouse_down = false
+	#PREM_7.trig_anim.play("RESET")
+	#PREM_7.trig_anim.play("trigger_pull")
 
-	if grabbed_object:  # An object is already grabbed; release it.
-		print('Release')
-		beam.object_is_grabbed = false
-		orbit_radius = target_orbit_radius
-		grabbed_pos_set = false
-		initial_grab = false
-		clear_char_obj_shape()
-		if not grabbed_object.is_controlled:
-			PREM_7.retract_beam()
-		grabbed_object.collision_shape.disabled = false
-		grabbed_object.lock_rotation = false
-		grabbed_object.angular_velocity = lerp(grabbed_object.angular_velocity, Vector3.ZERO, 1.0)
-		grabbed_object.linear_velocity = lerp(grabbed_object.linear_velocity, Vector3.ZERO, 1.0)
-		grabbed_object.set_outline('RELEASE', Color.WHITE, 0.0)
-		HUD.reticle.visible = true
-		object_sway_strength_x = object_sway_base_x
-		object_sway_strength_y = object_sway_base_y
-		distance_factor = 0.0
-		grabbed_distance = 0.0
-		grabbed_object.is_grabbed = false
-		grabbed_object.recently_grabbed = true
-		grabbed_object.is_released = true
-		beam_lock = false
-		if grabbed_object.is_suspended:
-			grabbed_rotation = grabbed_object.global_rotation_degrees
-			grabbed_object.gravity_scale = 0.0
-		#elif grabbed_object.is_controlled:
-			##grabbed_object.gravity_scale = 0.0
-			##grabbed_object.visible = false
-			#grabbed_object.queue_free()
+	print('Grab')
+	extracting_object_active = false
+	fusing_object_active = false
+	beam.set_process(true)
+	beam.object_is_grabbed = true
+	HUD.reticle.visible = false
+	mouse_speed = base_mouse_speed / grabbed_object.mass * 15.0
+	grabbed_object.set_outline('GRAB', glow_color, 0.0)
+	#grabbed_initial_mouse = get_viewport().get_mouse_position()
+	#grabbed_distance = (grabbed_object.global_transform.origin - camera.global_transform.origin).length()
+	object_is_grabbed = true
+	#grabbed_object.gravity_scale = 1.75
+	#grabbed_object.is_touching_ground = false
+	#grabbed_target_position = grabbed_object.position
+	if grabbed_object.is_suspended:
+		#beam_lock = true
+		print('When grabbing a suspended object, this needs to be a more gradual movement in terms of both moving towards the object and the direction in which you are looking')
+		#grabbed_rotation = grabbed_object.global_rotation_degrees
 		#grabbed_object.gravity_scale = 0.0
-		#grabbed_object.collision_layer = 2
-		#grabbed_object.collision_mask = 3
-		suspending_object_active = false
-		mouse_speed = base_mouse_speed
-		object_is_grabbed = false
-		grabbed_object = null
-		
+		#suspending_object_active = true
+		#var dir = (grabbed_object.global_transform.origin - camera.global_transform.origin)
+		#orbit_angle = atan2(dir.x, dir.z) + PI
 		return
-	else: #Grab a new object
-		print('Grab')
-		extracting_object_active = false
-		fusing_object_active = false
-		beam.set_process(true)
-		beam.object_is_grabbed = true
-		if assembly_component_selection:
-			jetpack_active = false
-			vertical_velocity = 0.0
-			hover_lock = false
-			assembly_component_selection = false
-		var space_state = get_world_3d().direct_space_state
-		var from = camera.global_transform.origin
-		var to = from + (-camera.global_transform.basis.z) * 100.0
-		var query = PhysicsRayQueryParameters3D.new()
-		query.from = from
-		query.to = to
-		query.exclude = [self]
-		var result = space_state.intersect_ray(query)
-		if result:
-			var target_body = result.collider
-			if target_body is RigidBody3D and not target_body.is_rocketship:
-				grabbed_object = target_body
-				grabbed_object.angular_velocity = Vector3.ZERO
-				grabbed_object.is_grabbed = true
-				PREM_7.cast_beam()
-				var object_children = grabbed_object.get_children()
-				for child in object_children:
-					if child is MeshInstance3D:
-						grabbed_mesh = child
-					elif child is CollisionShape3D:
-						grabbed_collision = child
-				HUD.reticle.visible = false
-				match current_mode:
-					MODE_1:
-						glow_color = MODE_1_COLOR
-					MODE_2:
-						glow_color = MODE_2_COLOR
-					MODE_3:
-						glow_color = MODE_3_COLOR
-					MODE_4:
-						glow_color = MODE_4_COLOR
-				grabbed_object.set_outline('GRAB', glow_color, 0.0)
-				grabbed_initial_mouse = get_viewport().get_mouse_position()
-				grabbed_distance = (grabbed_object.global_transform.origin - camera.global_transform.origin).length()
-				object_is_grabbed = true
-				grabbed_object.gravity_scale = 1.75
-				grabbed_object.is_touching_ground = false
-				grabbed_target_position = grabbed_object.position
-				if grabbed_object.is_suspended:
-					beam_lock = true
-					print('When grabbing a suspended object, this needs to be a more gradual movement in terms of both moving towards the object and the direction in which you are looking')
-					grabbed_rotation = grabbed_object.global_rotation_degrees
-					grabbed_object.gravity_scale = 0.0
-					suspending_object_active = true
-					var dir = (grabbed_object.global_transform.origin - camera.global_transform.origin)
-					orbit_angle = atan2(dir.x, dir.z) + PI
-					return
-				suspending_object_active = false
-				grabbed_initial_rotation = rotation_degrees
-				grabbed_global_rotation = grabbed_object.rotation_degrees
-				grabbed_rotation.x = shortest_angle_diff_value(grabbed_initial_rotation.x, grabbed_global_rotation.x)
-				var sanitized_initial_y = wrapf(grabbed_initial_rotation.y, -180.0, 180.0)
-				var sanitized_global_y = wrapf(grabbed_global_rotation.y, -180.0, 180.0)
-				grabbed_rotation.y = shortest_angle_diff_value(sanitized_initial_y, sanitized_global_y)
-				grabbed_rotation.y = shortest_angle_diff_value(grabbed_initial_rotation.y, grabbed_global_rotation.y)
-				grabbed_rotation.z = shortest_angle_diff_value(grabbed_initial_rotation.z, grabbed_global_rotation.z)
-				#grabbed_object.collision_shape.disabled = true
-				grabbed_object.freeze = false
-				grabbed_object.sleeping = false
-				PREM_7.holo_anim.play("RESET")
-				PREM_7.grabbed_object_name = grabbed_object.name
-				PREM_7.cast_hologram('Grabbed')
-				create_char_obj_shape(grabbed_object)
-				grab_timer.start(0.25)
-				mouse_speed = base_mouse_speed / grabbed_object.mass * 15.0
+	#suspending_object_active = false
+	grabbed_initial_rotation = rotation_degrees
+	#grabbed_global_rotation = grabbed_object.rotation_degrees
+	#grabbed_rotation.x = shortest_angle_diff_value(grabbed_initial_rotation.x, grabbed_global_rotation.x)
+	#var sanitized_initial_y = wrapf(grabbed_initial_rotation.y, -180.0, 180.0)
+	#var sanitized_global_y = wrapf(grabbed_global_rotation.y, -180.0, 180.0)
+	#grabbed_rotation.y = shortest_angle_diff_value(sanitized_initial_y, sanitized_global_y)
+	#grabbed_rotation.y = shortest_angle_diff_value(grabbed_initial_rotation.y, grabbed_global_rotation.y)
+	#grabbed_rotation.z = shortest_angle_diff_value(grabbed_initial_rotation.z, grabbed_global_rotation.z)
+	#grabbed_object.collision_shape.disabled = true
+	#grabbed_object.freeze = false
+	#grabbed_object.sleeping = false
+	PREM_7.holo_anim.play("RESET")
+	PREM_7.grabbed_object_name = grabbed_object.name
+	PREM_7.cast_hologram('Grabbed')
+	#create_char_obj_shape(grabbed_object)
+	#grab_timer.start(0.25)
+	#if assembly_component_selection:
+		#jetpack_active = false
+		#vertical_velocity = 0.0
+		#hover_lock = false
+		#assembly_component_selection = false
+	#var space_state = get_world_3d().direct_space_state
+	#var from = camera.global_transform.origin
+	#var to = from + (-camera.global_transform.basis.z) * 100.0
+	#var query = PhysicsRayQueryParameters3D.new()
+	#query.from = from
+	#query.to = to
+	#query.exclude = [self]
+	#var result = space_state.intersect_ray(query)
+	#if result:
+		#var target_body = result.collider
+		#if target_body is RigidBody3D and not target_body.is_rocketship:
+			#grabbed_object = target_body
+			#grabbed_object.angular_velocity = Vector3.ZERO
+			#grabbed_object.is_grabbed = true
+			#PREM_7.cast_beam()
+			#var object_children = grabbed_object.get_children()
+			#for child in object_children:
+				#if child is MeshInstance3D:
+					#grabbed_mesh = child
+				#elif child is CollisionShape3D:
+					#grabbed_collision = child
+			#
+			#match current_mode:
+				#MODE_1:
+					#glow_color = MODE_1_COLOR
+				#MODE_2:
+					#glow_color = MODE_2_COLOR
+				#MODE_3:
+					#glow_color = MODE_3_COLOR
+				#MODE_4:
+					#glow_color = MODE_4_COLOR
+	
+	
 
-			else:
-				print("Object hit, but no MeshInstance3D child found!")
-		else:
-			print("Object is not RigidBody3D")
-			return
+
+func release_object():
+	print('Release')
+	beam.object_is_grabbed = false
+	orbit_radius = target_orbit_radius
+	grabbed_pos_set = false
+	initial_grab = false
+	clear_char_obj_shape()
+	if not grabbed_object.is_controlled:
+		PREM_7.retract_beam()
+	#grabbed_object.collision_shape.disabled = false
+	#grabbed_object.lock_rotation = false
+	#grabbed_object.angular_velocity = lerp(grabbed_object.angular_velocity, Vector3.ZERO, 1.0)
+	#grabbed_object.linear_velocity = lerp(grabbed_object.linear_velocity, Vector3.ZERO, 1.0)
+	grabbed_object.set_outline('RELEASE', Color.WHITE, 0.0)
+	HUD.reticle.visible = true
+	#object_sway_strength_x = object_sway_base_x
+	#object_sway_strength_y = object_sway_base_y
+	#distance_factor = 0.0
+	#grabbed_distance = 0.0
+	grabbed_object.is_grabbed = false
+	grabbed_object.recently_grabbed = true
+	grabbed_object.is_released = true
+	#beam_lock = false
+	if grabbed_object.is_suspended:
+		#grabbed_rotation = grabbed_object.global_rotation_degrees
+		grabbed_object.gravity_scale = 0.0
+	#elif grabbed_object.is_controlled:
+		##grabbed_object.gravity_scale = 0.0
+		##grabbed_object.visible = false
+		#grabbed_object.queue_free()
+	#grabbed_object.gravity_scale = 0.0
+	#grabbed_object.collision_layer = 2
+	#grabbed_object.collision_mask = 3
+	suspending_object_active = false
+	mouse_speed = base_mouse_speed
+	object_is_grabbed = false
+	grabbed_object = null
+
 
 func handle_object(status):
 	if status == 'pressed':
@@ -1026,74 +1017,69 @@ func handle_pitch_and_yaw(time):
 		t = smoothstep(min_y, max_y, y)
 
 		# Interpolate between restricted and full downward pitch
-		var clamped_pitch_min = deg_to_rad(-10)
+		var clamped_pitch_min = deg_to_rad(-25)
 		pitch_min = lerp(clamped_pitch_min, base_pitch_min, t)
 	else:
 		pitch_min = base_pitch_min
 
-	if beam_lock:
-		var cam_pos = camera.global_transform.origin
-		var target_pos = grabbed_object.global_transform.origin
-		var dir = (target_pos - cam_pos).normalized()
+	#if beam_lock:
+		#var cam_pos = camera.global_transform.origin
+		#var target_pos = grabbed_object.global_transform.origin
+		#var dir = (target_pos - cam_pos).normalized()
+#
+		#var target_yaw = atan2(-dir.x, -dir.z)
+		#var look_vector = (grabbed_object.global_transform.origin - camera.global_transform.origin).normalized()
+		#var target_pitch = asin(look_vector.y)
+		#target_pitch = clamp(target_pitch, deg_to_rad(-89), deg_to_rad(89))
+#
+		#rotation.y = target_yaw
+		#camera.rotation.x = target_pitch
+#
+		#pitch = target_pitch
+		#desired_pitch = target_pitch
+		#desired_yaw = target_yaw
+		#yaw = desired_yaw
+		#
+		#velocity.x = 0.0
+		#velocity.z = 0.0  # Kill all physics-based movement
+		#move_and_slide()  # Just to satisfy the engine
+		#input_direction_x = lerp(input_direction_x, 0.0, time * 5.0)
+		#input_direction_z = lerp(input_direction_z, 0.0, time * 5.0)
+#
+		#if move_input["left"] and not shifting_object_active:
+			#input_direction_x -= 1.0
+		#if move_input["right"] and not shifting_object_active:
+			#input_direction_x += 1.0
+#
+		## Radial (toward/away from object)
+		#if move_input["up"] and not shifting_object_active:
+			#input_direction_z -= 1.0  # Move closer
+		#if move_input["down"] and not shifting_object_active:
+			#input_direction_z += 1.0  # Move away
+		#
+		#
+		#orbit_radius = clamp(orbit_radius + input_direction_z * time / 2, 5.0, 15.0)
+		#orbit_angle += input_direction_x * orbit_speed * time / orbit_radius
+		#orbit_angle = fmod(orbit_angle, TAU)
+		#
+		#print('Orbit Angle: ', orbit_angle)
+#
+		#var obj_pos = grabbed_object.global_transform.origin
+		#var orbit_offset = Vector3(
+			#orbit_radius * sin(orbit_angle),
+			#0.0,
+			#orbit_radius * cos(orbit_angle)
+		#)
+#
+		#global_position.x = lerp(global_position.x, obj_pos.x + orbit_offset.x, time * 5.0)
+		#global_position.z = lerp(global_position.z, obj_pos.z + orbit_offset.z, time * 5.0)
 
-		var target_yaw = atan2(-dir.x, -dir.z)
-		var look_vector = (grabbed_object.global_transform.origin - camera.global_transform.origin).normalized()
-		var target_pitch = asin(look_vector.y)
-		target_pitch = clamp(target_pitch, deg_to_rad(-89), deg_to_rad(89))
-
-		if initial_grab:
-			snap_to_suspended_object(target_yaw, target_pitch, time)
-
-		else:
-			rotation.y = target_yaw
-			camera.rotation.x = target_pitch
-
-
-		pitch = target_pitch
-		desired_pitch = target_pitch
-		desired_yaw = target_yaw
-		yaw = desired_yaw
-		
-		velocity.x = 0.0
-		velocity.z = 0.0  # Kill all physics-based movement
-		move_and_slide()  # Just to satisfy the engine
-		input_direction_x = lerp(input_direction_x, 0.0, time * 5.0)
-		input_direction_z = lerp(input_direction_z, 0.0, time * 5.0)
-
-		if move_input["left"] and not shifting_object_active:
-			input_direction_x -= 1.0
-		if move_input["right"] and not shifting_object_active:
-			input_direction_x += 1.0
-
-		# Radial (toward/away from object)
-		if move_input["up"] and not shifting_object_active:
-			input_direction_z -= 1.0  # Move closer
-		if move_input["down"] and not shifting_object_active:
-			input_direction_z += 1.0  # Move away
-		
-		
-		orbit_radius = clamp(orbit_radius + input_direction_z * time / 2, 5.0, 15.0)
-		orbit_angle += input_direction_x * orbit_speed * time / orbit_radius
-		orbit_angle = fmod(orbit_angle, TAU)
-		
-		print('Orbit Angle: ', orbit_angle)
-
-		var obj_pos = grabbed_object.global_transform.origin
-		var orbit_offset = Vector3(
-			orbit_radius * sin(orbit_angle),
-			0.0,
-			orbit_radius * cos(orbit_angle)
-		)
-
-		global_position.x = lerp(global_position.x, obj_pos.x + orbit_offset.x, time * 5.0)
-		global_position.z = lerp(global_position.z, obj_pos.z + orbit_offset.z, time * 5.0)
-
-	if not beam_lock:
-		desired_pitch = clamp(desired_pitch, pitch_min, pitch_max)
-		yaw = lerp(yaw, desired_yaw, smoothing)
-		pitch = lerp(pitch, desired_pitch, smoothing)
-		rotation.y = yaw
-		camera.rotation.x = pitch
+	#if not beam_lock:
+	desired_pitch = clamp(desired_pitch, pitch_min, pitch_max)
+	yaw = lerp(yaw, desired_yaw, smoothing)
+	pitch = lerp(pitch, desired_pitch, smoothing)
+	rotation.y = yaw
+	camera.rotation.x = pitch
 
 func handle_jetpack(status, timing):
 	# Jetpack Ceiling Clamp
@@ -1347,62 +1333,62 @@ func update_grabbed_object_physics(delta: float) -> void:
 	last_position = current_position
 	grabbed_object.object_speed = speed_vector
 
-func update_grabbed_object_sway(delta: float) -> void:
-	# Apply grabbed rotation directly
-	grabbed_object.rotation_degrees = grabbed_rotation
-	grabbed_object.object_rotation = grabbed_object.global_rotation_degrees
+#func update_grabbed_object_sway(delta: float) -> void:
+	## Apply grabbed rotation directly
+	##grabbed_object.rotation_degrees = grabbed_rotation
+	##grabbed_object.object_rotation = grabbed_object.global_rotation_degrees
+#
+	## Track camera pitch movement
+	#var pitch_now = camera.rotation.x
+	#var pitch_delta = pitch_now - previous_camera_pitch
+	#previous_camera_pitch = pitch_now
+#
+	## Prevent nonsense at vertical clamp angles
+	#var max_pitch_up = deg_to_rad(89.0)
+	#var max_pitch_down = deg_to_rad(-89.0)
+	#var clamped_pitch = clamp(pitch_now, max_pitch_down, max_pitch_up)
+	#var at_pitch_limit = abs(clamped_pitch - pitch_now) > 0.01
+#
+	## Adjust vertical sway strength based on pitch proximity
+	#var pitch_range = pitch_max - pitch_min
+	#var pitch_center = pitch_min + pitch_range * 0.5
+	#var pitch_distance = abs(pitch_now - pitch_center)
+	#var max_pitch_distance = pitch_range / 2.0
+	#var pitch_factor = 1.0 - clamp(pitch_distance / max_pitch_distance, 0.0, 1.0)
+#
+#
+	#object_sway_strength_y = object_sway_base_y * pitch_factor
+	#
+#
+	## Apply sway offsets
+	#var sway_x = camera.global_transform.basis.x.normalized() * object_sway_offset.x * 0.275 * screen_res_sway_multiplier
+	#var sway_z = Vector3.ZERO
+#
+	#if abs(pitch_delta) > 0.01 and not at_pitch_limit:
+		#sway_z = camera.global_transform.basis.y.normalized() * -object_sway_offset.y * 0.5 * screen_res_sway_multiplier
+#
+	#var sway_offset = sway_x + sway_z
+	#grabbed_object.global_position += sway_offset
 
-	# Track camera pitch movement
-	var pitch_now = camera.rotation.x
-	var pitch_delta = pitch_now - previous_camera_pitch
-	previous_camera_pitch = pitch_now
 
-	# Prevent nonsense at vertical clamp angles
-	var max_pitch_up = deg_to_rad(89.0)
-	var max_pitch_down = deg_to_rad(-89.0)
-	var clamped_pitch = clamp(pitch_now, max_pitch_down, max_pitch_up)
-	var at_pitch_limit = abs(clamped_pitch - pitch_now) > 0.01
-
-	# Adjust vertical sway strength based on pitch proximity
-	var pitch_range = pitch_max - pitch_min
-	var pitch_center = pitch_min + pitch_range * 0.5
-	var pitch_distance = abs(pitch_now - pitch_center)
-	var max_pitch_distance = pitch_range / 2.0
-	var pitch_factor = 1.0 - clamp(pitch_distance / max_pitch_distance, 0.0, 1.0)
-
-
-	object_sway_strength_y = object_sway_base_y * pitch_factor
-	
-
-	# Apply sway offsets
-	var sway_x = camera.global_transform.basis.x.normalized() * object_sway_offset.x * 0.275 * screen_res_sway_multiplier
-	var sway_z = Vector3.ZERO
-
-	if abs(pitch_delta) > 0.01 and not at_pitch_limit:
-		sway_z = camera.global_transform.basis.y.normalized() * -object_sway_offset.y * 0.5 * screen_res_sway_multiplier
-
-	var sway_offset = sway_x + sway_z
-	grabbed_object.global_position += sway_offset
-
-
-func _push_away_rigid_bodies():
-	for i in get_slide_collision_count():
-		var c := get_slide_collision(i)
-		var object = c.get_collider()
-		if object is RigidBody3D:
-			# Calculate a force direction
-			var push_dir = -c.get_normal()
-			var velocity_diff_in_push_dir = self.velocity.dot(push_dir) - object.linear_velocity.dot(push_dir)
-			
-			velocity_diff_in_push_dir = max(0.0, velocity_diff_in_push_dir)
-			
-			const CHAR_MASS_KG = 25.0
-			var mass_ratio = min(1.0, CHAR_MASS_KG / object.mass)
-			push_dir.y = 0
-			
-			var push_force = mass_ratio
-			
-			object.apply_impulse(push_dir * velocity_diff_in_push_dir * push_force, c.get_position() - object.global_position)
+#func _push_away_rigid_bodies():
+	#for i in get_slide_collision_count():
+		#var c := get_slide_collision(i)
+		#var object = c.get_collider()
+		#if object is RigidBody3D:
+			## Calculate a force direction
+			#var push_dir = -c.get_normal()
+			#var velocity_diff_in_push_dir = self.velocity.dot(push_dir) - object.linear_velocity.dot(push_dir)
+			#
+			#velocity_diff_in_push_dir = max(0.0, velocity_diff_in_push_dir)
+			#
+			#const CHAR_MASS_KG = 25.0
+			#var mass_ratio = min(1.0, CHAR_MASS_KG / object.mass)
+			#push_dir.y = 0
+			#
+			#var push_force = mass_ratio
+			#
+			#object.apply_impulse(push_dir * velocity_diff_in_push_dir * push_force, c.get_position() - object.global_position)
 
 
 func scale_object(object, x_scale: float, y_scale: float, z_scale: float, wait_time: float, duration: float):
@@ -1416,13 +1402,13 @@ func scale_object(object, x_scale: float, y_scale: float, z_scale: float, wait_t
 	scale_tween.set_ease(Tween.EASE_IN_OUT)
 
 
-func snap_to_suspended_object(y_target, x_target, time):
-	rotation.y = lerp(rotation.y, y_target, time * 15.0)
-	camera.rotation.x = lerp(camera.rotation.x, x_target, time * 15.0)
-	if abs(rotation.y - y_target) < 0.001 and abs(camera.rotation.x - x_target) < 0.001:
-		initial_grab = false
-	await get_tree().create_timer(0.25).timeout
-	initial_grab = false
+#func snap_to_suspended_object(y_target, x_target, time):
+	#rotation.y = lerp(rotation.y, y_target, time * 15.0)
+	#camera.rotation.x = lerp(camera.rotation.x, x_target, time * 15.0)
+	#if abs(rotation.y - y_target) < 0.001 and abs(camera.rotation.x - x_target) < 0.001:
+		#initial_grab = false
+	#await get_tree().create_timer(0.25).timeout
+	#initial_grab = false
 
 func reset_object_position():
 	var current_rot = grabbed_object.rotation_degrees

@@ -1,43 +1,167 @@
-[gd_scene load_steps=10 format=3 uid="uid://ccesmg52dnwh5"]
+[gd_scene load_steps=26 format=3 uid="uid://ccesmg52dnwh5"]
 
 [ext_resource type="Script" uid="uid://cm4pjgv3oiw5m" path="res://PREM-7/beam.gd" id="1_8l162"]
-[ext_resource type="Shader" uid="uid://bfisf5ks2k6pj" path="res://PREM-7/beam.gdshader" id="2_x6usk"]
+[ext_resource type="Shader" uid="uid://j4pl2pyf36nu" path="res://PREM-7/heat_wave.gdshader" id="3_x6usk"]
+[ext_resource type="Shader" uid="uid://vetnq53dk60g" path="res://Shaders/grabbed_glow.gdshader" id="4_mscii"]
 
-[sub_resource type="CylinderMesh" id="CylinderMesh_6dr8p"]
-lightmap_size_hint = Vector2i(4, 6)
-flip_faces = true
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vxkva"]
+shading_mode = 2
+diffuse_mode = 1
+disable_ambient_light = true
+emission_enabled = true
+emission = Color(1, 1, 1, 1)
+emission_energy_multiplier = 2.52
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_x6usk"]
+lightmap_size_hint = Vector2i(20, 20)
+uv2_padding = 10.0
 top_radius = 0.005
 bottom_radius = 0.005
-height = 0.001
+height = 0.1
 radial_segments = 150
 rings = 150
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_3nktn"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_vxkva"]
 render_priority = 0
-shader = ExtResource("2_x6usk")
-shader_parameter/beam_color = Color(0.560784, 0.678431, 0.964706, 1)
-shader_parameter/fresnel_power = 2.0
-shader_parameter/emission_strength = 2.303
+shader = ExtResource("4_mscii")
+shader_parameter/speed = -35.0
+shader_parameter/ring_scale = 0.5
+shader_parameter/wave_scale = 0.01
+shader_parameter/random_scale = 100.0
+shader_parameter/noise_scale = 0.0
+shader_parameter/c1 = 0.18
+shader_parameter/c2 = 0.5
+shader_parameter/c3 = 2.98
+shader_parameter/c4 = 3.25
+shader_parameter/fade_min_y = -3.0
+shader_parameter/fade_max_y = 3.0
+shader_parameter/emission_strength = 1.0
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_vxkva"]
+angle_min = 1.07288e-05
+angle_max = 107.2
+direction = Vector3(0, 1, 0)
+spread = 0.0
+initial_velocity_min = -12.3
+gravity = Vector3(0, 0, 0)
+turbulence_noise_strength = 20.0
+turbulence_noise_scale = 10.0
+turbulence_noise_speed_random = 0.0
+turbulence_influence_min = 0.0
+turbulence_influence_max = 0.025
+turbulence_initial_displacement_min = 1.49012e-06
+turbulence_initial_displacement_max = 1.49012e-06
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_61m6q"]
+albedo_color = Color(0.1, 1, 0, 1)
+emission_enabled = true
+emission = Color(0.23, 1, 0.294167, 1)
+emission_energy_multiplier = 1.09
+rim = 0.0
+rim_tint = 0.0
+heightmap_scale = 4.79
+billboard_mode = 3
+billboard_keep_scale = true
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+grow = true
+grow_amount = 0.01
+proximity_fade_distance = 0.01
+distance_fade_max_distance = 20.0
+
+[sub_resource type="SphereMesh" id="SphereMesh_vuyi1"]
+lightmap_size_hint = Vector2i(2, 4)
+material = SubResource("StandardMaterial3D_61m6q")
+flip_faces = true
+radius = 0.07
+height = 0.3
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_x6usk"]
+angle_min = 1.07288e-05
+angle_max = 107.2
+direction = Vector3(0, 1, 0)
+spread = 0.0
+initial_velocity_min = -12.3
+gravity = Vector3(0, -1, 0)
+turbulence_noise_strength = 20.0
+turbulence_noise_scale = 10.0
+turbulence_noise_speed_random = 0.0
+turbulence_influence_min = 0.0
+turbulence_influence_max = 0.025
+turbulence_initial_displacement_min = 1.49012e-06
+turbulence_initial_displacement_max = 1.49012e-06
+
+[sub_resource type="SphereMesh" id="SphereMesh_mscii"]
+lightmap_size_hint = Vector2i(2, 3)
+material = SubResource("StandardMaterial3D_61m6q")
+flip_faces = true
+radius = 0.01
+height = 0.15
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_mscii"]
+angle_min = 1.07288e-05
+angle_max = 107.2
+direction = Vector3(0, 1, 0)
+spread = 0.0
+initial_velocity_min = -12.3
+gravity = Vector3(0, 1, 0)
+turbulence_noise_strength = 20.0
+turbulence_noise_scale = 10.0
+turbulence_noise_speed_random = 0.0
+turbulence_influence_min = 0.0
+turbulence_influence_max = 0.025
+turbulence_initial_displacement_min = 1.49012e-06
+turbulence_initial_displacement_max = 1.49012e-06
+
+[sub_resource type="Curve" id="Curve_x6usk"]
+_data = [Vector2(0, 0.501519), 0.0, -0.197418, 0, 1, Vector2(1, 0.3041), -0.197418, 0.0, 1, 0]
+point_count = 2
+
+[sub_resource type="TubeTrailMesh" id="TubeTrailMesh_x6usk"]
+flip_faces = true
+radius = 0.11
+radial_steps = 60
+sections = 18
+section_length = 0.005
+section_rings = 60
+curve = SubResource("Curve_x6usk")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mscii"]
+disable_ambient_light = true
+albedo_color = Color(0, 0, 0, 1)
+emission_enabled = true
+emission = Color(0.501667, 1, 0.35, 1)
+emission_energy_multiplier = 5.16
+distance_fade_max_distance = 0.0
+
+[sub_resource type="Gradient" id="Gradient_x6usk"]
+colors = PackedColorArray(1, 0, 0, 1, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_mscii"]
+gradient = SubResource("Gradient_x6usk")
 
 [sub_resource type="Curve" id="Curve_l5ika"]
 _data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.252595, 0.120801), -1.09758, -1.09758, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
 point_count = 3
 
-[sub_resource type="CurveTexture" id="CurveTexture_6dr8p"]
+[sub_resource type="CurveTexture" id="CurveTexture_vxkva"]
 curve = SubResource("Curve_l5ika")
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_3nktn"]
 spread = 20.0
-initial_velocity_min = 5.0
-initial_velocity_max = 10.0
-gravity = Vector3(0, 0, 0)
-scale_curve = SubResource("CurveTexture_6dr8p")
+initial_velocity_max = 14.61
+scale_min = 0.5
+scale_max = 0.5
+scale_curve = SubResource("CurveTexture_vxkva")
+color = Color(1, 0, 1, 1)
+color_ramp = SubResource("GradientTexture1D_mscii")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_61m6q"]
-transparency = 1
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vuyi1"]
+albedo_color = Color(0.266667, 1, 0, 1)
 emission_enabled = true
-emission = Color(1, 1, 1, 1)
-emission_energy_multiplier = 10.0
+emission = Color(0.0666666, 1, 0, 1)
+emission_energy_multiplier = 6.72
 billboard_mode = 3
 billboard_keep_scale = true
 particles_anim_h_frames = 1
@@ -45,32 +169,173 @@ particles_anim_v_frames = 1
 particles_anim_loop = false
 
 [sub_resource type="SphereMesh" id="SphereMesh_5hhbi"]
-material = SubResource("StandardMaterial3D_61m6q")
+material = SubResource("StandardMaterial3D_vuyi1")
 radius = 0.2
 height = 0.4
+
+[sub_resource type="Curve3D" id="Curve3D_8l162"]
+_data = {
+"points": PackedVector3Array(0, 0, 0, 0, 0, 0, -0.000465109, -0.150393, -0.0890092, 1.54354, 3.25363, -0.956695, -1.54354, -3.25363, 0.956695, -0.0804286, -5.31605, 0.360461),
+"tilts": PackedFloat32Array(0, 0)
+}
+point_count = 2
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_mscii"]
+render_priority = 0
+shader = ExtResource("3_x6usk")
+shader_parameter/wave_strength = -0.09
+shader_parameter/wave_speed = 30.82
+shader_parameter/wobble_density = 6.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_x6usk"]
+transparency = 3
+alpha_hash_scale = 1.0
+alpha_antialiasing_mode = 0
+albedo_color = Color(1, 1, 1, 0.258824)
+emission_enabled = true
+emission = Color(0, 0.669723, 0.669723, 1)
+emission_energy_multiplier = 3.41
 
 [node name="Beam" type="RayCast3D"]
 transform = Transform3D(0.996707, 0.0810895, 0.00037707, 0.00096425, -0.00720211, -0.999974, -0.0810846, 0.996681, -0.00725657, 0, 0, 0)
 target_position = Vector3(0, -10, 0)
-debug_shape_custom_color = Color(1, 0, 0, 1)
-debug_shape_thickness = 5
+debug_shape_custom_color = Color(1, 0, 0, 0)
+debug_shape_thickness = 1
 script = ExtResource("1_8l162")
 
-[node name="BeamMesh" type="MeshInstance3D" parent="."]
-transform = Transform3D(16.4811, 0, -9.31323e-10, 1.19209e-07, 43.8643, 1.49012e-08, 9.31323e-10, -2.98023e-08, 16.097, 0, 0, 0)
+[node name="Beam_Multi" type="MeshInstance3D" parent="."]
+transform = Transform3D(16.4711, 1.53084, -1.86265e-09, -0.575182, 43.8376, 7.45058e-09, -9.31323e-10, -2.98023e-08, 16.097, -0.0771822, -2.32526, 0.035408)
 visible = false
-mesh = SubResource("CylinderMesh_6dr8p")
+material_overlay = SubResource("StandardMaterial3D_vxkva")
+transparency = 0.79
+cast_shadow = 0
+mesh = SubResource("CylinderMesh_x6usk")
 skeleton = NodePath("")
-surface_material_override/0 = SubResource("ShaderMaterial_3nktn")
+surface_material_override/0 = SubResource("ShaderMaterial_vxkva")
 
-[node name="EndParticles" type="GPUParticles3D" parent="."]
-transform = Transform3D(-4.47035e-08, -1, 0, 0.999999, -4.47035e-08, 0, 0, 0, 0.999998, 0, 0, 0)
+[node name="OutGlow" type="GPUParticles3D" parent="."]
+transform = Transform3D(1, 0, -2.91038e-10, 0, 1, 9.31323e-10, 1.16415e-10, -3.72529e-09, 0.999999, 0.0484289, -0.595053, 0.00517142)
 visible = false
+transparency = 0.88
+cast_shadow = 0
+amount = 100
+lifetime = 0.3
+speed_scale = 64.0
+process_material = SubResource("ParticleProcessMaterial_vxkva")
+draw_pass_1 = SubResource("SphereMesh_vuyi1")
+
+[node name="PREM_Particles_bottom" type="GPUParticles3D" parent="."]
+transform = Transform3D(1, 0, -2.91038e-10, 0, 1, 9.31323e-10, 1.16415e-10, -3.25963e-09, 0.999999, 0.0484289, -0.595053, 0.00517142)
+transparency = 0.88
+cast_shadow = 0
+amount = 50
+lifetime = 0.3
+speed_scale = 64.0
+process_material = SubResource("ParticleProcessMaterial_x6usk")
+draw_pass_1 = SubResource("SphereMesh_mscii")
+
+[node name="PREM_Particles_top" type="GPUParticles3D" parent="."]
+transform = Transform3D(1, 0, -2.91038e-10, 0, 1, 9.31323e-10, 1.16415e-10, -3.72529e-09, 0.999999, 0.0484289, -0.595053, 0.00517142)
+transparency = 0.88
+cast_shadow = 0
+amount = 50
+lifetime = 0.3
+speed_scale = 64.0
+process_material = SubResource("ParticleProcessMaterial_mscii")
+draw_pass_1 = SubResource("SphereMesh_mscii")
+
+[node name="BeamMesh" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, -1.16415e-10, 0, 1, 0, 5.82077e-11, 0, 1, 4.74023e-05, -0.000354053, 0.000841568)
+transparency = 0.34
+cast_shadow = 0
+mesh = SubResource("TubeTrailMesh_x6usk")
+skeleton = NodePath("")
+surface_material_override/0 = SubResource("StandardMaterial3D_mscii")
+
+[node name="EndParticles" type="GPUParticles3D" parent="BeamMesh"]
+transform = Transform3D(-5.21541e-08, -1, 1.16415e-10, 0.999999, -4.47035e-08, 0, 0, 0, 0.999998, -9.09495e-12, -2.91038e-11, -0.05)
+visibility_range_fade_mode = 1
 emitting = false
-amount = 500
-lifetime = 0.25
-speed_scale = 15.0
-randomness = 1.0
-trail_lifetime = 10.0
+amount = 1000
+lifetime = 0.14
+speed_scale = 64.0
 process_material = SubResource("ParticleProcessMaterial_3nktn")
 draw_pass_1 = SubResource("SphereMesh_5hhbi")
+
+[node name="Path3D" type="Path3D" parent="."]
+transform = Transform3D(-0.564967, 0, 0.825113, 0, 1, 0, -0.825113, 0, -0.564967, -6.67914e-06, 4.98873e-05, 0.00692659)
+curve = SubResource("Curve3D_8l162")
+
+[node name="CSGPolygon3D" type="CSGPolygon3D" parent="Path3D"]
+transform = Transform3D(0.999927, 0, 0, 0, 0.999887, 0, 0, 0, 0.999864, 0, 0, 0)
+visible = false
+material_override = SubResource("ShaderMaterial_mscii")
+polygon = PackedVector2Array(0, 0, 0, 0.25, 0.25, 0.25, 0.25, 0)
+mode = 2
+path_node = NodePath("..")
+path_interval_type = 0
+path_interval = 0.01
+path_simplify_angle = 0.0
+path_rotation = 2
+path_rotation_accurate = false
+path_local = true
+path_continuous_u = false
+path_u_distance = 0.0
+path_joined = false
+
+[node name="CSGPolygon3D2" type="CSGPolygon3D" parent="Path3D"]
+transform = Transform3D(0.0906259, 0, 0.995749, 0, 0.999887, 0, -0.995812, 0, 0.0906203, 1.31, 0, 0)
+visible = false
+material_override = SubResource("ShaderMaterial_mscii")
+material_overlay = SubResource("StandardMaterial3D_x6usk")
+mode = 2
+path_node = NodePath("..")
+path_interval_type = 0
+path_interval = 0.01
+path_simplify_angle = 0.0
+path_rotation = 2
+path_rotation_accurate = false
+path_local = true
+path_continuous_u = false
+path_u_distance = 0.0
+path_joined = false
+
+[node name="CSGPolygon3D3" type="CSGPolygon3D" parent="Path3D"]
+transform = Transform3D(0.999927, 0, 0, 0, 0.999887, 0, 0, 0, 0.999864, 2.11, 0.54, 1.12)
+visible = false
+material_override = SubResource("ShaderMaterial_mscii")
+material_overlay = SubResource("StandardMaterial3D_x6usk")
+mode = 2
+path_node = NodePath("..")
+path_interval_type = 0
+path_interval = 0.01
+path_simplify_angle = 0.0
+path_rotation = 2
+path_rotation_accurate = false
+path_local = true
+path_continuous_u = false
+path_u_distance = 0.0
+path_joined = false
+
+[node name="CSGPolygon3D4" type="CSGPolygon3D" parent="Path3D"]
+transform = Transform3D(-0.463262, 0, -0.886083, 0, 0.999887, 0, 0.886139, 0, -0.463233, 0, 0, 1.32)
+visible = false
+material_override = SubResource("ShaderMaterial_mscii")
+material_overlay = SubResource("StandardMaterial3D_x6usk")
+mode = 2
+path_node = NodePath("..")
+path_interval_type = 0
+path_interval = 0.01
+path_simplify_angle = 0.0
+path_rotation = 2
+path_rotation_accurate = false
+path_local = true
+path_continuous_u = false
+path_u_distance = 0.0
+path_joined = false
+
+[node name="PathBeam" type="PathFollow3D" parent="Path3D"]
+transform = Transform3D(-0.960414, -0.158073, -0.229024, -0.221672, -0.062985, 0.972946, -0.168251, 0.985298, 0.0254528, 0.502199, -1.34556, -0.220121)
+progress = 1.31188
+cubic_interp = false
+loop = false

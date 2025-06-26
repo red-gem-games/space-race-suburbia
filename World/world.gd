@@ -57,13 +57,7 @@ const GRAB_DAMPING := 1200.0
 const ROTATE_SPEED := 8.0  # Increase this for snappier rotation
 
 func _physics_process(delta: float) -> void:
-	target = character.PREM_7.beam.collider
-	if target is RigidBody3D:
-		if target.is_rocketship:
-			return
-		grabbable_object = target
-	else:
-		grabbable_object = null
+
 	
 	if grabbed_object:
 		# --- Force Movement Toward Target ---
@@ -82,6 +76,9 @@ func _physics_process(delta: float) -> void:
 		## --- Smooth LookAt Rotation ---
 		var object_pos = grabbed_object.global_transform.origin
 		var look_dir = -(character.global_position - object_pos).normalized()
+
+		look_dir.y += 0.15  # tweak this until it feels right
+		look_dir = look_dir.normalized()
 
 		var desired_basis = Basis().looking_at(look_dir, Vector3.UP)
 		var current_basis = grabbed_object.global_transform.basis
@@ -219,13 +216,14 @@ func _physics_process(delta: float) -> void:
 
 func grab_object():
 	grabbed_object = grabbable_object
-	character.mouse_speed = character.base_mouse_speed / grabbed_object.mass * 15.0
 	grabbed_object.is_grabbed = true
 	grabbed_object.freeze = false
 	grabbed_object.physics_mat.friction = 0.0
 	grabbed_object.axis_lock_angular_x = true
 	grabbed_object.axis_lock_angular_y = true
 	grabbed_object.axis_lock_angular_z = true
+	character.grabbed_object = grabbed_object
+	character.grab_object()
 
 
 func release_object():
@@ -234,7 +232,7 @@ func release_object():
 	grabbed_object.axis_lock_angular_x = false
 	grabbed_object.axis_lock_angular_y = false
 	grabbed_object.axis_lock_angular_z = false
-	character.mouse_speed = character.base_mouse_speed
+	character.release_object()
 	grabbed_object = null
 
 func _input(event: InputEvent) -> void:
@@ -243,12 +241,18 @@ func _input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
 
 		if event.button_index == MOUSE_BUTTON_LEFT:
+			target = character.PREM_7.beam.collider
+			if target is RigidBody3D:
+				if target.is_rocketship:
+					return
+				grabbable_object = target
+			else:
+				grabbable_object = null
 			if event.is_pressed():
 				if grabbed_object:
 					release_object()
 					return
 				if grabbable_object:
-					print('yay')
 					grab_object()
 					return
 

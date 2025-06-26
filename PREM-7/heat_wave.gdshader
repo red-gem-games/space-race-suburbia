@@ -1,21 +1,12 @@
 shader_type spatial;
-render_mode unshaded;
 
-uniform float wave_speed = 1.0;
-uniform float wave_strength = 0.02;
-uniform float wave_scale = 20.0;
+uniform float wave_strength = 0.01;
+uniform float wave_speed = 2.0;
+uniform float wobble_density = 6.0;
 
-uniform sampler2D SCREEN_TEXTURE: hint_screen_texture, filter_linear_mipmap;
-
-void fragment() {
-    vec2 uv = SCREEN_UV;
-    float time = TIME * wave_speed;
-
-    // Sine-based offset distortion
-    uv.y += sin(uv.x * wave_scale + time) * wave_strength;
-    uv.x += cos(uv.y * wave_scale + time) * wave_strength;
-
-    vec3 screen_color = textureLod(SCREEN_TEXTURE, uv, 0.0).rgb;
-    ALBEDO = screen_color;
+void vertex() {
+    float wave = sin(VERTEX.y * wobble_density + TIME * wave_speed) * wave_strength;
+    VERTEX.x += wave;
+    VERTEX.z += wave;
+	VERTEX.y += wave;
 }
-

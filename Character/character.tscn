@@ -144,7 +144,7 @@ script = ExtResource("1_pjt0s")
 [node name="Camera3D" type="Camera3D" parent="."]
 
 [node name="PREM-7" parent="Camera3D" instance=ExtResource("1_glpr6")]
-transform = Transform3D(0.993768, 0.00447345, 0.111379, 0, 0.999194, -0.0401318, -0.111469, 0.0398817, 0.992967, 0.951227, -0.376, -1.1)
+transform = Transform3D(0.998026, 0.00383327, 0.0626734, 0, 0.998134, -0.0610485, -0.0627905, 0.0609281, 0.996165, 0.684681, -0.391232, -1.1)
 
 [node name="Grabbed_Container" type="Node3D" parent="Camera3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.15, 0)
@@ -162,7 +162,7 @@ shape = SubResource("CapsuleShape3D_jkkns")
 debug_color = Color(1, 0.264211, 0.231967, 1)
 
 [node name="PREM_7_Collision" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.06511, -0.365046, -0.767292)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.757205, -0.365046, -0.767292)
 shape = SubResource("SphereShape3D_jkkns")
 debug_color = Color(0.843472, 0.664469, 7.70092e-07, 1)
 

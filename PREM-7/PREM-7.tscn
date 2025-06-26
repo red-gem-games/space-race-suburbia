@@ -1,4 +1,4 @@
-[gd_scene load_steps=83 format=4 uid="uid://bpvm0l41dywjs"]
+[gd_scene load_steps=87 format=4 uid="uid://bpvm0l41dywjs"]
 
 [ext_resource type="Script" uid="uid://so25svauxmkt" path="res://PREM-7/prem_7.gd" id="1_iarxa"]
 [ext_resource type="Shader" uid="uid://cw73tbbh1mfcs" path="res://Shaders/PREM-7_glow.gdshader" id="2_2cjep"]
@@ -1283,6 +1283,47 @@ top_radius = 0.01
 bottom_radius = 0.01
 height = 1.25
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_t05xm"]
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_t05xm"]
+angle_min = 1.07288e-05
+angle_max = 107.2
+direction = Vector3(0, 0, 0)
+spread = 0.0
+initial_velocity_min = -12.3
+gravity = Vector3(0, 0, 0)
+turbulence_noise_strength = 20.0
+turbulence_noise_scale = 10.0
+turbulence_noise_speed_random = 0.0
+turbulence_influence_min = 0.0
+turbulence_influence_max = 0.025
+turbulence_initial_displacement_min = 1.49012e-06
+turbulence_initial_displacement_max = 1.49012e-06
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_l5ika"]
+emission_enabled = true
+emission = Color(0.41, 1, 0.459167, 1)
+emission_energy_multiplier = 16.0
+rim = 0.21
+rim_tint = 0.0
+heightmap_scale = 4.79
+billboard_mode = 3
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+grow = true
+grow_amount = 0.01
+proximity_fade_distance = 0.01
+distance_fade_mode = 1
+distance_fade_max_distance = 20.0
+
+[sub_resource type="SphereMesh" id="SphereMesh_l5ika"]
+lightmap_size_hint = Vector2i(2, 3)
+material = SubResource("StandardMaterial3D_l5ika")
+flip_faces = true
+radius = 0.01
+height = 0.15
+
 [node name="PREM-7" type="Node3D"]
 script = ExtResource("1_iarxa")
 
@@ -1857,5 +1898,26 @@ horizontal_alignment = 0
 
 [node name="Beam" parent="." instance=ExtResource("6_l5ika")]
 transform = Transform3D(0.996707, 0.0810895, 0.000376676, 0.000963244, -0.00719459, -0.999974, -0.0810846, 0.996681, -0.007249, 0.0126342, 0.0246727, 0)
+
+[node name="CSGPolygon3D" type="CSGPolygon3D" parent="."]
+transform = Transform3D(8.14441e-09, -5.40397e-09, -0.1, 0.0992546, -0.0121869, 8.74228e-09, -0.0121869, -0.0992546, 4.37114e-09, 0, 0.38, 0)
+transparency = 0.64
+operation = 1
+mode = 1
+spin_degrees = 245.0
+spin_sides = 64
+smooth_faces = true
+material = SubResource("StandardMaterial3D_t05xm")
+
+[node name="PREM_Particles" type="GPUParticles3D" parent="."]
+transform = Transform3D(0.993372, 0.00401125, 0.114867, 0, 0.999391, -0.0348995, -0.114937, 0.0346682, 0.992768, -0.0657231, 0.0407857, -0.378437)
+visible = false
+transparency = 0.56
+cast_shadow = 0
+amount = 100
+lifetime = 0.28
+speed_scale = 64.0
+process_material = SubResource("ParticleProcessMaterial_t05xm")
+draw_pass_1 = SubResource("SphereMesh_l5ika")
 
 [connection signal="animation_finished" from="Hologram_Animation" to="." method="_on_hologram_animation_animation_finished"]
