@@ -175,7 +175,7 @@ height = 0.4
 
 [sub_resource type="Curve3D" id="Curve3D_8l162"]
 _data = {
-"points": PackedVector3Array(0, 0, 0, 0, 0, 0, -0.000465109, -0.150393, -0.0890092, 1.54354, 3.25363, -0.956695, -1.54354, -3.25363, 0.956695, -0.0804286, -5.31605, 0.360461),
+"points": PackedVector3Array(0, 0, 0, 0, 0, 0, -0.000465109, -0.150393, -0.0890092, 1.54354, 3.25363, -0.956695, -1.54354, -3.25363, 0.956695, -0.44218, -13.9734, 0.777484),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
@@ -226,6 +226,7 @@ draw_pass_1 = SubResource("SphereMesh_vuyi1")
 
 [node name="PREM_Particles_bottom" type="GPUParticles3D" parent="."]
 transform = Transform3D(1, 0, -2.91038e-10, 0, 1, 9.31323e-10, 1.16415e-10, -3.25963e-09, 0.999999, 0.0484289, -0.595053, 0.00517142)
+visible = false
 transparency = 0.88
 cast_shadow = 0
 amount = 50
@@ -236,6 +237,7 @@ draw_pass_1 = SubResource("SphereMesh_mscii")
 
 [node name="PREM_Particles_top" type="GPUParticles3D" parent="."]
 transform = Transform3D(1, 0, -2.91038e-10, 0, 1, 9.31323e-10, 1.16415e-10, -3.72529e-09, 0.999999, 0.0484289, -0.595053, 0.00517142)
+visible = false
 transparency = 0.88
 cast_shadow = 0
 amount = 50
@@ -246,6 +248,7 @@ draw_pass_1 = SubResource("SphereMesh_mscii")
 
 [node name="BeamMesh" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, -1.16415e-10, 0, 1, 0, 5.82077e-11, 0, 1, 4.74023e-05, -0.000354053, 0.000841568)
+visible = false
 transparency = 0.34
 cast_shadow = 0
 mesh = SubResource("TubeTrailMesh_x6usk")
@@ -264,20 +267,20 @@ draw_pass_1 = SubResource("SphereMesh_5hhbi")
 
 [node name="Path3D" type="Path3D" parent="."]
 transform = Transform3D(-0.564967, 0, 0.825113, 0, 1, 0, -0.825113, 0, -0.564967, -6.67914e-06, 4.98873e-05, 0.00692659)
+visible = false
 curve = SubResource("Curve3D_8l162")
 
 [node name="CSGPolygon3D" type="CSGPolygon3D" parent="Path3D"]
-transform = Transform3D(0.999927, 0, 0, 0, 0.999887, 0, 0, 0, 0.999864, 0, 0, 0)
-visible = false
+transform = Transform3D(0.6, 0, 0, 0, 0.6, 0, 0, 0, 0.6, 0, 0, 0)
 material_override = SubResource("ShaderMaterial_mscii")
-polygon = PackedVector2Array(0, 0, 0, 0.25, 0.25, 0.25, 0.25, 0)
+polygon = PackedVector2Array(0.085452, 0.0748861, 0.0854401, 0.10644, 0.12211, 0.113224, 0.121753, 0.0820303)
 mode = 2
 path_node = NodePath("..")
 path_interval_type = 0
 path_interval = 0.01
 path_simplify_angle = 0.0
 path_rotation = 2
-path_rotation_accurate = false
+path_rotation_accurate = true
 path_local = true
 path_continuous_u = false
 path_u_distance = 0.0
@@ -335,7 +338,8 @@ path_u_distance = 0.0
 path_joined = false
 
 [node name="PathBeam" type="PathFollow3D" parent="Path3D"]
-transform = Transform3D(-0.960414, -0.158073, -0.229024, -0.221672, -0.062985, 0.972946, -0.168251, 0.985298, 0.0254528, 0.502199, -1.34556, -0.220121)
+transform = Transform3D(-0.889062, -0.450487, -0.080348, -0.073402, -0.0329109, 0.996621, -0.451688, 0.892046, -0.00380704, 0.116576, -1.45701, -0.0901359)
+visible = false
 progress = 1.31188
 cubic_interp = false
 loop = false

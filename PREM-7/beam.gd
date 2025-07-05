@@ -83,54 +83,6 @@ func _process(delta: float) -> void:
 		collider = get_collider()
 		cast_point = to_local(get_collision_point())
 
-		
-		if object_is_grabbed:
-			#beam_polygon.visible = true
-			#beam_polygon2.visible = true
-			#beam_polygon3.visible = true
-			#beam_polygon4.visible = true
-			#if path_beam.progress_ratio >= 0.05:
-				#path_beam.visible = true
-			#
-			#path_beam.progress_ratio += delta * beam_speed
-			#if path_beam.progress_ratio > 0.95:
-				#path_beam.visible = false
-				#path_beam.progress_ratio = 0.0
-			
-			
-			end_particles.position.y = lerp(end_particles.position.y, cast_point.y + 5, delta * 10.0)
-			
-			beam_mesh.mesh.section_length = lerp(beam_mesh.mesh.section_length, cast_point.y / 20.0, delta * 5.0)
-			beam_mesh.position.y = lerp(beam_mesh.position.y, cast_point.y / 2.0, delta * 5.0)
-			
-			end_particles.position.y = lerp(beam_mesh.position.y, cast_point.y, delta * 5.0)
-			
-			if not end_particles.emitting:
-				await get_tree().create_timer(0.25).timeout
-				end_particles.emitting = true
-				print('*** WHY CANT I GET IT TO WORK PROPERLY IF OBJECT IS VERY FAR AWAY? ***')
-				print('Mess around with PREM-7 tilting left/right when moving forwards and backwards')
-
-			
-			
-
-		if not object_is_grabbed:
-
-			beam_mesh.mesh.section_length = lerp(beam_mesh.mesh.section_length, base_height, delta * 5.0)
-			beam_mesh.position.y = lerp(beam_mesh.position.y, base_y_pos, delta * 5.0)
-			
-			end_particles.emitting = false
-			
-			beam_polygon.visible = false
-			beam_polygon2.visible = false
-			beam_polygon3.visible = false
-			beam_polygon4.visible = false
-
-			
-			#end_particles.position.y = lerp(end_particles.position.y, base_y_pos, delta * 5.0)
-			
-			#set_process(false)
-
 	else:
 		collider = null
 

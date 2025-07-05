@@ -100,8 +100,11 @@ background_color = Color(0.709012, 1, 0.995678, 1)
 sky = SubResource("Sky_fj7yv")
 ambient_light_source = 3
 ambient_light_color = Color(1, 1, 1, 1)
+ambient_light_sky_contribution = 0.39
+ambient_light_energy = 0.28
 glow_enabled = true
 glow_normalized = true
+glow_strength = 0.9
 glow_blend_mode = 0
 glow_hdr_threshold = 2.0
 fog_mode = 1
@@ -247,10 +250,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.383, 1.28761, 46.7)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.7833, 0, 39.6017)
 
 [node name="WashingMachine" parent="Assembly_Objects" instance=ExtResource("4_036b0")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -6.82642, -0.598852, 1.91882)
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -6.82642, -0.317396, 1.91882)
 
 [node name="DryingMachine" parent="Assembly_Objects" instance=ExtResource("6_dwbse")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -6.8241, -0.598852, -0.717468)
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -6.8241, -0.673927, -0.717468)
 
 [node name="Garage" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.7833, -0.639899, 47.7116)
@@ -270,7 +273,7 @@ shape = SubResource("BoxShape3D_dwbse")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.1505, -0.867294, -21.8427)
 
 [node name="Tune_O_Matic" parent="Garage" instance=ExtResource("10_lo5ox")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -6.36691, -1.04368, -0.963196)
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -6.36691, -1.08074, -0.963196)
 
 [node name="Platform" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.31278, 0)

@@ -35,4 +35,3 @@ void fragment() {
     ALBEDO = beam_color;
     EMISSION = beam_color * (emission_strength + fresnel * 0.5);
 }
-

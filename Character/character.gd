@@ -770,6 +770,7 @@ func _on_reset_key() -> void:
 
 func grab_object():
 	
+	
 	#left_mouse_down = false
 	#PREM_7.trig_anim.play("RESET")
 	#PREM_7.trig_anim.play("trigger_pull")
@@ -781,7 +782,7 @@ func grab_object():
 	beam.object_is_grabbed = true
 	HUD.reticle.visible = false
 	mouse_speed = base_mouse_speed / grabbed_object.mass * 15.0
-	grabbed_object.set_outline('GRAB', glow_color, 0.0)
+	#grabbed_object.set_outline('GRAB', glow_color, 0.0)
 	#grabbed_initial_mouse = get_viewport().get_mouse_position()
 	#grabbed_distance = (grabbed_object.global_transform.origin - camera.global_transform.origin).length()
 	object_is_grabbed = true
@@ -809,9 +810,9 @@ func grab_object():
 	#grabbed_object.collision_shape.disabled = true
 	#grabbed_object.freeze = false
 	#grabbed_object.sleeping = false
-	PREM_7.holo_anim.play("RESET")
-	PREM_7.grabbed_object_name = grabbed_object.name
-	PREM_7.cast_hologram('Grabbed')
+	#PREM_7.holo_anim.play("RESET")
+	#PREM_7.grabbed_object_name = grabbed_object.name
+	#PREM_7.cast_hologram('Grabbed')
 	#create_char_obj_shape(grabbed_object)
 	#grab_timer.start(0.25)
 	#if assembly_component_selection:
@@ -855,6 +856,9 @@ func grab_object():
 
 
 func release_object():
+	if touched_object:
+		touched_object.is_touched = false
+		touched_object = null
 	print('Release')
 	beam.object_is_grabbed = false
 	orbit_radius = target_orbit_radius
@@ -1285,6 +1289,8 @@ func update_vertical_velocity() -> void:
 	else:
 		vertical_velocity = 0.0
 
+var touched_object
+
 func update_reticle_targeting() -> void:
 	var space_state = get_world_3d().direct_space_state
 	var from = camera.global_transform.origin
@@ -1295,20 +1301,32 @@ func update_reticle_targeting() -> void:
 	query.to = to
 	query.exclude = [self]
 
-	var result = space_state.intersect_ray(query)
+	var result = PREM_7.beam.collider
+	
+		
+	print(touched_object)
+
+#move_object(object, x_pos: float, y_pos: float, z_pos: float, wait_time: float, duration: float):
 
 	if result and not grabbed_object:
-		var collider = result.collider
-		if collider is RigidBody3D and not collider.is_rocketship:
+		if result is RigidBody3D and not result.is_rocketship:
+			if touched_object:
+				touched_object.is_touched = false
+				touched_object = null
 			match current_mode:
 				MODE_1: HUD.reticle.modulate = MODE_1_COLOR
 				MODE_2: HUD.reticle.modulate = MODE_2_COLOR
 				MODE_3: HUD.reticle.modulate = MODE_3_COLOR
 				MODE_4: HUD.reticle.modulate = MODE_4_COLOR
 				_: HUD.reticle.modulate = Color.WHITE
+			result.is_touched = true
+			touched_object = result
 		else:
 			HUD.reticle.modulate = Color.WHITE
 	else:
+		if touched_object:
+			touched_object.is_touched = false
+			touched_object = null
 		HUD.reticle.modulate = Color.WHITE
 
 func handle_prem7_decay(delta: float) -> void:

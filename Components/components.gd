@@ -111,7 +111,10 @@ var extractables: Array[RigidBody3D] = []
 
 var physics_mat = PhysicsMaterial.new()
 
-
+var is_touched: bool = false
+var is_touchable: bool = true
+var outline
+var resting_position
 
 
 
@@ -153,6 +156,7 @@ func _ready() -> void:
 		if child is MeshInstance3D:
 			if child.name == "Outline":
 				base_mesh = child
+				outline = child
 			else:
 				object_body = child
 
@@ -162,7 +166,7 @@ func _ready() -> void:
 		#glow_body.scale = Vector3(1.15, 1.15, 1.15)
 		#shader_material.shader = GLOW_SHADER
 		#glow_body.set_surface_override_material(0, shader_material)
-		var outline_mesh : Mesh = base_mesh.mesh.create_outline(0.1)
+		var outline_mesh : Mesh = base_mesh.mesh.create_outline(0.075)
 		glow_body = MeshInstance3D.new()
 		glow_body.name = "Outline"
 		glow_body.mesh = outline_mesh
@@ -183,6 +187,8 @@ func _ready() -> void:
 
 			#print('I, ', child.name, ' am an assembly component!')
 
+	resting_position = position
+
 	set_physics_process(true)
 
 func _physics_process(delta: float) -> void:
@@ -190,6 +196,8 @@ func _physics_process(delta: float) -> void:
 	if not is_grabbed and is_touching_ground:
 		if linear_velocity == Vector3.ZERO and angular_velocity == Vector3.ZERO:
 			freeze = true
+			resting_position = position
+			is_touchable = true
 			print('-------- ', name, ' is frozen! --------')
 	
 	if is_suspended:
@@ -218,9 +226,16 @@ func _physics_process(delta: float) -> void:
 			#angular_damp = 0
 
 	if is_grabbed:
+		if position_tween:
+			position_tween.kill()
+		if glow_tween:
+			glow_tween.kill()
+		if outline.transparency > 0.81:
+			change_glow(outline, 0.8, 0.075)
 		object_body.top_level = false
 		if is_suspended:
 			return
+		is_touchable = false
 		base_spawn_pos = global_position
 		object_body.global_transform = global_transform
 		linear_damp = 0
@@ -233,6 +248,32 @@ func _physics_process(delta: float) -> void:
 			is_touching_ground = false
 
 func _process(delta: float) -> void:
+	
+	if not is_grabbed:
+		if glow_tween:
+			glow_tween.kill()
+		change_glow(outline, 1.0, 0.075)
+		if is_touchable:
+			if is_touched:
+				is_touching_ground = false
+				if position_tween:
+					position_tween.kill()
+				if glow_tween:
+					glow_tween.kill()
+				move_object(self, position.x, 0.5, position.z, 0.0, 0.35)
+				change_glow(outline, 0.95, 0.075)
+				
+			else:
+				if position.y > resting_position.y + 0.01:
+					print('AHHHHHHHHHH')
+					if position_tween:
+						position_tween.kill()
+					if glow_tween:
+						glow_tween.kill()
+					move_object(self, position.x, resting_position.y, position.z, 0.0, 0.35)
+					change_glow(outline, 1.0, 0.075)
+	
+	
 	
 	if touching_wall_count >= 2:
 		sleeping = true
@@ -347,7 +388,7 @@ func set_outline(status: String, color: Color, opacity: float) -> void:
 		shader_material.set_shader_parameter("fresnel_power", 0.1)
 		shader_material.set_shader_parameter("random_seed", randf())
 		glow_body.material_override = shader_material
-		glow_body.visible = true
+		#glow_body.visible = true`
 		#create_particles()
 
 
@@ -487,6 +528,7 @@ func extract_component():
 			component.glow_body = MeshInstance3D.new()
 			component.glow_body.name = "Outline"
 			component.glow_body.mesh = outline_mesh
+			component.outline = outline_mesh
 
 			# Create or assign a real shader material
 			var glow_mat := ShaderMaterial.new()
@@ -594,6 +636,19 @@ func scale_object(object, x_scale: float, y_scale: float, z_scale: float, wait_t
 	
 	scale_tween.set_trans(Tween.TRANS_LINEAR)
 	scale_tween.set_ease(Tween.EASE_IN_OUT)
+
+var glow_tween: Tween
+
+func change_glow(object, amt: float, dur: float):
+	
+	print('ACTIVE')
+	
+	glow_tween = create_tween()
+	
+	glow_tween.tween_property(object, "transparency", amt, dur)
+	
+	glow_tween.set_trans(Tween.TRANS_LINEAR)
+	glow_tween.set_ease(Tween.EASE_IN_OUT)
 
 func manipulation_mode(type):
 	if type == "Active":

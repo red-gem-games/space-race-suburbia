@@ -11,7 +11,7 @@ uniform float plank_color_variation = 0.2;
 varying vec3 world_pos;
 
 // Random noise function
-vec2 random(vec2 pos) { 
+vec2 random(vec2 pos) {
 	return fract(sin(vec2(
 		dot(pos, vec2(12.9898,78.233)),
 		dot(pos, vec2(-148.998,-65.233))

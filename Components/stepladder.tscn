@@ -52,3 +52,31 @@ shape = SubResource("BoxShape3D_w47uh")
 [node name="CollisionShape3D2" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.0262451, -0.178062, -2.31797)
 shape = SubResource("BoxShape3D_w47uh")
+
+[node name="Outline" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_oe8m4")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Outline"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, -1)
+mesh = SubResource("BoxMesh_oe8m4")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="Outline"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, -2)
+mesh = SubResource("BoxMesh_oe8m4")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="Outline"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.905434, -2.98973)
+mesh = SubResource("BoxMesh_oe8m4")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D5" type="MeshInstance3D" parent="Outline"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.20543, -3.98973)
+mesh = SubResource("BoxMesh_oe8m4")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D6" type="MeshInstance3D" parent="Outline"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.50543, -4.98973)
+mesh = SubResource("BoxMesh_oe8m4")
+skeleton = NodePath("../..")
