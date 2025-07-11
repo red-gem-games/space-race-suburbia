@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3 uid="uid://ccesmg52dnwh5"]
+[gd_scene load_steps=27 format=3 uid="uid://ccesmg52dnwh5"]
 
 [ext_resource type="Script" uid="uid://cm4pjgv3oiw5m" path="res://PREM-7/beam.gd" id="1_8l162"]
 [ext_resource type="Shader" uid="uid://j4pl2pyf36nu" path="res://PREM-7/heat_wave.gdshader" id="3_x6usk"]
@@ -52,7 +52,7 @@ turbulence_influence_max = 0.025
 turbulence_initial_displacement_min = 1.49012e-06
 turbulence_initial_displacement_max = 1.49012e-06
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_61m6q"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_crlfp"]
 albedo_color = Color(0.1, 1, 0, 1)
 emission_enabled = true
 emission = Color(0.23, 1, 0.294167, 1)
@@ -72,7 +72,7 @@ distance_fade_max_distance = 20.0
 
 [sub_resource type="SphereMesh" id="SphereMesh_vuyi1"]
 lightmap_size_hint = Vector2i(2, 4)
-material = SubResource("StandardMaterial3D_61m6q")
+material = SubResource("StandardMaterial3D_crlfp")
 flip_faces = true
 radius = 0.07
 height = 0.3
@@ -91,6 +91,24 @@ turbulence_influence_min = 0.0
 turbulence_influence_max = 0.025
 turbulence_initial_displacement_min = 1.49012e-06
 turbulence_initial_displacement_max = 1.49012e-06
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_61m6q"]
+albedo_color = Color(0.1, 1, 0, 1)
+emission_enabled = true
+emission = Color(0.23, 1, 0.294167, 1)
+emission_energy_multiplier = 1.09
+rim = 0.0
+rim_tint = 0.0
+heightmap_scale = 4.79
+billboard_mode = 3
+billboard_keep_scale = true
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+grow = true
+grow_amount = 0.01
+proximity_fade_distance = 0.01
+distance_fade_max_distance = 20.0
 
 [sub_resource type="SphereMesh" id="SphereMesh_mscii"]
 lightmap_size_hint = Vector2i(2, 3)
@@ -197,10 +215,9 @@ emission = Color(0, 0.669723, 0.669723, 1)
 emission_energy_multiplier = 3.41
 
 [node name="Beam" type="RayCast3D"]
-transform = Transform3D(0.996707, 0.0810895, 0.00037707, 0.00096425, -0.00720211, -0.999974, -0.0810846, 0.996681, -0.00725657, 0, 0, 0)
-target_position = Vector3(0, -10, 0)
-debug_shape_custom_color = Color(1, 0, 0, 0)
-debug_shape_thickness = 1
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+target_position = Vector3(0, -100, 0)
+debug_shape_custom_color = Color(1, 0, 0, 1)
 script = ExtResource("1_8l162")
 
 [node name="Beam_Multi" type="MeshInstance3D" parent="."]
@@ -215,9 +232,9 @@ surface_material_override/0 = SubResource("ShaderMaterial_vxkva")
 
 [node name="OutGlow" type="GPUParticles3D" parent="."]
 transform = Transform3D(1, 0, -2.91038e-10, 0, 1, 9.31323e-10, 1.16415e-10, -3.72529e-09, 0.999999, 0.0484289, -0.595053, 0.00517142)
-visible = false
 transparency = 0.88
 cast_shadow = 0
+emitting = false
 amount = 100
 lifetime = 0.3
 speed_scale = 64.0

@@ -139,6 +139,8 @@ shader_parameter/fade_max_y = 6.32
 shader_parameter/emission_strength = 1.0
 
 [node name="Character" type="CharacterBody3D"]
+collision_layer = 2
+collision_mask = 2
 script = ExtResource("1_pjt0s")
 
 [node name="Camera3D" type="Camera3D" parent="."]

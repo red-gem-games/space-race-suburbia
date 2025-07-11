@@ -7,11 +7,11 @@ class_name PREM_7
 @onready var holo_anim: AnimationPlayer = $Hologram_Animation
 
 @onready var back_glow: MeshInstance3D = $Multitool/Back_Glow
-@onready var photon_glow: MeshInstance3D = $Multitool/Photon_Glow
+@onready var photon_glow: GPUParticles3D = $Multitool/Photon_Glow
 
 @onready var object_inventory: Node3D = $Multitool/Object_Inventory
 
-@onready var beam: RayCast3D = $Beam
+#@onready var beam: RayCast3D = $Beam
 #@onready var beam: Node3D = $Multitool/Beam
 #@onready var beam_mesh: MeshInstance3D = $Multitool/Beam/Beam_Mesh
 

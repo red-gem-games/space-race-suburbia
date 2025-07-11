@@ -79,9 +79,15 @@ func _process(delta: float) -> void:
 	
 	force_raycast_update()
 	
+	target_position = Vector3(0.0, -100.0, 0.0)
+	
 	if is_colliding():
-		collider = get_collider()
-		cast_point = to_local(get_collision_point())
+		if get_collider() is RigidBody3D:
+			collider = get_collider()
+			cast_point = to_local(get_collision_point())
+		
+		else:
+			collider = null
 
 	else:
 		collider = null

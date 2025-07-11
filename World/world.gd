@@ -43,27 +43,37 @@ var grid_parent = Node3D.new()
 var target
 var grabbable_object: RigidBody3D
 
+var stop_static_glow: bool = true
+var static_glow_active: bool = false
+var static_glow_task = null
+var flicker_obj_a: Node = null
+var flicker_obj_b: Node = null
+
+
+
 
 func _ready() -> void:
 	add_child(object_position_timer)
 	var somn = assembly_object_container.get_children()
 	for child in somn:
 		child.character_body = character
-	
 
+	start_static_glow_loop()
 
 const GRAB_STIFFNESS := 8000.0
 const GRAB_DAMPING := 1200.0
-const ROTATE_SPEED := 8.0  # Increase this for snappier rotation
+const ROTATE_SPEED := 4.0  # Increase this for snappier rotation
 
 func _physics_process(delta: float) -> void:
 
 	
 	if grabbed_object:
+		
+		print('----xxxxxx-----xxxx-----xxxxxx----')
 		# --- Force Movement Toward Target ---
 		var cam_pos = character.camera.global_transform.origin
 		var cam_dir = -character.camera.global_transform.basis.z
-		var target_pos = cam_pos + cam_dir * 7.0
+		var target_pos = cam_pos + cam_dir * 6.0
 
 		var obj_pos = grabbed_object.global_transform.origin
 		var direction = target_pos - obj_pos
@@ -89,17 +99,6 @@ func _physics_process(delta: float) -> void:
 		grabbed_object.global_transform = transform
 		
 
-
-		
-	if grabbed_object:
-		var current_pos = grabbed_object.global_transform.origin
-		var delta_pos = current_pos - _last_grabbed_pos
-		var velocity_vec = delta_pos / delta      # world-space directional velocity
-		_last_grabbed_pos = current_pos
-		
-		_release_velocity = velocity_vec
-		
-		#grabbed_object.linear_velocity = _release_velocity
 
 
 	for child in $Extracted_Object.get_children():
@@ -216,7 +215,13 @@ func _physics_process(delta: float) -> void:
 
 func grab_object():
 	grabbed_object = grabbable_object
+	grabbed_object.collision_layer = 1
+	grabbed_object.collision_mask = 1
+	flicker_obj_a = grabbed_object.outline
+	flicker_obj_b = character.PREM_7.photon_glow
+	grabbed_object.enable_object_glow(grabbed_object.outline)
 	grabbed_object.is_grabbed = true
+	grabbed_object.is_touchable = false
 	grabbed_object.freeze = false
 	grabbed_object.physics_mat.friction = 0.0
 	grabbed_object.axis_lock_angular_x = true
@@ -227,7 +232,13 @@ func grab_object():
 
 
 func release_object():
+	#static_glow_active = false
+	grabbed_object.collision_layer = 3
+	grabbed_object.collision_mask = 3
+	flicker_obj_a = null
+	flicker_obj_b = null
 	grabbed_object.is_grabbed = false
+	grabbed_object.is_touchable = true
 	grabbed_object.physics_mat.friction = 1.0
 	grabbed_object.axis_lock_angular_x = false
 	grabbed_object.axis_lock_angular_y = false
@@ -241,7 +252,7 @@ func _input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
 
 		if event.button_index == MOUSE_BUTTON_LEFT:
-			target = character.PREM_7.beam.collider
+			target = character.touched_object
 			if target is RigidBody3D:
 				if target.is_rocketship:
 					return
@@ -360,3 +371,59 @@ func add_component_to_grid(obj):
 	obj.scale = Vector3(1.0, 1.0, 1.0)
 	obj.reparent(assembly_object_container)
 	obj.is_full_size = true
+
+
+
+var rng = RandomNumberGenerator.new()
+
+func start_static_glow_loop() -> void:
+
+	static_glow_active = false
+	await get_tree().process_frame  # kill previous loop cleanly
+
+	static_glow_active = true
+	_static_glow_loop()
+
+
+func stop_static_glow_loop() -> void:
+	static_glow_active = false
+
+
+func _static_glow_loop() -> void:
+	var rng = RandomNumberGenerator.new()
+	rng.randomize()
+
+	while static_glow_active:
+		var delay = rng.randf_range(1.0, 4.0)
+		await get_tree().create_timer(delay).timeout
+
+		if not static_glow_active:
+			break
+
+		await _static_glow_blink(rng)
+
+
+
+func _static_glow_blink(rng: RandomNumberGenerator) -> void:
+	var blink_pairs = rng.randi_range(3, 10)
+
+	for i in blink_pairs:
+		if not static_glow_active:
+			break
+
+		var duration = rng.randf_range(0.005, 0.015)
+		if flicker_obj_a and flicker_obj_b:
+			flicker_obj_a.visible = true
+			flicker_obj_b.visible = true
+		await get_tree().create_timer(duration).timeout
+
+		if not static_glow_active:
+			break
+		if flicker_obj_a and flicker_obj_b:
+			flicker_obj_a.visible = false
+			flicker_obj_b.visible = false
+		await get_tree().create_timer(duration).timeout
+
+	if flicker_obj_a and flicker_obj_b:
+		flicker_obj_a.visible = true
+		flicker_obj_b.visible = true

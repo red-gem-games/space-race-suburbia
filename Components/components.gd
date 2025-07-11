@@ -139,13 +139,8 @@ func _ready() -> void:
 	gravity_scale = 1.5
 	freeze = true
 	
-	if is_in_group("Stepladder"):
-		is_stepladder = true
-		collision_layer = 1
-		collision_mask = 1
-	else:
-		collision_layer = 1
-		collision_mask = 1
+	collision_layer = 3
+	collision_mask = 3
 	
 	physics_mat.friction = 1.0
 	physics_mat.bounce = 0.0
@@ -182,22 +177,24 @@ func _ready() -> void:
 			assembly_components.append(child)
 			child.collision_layer = 0
 			child.collision_mask = 0
-			child.freeze = true
+			#child.freeze = true
 			child.name = "%s_%s" % [name, child.name]  # <--- this is the new line
 
 			#print('I, ', child.name, ' am an assembly component!')
 
-	resting_position = position
+	resting_position = global_position.y
 
 	set_physics_process(true)
 
 func _physics_process(delta: float) -> void:
 	
-	if not is_grabbed and is_touching_ground:
+	if not is_grabbed and is_touching_ground and recently_grabbed:
+		print('this')
 		if linear_velocity == Vector3.ZERO and angular_velocity == Vector3.ZERO:
+			print('that')
 			freeze = true
-			resting_position = position
-			is_touchable = true
+			resting_position = global_position.y
+			recently_grabbed = false
 			print('-------- ', name, ' is frozen! --------')
 	
 	if is_suspended:
@@ -226,6 +223,7 @@ func _physics_process(delta: float) -> void:
 			#angular_damp = 0
 
 	if is_grabbed:
+		print('AND THIS???')
 		if position_tween:
 			position_tween.kill()
 		if glow_tween:
@@ -235,17 +233,19 @@ func _physics_process(delta: float) -> void:
 		object_body.top_level = false
 		if is_suspended:
 			return
-		is_touchable = false
 		base_spawn_pos = global_position
-		object_body.global_transform = global_transform
+		#object_body.position = Vector3.ZERO
+		#global_transform = object_body.global_transform
+		#collision_shape.global_transform = object_body.global_transform
+		#object_body.global_transform = collision_shape.global_transform
+		#global_position.y = object_body.global_position.y
+		#outline.global_position.y = object_body.global_position.y
+		print('pull up quickly after grabbbing object...major defect')
 		linear_damp = 0
 		angular_damp = 0
 		contact_monitor = true
 		damp_elapsed_time = 0.0
 		damp_set = false
-		if is_in_group("Ground"):
-			remove_from_group("Ground")
-			is_touching_ground = false
 
 func _process(delta: float) -> void:
 	
@@ -254,29 +254,29 @@ func _process(delta: float) -> void:
 			glow_tween.kill()
 		change_glow(outline, 1.0, 0.075)
 		if is_touchable:
+			outline.position = object_body.position
 			if is_touched:
-				is_touching_ground = false
 				if position_tween:
 					position_tween.kill()
 				if glow_tween:
 					glow_tween.kill()
-				move_object(self, position.x, 0.5, position.z, 0.0, 0.35)
+				if hover_tween:
+					hover_tween.kill()
+				#hover_object(self, 0.3, 0.5)
 				change_glow(outline, 0.95, 0.075)
+				#print(object_body.global_position)
+				
 				
 			else:
-				if position.y > resting_position.y + 0.01:
-					print('AHHHHHHHHHH')
-					if position_tween:
-						position_tween.kill()
-					if glow_tween:
-						glow_tween.kill()
-					move_object(self, position.x, resting_position.y, position.z, 0.0, 0.35)
-					change_glow(outline, 1.0, 0.075)
-	
-	
-	
-	if touching_wall_count >= 2:
-		sleeping = true
+				if position_tween:
+					position_tween.kill()
+				if glow_tween:
+					glow_tween.kill()
+				if hover_tween:
+					hover_tween.kill()
+				#hover_object(self, resting_position - 0.05, 0.5)
+				change_glow(outline, 1.0, 0.075)
+				is_touching_ground = true
 
 	if is_extracting:
 		print('is currently extracting')
@@ -307,6 +307,14 @@ func _process(delta: float) -> void:
 			#extract_in_motion = false
 
 
+func enable_object_glow(object: Node) -> void:
+	# Start the transparency tween
+	var t := create_tween()
+	# Phase 1: 0.99 → 0.95 from 0.0 to 0.4s
+	t.tween_property(object, "transparency", 0.8, 0.25)
+
+
+
 func dampen_assembly_object(time):
 	damp_elapsed_time += time
 	var t = clamp(damp_elapsed_time / damp_ramp_time, 0.0, 1.0)
@@ -320,22 +328,13 @@ func dampen_assembly_object(time):
 var add_to_x: float
 
 func _on_body_shape_entered(body_rid: RID, body: Node, body_shape_index: int, local_shape_index: int) -> void:
-	if body.is_in_group("Ground"):
-		if is_suspended:
-			return
-		is_touching_ground = true
-
-	if body.name == 'Floor':
-		add_to_group('Ground')
-		print('ah haaaa')
 	
-	if is_grabbed:
-		if not body.name == 'Floor' and not body.name == 'Garage_Floor':
-			print(body.name, ' is being touched')
-			#apply_central_force(Vector3(0.0, 0.0, -1.0))
-			add_to_x += 0.01
-			#position.x = lerp(position.x, position.x + 0.1, 1.0)
+	
+	if body.name == 'Floor':
+		is_touching_ground = true
+		print('both??')
 
+	
 	#if body.name == "Left_Wall" and not touching_left_wall:
 		#touching_wall_count += 1
 		#touching_left_wall = true
@@ -471,7 +470,6 @@ func start_extraction():
 	var extractable_children = get_children()
 	for child in extractable_children:
 		if child is RigidBody3D:
-			print('hm')
 			extractables.append(child)
 	for child in extractables:
 		print(child.name)
@@ -627,6 +625,17 @@ func move_object(object, x_pos: float, y_pos: float, z_pos: float, wait_time: fl
 	position_tween.set_trans(Tween.TRANS_SINE)
 	position_tween.set_ease(Tween.EASE_IN_OUT)
 
+var hover_tween: Tween
+
+func hover_object(object, y_pos: float, duration: float):
+	hover_tween = create_tween()
+	
+	hover_tween.tween_property(object, "global_position:y", y_pos, duration)
+	
+	hover_tween.set_trans(Tween.TRANS_SINE)
+	hover_tween.set_ease(Tween.EASE_IN_OUT)
+	
+
 func scale_object(object, x_scale: float, y_scale: float, z_scale: float, wait_time: float, duration: float):
 	await get_tree().create_timer(wait_time).timeout
 	
@@ -640,9 +649,7 @@ func scale_object(object, x_scale: float, y_scale: float, z_scale: float, wait_t
 var glow_tween: Tween
 
 func change_glow(object, amt: float, dur: float):
-	
-	print('ACTIVE')
-	
+
 	glow_tween = create_tween()
 	
 	glow_tween.tween_property(object, "transparency", amt, dur)

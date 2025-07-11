@@ -11,7 +11,7 @@ var start_day: bool = false
 @onready var PREM_7: Node3D = $"Camera3D/PREM-7"
 @onready var HUD: Control = $HUD
 @onready var char_obj_shape: CollisionShape3D
-@onready var beam: Node3D = PREM_7.beam
+#@onready var beam: Node3D = PREM_7.beam
 #@onready var beam_mesh: Node3D = PREM_7.beam_mesh
 #@onready var beam_shader_mat := beam_mesh.get_active_material(0) as ShaderMaterial
 @onready var manipulation_cloud: MeshInstance3D = $Manipulation_Cloud
@@ -116,7 +116,7 @@ var pitch_set: bool = false
 var base_pitch_min: float = -PI/2
 var base_pitch_max: float = PI/2
 var grab_pitch_min: float = -0.25
-var grab_pitch_max: float = 1.0
+var grab_pitch_max: float = 0.9
 var pitch_min: float = base_pitch_min
 var pitch_max: float = base_pitch_max
 var base_mouse_speed: float = 0.002
@@ -601,21 +601,18 @@ func _input(event: InputEvent) -> void:
 		# Update movement key states.
 		if event.keycode == KEY_W or event.keycode == KEY_UP:
 			move_input["up"] = pressed
-			print('UP!')
 			if shifting_object_active and pressed:
 				if grabbed_object and grabbed_object.is_suspended:
 					grabbed_target_position.z -= 0.25
 					print('This should move forward based on direction of object face')
 		elif event.keycode == KEY_S or event.keycode == KEY_DOWN:
 			move_input["down"] = pressed
-			print('DOWN!')
 			if shifting_object_active and pressed:
 				if grabbed_object and grabbed_object.is_suspended:
 					grabbed_target_position.z += 0.25
 					print('This should move backward based on direction of object face')
 		elif event.keycode == KEY_A or event.keycode == KEY_LEFT:
 			move_input["left"] = pressed
-			print('LEFT!')
 			if shifting_object_active and pressed:
 				if grabbed_object and grabbed_object.is_suspended:
 					grabbed_target_position.x -= 0.25
@@ -623,7 +620,6 @@ func _input(event: InputEvent) -> void:
 					print('This should move left based on direction of object face')
 		elif event.keycode == KEY_D or event.keycode == KEY_RIGHT:
 			move_input["right"] = pressed
-			print('RIGHT!')
 			if shifting_object_active and pressed:
 				if grabbed_object and grabbed_object.is_suspended:
 					grabbed_target_position.x += 0.25
@@ -776,12 +772,14 @@ func grab_object():
 	#PREM_7.trig_anim.play("trigger_pull")
 
 	print('Grab')
+	PREM_7.cast_beam()
 	extracting_object_active = false
 	fusing_object_active = false
-	beam.set_process(true)
-	beam.object_is_grabbed = true
+	#beam.set_process(true)
+	#beam.object_is_grabbed = true
 	HUD.reticle.visible = false
 	mouse_speed = base_mouse_speed / grabbed_object.mass * 15.0
+	pitch_max = grab_pitch_max
 	#grabbed_object.set_outline('GRAB', glow_color, 0.0)
 	#grabbed_initial_mouse = get_viewport().get_mouse_position()
 	#grabbed_distance = (grabbed_object.global_transform.origin - camera.global_transform.origin).length()
@@ -860,13 +858,15 @@ func release_object():
 		touched_object.is_touched = false
 		touched_object = null
 	print('Release')
-	beam.object_is_grabbed = false
+	#beam.object_is_grabbed = false
 	orbit_radius = target_orbit_radius
+	PREM_7.retract_beam()
 	grabbed_pos_set = false
 	initial_grab = false
+	pitch_max = base_pitch_max
 	clear_char_obj_shape()
-	if not grabbed_object.is_controlled:
-		PREM_7.retract_beam()
+	#if not grabbed_object.is_controlled:
+		#PREM_7.retract_beam()
 	#grabbed_object.collision_shape.disabled = false
 	#grabbed_object.lock_rotation = false
 	#grabbed_object.angular_velocity = lerp(grabbed_object.angular_velocity, Vector3.ZERO, 1.0)
@@ -877,6 +877,7 @@ func release_object():
 	#object_sway_strength_y = object_sway_base_y
 	#distance_factor = 0.0
 	#grabbed_distance = 0.0
+	grabbed_object.collision_shape.position = Vector3.ZERO
 	grabbed_object.is_grabbed = false
 	grabbed_object.recently_grabbed = true
 	grabbed_object.is_released = true
@@ -1000,7 +1001,7 @@ func control_object():
 		grabbed_object.collision_mask = 0
 		grabbed_object.scale_object(grabbed_object.object_body, 0.25, 0.25, 0.25, 0.0, 0.15)
 		grabbed_object.scale_object(grabbed_object.glow_body, 0.25, 0.25, 0.25, 0.0, 0.15)
-		PREM_7.retract_beam()
+		#PREM_7.retract_beam()
 		await get_tree().create_timer(0.15).timeout
 		#grabbed_object.queue_free()
 		grab_object()
@@ -1301,15 +1302,10 @@ func update_reticle_targeting() -> void:
 	query.to = to
 	query.exclude = [self]
 
-	var result = PREM_7.beam.collider
-	
-		
-	print(touched_object)
-
-#move_object(object, x_pos: float, y_pos: float, z_pos: float, wait_time: float, duration: float):
+	var result = space_state.intersect_ray(query)
 
 	if result and not grabbed_object:
-		if result is RigidBody3D and not result.is_rocketship:
+		if result.collider is RigidBody3D and not result.collider.is_rocketship:
 			if touched_object:
 				touched_object.is_touched = false
 				touched_object = null
@@ -1319,10 +1315,13 @@ func update_reticle_targeting() -> void:
 				MODE_3: HUD.reticle.modulate = MODE_3_COLOR
 				MODE_4: HUD.reticle.modulate = MODE_4_COLOR
 				_: HUD.reticle.modulate = Color.WHITE
-			result.is_touched = true
-			touched_object = result
+			result.collider.is_touched = true
+			touched_object = result.collider
 		else:
 			HUD.reticle.modulate = Color.WHITE
+			if touched_object:
+				touched_object.is_touched = false
+				touched_object = null
 	else:
 		if touched_object:
 			touched_object.is_touched = false
@@ -1437,3 +1436,12 @@ func reset_object_position():
 	pitch_min = grab_pitch_min
 	pitch_max = grab_pitch_max
 	distance_factor = 0
+
+
+func _on_collider_body_entered(body: Node3D) -> void:
+	print(body.name)
+
+
+func _on_collider_body_shape_entered(body_rid: RID, body: Node3D, body_shape_index: int, local_shape_index: int) -> void:
+	if body is RigidBody3D:
+		print('?????')

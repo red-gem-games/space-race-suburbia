@@ -1,10 +1,8 @@
-[gd_scene load_steps=87 format=4 uid="uid://bpvm0l41dywjs"]
+[gd_scene load_steps=81 format=4 uid="uid://bpvm0l41dywjs"]
 
 [ext_resource type="Script" uid="uid://so25svauxmkt" path="res://PREM-7/prem_7.gd" id="1_iarxa"]
-[ext_resource type="Shader" uid="uid://cw73tbbh1mfcs" path="res://Shaders/PREM-7_glow.gdshader" id="2_2cjep"]
 [ext_resource type="Shader" uid="uid://vetnq53dk60g" path="res://Shaders/grabbed_glow.gdshader" id="2_4qq6n"]
 [ext_resource type="ArrayMesh" uid="uid://dxs73vc1sll8t" path="res://PREM-7/new_array_mesh.tres" id="5_t05xm"]
-[ext_resource type="PackedScene" uid="uid://ccesmg52dnwh5" path="res://PREM-7/beam.tscn" id="6_l5ika"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_a4na6"]
 resource_name = "Material.003"
@@ -88,15 +86,15 @@ shadow_mesh = SubResource("ArrayMesh_364h7")
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_4qq6n"]
 render_priority = 0
 shader = ExtResource("2_4qq6n")
-shader_parameter/speed = 0.1
-shader_parameter/ring_scale = 1.5
-shader_parameter/wave_scale = 4.0
+shader_parameter/speed = 0.28
+shader_parameter/ring_scale = -0.64
+shader_parameter/wave_scale = 3.24
 shader_parameter/random_scale = 10.0
-shader_parameter/noise_scale = 0.1
-shader_parameter/c1 = 0.18
-shader_parameter/c2 = 0.5
-shader_parameter/c3 = 2.98
-shader_parameter/c4 = 3.25
+shader_parameter/noise_scale = 0.33
+shader_parameter/c1 = 0.51
+shader_parameter/c2 = -7.84
+shader_parameter/c3 = 3.7
+shader_parameter/c4 = 3.49
 shader_parameter/fade_min_y = -3.0
 shader_parameter/fade_max_y = 3.0
 shader_parameter/emission_strength = 1.0
@@ -175,51 +173,6 @@ _surfaces = [{
 }]
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_j3ia4")
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1lvk8"]
-resource_name = "Material.005"
-cull_mode = 2
-albedo_color = Color(0, 0.90681, 0.0813613, 1)
-metallic = 1.0
-roughness = 0.709184
-
-[sub_resource type="ArrayMesh" id="ArrayMesh_ohhi8"]
-_surfaces = [{
-"aabb": AABB(-0.0698563, 0.557554, -0.0698718, 0.139713, 1e-05, 0.139744),
-"format": 34896613377,
-"index_count": 444,
-"index_data": PackedByteArray("AAABAAIAAAADAAEAAQADAAQABQAAAAYABQADAAAAAwAHAAgAAwAJAAcABwAJAAoAAwALAAkABQALAAMACQAMAA0ACQALAAwADAALAA4ADwAFABAAEQAFAA8AEQAPABIAEwAFABEAEwALAAUAFAARABUAEwARABQAEwAUABYAFwATABgAGQAXABoAGQATABcAGwAZABwAHQAZABsAHQATABkAHQAbAB4AHwAdACAAIQAdAB8AIQAfACIAIwATAB0AIwAdACEAJAAhACUAIwAhACQAIwAkACYAJwAjACgAKQAjACcAKQAnACoAKwAjACkALAApAC0AKwApACwAKwAsAC4ALwAjACsALwATACMAMAArADEAMgArADAAMgAwADMALwArADIANAAyADUALwAyADQALwA0ADYANwATAC8AEwA3AAsAOAAvADkAOgA4ADsAOgAvADgAPAA6AD0APgA6ADwAPgAvADoAPgA8AD8AQAA+AEEAQgA+AEAAQgBAAEMARAAvAD4ARAA+AEIARQBCAEYARABCAEUARABFAEcASAAvAEQASQBEAEoANwAvAEgASwBEAEkASwBJAEwATQBEAEsASABEAE0ATgBLAE8ATQBLAE4ATQBOAFAAUQBNAFIAUwBNAFEAUwBRAFQASABNAFMAVQBTAFYASABTAFUASABVAFcAWABIAFkAWgBIAFgAWgBYAFsAXABIAFoAXQBaAF4AXABaAF0AXABdAF8AYABIAFwAYQBcAGIAYwBcAGEAYwBhAGQAYABcAGMAZQBjAGYAYABjAGUAYABlAGcANwBIAGAAaABgAGkAagBgAGgAagBoAGsAbABgAGoANwBgAGwAbQBqAG4AbABqAG0AbABtAG8AcABsAHEAcgBsAHAAcgBwAHMANwBsAHIAdAByAHUANwByAHQANwB0AHYAdwA3AHgAeQA3AHcAeQB3AHoAewA3AHkAfAB5AH0AewB5AHwAewB8AH4AfwA3AHsAgAB7AIEAggB7AIAAggCAAIMAfwB7AIIAhACCAIUAfwCCAIQAfwCEAIYACwA3AH8AhwB/AIgACwCJAIoAiwB/AIcAiwCHAIwACwB/AI0AjQB/AIsACwCOAIkACwCNAI4AiQCOAI8AjQCLAJAAkACLAJEAjQCQAJIAjgCNAJMAkwCNAJQAjgCTAJUA"),
-"name": "Material.005",
-"primitive": 3,
-"uv_scale": Vector4(0, 0, 0, 0),
-"vertex_count": 150,
-"vertex_data": PackedByteArray("/38AAAAAAABJdQAAcgAAAKJ6AAAcAAAApWoAAMoBAADzbwAAAgEAALaKAAByAAAAW4UAABwAAAAoYAAABQQAAGFlAADMAgAA5VUAAB4HAAD+WgAAdgUAAFJCAADVDwAA7EsAABALAADeUAAA/QgAABJHAABZDQAAWZUAAMoBAAALkAAAAgEAANafAAAFBAAAnZoAAMwCAAAStAAAEAsAABmqAAAeBwAAAKUAAHYFAAAgrwAA/QgAAKy9AADVDwAA7LgAAFkNAADYxgAAYhUAAFHCAACDEgAAhc8AAK8bAAA/ywAAchgAAKPXAACxIgAAp9MAABofAAAj3wAAWSoAAHjbAABxJgAA+eUAAJwyAACk4gAAaC4AAHTxAACyRAAAGOwAAGk7AAAg6QAA8jYAAN/uAAD/PwAABfYAAGVOAADW8wAAf0kAAML5AABxWAAA/vcAAGFTAACm/gAATG0AAKT8AADFYgAATvsAAJNdAADB/QAAA2gAAMH9AAD7lwAAxf8AAPZ3AABS/wAAnnIAAP//AACtggAA//8AAFF9AABS/wAAYI0AAMX/AAAIiAAApv4AALKSAACwBAAAa6IAAE77AABrogAApPwAADmdAAD+9wAAnawAAML5AACNpwAA1vMAAH+2AAAF9gAAmbEAAN/uAAD/vwAAdPEAAEy7AAAg6QAADMkAABjsAACVxAAApOIAAJbRAAD55QAAYs0AAKfTAADk4AAAeNsAAI3ZAAAj3wAApdUAAKPXAABN3QAAW4UAAOL/AAA/ywAAjOcAAIXPAABP5AAAUcIAAHvtAADYxgAAnOoAACCvAAAB9wAA7LgAAKXyAACsvQAAKfAAABK0AADu9AAAAKUAAIj6AAAZqgAA4PgAAJ2aAAAy/QAA1p8AAPn7AAALkAAA/P4AAFmVAAA0/gAAtYoAAIz/AACiegAA4v8AAP9/AAD//wAA828AAPz+AABIdQAAjP8AAP5aAACI+gAAYWUAADL9AAClagAANP4AAChgAAD5+wAAvzQAAIznAADeUAAAAfcAAOVVAADg+AAAEkcAAKXyAADsSwAA7vQAAK09AAB77QAAUkIAACnwAAAmOQAAnOoAAFcsAADk4AAAeTAAAE/kAACGJAAAjdkAAFsoAABN3QAA3hYAAAzJAABaHQAAltEAANsgAACl1QAABRoAAGLNAAAfEQAA/78AAOYTAACVxAAAKAwAAH+2AACKDgAATLsAAAAIAACdrAAA+QkAAJmxAAA8BgAAjacAAD0CAAD7lwAAWgMAADmdAACsAAAAYI0AAFgBAACykgAAOQAAAPZ3AAAAAAAArYIAADkAAAAIiAAAAAAAAFF9AAD5CQAAZU4AAFgBAABMbQAArAAAAJ5yAABaAwAAxWIAAD0CAAADaAAAPAYAAHFYAACwBAAAk10AAAAIAABhUwAAig4AALJEAAAoDAAAf0kAACY5AABiFQAArT0AAIMSAADmEwAAaTsAAB8RAAD/PwAA2yAAAFkqAAB5MAAArxsAAL80AAByGAAABRoAAJwyAADeFgAA8jYAAFodAABoLgAAWygAALEiAACGJAAAcSYAAFcsAAAaHwAA")
-}]
-blend_shape_mode = 0
-
-[sub_resource type="ArrayMesh" id="ArrayMesh_ukc16"]
-resource_name = "PREM-7_v2_Cylinder_002"
-_surfaces = [{
-"aabb": AABB(-0.0698563, 0.557554, -0.0698718, 0.139713, 1e-05, 0.139744),
-"attribute_data": PackedByteArray("AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//"),
-"format": 34896613399,
-"index_count": 444,
-"index_data": PackedByteArray("AAABAAIAAAADAAEAAQADAAQABQAAAAYABQADAAAAAwAHAAgAAwAJAAcABwAJAAoAAwALAAkABQALAAMACQAMAA0ACQALAAwADAALAA4ADwAFABAAEQAFAA8AEQAPABIAEwAFABEAEwALAAUAFAARABUAEwARABQAEwAUABYAFwATABgAGQAXABoAGQATABcAGwAZABwAHQAZABsAHQATABkAHQAbAB4AHwAdACAAIQAdAB8AIQAfACIAIwATAB0AIwAdACEAJAAhACUAIwAhACQAIwAkACYAJwAjACgAKQAjACcAKQAnACoAKwAjACkALAApAC0AKwApACwAKwAsAC4ALwAjACsALwATACMAMAArADEAMgArADAAMgAwADMALwArADIANAAyADUALwAyADQALwA0ADYANwATAC8AEwA3AAsAOAAvADkAOgA4ADsAOgAvADgAPAA6AD0APgA6ADwAPgAvADoAPgA8AD8AQAA+AEEAQgA+AEAAQgBAAEMARAAvAD4ARAA+AEIARQBCAEYARABCAEUARABFAEcASAAvAEQASQBEAEoANwAvAEgASwBEAEkASwBJAEwATQBEAEsASABEAE0ATgBLAE8ATQBLAE4ATQBOAFAAUQBNAFIAUwBNAFEAUwBRAFQASABNAFMAVQBTAFYASABTAFUASABVAFcAWABIAFkAWgBIAFgAWgBYAFsAXABIAFoAXQBaAF4AXABaAF0AXABdAF8AYABIAFwAYQBcAGIAYwBcAGEAYwBhAGQAYABcAGMAZQBjAGYAYABjAGUAYABlAGcANwBIAGAAaABgAGkAagBgAGgAagBoAGsAbABgAGoANwBgAGwAbQBqAG4AbABqAG0AbABtAG8AcABsAHEAcgBsAHAAcgBwAHMANwBsAHIAdAByAHUANwByAHQANwB0AHYAdwA3AHgAeQA3AHcAeQB3AHoAewA3AHkAfAB5AH0AewB5AHwAewB8AH4AfwA3AHsAgAB7AIEAggB7AIAAggCAAIMAfwB7AIIAhACCAIUAfwCCAIQAfwCEAIYACwA3AH8AhwB/AIgACwCJAIoAiwB/AIcAiwCHAIwACwB/AI0AjQB/AIsACwCOAIkACwCNAI4AiQCOAI8AjQCLAJAAkACLAJEAjQCQAJIAjgCNAJMAkwCNAJQAjgCTAJUA"),
-"material": SubResource("StandardMaterial3D_1lvk8"),
-"name": "Material.005",
-"primitive": 3,
-"uv_scale": Vector4(0, 0, 0, 0),
-"vertex_count": 150,
-"vertex_data": PackedByteArray("/38AAAAA/79JdQAAcgD/v6J6AAAcAP+/pWoAAMoB/7/zbwAAAgH/v7aKAAByAP+/W4UAABwA/78oYAAABQT/v2FlAADMAv+/5VUAAB4H/7/+WgAAdgX/v1JCAADVD/+/7EsAABAL/7/eUAAA/Qj/vxJHAABZDf+/WZUAAMoB/78LkAAAAgH/v9afAAAFBP+/nZoAAMwC/78StAAAEAv/vxmqAAAeB/+/AKUAAHYF/78grwAA/Qj/v6y9AADVD/+/7LgAAFkN/7/YxgAAYhX/v1HCAACDEv+/hc8AAK8b/78/ywAAchj/v6PXAACxIv+/p9MAABof/78j3wAAWSr/v3jbAABxJv+/+eUAAJwy/7+k4gAAaC7/v3TxAACyRP+/GOwAAGk7/78g6QAA8jb/v9/uAAD/P/+/BfYAAGVO/7/W8wAAf0n/v8L5AABxWP+//vcAAGFT/7+m/gAATG3/v6T8AADFYv+/TvsAAJNd/7/B/QAAA2j/v8H9AAD7l/+/xf8AAPZ3/79S/wAAnnL/v///AACtgv+///8AAFF9/79S/wAAYI3/v8X/AAAIiP+/pv4AALKS/7+wBAAAa6L/v077AABrov+/pPwAADmd/7/+9wAAnaz/v8L5AACNp/+/1vMAAH+2/78F9gAAmbH/v9/uAAD/v/+/dPEAAEy7/78g6QAADMn/vxjsAACVxP+/pOIAAJbR/7/55QAAYs3/v6fTAADk4P+/eNsAAI3Z/78j3wAApdX/v6PXAABN3f+/W4UAAOL//78/ywAAjOf/v4XPAABP5P+/UcIAAHvt/7/YxgAAnOr/vyCvAAAB9/+/7LgAAKXy/7+svQAAKfD/vxK0AADu9P+/AKUAAIj6/78ZqgAA4Pj/v52aAAAy/f+/1p8AAPn7/78LkAAA/P7/v1mVAAA0/v+/tYoAAIz//7+iegAA4v//v/9/AAD///+/828AAPz+/79IdQAAjP//v/5aAACI+v+/YWUAADL9/7+lagAANP7/vyhgAAD5+/+/vzQAAIzn/7/eUAAAAff/v+VVAADg+P+/EkcAAKXy/7/sSwAA7vT/v609AAB77f+/UkIAACnw/78mOQAAnOr/v1csAADk4P+/eTAAAE/k/7+GJAAAjdn/v1soAABN3f+/3hYAAAzJ/79aHQAAltH/v9sgAACl1f+/BRoAAGLN/78fEQAA/7//v+YTAACVxP+/KAwAAH+2/7+KDgAATLv/vwAIAACdrP+/+QkAAJmx/788BgAAjaf/vz0CAAD7l/+/WgMAADmd/7+sAAAAYI3/v1gBAACykv+/OQAAAPZ3/78AAAAArYL/vzkAAAAIiP+/AAAAAFF9/7/5CQAAZU7/v1gBAABMbf+/rAAAAJ5y/79aAwAAxWL/vz0CAAADaP+/PAYAAHFY/7+wBAAAk13/vwAIAABhU/+/ig4AALJE/78oDAAAf0n/vyY5AABiFf+/rT0AAIMS/7/mEwAAaTv/vx8RAAD/P/+/2yAAAFkq/795MAAArxv/v780AAByGP+/BRoAAJwy/7/eFgAA8jb/v1odAABoLv+/WygAALEi/7+GJAAAcSb/v1csAAAaH/+/////f////3////9/////f////3////9/////f////3////9/////f////3////9/////f////3////9/////f////3////9/////f////3////9/////f////3////9/////f////3////9/////f////3////9/////f////3////9/////f////3////9/////f////3////9/////f////3////9/////f////3////9/////f////3////9/////f////3////9/////f////3////9/////f////3////9/////f////3////9/////f////3////9/////f////3////9/////f////3////9/////f////3////9/////f////3////9/////f////3////9/////f////3////9/////f////3////9/////f////3////9/////f////3////9/////f////3////9/////f////3////9/////f////3////9/////f////3////9/////f////3////9/////f////3////9/////f////3////9/////f////3////9/////f////3////9/////f////3////9/////f////3////9/////f////3////9/////f////3////9/////f////3////9/////f////3////9/////f////3////9/////f////3////9/////f////3////9/////f////3////9/////f////3////9/")
-}]
-blend_shape_mode = 0
-shadow_mesh = SubResource("ArrayMesh_ohhi8")
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_yppce"]
-render_priority = 0
-shader = ExtResource("2_2cjep")
-shader_parameter/glow_color = Vector3(0, 1, 0)
-shader_parameter/emission_strength = 1.0
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3drb5"]
 resource_name = "Primary"
@@ -598,6 +551,38 @@ metallic = 1.0
 metallic_specular = 1.0
 roughness = 0.0
 
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_4qq6n"]
+lifetime_randomness = 1.0
+emission_shape_offset = Vector3(0, 0.22, 0)
+direction = Vector3(-8.18, -0.68, 2.74)
+spread = 180.0
+flatness = 1.0
+initial_velocity_max = 0.7
+gravity = Vector3(0, 0, 0)
+radial_accel_min = -52.48
+radial_accel_max = -37.59
+damping_min = 30.78
+damping_max = 30.78
+turbulence_noise_strength = 20.0
+turbulence_noise_scale = 15.08
+turbulence_noise_speed = Vector3(0, 7.89, 0)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6dr8p"]
+transparency = 1
+albedo_color = Color(0.183333, 1, 0, 0.00392157)
+emission_enabled = true
+emission = Color(0.0500001, 1, 0, 1)
+heightmap_scale = -15.87
+billboard_keep_scale = true
+fixed_size = true
+distance_fade_min_distance = 1.0
+distance_fade_max_distance = 1.0
+
+[sub_resource type="TorusMesh" id="TorusMesh_t05xm"]
+material = SubResource("StandardMaterial3D_6dr8p")
+inner_radius = 0.075
+outer_radius = 0.034
+
 [sub_resource type="Animation" id="Animation_caqm6"]
 length = 0.001
 tracks/0/type = "bezier"
@@ -838,10 +823,70 @@ _data = {
 
 [sub_resource type="Animation" id="Animation_4qq6n"]
 length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Multitool/Photon_Glow:emitting")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Multitool/Photon_Glow:draw_pass_1:material:emission_energy_multiplier")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [1.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Multitool/Photon_Glow:draw_pass_1:material:emission_enabled")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
 
 [sub_resource type="Animation" id="Animation_8m00m"]
 resource_name = "cast_beam"
-length = 0.5
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Multitool/Photon_Glow:emitting")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [false, true, false, true, false, true, false, true, false, true]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Multitool/Photon_Glow:draw_pass_1:material:emission_energy_multiplier")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.4, 0.45, 1),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [0.01, 10.0, 1.0, 100.0]
+}
 
 [sub_resource type="Animation" id="Animation_t05xm"]
 resource_name = "control_object"
@@ -1285,45 +1330,6 @@ height = 1.25
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_t05xm"]
 
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_t05xm"]
-angle_min = 1.07288e-05
-angle_max = 107.2
-direction = Vector3(0, 0, 0)
-spread = 0.0
-initial_velocity_min = -12.3
-gravity = Vector3(0, 0, 0)
-turbulence_noise_strength = 20.0
-turbulence_noise_scale = 10.0
-turbulence_noise_speed_random = 0.0
-turbulence_influence_min = 0.0
-turbulence_influence_max = 0.025
-turbulence_initial_displacement_min = 1.49012e-06
-turbulence_initial_displacement_max = 1.49012e-06
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_l5ika"]
-emission_enabled = true
-emission = Color(0.41, 1, 0.459167, 1)
-emission_energy_multiplier = 16.0
-rim = 0.21
-rim_tint = 0.0
-heightmap_scale = 4.79
-billboard_mode = 3
-particles_anim_h_frames = 1
-particles_anim_v_frames = 1
-particles_anim_loop = false
-grow = true
-grow_amount = 0.01
-proximity_fade_distance = 0.01
-distance_fade_mode = 1
-distance_fade_max_distance = 20.0
-
-[sub_resource type="SphereMesh" id="SphereMesh_l5ika"]
-lightmap_size_hint = Vector2i(2, 3)
-material = SubResource("StandardMaterial3D_l5ika")
-flip_faces = true
-radius = 0.01
-height = 0.15
-
 [node name="PREM-7" type="Node3D"]
 script = ExtResource("1_iarxa")
 
@@ -1340,7 +1346,7 @@ mesh = SubResource("ArrayMesh_pp5ti")
 skeleton = NodePath("")
 
 [node name="Back_Glow" type="MeshInstance3D" parent="Multitool"]
-transform = Transform3D(2.42144e-08, -2.23517e-07, -0.999998, -0.94088, -0.846844, -1.30385e-08, -0.338738, 2.3522, 5.96046e-08, -0.113306, 0.30805, -1.40236)
+transform = Transform3D(2.79397e-08, -2.5332e-07, -0.999998, -0.94088, -0.846844, -1.53668e-08, -0.338738, 2.3522, 2.98023e-08, -0.112823, 0.295467, -1.40328)
 mesh = SubResource("ArrayMesh_f3egd")
 skeleton = NodePath("")
 surface_material_override/0 = SubResource("ShaderMaterial_4qq6n")
@@ -1354,12 +1360,6 @@ skeleton = NodePath("")
 transform = Transform3D(-0.0115625, 0.00792043, 0.999926, -0.992464, -0.30504, -0.0110895, 0.121972, -2.4813, 0.00455512, -0.107515, 0.0407202, 0.23299)
 mesh = SubResource("ArrayMesh_4x8s3")
 skeleton = NodePath("")
-
-[node name="Photon_Glow" type="MeshInstance3D" parent="Multitool"]
-transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, -0.133621, 0.523774, 2.20674)
-mesh = SubResource("ArrayMesh_ukc16")
-skeleton = NodePath("")
-surface_material_override/0 = SubResource("ShaderMaterial_yppce")
 
 [node name="Body_Group" type="Node3D" parent="Multitool"]
 
@@ -1458,6 +1458,19 @@ pixel_size = 0.001
 modulate = Color(0.875138, 0.457069, 1, 1)
 text = "SUSPEND"
 font_size = 165
+
+[node name="Photon_Glow" type="GPUParticles3D" parent="Multitool"]
+transform = Transform3D(3.98306, 0.334188, 0.153405, 0.167321, -0.161181, -3.99324, -0.545737, 6.63793, -0.290795, -0.310577, 0.481699, 2.08615)
+transparency = 0.75
+cast_shadow = 0
+emitting = false
+amount = 250
+lifetime = 0.05
+preprocess = 0.2
+speed_scale = 7.1
+explosiveness = 0.04
+process_material = SubResource("ParticleProcessMaterial_4qq6n")
+draw_pass_1 = SubResource("TorusMesh_t05xm")
 
 [node name="Trigger_Animation" type="AnimationPlayer" parent="."]
 libraries = {
@@ -1896,9 +1909,6 @@ font_size = 80
 outline_size = 5
 horizontal_alignment = 0
 
-[node name="Beam" parent="." instance=ExtResource("6_l5ika")]
-transform = Transform3D(0.996707, 0.0810895, 0.000376676, 0.000963244, -0.00719459, -0.999974, -0.0810846, 0.996681, -0.007249, 0.0126342, 0.0246727, 0)
-
 [node name="CSGPolygon3D" type="CSGPolygon3D" parent="."]
 transform = Transform3D(8.14441e-09, -5.40397e-09, -0.1, 0.0992546, -0.0121869, 8.74228e-09, -0.0121869, -0.0992546, 4.37114e-09, 0, 0.38, 0)
 transparency = 0.64
@@ -1908,16 +1918,5 @@ spin_degrees = 245.0
 spin_sides = 64
 smooth_faces = true
 material = SubResource("StandardMaterial3D_t05xm")
-
-[node name="PREM_Particles" type="GPUParticles3D" parent="."]
-transform = Transform3D(0.993372, 0.00401125, 0.114867, 0, 0.999391, -0.0348995, -0.114937, 0.0346682, 0.992768, -0.0657231, 0.0407857, -0.378437)
-visible = false
-transparency = 0.56
-cast_shadow = 0
-amount = 100
-lifetime = 0.28
-speed_scale = 64.0
-process_material = SubResource("ParticleProcessMaterial_t05xm")
-draw_pass_1 = SubResource("SphereMesh_l5ika")
 
 [connection signal="animation_finished" from="Hologram_Animation" to="." method="_on_hologram_animation_animation_finished"]

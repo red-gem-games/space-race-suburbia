@@ -36,6 +36,22 @@ shader_parameter/color5 = Vector4(0.274, 0.45, 0.12, 1)
 material = SubResource("ShaderMaterial_tlwt5")
 size = Vector2(100, 100)
 
+[sub_resource type="PlaneMesh" id="PlaneMesh_aqk2v"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_lo5ox"]
+render_priority = 0
+shader = ExtResource("6_eidgh")
+shader_parameter/base_color = Vector4(0.1, 0.1, 0.1, 1)
+shader_parameter/noise_texture = ExtResource("8_w47uh")
+shader_parameter/noise_scale = 26.118
+shader_parameter/crack_texture = ExtResource("7_oe8m4")
+shader_parameter/crack_scale = 1.612
+shader_parameter/crack_threshold = 0.495
+shader_parameter/chip_strength = 0.488
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_dwbse"]
+size = Vector3(15.8889, 1, 20.1041)
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_awrha"]
 render_priority = 0
 shader = ExtResource("3_awrha")
@@ -114,22 +130,6 @@ fog_sky_affect = 0.41
 volumetric_fog_density = 0.01
 volumetric_fog_emission_energy = 0.0
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_aqk2v"]
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_lo5ox"]
-render_priority = 0
-shader = ExtResource("6_eidgh")
-shader_parameter/base_color = Vector4(0.1, 0.1, 0.1, 1)
-shader_parameter/noise_texture = ExtResource("8_w47uh")
-shader_parameter/noise_scale = 26.118
-shader_parameter/crack_texture = ExtResource("7_oe8m4")
-shader_parameter/crack_scale = 1.612
-shader_parameter/crack_threshold = 0.495
-shader_parameter/chip_strength = 0.488
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_dwbse"]
-size = Vector3(15.8889, 1, 20.1041)
-
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_k8do8"]
 vertex_color_use_as_albedo = true
 albedo_color = Color(0.321728, 0.321728, 0.321728, 1)
@@ -184,6 +184,8 @@ directional_shadow_pancake_size = 80.0
 
 [node name="Floor" type="StaticBody3D" parent="." groups=["Ground"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+collision_layer = 3
+collision_mask = 3
 collision_priority = 100.0
 input_ray_pickable = false
 
@@ -196,6 +198,18 @@ debug_color = Color(0, 0.6, 0.701961, 1)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.858479, 0)
 mesh = SubResource("PlaneMesh_fj7yv")
 
+[node name="Garage_Floor" type="StaticBody3D" parent="Floor" groups=["Ground"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.7833, 0.360101, 47.7116)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Floor/Garage_Floor"]
+transform = Transform3D(13.843, 0, 0, 0, 2.659, 0, 0, 0, 10.151, 5.71963, -1.05, -9.3864)
+mesh = SubResource("PlaneMesh_aqk2v")
+surface_material_override/0 = SubResource("ShaderMaterial_lo5ox")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor/Garage_Floor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.013279, -1.50434, -9.27784)
+shape = SubResource("BoxShape3D_dwbse")
+
 [node name="Fence" type="Node3D" parent="."]
 
 [node name="Fence" type="MultiMeshInstance3D" parent="Fence"]
@@ -207,6 +221,8 @@ script = ExtResource("3_h2aik")
 
 [node name="Left_Wall" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -54.9, 23.14, 0)
+collision_layer = 3
+collision_mask = 3
 collision_priority = 100.0
 physics_material_override = SubResource("PhysicsMaterial_f23eu")
 
@@ -215,6 +231,8 @@ shape = SubResource("BoxShape3D_lo5ox")
 
 [node name="Right Wall" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 54.9, 23.14, 0)
+collision_layer = 3
+collision_mask = 3
 collision_priority = 100.0
 physics_material_override = SubResource("PhysicsMaterial_0wqet")
 
@@ -223,6 +241,8 @@ shape = SubResource("BoxShape3D_h2aik")
 
 [node name="Back_Wall" type="StaticBody3D" parent="."]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 23.14, -50)
+collision_layer = 3
+collision_mask = 3
 collision_priority = 100.0
 physics_material_override = SubResource("PhysicsMaterial_oeat8")
 
@@ -232,6 +252,8 @@ shape = SubResource("BoxShape3D_awrha")
 
 [node name="Front_Wall" type="StaticBody3D" parent="."]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 23, 54.9)
+collision_layer = 3
+collision_mask = 3
 collision_priority = 100.0
 physics_material_override = SubResource("PhysicsMaterial_awrha")
 
@@ -250,24 +272,13 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.383, 1.28761, 46.7)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.7833, 0, 39.6017)
 
 [node name="WashingMachine" parent="Assembly_Objects" instance=ExtResource("4_036b0")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -6.82642, -0.317396, 1.91882)
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -6.82642, -0.253552, 1.91882)
 
 [node name="DryingMachine" parent="Assembly_Objects" instance=ExtResource("6_dwbse")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -6.8241, -0.673927, -0.717468)
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -6.8241, -0.264599, -0.230286)
 
 [node name="Garage" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.7833, -0.639899, 47.7116)
-
-[node name="Garage_Floor" type="StaticBody3D" parent="Garage" groups=["Ground"]]
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Garage/Garage_Floor"]
-transform = Transform3D(13.843, 0, 0, 0, 2.659, 0, 0, 0, 10.151, 5.71963, -1.05, -9.3864)
-mesh = SubResource("PlaneMesh_aqk2v")
-surface_material_override/0 = SubResource("ShaderMaterial_lo5ox")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Garage/Garage_Floor"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.013279, -1.50434, -9.27784)
-shape = SubResource("BoxShape3D_dwbse")
 
 [node name="Stepladder" parent="Garage" instance=ExtResource("9_w47uh")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.1505, -0.867294, -21.8427)
