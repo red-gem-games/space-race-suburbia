@@ -94,7 +94,7 @@ const MODE_1: String = "SHIFT"
 const MODE_2: String = "SUSPEND"
 const MODE_3: String = "EXTRACT"
 const MODE_4: String = "FUSE"
-const MODE_1_COLOR: Color = Color.GREEN
+const MODE_1_COLOR: Color = Color.ORANGE
 const MODE_2_COLOR: Color = Color.BLUE
 const MODE_3_COLOR: Color = Color.RED
 const MODE_4_COLOR: Color = Color.WEB_PURPLE
@@ -772,7 +772,6 @@ func grab_object():
 	#PREM_7.trig_anim.play("trigger_pull")
 
 	print('Grab')
-	PREM_7.cast_beam()
 	extracting_object_active = false
 	fusing_object_active = false
 	#beam.set_process(true)

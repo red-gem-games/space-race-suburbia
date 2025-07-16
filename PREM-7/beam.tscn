@@ -215,7 +215,6 @@ emission = Color(0, 0.669723, 0.669723, 1)
 emission_energy_multiplier = 3.41
 
 [node name="Beam" type="RayCast3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 target_position = Vector3(0, -100, 0)
 debug_shape_custom_color = Color(1, 0, 0, 1)
 script = ExtResource("1_8l162")
@@ -265,7 +264,6 @@ draw_pass_1 = SubResource("SphereMesh_mscii")
 
 [node name="BeamMesh" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, -1.16415e-10, 0, 1, 0, 5.82077e-11, 0, 1, 4.74023e-05, -0.000354053, 0.000841568)
-visible = false
 transparency = 0.34
 cast_shadow = 0
 mesh = SubResource("TubeTrailMesh_x6usk")
@@ -355,7 +353,7 @@ path_u_distance = 0.0
 path_joined = false
 
 [node name="PathBeam" type="PathFollow3D" parent="Path3D"]
-transform = Transform3D(-0.889062, -0.450487, -0.080348, -0.073402, -0.0329109, 0.996621, -0.451688, 0.892046, -0.00380704, 0.116576, -1.45701, -0.0901359)
+transform = Transform3D(-0.889062, -0.450487, -0.0803473, -0.0734013, -0.0329108, 0.996621, -0.451688, 0.892046, -0.0038068, 0.116575, -1.45701, -0.0901359)
 visible = false
 progress = 1.31188
 cubic_interp = false

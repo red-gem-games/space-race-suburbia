@@ -1,6 +1,7 @@
-[gd_scene load_steps=59 format=4 uid="uid://cvtdsd7mu2wv"]
+[gd_scene load_steps=61 format=4 uid="uid://cvtdsd7mu2wv"]
 
 [ext_resource type="Script" uid="uid://clwwid0cs6u32" path="res://Components/components.gd" id="1_hnuj6"]
+[ext_resource type="Shader" uid="uid://vetnq53dk60g" path="res://Shaders/grabbed_glow.gdshader" id="3_ypo5v"]
 [ext_resource type="Texture2D" uid="uid://daqj3vpphaede" path="res://Assets/Blender/WashingMachine/WashingMachine_Final_T_ControlPanel_DF.png" id="4_ckldo"]
 [ext_resource type="Texture2D" uid="uid://bdykcba87jahw" path="res://Assets/Blender/WashingMachine/WashingMachine_Final_T_ControlPanel_MT-T_ControlPanel_RG.png" id="5_lrmwq"]
 [ext_resource type="Texture2D" uid="uid://rx87nqgs67v6" path="res://Assets/Blender/WashingMachine/WashingMachine_Final_T_ControlPanel_NR.png" id="6_iq5bj"]
@@ -15,7 +16,6 @@
 [ext_resource type="Texture2D" uid="uid://be20arqw45a1t" path="res://Assets/Blender/WashingMachine/WashingMachine_Final_T_Hose_NR.png" id="15_v118d"]
 [ext_resource type="Texture2D" uid="uid://bi06dx16dub1d" path="res://Assets/Blender/WashingMachine/WashingMachine_Final_T_WashingMachine_DF.png" id="16_03tit"]
 [ext_resource type="Texture2D" uid="uid://blen8hk8jt3a0" path="res://Assets/Blender/WashingMachine/WashingMachine_Final_T_WashingMachine_MT-T_WashingMachine_RG.png" id="17_07fdc"]
-[ext_resource type="Material" uid="uid://cfg62cbo2kbe7" path="res://Shaders/Component_Glow.tres" id="17_83f2o"]
 [ext_resource type="Texture2D" uid="uid://ca5kuuln4xlt2" path="res://Assets/Blender/WashingMachine/WashingMachine_Final_T_WashingMachine_NR.png" id="18_a1oq3"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0slab"]
@@ -596,6 +596,25 @@ blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_38lty")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kxy3t"]
+transparency = 1
+blend_mode = 3
+cull_mode = 2
+albedo_color = Color(1, 0.366667, 0, 1)
+metallic = 1.0
+roughness = 0.0
+emission_enabled = true
+emission = Color(1, 0.516667, 0, 1)
+emission_energy_multiplier = 7.75
+normal_scale = -16.0
+rim = 0.14
+rim_tint = 1.0
+anisotropy = 1.0
+heightmap_scale = 16.0
+subsurf_scatter_strength = 1.0
+backlight = Color(1, 1, 1, 1)
+refraction_scale = 1.0
+grow_amount = -1.58
+point_size = 36.0
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_8rmjb"]
 _surfaces = [{
@@ -613,6 +632,7 @@ blend_shape_mode = 0
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_41lno"]
 resource_name = "Washing_Machine_Outline_v2_Plane"
+lightmap_size_hint = Vector2i(6960, 3500)
 _surfaces = [{
 "aabb": AABB(-0.888523, -1.44504, -1.40242, 1.8726, 2.57276, 2.34721),
 "attribute_data": PackedByteArray("xyNszJzNbMyezmzMGCNszBEjz1LHI2zMOSSFLxgjbMy6I4UvMiOFLxEjm1GKzc9Shs6FL3nPhS+KzZtR2c2FL5zNbMyezmzMCaaBL4bOhS+6I4Uv2c2FLzIjhS+NPoMvOSSFL3nPhS85JIUvESPPUpzNbMwYI2zMis3PUorNz1IRI5tRis2bUREjz1I5JIUvns5szHnPhS/HI2zMMiOFL4rNm1ERI5tR2c2FLxEjm1GKzZtRESObUcWodi95z4Uvis2bUak+hS8jtoEvt7OFL6k+hS+NPoMvuiOFLyO2gS+GzoUvt7OFL7ezhS+6I4UvqT6FL4bOhS/FqHYvjT6DLwmmgS8jtoEv"),
@@ -628,6 +648,40 @@ _surfaces = [{
 }]
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_8rmjb")
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_v118d"]
+resource_name = "Washing_Machine_Outline_v2_Plane"
+_surfaces = [{
+"aabb": AABB(-0.888523, -1.44504, -1.40242, 1.8726, 2.57276, 2.34721),
+"attribute_data": PackedByteArray("xyNszJzNbMyezmzMGCNszBEjz1LHI2zMOSSFLxgjbMy6I4UvMiOFLxEjm1GKzc9Shs6FL3nPhS+KzZtR2c2FL5zNbMyezmzMCaaBL4bOhS+6I4Uv2c2FLzIjhS+NPoMvOSSFL3nPhS85JIUvESPPUpzNbMwYI2zMis3PUorNz1IRI5tRis2bUREjz1I5JIUvns5szHnPhS/HI2zMMiOFL4rNm1ERI5tR2c2FLxEjm1GKzZtRESObUcWodi95z4Uvis2bUak+hS8jtoEvt7OFL6k+hS+NPoMvuiOFLyO2gS+GzoUvt7OFL7ezhS+6I4UvqT6FL4bOhS/FqHYvjT6DLwmmgS8jtoEv"),
+"format": 34896613399,
+"index_count": 120,
+"index_data": PackedByteArray("AAABAAIAAAADAAEABAAFACsABAAHAAUACAAEACsACAArAAYABAAIAAkABAAJAAoALAAjAC0AIwAsAC4ALgAsACUALQAkACwALQAmACQACwAvADAACwAMAC8AEAALADAAEAAwABEADAALAA4ADAAOAA8AEgAxABcAEgAyADEAMQAyADMAGwAcAB0AGwAeABwAHwAgACEAHwAiACAAJwAoACkAJwAqACgAFAAVABYAFAATABUANAAYADUANAA2ABgANwA4ADkANwANADgAOgA7ADwAOgA9ADsAPgA/ABoAPgBAAD8AQAA+ABkAQAAZAEEA"),
+"lods": [0.302001, PackedByteArray("AAABAAIAAAADAAEABAAFAAYABAAHAAUACAAEAAYABAAIAAkABAAJAAoACwAMAA0ADAALAA4ADAAOAA8AEAALAA0AEAANABEAEgANABMAFAASABMAFAATABUAFAAVABYAEgAUABcAFAAYABcAGQASABcAGQAXABoAGwAcAB0AGwAeABwAHwAgACEAHwAiACAAIwAkACUAIwAmACQAJwAoACkAJwAqACgA")],
+"material": SubResource("StandardMaterial3D_kxy3t"),
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 66,
+"vertex_data": PackedByteArray("AAAAAP///n///4Dm///+f///AAD///5/AACA5v///n8AAIDm32DxKQAAAAD//6oqAAAAALQyqioAAIDm//+qKgAAstW0MqoqAAD//7QyMCoAAP//32BJKf//gObfYHzU//+y1bQyKdX//wAAtDKn4//////fYLDU/////7QyVNX//4Dm//+qKv//AAD//1TVqsDDLgAA/////7LVtDL//wAAstW0Mv///////7Qy//8AAP//tDL//0gowy4AAP//AAAAALQyaeb//wAAtDI65QAAAAC0MoHnAACA5t9g/7///4Dm////vwAAgOb///+///+A5t9g/7///4Dm32AAgAAA///fYACA/////99gAIAAAIDm32AAgAAAAAC0Mv8///8AAP///z///wAAtDL/PwAAAAD///8/AAD//7Qy/7//////32D/vwAA///fYP+//////7Qy/78AAAAATV9U1f//AABNX/8/AAAAAE1f/z+qwAAAtDL/P///AAC0MlTV//8AAE1fqipIKNHJAAD//7bXwy4AAP//ttfRyQAA//9IKNHJAABb5Egowy4AAJvnAACy1bQy0uO218MuAAAh5v//stW0Mpr8ttfRyQAAaP2219HJAAA8ygAAstW0Mj7KSCjRyQAAQcr//7LVtDI8yqrAAAC0Ms7gSCjDLgAAy+SqwMMuAABT4LbXwy4AAIMc/3////9/////f////3///+ZUzKlUVaqqVFWqqlRVqqpVVaqqC1UXqoNUBqklqktUkKohVS+yy01FqoxUqqpUVaoqqiqqqlRVXvRedP8//79E9kR2Q8VDRf///3+Zy2S0M9NSynMq5rsYRLxP////f////3////9/////f/9/////f////3////9///8BAAGAAAD/fzAA538AAP9/////f////3////9/////f1TVVNUKAPp/AAD/fwAAAICqqlRVqiqqKpPoapdN7E5svf9BgDvP4cxj1ejIJM6VzVW1rFIyzjd5OwUzT+r/239b/AuCh/oTg2P/7H4tEw+bDzrZVkYJFo2iM2db")
+}]
+blend_shape_mode = 0
+shadow_mesh = SubResource("ArrayMesh_8rmjb")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_03tit"]
+render_priority = 0
+shader = ExtResource("3_ypo5v")
+shader_parameter/speed = 0.1
+shader_parameter/ring_scale = 1.5
+shader_parameter/wave_scale = 4.0
+shader_parameter/random_scale = 10.0
+shader_parameter/noise_scale = 0.1
+shader_parameter/c1 = 0.18
+shader_parameter/c2 = 0.5
+shader_parameter/c3 = 2.98
+shader_parameter/c4 = 3.25
+shader_parameter/fade_min_y = -3.0
+shader_parameter/fade_max_y = 3.0
+shader_parameter/emission_strength = 1.0
 
 [node name="WashingMachine" type="RigidBody3D"]
 mass = 75.0
@@ -733,7 +787,15 @@ mesh = SubResource("ArrayMesh_f3bit")
 skeleton = NodePath("")
 
 [node name="Outline" type="MeshInstance3D" parent="."]
-transparency = 1.0
+cast_shadow = 0
+lod_bias = 0.001
+visibility_range_fade_mode = 1
 mesh = SubResource("ArrayMesh_41lno")
 skeleton = NodePath("")
-surface_material_override/0 = ExtResource("17_83f2o")
+
+[node name="Outline2" type="MeshInstance3D" parent="Outline"]
+visible = false
+transparency = 0.86
+mesh = SubResource("ArrayMesh_v118d")
+skeleton = NodePath("")
+surface_material_override/0 = SubResource("ShaderMaterial_03tit")

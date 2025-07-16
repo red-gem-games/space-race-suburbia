@@ -105,7 +105,6 @@ sky_top_color = Color(1, 1, 1, 1)
 sky_horizon_color = Color(0.541452, 0.840693, 1, 1)
 ground_bottom_color = Color(0.554954, 0.554954, 0.554954, 1)
 ground_horizon_color = Color(0.557856, 0.567997, 0.584009, 1)
-energy_multiplier = 2.0
 
 [sub_resource type="Sky" id="Sky_fj7yv"]
 sky_material = SubResource("ProceduralSkyMaterial_f3sb7")
@@ -120,9 +119,10 @@ ambient_light_sky_contribution = 0.39
 ambient_light_energy = 0.28
 glow_enabled = true
 glow_normalized = true
-glow_strength = 0.9
+glow_intensity = 0.24
+glow_strength = 0.84
 glow_blend_mode = 0
-glow_hdr_threshold = 2.0
+glow_hdr_threshold = 4.0
 fog_mode = 1
 fog_sun_scatter = 0.95
 fog_density = 0.646
@@ -169,7 +169,7 @@ script = ExtResource("1_tlwt5")
 [node name="Lights" type="Node3D" parent="."]
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="Lights"]
-transform = Transform3D(0.984808, -0.167731, 0.0449435, 0, 0.258819, 0.965926, -0.173648, -0.951251, 0.254887, 0, 0, 0)
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 21.4571, 0)
 light_energy = 1.5
 light_specular = 1.5
 shadow_enabled = true
@@ -184,8 +184,6 @@ directional_shadow_pancake_size = 80.0
 
 [node name="Floor" type="StaticBody3D" parent="." groups=["Ground"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
-collision_layer = 3
-collision_mask = 3
 collision_priority = 100.0
 input_ray_pickable = false
 
@@ -221,8 +219,6 @@ script = ExtResource("3_h2aik")
 
 [node name="Left_Wall" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -54.9, 23.14, 0)
-collision_layer = 3
-collision_mask = 3
 collision_priority = 100.0
 physics_material_override = SubResource("PhysicsMaterial_f23eu")
 
@@ -231,8 +227,6 @@ shape = SubResource("BoxShape3D_lo5ox")
 
 [node name="Right Wall" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 54.9, 23.14, 0)
-collision_layer = 3
-collision_mask = 3
 collision_priority = 100.0
 physics_material_override = SubResource("PhysicsMaterial_0wqet")
 
@@ -241,8 +235,6 @@ shape = SubResource("BoxShape3D_h2aik")
 
 [node name="Back_Wall" type="StaticBody3D" parent="."]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 23.14, -50)
-collision_layer = 3
-collision_mask = 3
 collision_priority = 100.0
 physics_material_override = SubResource("PhysicsMaterial_oeat8")
 
@@ -252,8 +244,6 @@ shape = SubResource("BoxShape3D_awrha")
 
 [node name="Front_Wall" type="StaticBody3D" parent="."]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 23, 54.9)
-collision_layer = 3
-collision_mask = 3
 collision_priority = 100.0
 physics_material_override = SubResource("PhysicsMaterial_awrha")
 

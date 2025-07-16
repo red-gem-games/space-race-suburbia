@@ -228,8 +228,8 @@ func _physics_process(delta: float) -> void:
 			position_tween.kill()
 		if glow_tween:
 			glow_tween.kill()
-		if outline.transparency > 0.81:
-			change_glow(outline, 0.8, 0.075)
+		if outline.transparency > 0.91:
+			change_glow(outline, 0.9, 0.075)
 		object_body.top_level = false
 		if is_suspended:
 			return
@@ -311,7 +311,7 @@ func enable_object_glow(object: Node) -> void:
 	# Start the transparency tween
 	var t := create_tween()
 	# Phase 1: 0.99 → 0.95 from 0.0 to 0.4s
-	t.tween_property(object, "transparency", 0.8, 0.25)
+	t.tween_property(object, "transparency", 0.875, 0.25)
 
 
 
