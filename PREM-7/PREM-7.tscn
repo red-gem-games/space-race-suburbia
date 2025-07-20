@@ -1,8 +1,768 @@
-[gd_scene load_steps=97 format=4 uid="uid://bpvm0l41dywjs"]
+[gd_scene load_steps=96 format=4 uid="uid://bpvm0l41dywjs"]
 
 [ext_resource type="Script" uid="uid://so25svauxmkt" path="res://PREM-7/prem_7.gd" id="1_iarxa"]
 [ext_resource type="Shader" uid="uid://vetnq53dk60g" path="res://Shaders/grabbed_glow.gdshader" id="2_4qq6n"]
 [ext_resource type="ArrayMesh" uid="uid://dxs73vc1sll8t" path="res://PREM-7/new_array_mesh.tres" id="5_t05xm"]
+
+[sub_resource type="Animation" id="Animation_caqm6"]
+length = 0.001
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Multitool/Trigger:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(-0.107515, -0.0625, 0, 0.0625, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Multitool/Trigger:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(0.0407202, -0.0625, 0, 0.0625, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Multitool/Trigger:position:z")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(0.23299, -0.0625, 0, 0.0625, 0),
+"times": PackedFloat32Array(0)
+}
+
+[sub_resource type="Animation" id="Animation_2cjep"]
+resource_name = "trigger_pull"
+length = 0.06
+step = 0.005
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Multitool/Trigger:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(-0.107515, -0.0625, 0, 0.0625, 0, -0.085812, -0.0625, 0, 0.0625, 0),
+"times": PackedFloat32Array(0, 0.06)
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Multitool/Trigger:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(0.0407202, -0.0625, 0, 0.0625, 0, 0.089261, -0.0625, 0, 0.0625, 0),
+"times": PackedFloat32Array(0, 0.06)
+}
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Multitool/Trigger:position:z")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(0.23299, -0.0625, 0, 0.0625, 0, -0.0173222, -0.0625, 0, 0.0625, 0),
+"times": PackedFloat32Array(0, 0.06)
+}
+
+[sub_resource type="Animation" id="Animation_3tjq7"]
+resource_name = "trigger_release"
+length = 0.06
+step = 0.005
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Multitool/Trigger:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(-0.085812, -0.0625, 0, 0.0625, 0, -0.107515, -0.0625, 0, 0.0625, 0),
+"times": PackedFloat32Array(0, 0.06)
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Multitool/Trigger:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(0.089261, -0.0625, 0, 0.0625, 0, 0.0407202, -0.0625, 0, 0.0625, 0),
+"times": PackedFloat32Array(0, 0.06)
+}
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Multitool/Trigger:position:z")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(-0.0173222, -0.0625, 0, 0.0625, 0, 0.23299, -0.0625, 0, 0.0625, 0),
+"times": PackedFloat32Array(0, 0.06)
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_yppce"]
+_data = {
+&"RESET": SubResource("Animation_caqm6"),
+&"trigger_pull": SubResource("Animation_2cjep"),
+&"trigger_release": SubResource("Animation_3tjq7")
+}
+
+[sub_resource type="Animation" id="Animation_yppce"]
+length = 0.001
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Multitool/Button:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(-0.1072, -0.03, 0, 0.03, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Multitool/Button:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(0.0198131, -0.03, 0, 0.03, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Multitool/Button:position:z")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(0.292164, -0.03, 0, 0.03, 0),
+"times": PackedFloat32Array(0)
+}
+
+[sub_resource type="Animation" id="Animation_iarxa"]
+resource_name = "control_down"
+length = 0.12
+step = 0.001
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Multitool/Button:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0),
+"points": PackedFloat32Array(-0.1072, -0.03, 0, 0.03, 0, -0.109147, -0.03, 0, 0.03, 0, -0.1072, -0.03, 0, 0.03, 0),
+"times": PackedFloat32Array(0, 0.06, 0.12)
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Multitool/Button:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0),
+"points": PackedFloat32Array(0.0198131, -0.03, 0, 0.03, 0, -0.0780031, -0.03, 0, 0.03, 0, 0.0198131, -0.03, 0, 0.03, 0),
+"times": PackedFloat32Array(0, 0.06, 0.12)
+}
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Multitool/Button:position:z")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0),
+"points": PackedFloat32Array(0.292164, -0.03, 0, 0.03, 0, 0.346491, -0.03, 0, 0.03, 0, 0.292164, -0.03, 0, 0.03, 0),
+"times": PackedFloat32Array(0, 0.06, 0.12)
+}
+
+[sub_resource type="Animation" id="Animation_d8k6r"]
+resource_name = "control_up"
+length = 0.06
+step = 0.125
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Multitool/Button:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(-0.109147, -0.03, 0, 0.03, 0, -0.107, -0.03, 0, 0.03, 0),
+"times": PackedFloat32Array(0, 0.06)
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Multitool/Button:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(-0.0780031, -0.03, 0, 0.03, 0, 0.02, -0.03, 0, 0.03, 0),
+"times": PackedFloat32Array(0, 0.06)
+}
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Multitool/Button:position:z")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(0.346491, -0.03, 0, 0.03, 0, 0.292, -0.03, 0, 0.03, 0),
+"times": PackedFloat32Array(0, 0.06)
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_3tjq7"]
+_data = {
+&"RESET": SubResource("Animation_yppce"),
+&"control_down": SubResource("Animation_iarxa"),
+&"control_up": SubResource("Animation_d8k6r")
+}
+
+[sub_resource type="Animation" id="Animation_4qq6n"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Multitool/Photon_Glow_2:emitting")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Multitool/Photon_Glow_2:draw_pass_1:material:emission_energy_multiplier")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [1.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Multitool/Photon_Glow_2:draw_pass_1:material:emission_enabled")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Multitool/Body_Group/Barrel_1/Photon_Bullet/Photon:draw_pass_1:height")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.02]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Multitool/Body_Group/Barrel_1/Photon_Bullet/Photon:position")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 4.39, 0)]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Multitool/Photon_Glow:transparency")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [1.0]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("Multitool/Body_Group/Barrel_1/Photon_Bullet/Photon:amount")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [1]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("Multitool/Body_Group/Barrel_1/Photon_Bullet/EndParticles:emitting")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("Multitool/Body_Group/Barrel_1/Photon_Bullet/Photon:emitting")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="Animation" id="Animation_s7cmo"]
+resource_name = "grab_object"
+length = 0.5
+step = 0.005
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Multitool/Body_Group/Barrel_1/Photon_Bullet/Photon:draw_pass_1:height")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.02, 1.965]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Multitool/Body_Group/Barrel_1/Photon_Bullet/Photon:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 4.39, 0), Vector3(0, 11.5, 0)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Multitool/Photon_Glow:transparency")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [1.0, 0.0]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Multitool/Body_Group/Barrel_1/Photon_Bullet/Photon:amount")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0.25, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [5, 100]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Multitool/Body_Group/Barrel_1/Photon_Bullet/EndParticles:emitting")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0.495, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Multitool/Body_Group/Barrel_1/Photon_Bullet/Photon:emitting")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0, 0.005),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+
+[sub_resource type="Animation" id="Animation_t05xm"]
+resource_name = "object_grabbed"
+length = 2.0
+loop_mode = 1
+step = 0.1
+
+[sub_resource type="Animation" id="Animation_8m00m"]
+resource_name = "touching_object"
+length = 0.5
+step = 0.005
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_t05xm"]
+_data = {
+&"RESET": SubResource("Animation_4qq6n"),
+&"grab_object": SubResource("Animation_s7cmo"),
+&"object_grabbed": SubResource("Animation_t05xm"),
+&"touching_object": SubResource("Animation_8m00m")
+}
+
+[sub_resource type="Animation" id="Animation_6dr8p"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Hologram:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, -0.174533, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Hologram:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Hologram:scale:x")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(0.001, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/3/type = "bezier"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Hologram:scale:y")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(0.001, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/4/type = "bezier"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Hologram:scale:z")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(0.001, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/5/type = "bezier"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Hologram:rotation:x")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(0, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/6/type = "bezier"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("Hologram:rotation:y")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(-0.174533, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/7/type = "bezier"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("Hologram:rotation:z")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(0, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("Details:visible")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="Animation" id="Animation_5hhbi"]
+resource_name = "cast_details"
+length = 0.5
+step = 0.01
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Details:scale:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(0.01, -0.25, 0, 0.25, 0, 0.9, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0, 0.5)
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Details:scale:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(0.01, -0.25, 0, 0.25, 0, 0.9, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0, 0.5)
+}
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Details:scale:z")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(0.01, -0.25, 0, 0.25, 0, 0.9, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0, 0.5)
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Details:visible")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+
+[sub_resource type="Animation" id="Animation_3nktn"]
+resource_name = "cast_hologram"
+length = 0.5
+step = 0.01
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Hologram:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Hologram:scale:x")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(0.001, -0.25, 0, 0.25, 0, 0.085, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0, 0.5)
+}
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Hologram:scale:y")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(0.001, -0.25, 0, 0.25, 0, 0.085, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0, 0.5)
+}
+tracks/3/type = "bezier"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Hologram:scale:z")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(0.001, -0.25, 0, 0.25, 0, 0.085, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0, 0.5)
+}
+tracks/4/type = "bezier"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Hologram:rotation:x")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(0, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/5/type = "bezier"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Hologram:rotation:y")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(-0.174533, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/6/type = "bezier"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("Hologram:rotation:z")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(0, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+
+[sub_resource type="Animation" id="Animation_61m6q"]
+resource_name = "retract_hologram"
+length = 0.5
+step = 0.01
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Hologram:scale:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(0.085, -0.25, 0, 0.25, 0, 0.001, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0, 0.5)
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Hologram:scale:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(0.085, -0.25, 0, 0.25, 0, 0.001, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0, 0.5)
+}
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Hologram:scale:z")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(0.085, -0.25, 0, 0.25, 0, 0.001, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0, 0.5)
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Hologram:visible")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0.5),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="Animation" id="Animation_l5ika"]
+resource_name = "spin_hologram"
+length = 25.0
+loop_mode = 1
+step = 0.01
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Hologram:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 25),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, -0.174533, 0), Vector3(0, -6.45772, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_3nktn"]
+_data = {
+&"RESET": SubResource("Animation_6dr8p"),
+&"cast_details": SubResource("Animation_5hhbi"),
+&"cast_hologram": SubResource("Animation_3nktn"),
+&"retract_hologram": SubResource("Animation_61m6q"),
+&"spin_hologram": SubResource("Animation_l5ika")
+}
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_a4na6"]
 resource_name = "Material.003"
@@ -96,9 +856,9 @@ shader_parameter/c1 = 1.95
 shader_parameter/c2 = -0.68
 shader_parameter/c3 = 2.81
 shader_parameter/c4 = 3.41
-shader_parameter/fade_min_y = 0.0
-shader_parameter/fade_max_y = 3.0
 shader_parameter/emission_strength = 1.0
+shader_parameter/base_alpha = 0.5
+shader_parameter/uv_projection_mode = 0
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_61m6q"]
 transparency = 1
@@ -106,26 +866,6 @@ albedo_color = Color(1, 0.483333, 0, 1)
 emission_enabled = true
 emission = Color(1, 0.283333, 0, 1)
 emission_energy_multiplier = 100.0
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_t05xm"]
-emission_shape_scale = Vector3(0.05, 0.08, 0.05)
-emission_shape = 2
-emission_sphere_radius = 0.5
-spread = 0.0
-gravity = Vector3(0, 0, 0)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3nktn"]
-albedo_color = Color(0, 0, 0, 1)
-metallic = 1.0
-roughness = 0.0
-emission_enabled = true
-emission = Color(1, 0.266667, 0, 1)
-emission_energy_multiplier = 8.63
-
-[sub_resource type="SphereMesh" id="SphereMesh_l5ika"]
-material = SubResource("StandardMaterial3D_3nktn")
-radius = 0.01
-height = 0.02
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_l5ika"]
 emission_shape_scale = Vector3(0.05, 0.03, 0.07)
@@ -140,6 +880,7 @@ roughness = 0.0
 emission_enabled = true
 emission = Color(1, 0.266667, 0, 1)
 emission_energy_multiplier = 8.0
+grow = true
 
 [sub_resource type="SphereMesh" id="SphereMesh_8d6ws"]
 material = SubResource("StandardMaterial3D_s7cmo")
@@ -309,17 +1050,62 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_ia8nm")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8d6ws"]
-transparency = 1
-albedo_color = Color(1, 0.866667, 0, 1)
-emission_enabled = true
-emission = Color(1, 0.416667, 0, 1)
-emission_energy_multiplier = 10.44
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_t05xm"]
+emission_shape_scale = Vector3(-0.04, 0.08, 0.05)
+emission_shape = 2
+emission_sphere_radius = 0.5
+spread = 0.0
+gravity = Vector3(0, 0, 0)
 
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_8m00m"]
-material = SubResource("StandardMaterial3D_8d6ws")
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_l5ika"]
+transparency = 1
+blend_mode = 3
+cull_mode = 2
+depth_draw_mode = 1
+albedo_color = Color(1, 0.533333, 0, 1)
+emission_enabled = true
+emission = Color(0.45, 0.2925, 0, 1)
+emission_energy_multiplier = 18.1
+
+[sub_resource type="SphereMesh" id="SphereMesh_l5ika"]
+material = SubResource("StandardMaterial3D_l5ika")
+radius = 0.01
+height = 0.02
+
+[sub_resource type="Gradient" id="Gradient_8m00m"]
+colors = PackedColorArray(1, 0, 0, 1, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_mscii"]
+gradient = SubResource("Gradient_8m00m")
+
+[sub_resource type="Curve" id="Curve_t05xm"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.252595, 0.120801), -1.09758, -1.09758, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_vxkva"]
+curve = SubResource("Curve_t05xm")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_6dr8p"]
+spread = 20.0
+initial_velocity_max = 14.61
+gravity = Vector3(0, 0, 0)
+scale_min = 0.5
+scale_max = 0.5
+scale_curve = SubResource("CurveTexture_vxkva")
+color = Color(1, 0, 1, 1)
+color_ramp = SubResource("GradientTexture1D_mscii")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vuyi1"]
+albedo_color = Color(1, 1, 0, 1)
+emission_enabled = true
+emission = Color(1, 0.145098, 0, 1)
+emission_energy_multiplier = 16.0
+billboard_keep_scale = true
+
+[sub_resource type="SphereMesh" id="SphereMesh_3nktn"]
+material = SubResource("StandardMaterial3D_vuyi1")
 radius = 0.2
-height = 3.0
+height = 0.4
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dpu46"]
 transparency = 1
@@ -330,8 +1116,8 @@ emission_energy_multiplier = 77.1
 
 [sub_resource type="TorusMesh" id="TorusMesh_8m00m"]
 material = SubResource("StandardMaterial3D_dpu46")
-inner_radius = 0.478
-outer_radius = 0.464
+inner_radius = 0.525
+outer_radius = 0.404
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_tbqlv"]
 _surfaces = [{
@@ -667,785 +1453,10 @@ material = SubResource("StandardMaterial3D_6dr8p")
 inner_radius = 0.075
 outer_radius = 0.034
 
-[sub_resource type="Animation" id="Animation_caqm6"]
-length = 0.001
-tracks/0/type = "bezier"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Multitool/Trigger:position:x")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"handle_modes": PackedInt32Array(0),
-"points": PackedFloat32Array(-0.107515, -0.0625, 0, 0.0625, 0),
-"times": PackedFloat32Array(0)
-}
-tracks/1/type = "bezier"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Multitool/Trigger:position:y")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"handle_modes": PackedInt32Array(0),
-"points": PackedFloat32Array(0.0407202, -0.0625, 0, 0.0625, 0),
-"times": PackedFloat32Array(0)
-}
-tracks/2/type = "bezier"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Multitool/Trigger:position:z")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"handle_modes": PackedInt32Array(0),
-"points": PackedFloat32Array(0.23299, -0.0625, 0, 0.0625, 0),
-"times": PackedFloat32Array(0)
-}
-
-[sub_resource type="Animation" id="Animation_2cjep"]
-resource_name = "trigger_pull"
-length = 0.06
-step = 0.005
-tracks/0/type = "bezier"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Multitool/Trigger:position:x")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"handle_modes": PackedInt32Array(0, 0),
-"points": PackedFloat32Array(-0.107515, -0.0625, 0, 0.0625, 0, -0.085812, -0.0625, 0, 0.0625, 0),
-"times": PackedFloat32Array(0, 0.06)
-}
-tracks/1/type = "bezier"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Multitool/Trigger:position:y")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"handle_modes": PackedInt32Array(0, 0),
-"points": PackedFloat32Array(0.0407202, -0.0625, 0, 0.0625, 0, 0.089261, -0.0625, 0, 0.0625, 0),
-"times": PackedFloat32Array(0, 0.06)
-}
-tracks/2/type = "bezier"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Multitool/Trigger:position:z")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"handle_modes": PackedInt32Array(0, 0),
-"points": PackedFloat32Array(0.23299, -0.0625, 0, 0.0625, 0, -0.0173222, -0.0625, 0, 0.0625, 0),
-"times": PackedFloat32Array(0, 0.06)
-}
-
-[sub_resource type="Animation" id="Animation_3tjq7"]
-resource_name = "trigger_release"
-length = 0.06
-step = 0.005
-tracks/0/type = "bezier"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Multitool/Trigger:position:x")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"handle_modes": PackedInt32Array(0, 0),
-"points": PackedFloat32Array(-0.085812, -0.0625, 0, 0.0625, 0, -0.107515, -0.0625, 0, 0.0625, 0),
-"times": PackedFloat32Array(0, 0.06)
-}
-tracks/1/type = "bezier"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Multitool/Trigger:position:y")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"handle_modes": PackedInt32Array(0, 0),
-"points": PackedFloat32Array(0.089261, -0.0625, 0, 0.0625, 0, 0.0407202, -0.0625, 0, 0.0625, 0),
-"times": PackedFloat32Array(0, 0.06)
-}
-tracks/2/type = "bezier"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Multitool/Trigger:position:z")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"handle_modes": PackedInt32Array(0, 0),
-"points": PackedFloat32Array(-0.0173222, -0.0625, 0, 0.0625, 0, 0.23299, -0.0625, 0, 0.0625, 0),
-"times": PackedFloat32Array(0, 0.06)
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_yppce"]
-_data = {
-&"RESET": SubResource("Animation_caqm6"),
-&"trigger_pull": SubResource("Animation_2cjep"),
-&"trigger_release": SubResource("Animation_3tjq7")
-}
-
-[sub_resource type="Animation" id="Animation_yppce"]
-length = 0.001
-tracks/0/type = "bezier"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Multitool/Button:position:x")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"handle_modes": PackedInt32Array(0),
-"points": PackedFloat32Array(-0.1072, -0.03, 0, 0.03, 0),
-"times": PackedFloat32Array(0)
-}
-tracks/1/type = "bezier"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Multitool/Button:position:y")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"handle_modes": PackedInt32Array(0),
-"points": PackedFloat32Array(0.0198131, -0.03, 0, 0.03, 0),
-"times": PackedFloat32Array(0)
-}
-tracks/2/type = "bezier"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Multitool/Button:position:z")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"handle_modes": PackedInt32Array(0),
-"points": PackedFloat32Array(0.292164, -0.03, 0, 0.03, 0),
-"times": PackedFloat32Array(0)
-}
-
-[sub_resource type="Animation" id="Animation_iarxa"]
-resource_name = "control_down"
-length = 0.12
-step = 0.001
-tracks/0/type = "bezier"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Multitool/Button:position:x")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"handle_modes": PackedInt32Array(0, 0, 0),
-"points": PackedFloat32Array(-0.1072, -0.03, 0, 0.03, 0, -0.109147, -0.03, 0, 0.03, 0, -0.1072, -0.03, 0, 0.03, 0),
-"times": PackedFloat32Array(0, 0.06, 0.12)
-}
-tracks/1/type = "bezier"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Multitool/Button:position:y")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"handle_modes": PackedInt32Array(0, 0, 0),
-"points": PackedFloat32Array(0.0198131, -0.03, 0, 0.03, 0, -0.0780031, -0.03, 0, 0.03, 0, 0.0198131, -0.03, 0, 0.03, 0),
-"times": PackedFloat32Array(0, 0.06, 0.12)
-}
-tracks/2/type = "bezier"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Multitool/Button:position:z")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"handle_modes": PackedInt32Array(0, 0, 0),
-"points": PackedFloat32Array(0.292164, -0.03, 0, 0.03, 0, 0.346491, -0.03, 0, 0.03, 0, 0.292164, -0.03, 0, 0.03, 0),
-"times": PackedFloat32Array(0, 0.06, 0.12)
-}
-
-[sub_resource type="Animation" id="Animation_d8k6r"]
-resource_name = "control_up"
-length = 0.06
-step = 0.125
-tracks/0/type = "bezier"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Multitool/Button:position:x")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"handle_modes": PackedInt32Array(0, 0),
-"points": PackedFloat32Array(-0.109147, -0.03, 0, 0.03, 0, -0.107, -0.03, 0, 0.03, 0),
-"times": PackedFloat32Array(0, 0.06)
-}
-tracks/1/type = "bezier"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Multitool/Button:position:y")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"handle_modes": PackedInt32Array(0, 0),
-"points": PackedFloat32Array(-0.0780031, -0.03, 0, 0.03, 0, 0.02, -0.03, 0, 0.03, 0),
-"times": PackedFloat32Array(0, 0.06)
-}
-tracks/2/type = "bezier"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Multitool/Button:position:z")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"handle_modes": PackedInt32Array(0, 0),
-"points": PackedFloat32Array(0.346491, -0.03, 0, 0.03, 0, 0.292, -0.03, 0, 0.03, 0),
-"times": PackedFloat32Array(0, 0.06)
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_3tjq7"]
-_data = {
-&"RESET": SubResource("Animation_yppce"),
-&"control_down": SubResource("Animation_iarxa"),
-&"control_up": SubResource("Animation_d8k6r")
-}
-
-[sub_resource type="Animation" id="Animation_4qq6n"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Multitool/Photon_Glow_2:emitting")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [false]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Multitool/Photon_Glow_2:draw_pass_1:material:emission_energy_multiplier")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [1.0]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Multitool/Photon_Glow_2:draw_pass_1:material:emission_enabled")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [true]
-}
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("Multitool/Body_Group/Barrel_1/Photon_Bullet:position")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0, -2, 0)]
-}
-tracks/4/type = "value"
-tracks/4/imported = false
-tracks/4/enabled = true
-tracks/4/path = NodePath("Multitool/Body_Group/Barrel_1/MeshInstance3D2:mesh:inner_radius")
-tracks/4/interp = 1
-tracks/4/loop_wrap = true
-tracks/4/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [0.478]
-}
-tracks/5/type = "value"
-tracks/5/imported = false
-tracks/5/enabled = true
-tracks/5/path = NodePath("Multitool/Body_Group/Barrel_1/MeshInstance3D2:mesh:outer_radius")
-tracks/5/interp = 1
-tracks/5/loop_wrap = true
-tracks/5/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [0.464]
-}
-tracks/6/type = "value"
-tracks/6/imported = false
-tracks/6/enabled = true
-tracks/6/path = NodePath("Multitool/Body_Group/Barrel_1/Photon_Bullet/Bullet:mesh:material:albedo_color")
-tracks/6/interp = 1
-tracks/6/loop_wrap = true
-tracks/6/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Color(1, 0.866667, 0, 1)]
-}
-tracks/7/type = "value"
-tracks/7/imported = false
-tracks/7/enabled = true
-tracks/7/path = NodePath("Multitool/Body_Group/Barrel_1/Photon_Bullet/Bullet:mesh:height")
-tracks/7/interp = 1
-tracks/7/loop_wrap = true
-tracks/7/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [3.0]
-}
-tracks/8/type = "value"
-tracks/8/imported = false
-tracks/8/enabled = true
-tracks/8/path = NodePath("Multitool/Body_Group/Barrel_1/Photon_Bullet/Bullet:mesh:radius")
-tracks/8/interp = 1
-tracks/8/loop_wrap = true
-tracks/8/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [0.2]
-}
-
-[sub_resource type="Animation" id="Animation_8m00m"]
-resource_name = "cast_beam"
-step = 0.05
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Multitool/Photon_Glow_2:emitting")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
-"update": 1,
-"values": [false, true, false, true, false, true, false, true, false, true]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Multitool/Photon_Glow_2:draw_pass_1:material:emission_energy_multiplier")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.4, 0.45, 1),
-"transitions": PackedFloat32Array(1, 1, 1, 1),
-"update": 0,
-"values": [0.01, 10.0, 1.0, 100.0]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Multitool/Body_Group/Barrel_1/Photon_Bullet:position")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0, 0.5),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Vector3(0, -2, 0), Vector3(0, 20, 0)]
-}
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("Multitool/Body_Group/Barrel_1/MeshInstance3D2:mesh:inner_radius")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"times": PackedFloat32Array(0, 0.75, 1),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 0,
-"values": [0.478, 0.915, 0.525]
-}
-tracks/4/type = "value"
-tracks/4/imported = false
-tracks/4/enabled = true
-tracks/4/path = NodePath("Multitool/Body_Group/Barrel_1/MeshInstance3D2:mesh:outer_radius")
-tracks/4/interp = 1
-tracks/4/loop_wrap = true
-tracks/4/keys = {
-"times": PackedFloat32Array(0, 0.75, 1),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 0,
-"values": [0.464, 1.12, 0.404]
-}
-tracks/5/type = "value"
-tracks/5/imported = false
-tracks/5/enabled = true
-tracks/5/path = NodePath("Multitool/Body_Group/Barrel_1/Photon_Bullet/Bullet:mesh:material:albedo_color")
-tracks/5/interp = 1
-tracks/5/loop_wrap = true
-tracks/5/keys = {
-"times": PackedFloat32Array(0, 0.5),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Color(1, 0.866667, 0, 1), Color(1, 0.866667, 0, 0)]
-}
-tracks/6/type = "value"
-tracks/6/imported = false
-tracks/6/enabled = true
-tracks/6/path = NodePath("Multitool/Body_Group/Barrel_1/Photon_Bullet/Bullet:mesh:height")
-tracks/6/interp = 1
-tracks/6/loop_wrap = true
-tracks/6/keys = {
-"times": PackedFloat32Array(0, 0.25, 0.5),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 0,
-"values": [3.0, 30.0, 0.001]
-}
-tracks/7/type = "value"
-tracks/7/imported = false
-tracks/7/enabled = true
-tracks/7/path = NodePath("Multitool/Body_Group/Barrel_1/Photon_Bullet/Bullet:mesh:radius")
-tracks/7/interp = 1
-tracks/7/loop_wrap = true
-tracks/7/keys = {
-"times": PackedFloat32Array(0, 0.25, 0.5),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 0,
-"values": [0.2, 0.2, 0.0005]
-}
-
-[sub_resource type="Animation" id="Animation_t05xm"]
-resource_name = "control_object"
-length = 0.1
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_t05xm"]
-_data = {
-&"RESET": SubResource("Animation_4qq6n"),
-&"cast_beam": SubResource("Animation_8m00m"),
-&"control_object": SubResource("Animation_t05xm")
-}
-
-[sub_resource type="Animation" id="Animation_6dr8p"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Hologram:rotation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0, -0.174533, 0)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Hologram:visible")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [false]
-}
-tracks/2/type = "bezier"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Hologram:scale:x")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"handle_modes": PackedInt32Array(0),
-"points": PackedFloat32Array(0.001, -0.25, 0, 0.25, 0),
-"times": PackedFloat32Array(0)
-}
-tracks/3/type = "bezier"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("Hologram:scale:y")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"handle_modes": PackedInt32Array(0),
-"points": PackedFloat32Array(0.001, -0.25, 0, 0.25, 0),
-"times": PackedFloat32Array(0)
-}
-tracks/4/type = "bezier"
-tracks/4/imported = false
-tracks/4/enabled = true
-tracks/4/path = NodePath("Hologram:scale:z")
-tracks/4/interp = 1
-tracks/4/loop_wrap = true
-tracks/4/keys = {
-"handle_modes": PackedInt32Array(0),
-"points": PackedFloat32Array(0.001, -0.25, 0, 0.25, 0),
-"times": PackedFloat32Array(0)
-}
-tracks/5/type = "bezier"
-tracks/5/imported = false
-tracks/5/enabled = true
-tracks/5/path = NodePath("Hologram:rotation:x")
-tracks/5/interp = 1
-tracks/5/loop_wrap = true
-tracks/5/keys = {
-"handle_modes": PackedInt32Array(0),
-"points": PackedFloat32Array(0, -0.25, 0, 0.25, 0),
-"times": PackedFloat32Array(0)
-}
-tracks/6/type = "bezier"
-tracks/6/imported = false
-tracks/6/enabled = true
-tracks/6/path = NodePath("Hologram:rotation:y")
-tracks/6/interp = 1
-tracks/6/loop_wrap = true
-tracks/6/keys = {
-"handle_modes": PackedInt32Array(0),
-"points": PackedFloat32Array(-0.174533, -0.25, 0, 0.25, 0),
-"times": PackedFloat32Array(0)
-}
-tracks/7/type = "bezier"
-tracks/7/imported = false
-tracks/7/enabled = true
-tracks/7/path = NodePath("Hologram:rotation:z")
-tracks/7/interp = 1
-tracks/7/loop_wrap = true
-tracks/7/keys = {
-"handle_modes": PackedInt32Array(0),
-"points": PackedFloat32Array(0, -0.25, 0, 0.25, 0),
-"times": PackedFloat32Array(0)
-}
-tracks/8/type = "value"
-tracks/8/imported = false
-tracks/8/enabled = true
-tracks/8/path = NodePath("Details:visible")
-tracks/8/interp = 1
-tracks/8/loop_wrap = true
-tracks/8/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [false]
-}
-
-[sub_resource type="Animation" id="Animation_5hhbi"]
-resource_name = "cast_details"
-length = 0.5
-step = 0.01
-tracks/0/type = "bezier"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Details:scale:x")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"handle_modes": PackedInt32Array(0, 0),
-"points": PackedFloat32Array(0.01, -0.25, 0, 0.25, 0, 0.9, -0.25, 0, 0.25, 0),
-"times": PackedFloat32Array(0, 0.5)
-}
-tracks/1/type = "bezier"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Details:scale:y")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"handle_modes": PackedInt32Array(0, 0),
-"points": PackedFloat32Array(0.01, -0.25, 0, 0.25, 0, 0.9, -0.25, 0, 0.25, 0),
-"times": PackedFloat32Array(0, 0.5)
-}
-tracks/2/type = "bezier"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Details:scale:z")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"handle_modes": PackedInt32Array(0, 0),
-"points": PackedFloat32Array(0.01, -0.25, 0, 0.25, 0, 0.9, -0.25, 0, 0.25, 0),
-"times": PackedFloat32Array(0, 0.5)
-}
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("Details:visible")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [true]
-}
-
-[sub_resource type="Animation" id="Animation_3nktn"]
-resource_name = "cast_hologram"
-length = 0.5
-step = 0.01
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Hologram:visible")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [true]
-}
-tracks/1/type = "bezier"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Hologram:scale:x")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"handle_modes": PackedInt32Array(0, 0),
-"points": PackedFloat32Array(0.001, -0.25, 0, 0.25, 0, 0.085, -0.25, 0, 0.25, 0),
-"times": PackedFloat32Array(0, 0.5)
-}
-tracks/2/type = "bezier"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Hologram:scale:y")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"handle_modes": PackedInt32Array(0, 0),
-"points": PackedFloat32Array(0.001, -0.25, 0, 0.25, 0, 0.085, -0.25, 0, 0.25, 0),
-"times": PackedFloat32Array(0, 0.5)
-}
-tracks/3/type = "bezier"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("Hologram:scale:z")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"handle_modes": PackedInt32Array(0, 0),
-"points": PackedFloat32Array(0.001, -0.25, 0, 0.25, 0, 0.085, -0.25, 0, 0.25, 0),
-"times": PackedFloat32Array(0, 0.5)
-}
-tracks/4/type = "bezier"
-tracks/4/imported = false
-tracks/4/enabled = true
-tracks/4/path = NodePath("Hologram:rotation:x")
-tracks/4/interp = 1
-tracks/4/loop_wrap = true
-tracks/4/keys = {
-"handle_modes": PackedInt32Array(0),
-"points": PackedFloat32Array(0, -0.25, 0, 0.25, 0),
-"times": PackedFloat32Array(0)
-}
-tracks/5/type = "bezier"
-tracks/5/imported = false
-tracks/5/enabled = true
-tracks/5/path = NodePath("Hologram:rotation:y")
-tracks/5/interp = 1
-tracks/5/loop_wrap = true
-tracks/5/keys = {
-"handle_modes": PackedInt32Array(0),
-"points": PackedFloat32Array(-0.174533, -0.25, 0, 0.25, 0),
-"times": PackedFloat32Array(0)
-}
-tracks/6/type = "bezier"
-tracks/6/imported = false
-tracks/6/enabled = true
-tracks/6/path = NodePath("Hologram:rotation:z")
-tracks/6/interp = 1
-tracks/6/loop_wrap = true
-tracks/6/keys = {
-"handle_modes": PackedInt32Array(0),
-"points": PackedFloat32Array(0, -0.25, 0, 0.25, 0),
-"times": PackedFloat32Array(0)
-}
-
-[sub_resource type="Animation" id="Animation_61m6q"]
-resource_name = "retract_hologram"
-length = 0.5
-step = 0.01
-tracks/0/type = "bezier"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Hologram:scale:x")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"handle_modes": PackedInt32Array(0, 0),
-"points": PackedFloat32Array(0.085, -0.25, 0, 0.25, 0, 0.001, -0.25, 0, 0.25, 0),
-"times": PackedFloat32Array(0, 0.5)
-}
-tracks/1/type = "bezier"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Hologram:scale:y")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"handle_modes": PackedInt32Array(0, 0),
-"points": PackedFloat32Array(0.085, -0.25, 0, 0.25, 0, 0.001, -0.25, 0, 0.25, 0),
-"times": PackedFloat32Array(0, 0.5)
-}
-tracks/2/type = "bezier"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Hologram:scale:z")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"handle_modes": PackedInt32Array(0, 0),
-"points": PackedFloat32Array(0.085, -0.25, 0, 0.25, 0, 0.001, -0.25, 0, 0.25, 0),
-"times": PackedFloat32Array(0, 0.5)
-}
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("Hologram:visible")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"times": PackedFloat32Array(0.5),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [false]
-}
-
-[sub_resource type="Animation" id="Animation_l5ika"]
-resource_name = "spin_hologram"
-length = 25.0
-loop_mode = 1
-step = 0.01
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Hologram:rotation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 25),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Vector3(0, -0.174533, 0), Vector3(0, -6.45772, 0)]
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_3nktn"]
-_data = {
-&"RESET": SubResource("Animation_6dr8p"),
-&"cast_details": SubResource("Animation_5hhbi"),
-&"cast_hologram": SubResource("Animation_3nktn"),
-&"retract_hologram": SubResource("Animation_61m6q"),
-&"spin_hologram": SubResource("Animation_l5ika")
-}
-
 [sub_resource type="Gradient" id="Gradient_6dr8p"]
 colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1)
 
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_mscii"]
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_61m6q"]
 gradient = SubResource("Gradient_6dr8p")
 
 [sub_resource type="Curve" id="Curve_3nktn"]
@@ -1473,7 +1484,7 @@ curve_z = SubResource("Curve_5hhbi")
 gravity = Vector3(0, 0, 0)
 scale_curve = SubResource("CurveXYZTexture_vuyi1")
 color = Color(1.26103e-05, 0.840319, 1.15514e-06, 1)
-color_ramp = SubResource("GradientTexture1D_mscii")
+color_ramp = SubResource("GradientTexture1D_61m6q")
 turbulence_noise_strength = 10.89
 
 [sub_resource type="Curve" id="Curve_4qq6n"]
@@ -1500,53 +1511,9 @@ shader_parameter/c1 = 0.18
 shader_parameter/c2 = 0.5
 shader_parameter/c3 = 2.98
 shader_parameter/c4 = 3.25
-shader_parameter/fade_min_y = 1.12
-shader_parameter/fade_max_y = -0.14
 shader_parameter/emission_strength = 1.0
-
-[sub_resource type="TorusMesh" id="TorusMesh_4qq6n"]
-inner_radius = 0.181
-outer_radius = 0.227
-rings = 250
-ring_segments = 250
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_6dr8p"]
-render_priority = 0
-shader = ExtResource("2_4qq6n")
-shader_parameter/speed = 0.1
-shader_parameter/ring_scale = 1.5
-shader_parameter/wave_scale = 4.0
-shader_parameter/random_scale = 10.0
-shader_parameter/noise_scale = 0.1
-shader_parameter/c1 = 0.18
-shader_parameter/c2 = 0.5
-shader_parameter/c3 = 2.98
-shader_parameter/c4 = 3.25
-shader_parameter/fade_min_y = -3.0
-shader_parameter/fade_max_y = 3.0
-shader_parameter/emission_strength = 1.0
-
-[sub_resource type="TorusMesh" id="TorusMesh_3nktn"]
-inner_radius = 0.181
-outer_radius = 0.227
-rings = 250
-ring_segments = 250
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_61m6q"]
-render_priority = 0
-shader = ExtResource("2_4qq6n")
-shader_parameter/speed = 0.1
-shader_parameter/ring_scale = 1.5
-shader_parameter/wave_scale = 4.0
-shader_parameter/random_scale = 10.0
-shader_parameter/noise_scale = 0.1
-shader_parameter/c1 = 0.18
-shader_parameter/c2 = 0.5
-shader_parameter/c3 = 2.98
-shader_parameter/c4 = 3.25
-shader_parameter/fade_min_y = -34.59
-shader_parameter/fade_max_y = 17.31
-shader_parameter/emission_strength = 1.0
+shader_parameter/base_alpha = 0.5
+shader_parameter/uv_projection_mode = 0
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4qq6n"]
 
@@ -1558,28 +1525,33 @@ height = 1.25
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_t05xm"]
 
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_8m00m"]
-emission_shape_scale = Vector3(0.28, 0.25, 0.09)
-emission_shape = 2
-emission_sphere_radius = 0.3
-spread = 0.0
-gravity = Vector3(0, 0, 0)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_l5ika"]
-emission_enabled = true
-emission = Color(0.0833333, 1, 0, 1)
-emission_energy_multiplier = 10.0
-
-[sub_resource type="SphereMesh" id="SphereMesh_4qq6n"]
-material = SubResource("StandardMaterial3D_l5ika")
-radius = 0.005
-height = 0.01
-
 [node name="PREM-7" type="Node3D"]
 script = ExtResource("1_iarxa")
 
+[node name="Trigger_Animation" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_yppce")
+}
+
+[node name="Control_Animation" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_3tjq7")
+}
+
+[node name="Beam_Animation" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_t05xm")
+}
+speed_scale = 1.75
+movie_quit_on_finish = true
+
+[node name="Hologram_Animation" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_3nktn")
+}
+
 [node name="Multitool" type="Node3D" parent="."]
-transform = Transform3D(-0.246939, -0.00781692, -0.022926, -0.00958782, 0.249578, 0.00654291, 0.0378046, 0.0122367, -0.148093, 0.00330822, -0.113262, 0.064556)
+transform = Transform3D(-0.246939, -0.00781692, -0.022926, -0.00958782, 0.249578, 0.00654291, 0.0378046, 0.0122367, -0.148093, 0.00330822, -0.113262, -0.384817)
 
 [node name="Object_Inventory" type="Node3D" parent="Multitool"]
 transform = Transform3D(0.00996917, 0, 0.000784591, 0, 0.01, 0, -0.000784591, 0, 0.00996917, -0.13, 0.51, 2.89)
@@ -1599,21 +1571,14 @@ surface_material_override/0 = SubResource("ShaderMaterial_4qq6n")
 
 [node name="Photon_Glow" type="MeshInstance3D" parent="Multitool"]
 transform = Transform3D(9.31323e-09, 5.96046e-08, 1.22, -1.19198, 0.498595, 1.02445e-08, -0.208035, -2.85682, 2.98023e-08, -0.188521, -0.207907, 0.273234)
+transparency = 1.0
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_f3egd")
 skeleton = NodePath("")
 surface_material_override/0 = SubResource("StandardMaterial3D_61m6q")
 
-[node name="GPUParticles3D3" type="GPUParticles3D" parent="Multitool/Photon_Glow"]
-transform = Transform3D(2.65618, 1.46735, 0.392462, -1.57431, 2.50574, -0.0515445, -0.344797, -0.137086, 3.25872, -1.14119, -1.20922, 0.060176)
-amount = 250
-lifetime = 0.01
-speed_scale = 8.0
-process_material = SubResource("ParticleProcessMaterial_t05xm")
-draw_pass_1 = SubResource("SphereMesh_l5ika")
-
 [node name="GPUParticles3D4" type="GPUParticles3D" parent="Multitool/Photon_Glow"]
-transform = Transform3D(0.902886, 2.34071, -13.2319, -1.13373, 9.49267, 0.531002, 21.1738, 2.77377, 0.715667, -1.00023, -0.815962, 0.0487099)
+transform = Transform3D(0.902887, 2.34071, -13.2319, -1.13373, 9.49267, 0.531002, 21.1738, 2.77377, 0.715667, -1.00446, -0.828202, 0.0460097)
 visible = false
 amount = 335
 lifetime = 0.01
@@ -1652,12 +1617,30 @@ skeleton = NodePath("")
 [node name="Photon_Bullet" type="Node3D" parent="Multitool/Body_Group/Barrel_1"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2, 0)
 
-[node name="Bullet" type="MeshInstance3D" parent="Multitool/Body_Group/Barrel_1/Photon_Bullet"]
-transform = Transform3D(0.25, 4.65661e-09, -2.91038e-10, -4.65661e-09, 0.25, 5.82077e-10, 2.91038e-10, -5.82077e-10, 0.25, -0.001, 4.171, -0.016)
-mesh = SubResource("CapsuleMesh_8m00m")
+[node name="Photon" type="GPUParticles3D" parent="Multitool/Body_Group/Barrel_1/Photon_Bullet"]
+transform = Transform3D(6.5, 0, 0, 0, 8.729, 0, 0, 0, 4.644, 0, 4.39, 0)
+cast_shadow = 0
+emitting = false
+amount = 1
+lifetime = 0.01
+speed_scale = 8.0
+process_material = SubResource("ParticleProcessMaterial_t05xm")
+draw_pass_1 = SubResource("SphereMesh_l5ika")
+
+[node name="EndParticles" type="GPUParticles3D" parent="Multitool/Body_Group/Barrel_1/Photon_Bullet"]
+transform = Transform3D(-4.47035e-08, 1, 1.39698e-08, -0.999999, 4.47035e-08, -3.72529e-08, -4.47035e-08, -3.72529e-09, 0.999998, -0.0413232, 20.1231, 0.0212742)
+cast_shadow = 0
+visibility_range_fade_mode = 1
+emitting = false
+amount = 250
+lifetime = 0.14
+speed_scale = 64.0
+process_material = SubResource("ParticleProcessMaterial_6dr8p")
+draw_pass_1 = SubResource("SphereMesh_3nktn")
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="Multitool/Body_Group/Barrel_1"]
 transform = Transform3D(1, 1.49012e-08, -6.0536e-09, -1.49012e-08, 1, 7.45058e-09, -9.31323e-10, 0, 1, 0, 1.12, 0)
+visible = false
 mesh = SubResource("TorusMesh_8m00m")
 
 [node name="Barrel_2" type="MeshInstance3D" parent="Multitool/Body_Group"]
@@ -1765,39 +1748,18 @@ explosiveness = 0.04
 process_material = SubResource("ParticleProcessMaterial_4qq6n")
 draw_pass_1 = SubResource("TorusMesh_t05xm")
 
-[node name="Trigger_Animation" type="AnimationPlayer" parent="."]
-libraries = {
-&"": SubResource("AnimationLibrary_yppce")
-}
-
-[node name="Control_Animation" type="AnimationPlayer" parent="."]
-libraries = {
-&"": SubResource("AnimationLibrary_3tjq7")
-}
-
-[node name="Beam_Animation" type="AnimationPlayer" parent="."]
-libraries = {
-&"": SubResource("AnimationLibrary_t05xm")
-}
-speed_scale = 1.75
-
-[node name="Hologram_Animation" type="AnimationPlayer" parent="."]
-libraries = {
-&"": SubResource("AnimationLibrary_3nktn")
-}
-
 [node name="SpotLight3D" type="SpotLight3D" parent="."]
-transform = Transform3D(0.498528, 0.142093, -0.855149, -0.0715637, 0.989853, 0.122757, 0.863915, 0, 0.503638, -1.85658, 0.509018, 0.527215)
+transform = Transform3D(0.498528, 0.142093, -0.855149, -0.0715637, 0.989853, 0.122756, 0.863915, 1.72568e-07, 0.503638, -1.85658, 0.509018, 0.0778424)
 light_specular = 1.0
 shadow_enabled = true
 
 [node name="SpotLight3D2" type="SpotLight3D" parent="."]
-transform = Transform3D(-0.212614, 0.105105, -0.971467, -0.0715637, 0.989853, 0.122757, 0.974512, 0.0956215, -0.202935, -0.197883, -0.25074, -0.0400561)
+transform = Transform3D(-0.212614, 0.105105, -0.971467, -0.0715637, 0.989853, 0.122757, 0.974512, 0.0956216, -0.202935, -0.197883, -0.25074, -0.489429)
 light_specular = 1.0
 shadow_enabled = true
 
 [node name="GPUParticles3D" type="GPUParticles3D" parent="."]
-transform = Transform3D(0.0173955, -0.586107, 0.810032, 0.0240309, -0.809676, -0.586365, 0.999559, 0.029666, -3.54076e-08, 0, 0, -0.4)
+transform = Transform3D(0.0173955, -0.586107, 0.810032, 0.0240309, -0.809676, -0.586365, 0.999559, 0.029666, -3.54076e-08, 0, 0, -0.849373)
 visible = false
 emitting = false
 amount = 1
@@ -1807,7 +1769,7 @@ process_material = SubResource("ParticleProcessMaterial_s7cmo")
 draw_pass_1 = ExtResource("5_t05xm")
 
 [node name="Hologram" type="Node3D" parent="."]
-transform = Transform3D(0.000984808, 0, -0.000173648, 0, 0.001, 0, 0.000173648, 0, 0.000984808, 0, 0.364234, -0.0664346)
+transform = Transform3D(0.000984808, 0, -0.000173648, 0, 0.001, 0, 0.000173648, 0, 0.000984808, 0, 0.364234, -0.515807)
 visible = false
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Hologram"]
@@ -1817,7 +1779,7 @@ skeleton = NodePath("../..")
 surface_material_override/0 = SubResource("ShaderMaterial_l5ika")
 
 [node name="Details" type="Label3D" parent="."]
-transform = Transform3D(0.00965926, 0, 0.00258819, 0, 0.01, 0, -0.00258819, 0, 0.00965926, 0.0143264, 0.38144, -0.116609)
+transform = Transform3D(0.00965926, 0, 0.00258819, 0, 0.01, 0, -0.00258819, 0, 0.00965926, 0.0143264, 0.38144, -0.565982)
 visible = false
 pixel_size = 0.001
 modulate = Color(0.752941, 0, 1, 0.729412)
@@ -1827,256 +1789,8 @@ Mass: 85 kg"
 font_size = 80
 outline_size = 5
 
-[node name="Bubble_Beam" type="Node3D" parent="."]
-transform = Transform3D(0.435469, 0, 0.113431, 0, 0.45, 0, -0.113431, 0, 0.435469, -0.493, 0.054, -2.072)
-visible = false
-
-[node name="1" type="MeshInstance3D" parent="Bubble_Beam"]
-transform = Transform3D(-0.211417, -0.25312, -1.3606, -1.38371, 0.0132287, 0.212547, -0.025572, 1.37686, -0.252172, 0, 0, -3.14)
-mesh = SubResource("TorusMesh_4qq6n")
-skeleton = NodePath("../..")
-surface_material_override/0 = SubResource("ShaderMaterial_6dr8p")
-
-[node name="2" type="MeshInstance3D" parent="Bubble_Beam"]
-transform = Transform3D(-0.181215, -0.21696, -1.16623, -1.18604, 0.0113389, 0.182183, -0.0219189, 1.18017, -0.216148, 0, 0, -3.1)
-mesh = SubResource("TorusMesh_3nktn")
-skeleton = NodePath("../..")
-surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
-
-[node name="3" type="MeshInstance3D" parent="Bubble_Beam"]
-transform = Transform3D(-0.151012, -0.1808, -0.971857, -0.988363, 0.0094491, 0.151819, -0.0182657, 0.983474, -0.180123, 0, 0, -3.08)
-mesh = SubResource("TorusMesh_3nktn")
-skeleton = NodePath("../..")
-surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
-
-[node name="4" type="MeshInstance3D" parent="Bubble_Beam"]
-transform = Transform3D(-0.135911, -0.16272, -0.874672, -0.889527, 0.00850419, 0.136637, -0.0164392, 0.885127, -0.162111, 0, 0, -3.06)
-mesh = SubResource("TorusMesh_3nktn")
-skeleton = NodePath("../..")
-surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
-
-[node name="5" type="MeshInstance3D" parent="Bubble_Beam"]
-transform = Transform3D(-0.113259, -0.1356, -0.728893, -0.741272, 0.00708683, 0.113864, -0.0136993, 0.737606, -0.135092, 0, 0, -3.057)
-mesh = SubResource("TorusMesh_3nktn")
-skeleton = NodePath("../..")
-surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
-
-[node name="6" type="MeshInstance3D" parent="Bubble_Beam"]
-transform = Transform3D(-0.203867, -0.24408, -1.31201, -1.33429, 0.0127563, 0.204956, -0.0246587, 1.32769, -0.243166, 0, 0, -3.115)
-visible = false
-mesh = SubResource("TorusMesh_3nktn")
-skeleton = NodePath("../..")
-surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
-
-[node name="7" type="MeshInstance3D" parent="Bubble_Beam"]
-transform = Transform3D(-0.203867, -0.24408, -1.31201, -1.33429, 0.0127563, 0.204956, -0.0246587, 1.32769, -0.243166, 0, 0, -3.11)
-visible = false
-mesh = SubResource("TorusMesh_3nktn")
-skeleton = NodePath("../..")
-surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
-
-[node name="8" type="MeshInstance3D" parent="Bubble_Beam"]
-transform = Transform3D(-0.203867, -0.24408, -1.31201, -1.33429, 0.0127563, 0.204956, -0.0246587, 1.32769, -0.243166, 0, 0, -3.105)
-visible = false
-mesh = SubResource("TorusMesh_3nktn")
-skeleton = NodePath("../..")
-surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
-
-[node name="9" type="MeshInstance3D" parent="Bubble_Beam"]
-transform = Transform3D(-0.203867, -0.24408, -1.31201, -1.33429, 0.0127563, 0.204956, -0.0246587, 1.32769, -0.243166, 0, 0, -3.1)
-visible = false
-mesh = SubResource("TorusMesh_3nktn")
-skeleton = NodePath("../..")
-surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
-
-[node name="10" type="MeshInstance3D" parent="Bubble_Beam"]
-transform = Transform3D(-0.0151012, -0.01808, -0.0971857, -0.0988363, 0.00094491, 0.0151819, -0.00182657, 0.0983474, -0.0180123, 0, 0, 0)
-mesh = SubResource("TorusMesh_3nktn")
-skeleton = NodePath("../..")
-surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
-
-[node name="11" type="MeshInstance3D" parent="Bubble_Beam"]
-transform = Transform3D(-0.0151012, -0.01808, -0.0971857, -0.0988363, 0.00094491, 0.0151819, -0.00182657, 0.0983474, -0.0180123, 0, 0, 0)
-mesh = SubResource("TorusMesh_3nktn")
-skeleton = NodePath("../..")
-surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
-
-[node name="12" type="MeshInstance3D" parent="Bubble_Beam"]
-transform = Transform3D(-0.0151012, -0.01808, -0.0971857, -0.0988363, 0.00094491, 0.0151819, -0.00182657, 0.0983474, -0.0180123, 0, 0, 0)
-mesh = SubResource("TorusMesh_3nktn")
-skeleton = NodePath("../..")
-surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
-
-[node name="13" type="MeshInstance3D" parent="Bubble_Beam"]
-transform = Transform3D(-0.0151012, -0.01808, -0.0971857, -0.0988363, 0.00094491, 0.0151819, -0.00182657, 0.0983474, -0.0180123, 0, 0, 0)
-mesh = SubResource("TorusMesh_3nktn")
-skeleton = NodePath("../..")
-surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
-
-[node name="14" type="MeshInstance3D" parent="Bubble_Beam"]
-transform = Transform3D(-0.0151012, -0.01808, -0.0971857, -0.0988363, 0.00094491, 0.0151819, -0.00182657, 0.0983474, -0.0180123, 0, 0, 0)
-mesh = SubResource("TorusMesh_3nktn")
-skeleton = NodePath("../..")
-surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
-
-[node name="15" type="MeshInstance3D" parent="Bubble_Beam"]
-transform = Transform3D(-0.0151012, -0.01808, -0.0971857, -0.0988363, 0.00094491, 0.0151819, -0.00182657, 0.0983474, -0.0180123, 0, 0, 0)
-mesh = SubResource("TorusMesh_3nktn")
-skeleton = NodePath("../..")
-surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
-
-[node name="16" type="MeshInstance3D" parent="Bubble_Beam"]
-transform = Transform3D(-0.0151012, -0.01808, -0.0971857, -0.0988363, 0.00094491, 0.0151819, -0.00182657, 0.0983474, -0.0180123, 0, 0, 0)
-mesh = SubResource("TorusMesh_3nktn")
-skeleton = NodePath("../..")
-surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
-
-[node name="17" type="MeshInstance3D" parent="Bubble_Beam"]
-transform = Transform3D(-0.0151012, -0.01808, -0.0971857, -0.0988363, 0.00094491, 0.0151819, -0.00182657, 0.0983474, -0.0180123, 0, 0, 0)
-mesh = SubResource("TorusMesh_3nktn")
-skeleton = NodePath("../..")
-surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
-
-[node name="18" type="MeshInstance3D" parent="Bubble_Beam"]
-transform = Transform3D(-0.0151012, -0.01808, -0.0971857, -0.0988363, 0.00094491, 0.0151819, -0.00182657, 0.0983474, -0.0180123, 0, 0, 0)
-mesh = SubResource("TorusMesh_3nktn")
-skeleton = NodePath("../..")
-surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
-
-[node name="19" type="MeshInstance3D" parent="Bubble_Beam"]
-transform = Transform3D(-0.0151012, -0.01808, -0.0971857, -0.0988363, 0.00094491, 0.0151819, -0.00182657, 0.0983474, -0.0180123, 0, 0, 0)
-mesh = SubResource("TorusMesh_3nktn")
-skeleton = NodePath("../..")
-surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
-
-[node name="20" type="MeshInstance3D" parent="Bubble_Beam"]
-transform = Transform3D(-0.0151012, -0.01808, -0.0971857, -0.0988363, 0.00094491, 0.0151819, -0.00182657, 0.0983474, -0.0180123, 0, 0, 0)
-mesh = SubResource("TorusMesh_3nktn")
-skeleton = NodePath("../..")
-surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
-
-[node name="21" type="MeshInstance3D" parent="Bubble_Beam"]
-transform = Transform3D(-0.0151012, -0.01808, -0.0971857, -0.0988363, 0.00094491, 0.0151819, -0.00182657, 0.0983474, -0.0180123, 0, 0, 0)
-mesh = SubResource("TorusMesh_3nktn")
-skeleton = NodePath("../..")
-surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
-
-[node name="22" type="MeshInstance3D" parent="Bubble_Beam"]
-transform = Transform3D(-0.0151012, -0.01808, -0.0971857, -0.0988363, 0.00094491, 0.0151819, -0.00182657, 0.0983474, -0.0180123, 0, 0, 0)
-mesh = SubResource("TorusMesh_3nktn")
-skeleton = NodePath("../..")
-surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
-
-[node name="23" type="MeshInstance3D" parent="Bubble_Beam"]
-transform = Transform3D(-0.0151012, -0.01808, -0.0971857, -0.0988363, 0.00094491, 0.0151819, -0.00182657, 0.0983474, -0.0180123, 0, 0, 0)
-mesh = SubResource("TorusMesh_3nktn")
-skeleton = NodePath("../..")
-surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
-
-[node name="24" type="MeshInstance3D" parent="Bubble_Beam"]
-transform = Transform3D(-0.0151012, -0.01808, -0.0971857, -0.0988363, 0.00094491, 0.0151819, -0.00182657, 0.0983474, -0.0180123, 0, 0, 0)
-mesh = SubResource("TorusMesh_3nktn")
-skeleton = NodePath("../..")
-surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
-
-[node name="25" type="MeshInstance3D" parent="Bubble_Beam"]
-transform = Transform3D(-0.0151012, -0.01808, -0.0971857, -0.0988363, 0.00094491, 0.0151819, -0.00182657, 0.0983474, -0.0180123, 0, 0, 0)
-mesh = SubResource("TorusMesh_3nktn")
-skeleton = NodePath("../..")
-surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
-
-[node name="26" type="MeshInstance3D" parent="Bubble_Beam"]
-transform = Transform3D(-0.0151012, -0.01808, -0.0971857, -0.0988363, 0.00094491, 0.0151819, -0.00182657, 0.0983474, -0.0180123, 0, 0, 0)
-mesh = SubResource("TorusMesh_3nktn")
-skeleton = NodePath("../..")
-surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
-
-[node name="27" type="MeshInstance3D" parent="Bubble_Beam"]
-transform = Transform3D(-0.0151012, -0.01808, -0.0971857, -0.0988363, 0.00094491, 0.0151819, -0.00182657, 0.0983474, -0.0180123, 0, 0, 0)
-mesh = SubResource("TorusMesh_3nktn")
-skeleton = NodePath("../..")
-surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
-
-[node name="28" type="MeshInstance3D" parent="Bubble_Beam"]
-transform = Transform3D(-0.0151012, -0.01808, -0.0971857, -0.0988363, 0.00094491, 0.0151819, -0.00182657, 0.0983474, -0.0180123, 0, 0, 0)
-mesh = SubResource("TorusMesh_3nktn")
-skeleton = NodePath("../..")
-surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
-
-[node name="29" type="MeshInstance3D" parent="Bubble_Beam"]
-transform = Transform3D(-0.0151012, -0.01808, -0.0971857, -0.0988363, 0.00094491, 0.0151819, -0.00182657, 0.0983474, -0.0180123, 0, 0, 0)
-mesh = SubResource("TorusMesh_3nktn")
-skeleton = NodePath("../..")
-surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
-
-[node name="30" type="MeshInstance3D" parent="Bubble_Beam"]
-transform = Transform3D(-0.0151012, -0.01808, -0.0971857, -0.0988363, 0.00094491, 0.0151819, -0.00182657, 0.0983474, -0.0180123, 0, 0, 0)
-mesh = SubResource("TorusMesh_3nktn")
-skeleton = NodePath("../..")
-surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
-
-[node name="31" type="MeshInstance3D" parent="Bubble_Beam"]
-transform = Transform3D(-0.0151012, -0.01808, -0.0971857, -0.0988363, 0.00094491, 0.0151819, -0.00182657, 0.0983474, -0.0180123, 0, 0, 0)
-mesh = SubResource("TorusMesh_3nktn")
-skeleton = NodePath("../..")
-surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
-
-[node name="32" type="MeshInstance3D" parent="Bubble_Beam"]
-transform = Transform3D(-0.0151012, -0.01808, -0.0971857, -0.0988363, 0.00094491, 0.0151819, -0.00182657, 0.0983474, -0.0180123, 0, 0, 0)
-mesh = SubResource("TorusMesh_3nktn")
-skeleton = NodePath("../..")
-surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
-
-[node name="33" type="MeshInstance3D" parent="Bubble_Beam"]
-transform = Transform3D(-0.0151012, -0.01808, -0.0971857, -0.0988363, 0.00094491, 0.0151819, -0.00182657, 0.0983474, -0.0180123, 0, 0, 0)
-mesh = SubResource("TorusMesh_3nktn")
-skeleton = NodePath("../..")
-surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
-
-[node name="34" type="MeshInstance3D" parent="Bubble_Beam"]
-transform = Transform3D(-0.0151012, -0.01808, -0.0971857, -0.0988363, 0.00094491, 0.0151819, -0.00182657, 0.0983474, -0.0180123, 0, 0, 0)
-mesh = SubResource("TorusMesh_3nktn")
-skeleton = NodePath("../..")
-surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
-
-[node name="35" type="MeshInstance3D" parent="Bubble_Beam"]
-transform = Transform3D(-0.0151012, -0.01808, -0.0971857, -0.0988363, 0.00094491, 0.0151819, -0.00182657, 0.0983474, -0.0180123, 0, 0, 0)
-mesh = SubResource("TorusMesh_3nktn")
-skeleton = NodePath("../..")
-surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
-
-[node name="36" type="MeshInstance3D" parent="Bubble_Beam"]
-transform = Transform3D(-0.0151012, -0.01808, -0.0971857, -0.0988363, 0.00094491, 0.0151819, -0.00182657, 0.0983474, -0.0180123, 0, 0, 0)
-mesh = SubResource("TorusMesh_3nktn")
-skeleton = NodePath("../..")
-surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
-
-[node name="37" type="MeshInstance3D" parent="Bubble_Beam"]
-transform = Transform3D(-0.0151012, -0.01808, -0.0971857, -0.0988363, 0.00094491, 0.0151819, -0.00182657, 0.0983474, -0.0180123, 0, 0, 0)
-mesh = SubResource("TorusMesh_3nktn")
-skeleton = NodePath("../..")
-surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
-
-[node name="38" type="MeshInstance3D" parent="Bubble_Beam"]
-transform = Transform3D(-0.0151012, -0.01808, -0.0971857, -0.0988363, 0.00094491, 0.0151819, -0.00182657, 0.0983474, -0.0180123, 0, 0, 0)
-mesh = SubResource("TorusMesh_3nktn")
-skeleton = NodePath("../..")
-surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
-
-[node name="39" type="MeshInstance3D" parent="Bubble_Beam"]
-transform = Transform3D(-0.0151012, -0.01808, -0.0971857, -0.0988363, 0.00094491, 0.0151819, -0.00182657, 0.0983474, -0.0180123, 0, 0, 0)
-mesh = SubResource("TorusMesh_3nktn")
-skeleton = NodePath("../..")
-surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
-
-[node name="40" type="MeshInstance3D" parent="Bubble_Beam"]
-transform = Transform3D(-0.0151012, -0.01808, -0.0971857, -0.0988363, 0.00094491, 0.0151819, -0.00182657, 0.0983474, -0.0180123, 0, 0, 0)
-mesh = SubResource("TorusMesh_3nktn")
-skeleton = NodePath("../..")
-surface_material_override/0 = SubResource("ShaderMaterial_61m6q")
-
 [node name="Object_Info" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.801669, 0.872407, 0.798682)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.801669, 0.872407, 0.349309)
 visible = false
 
 [node name="Main_Code" type="Label3D" parent="Object_Info"]
@@ -2203,7 +1917,7 @@ outline_size = 5
 horizontal_alignment = 0
 
 [node name="CSGPolygon3D" type="CSGPolygon3D" parent="."]
-transform = Transform3D(8.14441e-09, -5.40397e-09, -0.1, 0.0992546, -0.0121869, 8.74228e-09, -0.0121869, -0.0992546, 4.37114e-09, 0, 0.38, 0)
+transform = Transform3D(8.14441e-09, -5.40397e-09, -0.1, 0.0992546, -0.0121869, 8.74228e-09, -0.0121869, -0.0992546, 4.37114e-09, 0, 0.38, -0.449373)
 transparency = 0.64
 operation = 1
 mode = 1
@@ -2211,14 +1925,5 @@ spin_degrees = 245.0
 spin_sides = 64
 smooth_faces = true
 material = SubResource("StandardMaterial3D_t05xm")
-
-[node name="Delete?" type="GPUParticles3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0229723, -0.0162222, -9.76324e-05)
-emitting = false
-amount = 200
-lifetime = 0.11
-speed_scale = 19.29
-process_material = SubResource("ParticleProcessMaterial_8m00m")
-draw_pass_1 = SubResource("SphereMesh_4qq6n")
 
 [connection signal="animation_finished" from="Hologram_Animation" to="." method="_on_hologram_animation_animation_finished"]

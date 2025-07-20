@@ -142,6 +142,10 @@ func _ready() -> void:
 	collision_layer = 3
 	collision_mask = 3
 	
+	mass = 50.0
+	
+	print('Can I get the objects to drag a little less?')
+	
 	physics_mat.friction = 1.0
 	physics_mat.bounce = 0.0
 	self.physics_material_override = physics_mat
@@ -157,10 +161,10 @@ func _ready() -> void:
 
 	if base_mesh:
 		#var outline_mesh = base_mesh.duplicate()
-		#glow_body = outline_mesh
+		glow_body = outline
 		#glow_body.scale = Vector3(1.15, 1.15, 1.15)
-		#shader_material.shader = GLOW_SHADER
-		#glow_body.set_surface_override_material(0, shader_material)
+		shader_material.shader = GLOW_SHADER
+		glow_body.set_surface_override_material(0, shader_material)
 		var outline_mesh : Mesh = base_mesh.mesh.create_outline(0.075)
 		glow_body = MeshInstance3D.new()
 		glow_body.name = "Outline"
@@ -223,13 +227,11 @@ func _physics_process(delta: float) -> void:
 			#angular_damp = 0
 
 	if is_grabbed:
-		print('AND THIS???')
 		if position_tween:
 			position_tween.kill()
 		if glow_tween:
 			glow_tween.kill()
-		if outline.transparency > 0.91:
-			change_glow(outline, 0.9, 0.075)
+		shader_material.set_shader_parameter("emission_strength", 1.0)
 		object_body.top_level = false
 		if is_suspended:
 			return
@@ -240,7 +242,6 @@ func _physics_process(delta: float) -> void:
 		#object_body.global_transform = collision_shape.global_transform
 		#global_position.y = object_body.global_position.y
 		#outline.global_position.y = object_body.global_position.y
-		print('pull up quickly after grabbbing object...major defect')
 		linear_damp = 0
 		angular_damp = 0
 		contact_monitor = true
@@ -252,31 +253,36 @@ func _process(delta: float) -> void:
 	if not is_grabbed:
 		if glow_tween:
 			glow_tween.kill()
-		change_glow(outline, 1.0, 0.075)
 		if is_touchable:
-			outline.position = object_body.position
-			if is_touched:
-				if position_tween:
-					position_tween.kill()
-				if glow_tween:
-					glow_tween.kill()
-				if hover_tween:
-					hover_tween.kill()
-				#hover_object(self, 0.3, 0.5)
-				change_glow(outline, 0.95, 0.075)
-				#print(object_body.global_position)
+			#outline.position = object_body.position
+			if is_touched and not outline.visible:
+				var rand_speed = randfn(0.25, 0.1)
+				var rand_ring = randf_range(0.35, 0.75)
+				var rand_wave = randf_range(0.35, 0.75)
+				var rand_all = randf_range(0.5, 1.5)
+				print(rand_speed)
+				shader_material.set_shader_parameter("speed", rand_speed)
+				shader_material.set_shader_parameter("ring_scale", rand_ring)
+				shader_material.set_shader_parameter("wave_scale", rand_wave)
+				shader_material.set_shader_parameter("random_scale", rand_all)
+				shader_material.set_shader_parameter("emission_strength", -0.5)
+				if object_body.rotation_degrees.y == 0.0:
+					shader_material.set_shader_parameter("uv_projection_mode", 0)
+				else:
+					shader_material.set_shader_parameter("uv_projection_mode", 1)
+				outline.visible = true
 				
-				
-			else:
-				if position_tween:
-					position_tween.kill()
-				if glow_tween:
-					glow_tween.kill()
-				if hover_tween:
-					hover_tween.kill()
-				#hover_object(self, resting_position - 0.05, 0.5)
-				change_glow(outline, 1.0, 0.075)
-				is_touching_ground = true
+			if not is_touched:
+				outline.visible = false
+			#else:
+				#if position_tween:
+					#position_tween.kill()
+				#if glow_tween:
+					#glow_tween.kill()
+				#if hover_tween:
+					#hover_tween.kill()
+				#is_touching_ground = true
+				#outline.visible = false
 
 	if is_extracting:
 		print('is currently extracting')
@@ -353,9 +359,9 @@ func _on_body_shape_entered(body_rid: RID, body: Node, body_shape_index: int, lo
 
 	if body is character:
 		body.is_on_floor()
-		if not is_stepladder and not is_rocketship:
-			character_force = character_body.current_velocity
-			print(character_force)
+		#if not is_stepladder and not is_rocketship:
+			#character_force = character_body.current_velocity
+			#print(character_force)
 
 func _on_body_shape_exited(body_rid: RID, body: Node, body_shape_index: int, local_shape_index: int) -> void:
 	pass
@@ -382,10 +388,10 @@ func set_outline(status: String, color: Color, opacity: float) -> void:
 	if status == 'GRAB':
 		randomize()
 		shader_material.shader = shader
-		color.a = 0.25
-		shader_material.set_shader_parameter("glow_color", color)
-		shader_material.set_shader_parameter("fresnel_power", 0.1)
-		shader_material.set_shader_parameter("random_seed", randf())
+		#color.a = 0.25
+		#shader_material.set_shader_parameter("albedo", color)
+		#shader_material.set_shader_parameter("fresnel_power", 0.1)
+		#shader_material.set_shader_parameter("random_seed", randf())
 		glow_body.material_override = shader_material
 		#glow_body.visible = true`
 		#create_particles()

@@ -33,9 +33,9 @@ shader_parameter/c1 = 0.18
 shader_parameter/c2 = 0.5
 shader_parameter/c3 = 2.98
 shader_parameter/c4 = 3.25
-shader_parameter/fade_min_y = -3.0
-shader_parameter/fade_max_y = 3.0
 shader_parameter/emission_strength = 1.0
+shader_parameter/base_alpha = 0.5
+shader_parameter/uv_projection_mode = 0
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_vxkva"]
 angle_min = 1.07288e-05
@@ -156,14 +156,14 @@ distance_fade_max_distance = 0.0
 [sub_resource type="Gradient" id="Gradient_x6usk"]
 colors = PackedColorArray(1, 0, 0, 1, 1, 1, 1, 1)
 
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_mscii"]
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_x6usk"]
 gradient = SubResource("Gradient_x6usk")
 
 [sub_resource type="Curve" id="Curve_l5ika"]
 _data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.252595, 0.120801), -1.09758, -1.09758, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
 point_count = 3
 
-[sub_resource type="CurveTexture" id="CurveTexture_vxkva"]
+[sub_resource type="CurveTexture" id="CurveTexture_mscii"]
 curve = SubResource("Curve_l5ika")
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_3nktn"]
@@ -171,9 +171,9 @@ spread = 20.0
 initial_velocity_max = 14.61
 scale_min = 0.5
 scale_max = 0.5
-scale_curve = SubResource("CurveTexture_vxkva")
+scale_curve = SubResource("CurveTexture_mscii")
 color = Color(1, 0, 1, 1)
-color_ramp = SubResource("GradientTexture1D_mscii")
+color_ramp = SubResource("GradientTexture1D_x6usk")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vuyi1"]
 albedo_color = Color(0.266667, 1, 0, 1)

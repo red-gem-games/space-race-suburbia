@@ -220,7 +220,7 @@ var orbit_speed: float = 1.0  # Speed multiplier
 var input_direction_x: float = 0.0
 var input_direction_z: float = 0.0
 var grabbed_pos_set: bool = false
-
+var look_to
 
 func _ready() -> void:
 	push_warning('General To Do List:')
@@ -266,11 +266,11 @@ func _physics_process(delta: float) -> void:
 		if move_input["up"] and not move_input["down"]:
 			if not shifting_object_active:
 				vertical = lerp(vertical, 1, delta)
-				prem7_rotation_offset.x -= 0.0025
+				#prem7_rotation_offset.x -= 0.0025
 		elif move_input["down"] and not move_input["up"]:
 			if not shifting_object_active:
 				vertical = lerp(vertical, -1, delta)
-				prem7_rotation_offset.x += 0.0025
+				#prem7_rotation_offset.x += 0.0025
 		if move_input["right"] and not move_input["left"]:
 			if not shifting_object_active:
 				horizontal = lerp(horizontal, 1, delta)
@@ -352,18 +352,19 @@ func _process(delta: float) -> void:
 		scroll_cooldown -= delta
 
 
-	# PREM-7 mouse decay effect
-	if control_timer.time_left == 0.0:
-		handle_prem7_decay(delta)
-	
-	else:
-		prem7_rotation_offset = Vector3.ZERO
+	if not grabbed_object:
 		PREM_7.rotation = PREM_7.rotation.lerp(prem7_original_rotation, prem7_decay_speed * delta)
-
-	# Update HUD Reticle target and color
-	update_reticle_targeting()
+		update_reticle_targeting()
 
 	if grabbed_object:
+
+		look_to = grabbed_object.global_position
+		PREM_7.look_at(look_to)
+		#print("pos: ", grabbed_object.global_position)
+		#print("tra: ", grabbed_object.global_transform)
+		#look_to.x = look_to.x + 0.5
+		#look_to.y = look_to.y - 0.2
+
 		if shifting_object_active or extracting_object_active or fusing_object_active:
 			camera.fov = lerp(camera.fov, 55.0, delta * 10)
 			if not PREM_7.handling_object:
@@ -766,7 +767,8 @@ func _on_reset_key() -> void:
 
 func grab_object():
 	
-	
+	look_to = grabbed_object.global_position
+	look_to.x += 1.0
 	#left_mouse_down = false
 	#PREM_7.trig_anim.play("RESET")
 	#PREM_7.trig_anim.play("trigger_pull")
@@ -776,8 +778,9 @@ func grab_object():
 	fusing_object_active = false
 	#beam.set_process(true)
 	#beam.object_is_grabbed = true
+	PREM_7.cast_beam()
 	HUD.reticle.visible = false
-	mouse_speed = base_mouse_speed / grabbed_object.mass * 15.0
+	mouse_speed = base_mouse_speed / 100.0 * 15.0
 	pitch_max = grab_pitch_max
 	#grabbed_object.set_outline('GRAB', glow_color, 0.0)
 	#grabbed_initial_mouse = get_viewport().get_mouse_position()
@@ -870,13 +873,13 @@ func release_object():
 	#grabbed_object.lock_rotation = false
 	#grabbed_object.angular_velocity = lerp(grabbed_object.angular_velocity, Vector3.ZERO, 1.0)
 	#grabbed_object.linear_velocity = lerp(grabbed_object.linear_velocity, Vector3.ZERO, 1.0)
-	grabbed_object.set_outline('RELEASE', Color.WHITE, 0.0)
+	#grabbed_object.set_outline('RELEASE', Color.WHITE, 0.0)
 	HUD.reticle.visible = true
 	#object_sway_strength_x = object_sway_base_x
 	#object_sway_strength_y = object_sway_base_y
 	#distance_factor = 0.0
 	#grabbed_distance = 0.0
-	grabbed_object.collision_shape.position = Vector3.ZERO
+	#grabbed_object.collision_shape.position = Vector3.ZERO
 	grabbed_object.is_grabbed = false
 	grabbed_object.recently_grabbed = true
 	grabbed_object.is_released = true
@@ -1321,11 +1324,13 @@ func update_reticle_targeting() -> void:
 			if touched_object:
 				touched_object.is_touched = false
 				touched_object = null
+				
 	else:
 		if touched_object:
 			touched_object.is_touched = false
 			touched_object = null
 		HUD.reticle.modulate = Color.WHITE
+		
 
 func handle_prem7_decay(delta: float) -> void:
 	

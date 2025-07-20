@@ -1,29 +1,26 @@
 shader_type spatial;
-render_mode unshaded, blend_mix;
+render_mode blend_mix, cull_disabled;
+
+// ——— Control Variables ———
+uniform float speed              = 0.25;
+uniform float ring_scale         = 0.5;
+uniform float wave_scale         = 0.4;
+uniform float random_scale       = 1.0;
+uniform float noise_scale        = 0.05;
+uniform float c1                 = 0.18;
+uniform float c2                 = 0.5;
+uniform float c3                 = 2.98;
+uniform float c4                 = 3.25;
+
+uniform float emission_strength  = 1.0;  // Glow brightness
+uniform float base_alpha         = 0.5;  // Overall transparency
+
+// ——— Projection Mode ———
+// 0 = XY (Front), 1 = YZ (Side), 2 = XZ (Top)
+uniform int uv_projection_mode : hint_enum("XY (Front)", "YZ (Side)", "XZ (Top)") = 0;
 
 
-// your existing “scroll + noise” parameters
-uniform float speed         = 0.1;
-uniform float ring_scale    = 1.5;
-uniform float wave_scale    = 4.0;
-uniform float random_scale  = 10.0;
-uniform float noise_scale   = 0.1;
-uniform float c1 = 0.18;
-uniform float c2 = 0.5;
-uniform float c3 = 2.98;
-uniform float c4 = 3.25;
-
-
-// new: where the fade starts/ends in local‐space Y
-uniform float fade_min_y    =  -3.0;  // fully opaque at or below this Y
-uniform float fade_max_y    =  3.0;  // fully transparent at or above this Y
-
-// new: emission (glow) control
-uniform float emission_strength = 1.0; // how “bright” the glow is
-
-// ----------------------------------------------
-// 1) hsv2rgb (unchanged)
-// ----------------------------------------------
+// ——— Functions ———
 vec3 hsv2rgb(float h, float s, float v) {
     return (
         (
@@ -36,9 +33,6 @@ vec3 hsv2rgb(float h, float s, float v) {
     ) * v;
 }
 
-// ----------------------------------------------
-// 2) value_noise / random (unchanged)
-// ----------------------------------------------
 vec2 random(vec2 pos) {
     return fract(
         sin(
@@ -67,38 +61,40 @@ float value_noise(vec2 pos) {
     );
 }
 
-// ----------------------------------------------
-// 3) Pass local‐space Y from vertex→fragment
-// ----------------------------------------------
-varying float v_local_y;
+
+// ——— Varyings ———
+varying vec3 v_world_pos;
 
 void vertex() {
-    v_local_y = VERTEX.y;
-    // Godot’s built-ins handle the rest of the transforms
+    v_world_pos = (vec4(VERTEX, 1.0)).xyz;
 }
 
-// ----------------------------------------------
-// 4) Compute UV warping, color, fade, and emission
-// ----------------------------------------------
+
+// ——— Fragment Shader ———
 void fragment() {
-    // ——— A) Scroll & warp your UV exactly as before ———
-    vec2 shift_uv = UV;
-    shift_uv.x += value_noise(UV * random_scale + TIME * speed);
+    // Projection switch: choose which 2D plane to map effect onto
+    vec2 proj_uv;
+
+    if (uv_projection_mode == 0) {
+        proj_uv = vec2(v_world_pos.x, v_world_pos.y); // XY (Front)
+    } else if (uv_projection_mode == 1) {
+        proj_uv = vec2(v_world_pos.y, v_world_pos.z); // YZ (Side)
+    } else {
+        proj_uv = vec2(v_world_pos.x, v_world_pos.z); // XZ (Top)
+    }
+
+    // Scrolling & warping using projected UVs
+    vec3 shift_uv = vec3(proj_uv, 0.0);
+    shift_uv.x += value_noise(proj_uv * random_scale + TIME * speed);
     shift_uv.y += TIME * speed;
     float x = shift_uv.x + sin(shift_uv.y * wave_scale);
-    float f = mod(x * ring_scale + random(UV).x * noise_scale, 1.0);
+    float f = mod(x * ring_scale + random(proj_uv).x * noise_scale, 1.0);
 
     vec3 base_col = hsv2rgb(f, 1.0, 1.0);
 
-    // ——— B) Compute alpha based on local Y vs fade_min_y/fade_max_y ———
-    float alpha = clamp((fade_max_y - v_local_y) / (fade_max_y - fade_min_y), 0.0, 1.0);
-
-    // ——— C) Output color + transparency ———
+    // Output
     ALBEDO = base_col;
-    ALPHA  = alpha;
+    ALPHA  = base_alpha;
 
-    // ——— D) Emission (glow) ———
-    // Multiply your base color by an emission strength
-    // Optionally, you can also let glow fade out along with alpha
-    EMISSION = base_col * emission_strength * alpha;
+    EMISSION = base_col * emission_strength * base_alpha;
 }

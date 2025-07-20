@@ -1,4 +1,4 @@
-[gd_scene load_steps=59 format=4 uid="uid://diw15u24g3w3h"]
+[gd_scene load_steps=57 format=4 uid="uid://diw15u24g3w3h"]
 
 [ext_resource type="Script" uid="uid://clwwid0cs6u32" path="res://Components/components.gd" id="1_yvv8m"]
 [ext_resource type="Texture2D" uid="uid://daqj3vpphaede" path="res://Assets/Blender/WashingMachine/WashingMachine_Final_T_ControlPanel_DF.png" id="4_fon8m"]
@@ -14,7 +14,6 @@
 [ext_resource type="Texture2D" uid="uid://csv81y4tywxqw" path="res://Assets/Blender/WashingMachine/WashingMachine_Final_T_Hose_RG.png" id="14_1w8o5"]
 [ext_resource type="Texture2D" uid="uid://be20arqw45a1t" path="res://Assets/Blender/WashingMachine/WashingMachine_Final_T_Hose_NR.png" id="15_q85i0"]
 [ext_resource type="Texture2D" uid="uid://bi06dx16dub1d" path="res://Assets/Blender/WashingMachine/WashingMachine_Final_T_WashingMachine_DF.png" id="16_ocsr5"]
-[ext_resource type="Material" uid="uid://cfg62cbo2kbe7" path="res://Shaders/Component_Glow.tres" id="17_fst5s"]
 [ext_resource type="Texture2D" uid="uid://blen8hk8jt3a0" path="res://Assets/Blender/WashingMachine/WashingMachine_Final_T_WashingMachine_MT-T_WashingMachine_RG.png" id="17_u6405"]
 [ext_resource type="Texture2D" uid="uid://ca5kuuln4xlt2" path="res://Assets/Blender/WashingMachine/WashingMachine_Final_T_WashingMachine_NR.png" id="18_a2t3e"]
 
@@ -595,21 +594,14 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_iq5bj")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kxy3t"]
-
-[sub_resource type="ArrayMesh" id="ArrayMesh_fst5s"]
-_surfaces = [{
-"aabb": AABB(-0.888523, -1.44504, -1.40242, 1.8726, 2.57276, 2.34721),
-"format": 34896613377,
-"index_count": 120,
-"index_data": PackedByteArray("AAABAAIAAAADAAEAAQAQAAIABQADAAAABQABAAMAEQAAAAIABQAAABEAEQACABAABQAHAAEAAQAHABAACwAFABEAEAAGABEACwARAAYABgAQABIAEgAIAAYAEgAQAAQABwAEABAAEgAKAAgACgASAAQAEwAGAAgACgATAAgAEwALAAYACgAEABQACgAUABMAEwAUABUAFQALABMAFAAEAA0AFAANABUAFQANAAsABwANAAQACwANAA8ADQAHAA4ADQAOAA8ABwAJAA4ABwAFAAkADAAPAA4ACwAPAAwADAAOAAkABQALAAwABQAMAAkA"),
-"lods": [0.302001, PackedByteArray("AAABAAIAAAADAAEAAQAEAAIABQADAAAABQABAAMABgAAAAIABQAAAAYABgACAAQABQAHAAEAAQAHAAQABAAIAAYABwAFAAkABAAKAAgACwAGAAgACwAFAAYACgALAAgABQAMAAkABQALAAwACgAEAA0ABwANAAQACwAKAA0ABwAJAA4ADAAOAAkADQAHAA4ACwAPAAwACwANAA8ADAAPAA4ADQAOAA8A")],
-"primitive": 3,
-"uv_scale": Vector4(0, 0, 0, 0),
-"vertex_count": 22,
-"vertex_data": PackedByteArray("AAAAAP//AAD//4Dm//8AAP//AAD//wAAAACA5v//AAD//wAAtDIAAAAAgObfYAAAAAAAALQyAAD//4Dm32AAAEgowy4AAAAAAAD//99gAACqwMMuAAAAAAAAstW0MgAAAAD//7QyAAD//7LVtDIAAP/////fYAAA/////7QyAAD//wAATV8AAAAAAABNXwAAqsAAALQyAABIKNHJAAAAALbXwy4AAAAAttfRyQAAAAA=")
-}]
-blend_shape_mode = 0
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7mlha"]
+transparency = 1
+blend_mode = 3
+shading_mode = 2
+albedo_color = Color(1, 0, 0, 1)
+emission_enabled = true
+emission = Color(0.843137, 0.223529, 0, 1)
+emission_energy_multiplier = 6.96
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_ypmdt"]
 resource_name = "Washing_Machine_Outline_v2_Plane"
@@ -620,21 +612,20 @@ _surfaces = [{
 "index_count": 120,
 "index_data": PackedByteArray("AAABAAIAAAADAAEABAAFACsABAAHAAUACAAEACsACAArAAYABAAIAAkABAAJAAoALAAjAC0AIwAsAC4ALgAsACUALQAkACwALQAmACQACwAvADAACwAMAC8AEAALADAAEAAwABEADAALAA4ADAAOAA8AEgAxABcAEgAyADEAMQAyADMAGwAcAB0AGwAeABwAHwAgACEAHwAiACAAJwAoACkAJwAqACgAFAAVABYAFAATABUANAAYADUANAA2ABgANwA4ADkANwANADgAOgA7ADwAOgA9ADsAPgA/ABoAPgBAAD8AQAA+ABkAQAAZAEEA"),
 "lods": [0.302001, PackedByteArray("AAABAAIAAAADAAEABAAFAAYABAAHAAUACAAEAAYABAAIAAkABAAJAAoACwAMAA0ADAALAA4ADAAOAA8AEAALAA0AEAANABEAEgANABMAFAASABMAFAATABUAFAAVABYAEgAUABcAFAAYABcAGQASABcAGQAXABoAGwAcAB0AGwAeABwAHwAgACEAHwAiACAAIwAkACUAIwAmACQAJwAoACkAJwAqACgA")],
-"material": SubResource("StandardMaterial3D_kxy3t"),
+"material": SubResource("StandardMaterial3D_7mlha"),
 "primitive": 3,
 "uv_scale": Vector4(0, 0, 0, 0),
 "vertex_count": 66,
 "vertex_data": PackedByteArray("AAAAAP///n///4Dm///+f///AAD///5/AACA5v///n8AAIDm32DxKQAAAAD//6oqAAAAALQyqioAAIDm//+qKgAAstW0MqoqAAD//7QyMCoAAP//32BJKf//gObfYHzU//+y1bQyKdX//wAAtDKn4//////fYLDU/////7QyVNX//4Dm//+qKv//AAD//1TVqsDDLgAA/////7LVtDL//wAAstW0Mv///////7Qy//8AAP//tDL//0gowy4AAP//AAAAALQyaeb//wAAtDI65QAAAAC0MoHnAACA5t9g/7///4Dm////vwAAgOb///+///+A5t9g/7///4Dm32AAgAAA///fYACA/////99gAIAAAIDm32AAgAAAAAC0Mv8///8AAP///z///wAAtDL/PwAAAAD///8/AAD//7Qy/7//////32D/vwAA///fYP+//////7Qy/78AAAAATV9U1f//AABNX/8/AAAAAE1f/z+qwAAAtDL/P///AAC0MlTV//8AAE1fqipIKNHJAAD//7bXwy4AAP//ttfRyQAA//9IKNHJAABb5Egowy4AAJvnAACy1bQy0uO218MuAAAh5v//stW0Mpr8ttfRyQAAaP2219HJAAA8ygAAstW0Mj7KSCjRyQAAQcr//7LVtDI8yqrAAAC0Ms7gSCjDLgAAy+SqwMMuAABT4LbXwy4AAIMc/3////9/////f////3///+ZUzKlUVaqqVFWqqlRVqqpVVaqqC1UXqoNUBqklqktUkKohVS+yy01FqoxUqqpUVaoqqiqqqlRVXvRedP8//79E9kR2Q8VDRf///3+Zy2S0M9NSynMq5rsYRLxP////f////3////9/////f/9/////f////3////9///8BAAGAAAD/fzAA538AAP9/////f////3////9/////f1TVVNUKAPp/AAD/fwAAAICqqlRVqiqqKpPoapdN7E5svf9BgDvP4cxj1ejIJM6VzVW1rFIyzjd5OwUzT+r/239b/AuCh/oTg2P/7H4tEw+bDzrZVkYJFo2iM2db")
 }]
 blend_shape_mode = 0
-shadow_mesh = SubResource("ArrayMesh_fst5s")
 
 [node name="DryingMachine" type="RigidBody3D"]
 mass = 75.0
 script = ExtResource("1_yvv8m")
 
 [node name="ControlPanel" type="RigidBody3D" parent="."]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.0800683, 0.961622, -0.677443)
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.0704599, 0.947516, -0.690812)
 visible = false
 mass = 10.0
 
@@ -648,7 +639,7 @@ transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, 0, 0, 2.5, 0, 0, 0)
 shape = SubResource("ConvexPolygonShape3D_fst5s")
 
 [node name="Door" type="RigidBody3D" parent="."]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.0897205, -0.0598232, 0.691616)
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.0801121, -0.0820642, 0.716073)
 visible = false
 mass = 15.0
 
@@ -668,7 +659,7 @@ transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, 0, 0, 2.5, 0, 0, 0)
 shape = SubResource("ConvexPolygonShape3D_4u6p5")
 
 [node name="Drum" type="RigidBody3D" parent="."]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.149727, -0.0958738, -0.0170078)
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.140119, -0.0727095, -0.0170078)
 visible = false
 mass = 40.0
 
@@ -682,7 +673,7 @@ transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, 0, 0, 2.5, 0, 0, 0)
 shape = SubResource("ConvexPolygonShape3D_nctpg")
 
 [node name="Hose" type="RigidBody3D" parent="."]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.0398411, -0.0958738, -1.12571)
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.0302327, -0.105451, -1.12571)
 visible = false
 mass = 5.0
 
@@ -699,7 +690,6 @@ shape = SubResource("ConvexPolygonShape3D_hkown")
 shape = SubResource("ConvexPolygonShape3D_bsmju")
 
 [node name="Body" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.055, 0)
 
 [node name="ControlPanel" type="MeshInstance3D" parent="Body"]
 transform = Transform3D(-1.09278e-07, 0, 2.5, 0, 2.5, 0, -2.5, 0, -1.09278e-07, 0.0548385, 0.952278, -0.693256)
@@ -733,7 +723,6 @@ mesh = SubResource("ArrayMesh_im5d3")
 skeleton = NodePath("")
 
 [node name="Outline" type="MeshInstance3D" parent="."]
-transparency = 1.0
+cast_shadow = 0
 mesh = SubResource("ArrayMesh_ypmdt")
 skeleton = NodePath("")
-surface_material_override/0 = ExtResource("17_fst5s")

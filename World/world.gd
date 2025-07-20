@@ -60,16 +60,14 @@ func _ready() -> void:
 
 	start_static_glow_loop()
 
-const GRAB_STIFFNESS := 8000.0
-const GRAB_DAMPING := 1200.0
+const GRAB_STIFFNESS := 18000.0
+const GRAB_DAMPING := 1800.0
 const ROTATE_SPEED := 4.0  # Increase this for snappier rotation
 
 func _physics_process(delta: float) -> void:
 
 	
 	if grabbed_object:
-		
-		print('----xxxxxx-----xxxx-----xxxxxx----')
 		# --- Force Movement Toward Target ---
 		var cam_pos = character.camera.global_transform.origin
 		var cam_dir = -character.camera.global_transform.basis.z
@@ -215,10 +213,9 @@ func _physics_process(delta: float) -> void:
 
 func grab_object():
 	character.PREM_7.cast_beam()
-	await get_tree().create_timer(0.4).timeout
+	#await get_tree().create_timer(0.4).timeout
 	grabbed_object = grabbable_object
 	character.grabbed_object = grabbed_object
-	character.grab_object()
 	grabbed_object.collision_layer = 1
 	grabbed_object.collision_mask = 1
 	flicker_obj_a = grabbed_object.outline
@@ -231,10 +228,12 @@ func grab_object():
 	grabbed_object.axis_lock_angular_x = true
 	grabbed_object.axis_lock_angular_y = true
 	grabbed_object.axis_lock_angular_z = true
+	character.grab_object()
 
 
 
 func release_object():
+	print('how??')
 	#static_glow_active = false
 	grabbed_object.collision_layer = 3
 	grabbed_object.collision_mask = 3
