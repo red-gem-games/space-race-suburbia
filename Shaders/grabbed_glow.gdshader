@@ -1,19 +1,19 @@
 shader_type spatial;
-render_mode blend_mix, cull_disabled;
+render_mode blend_mul, cull_disabled, depth_draw_always, depth_test_disabled;
 
 // ——— Control Variables ———
 uniform float speed              = 0.25;
-uniform float ring_scale         = 0.5;
-uniform float wave_scale         = 0.4;
-uniform float random_scale       = 1.0;
+uniform float ring_scale         = 4.1;
+uniform float wave_scale         = 0.1;
+uniform float random_scale       = 2.25;
 uniform float noise_scale        = 0.05;
-uniform float c1                 = 0.18;
-uniform float c2                 = 0.5;
-uniform float c3                 = 2.98;
-uniform float c4                 = 3.25;
+uniform float c1                 = 0.72;
+uniform float c2                 = 4.69;
+uniform float c3                 = 7.35;
+uniform float c4                 = 0.0;
 
-uniform float emission_strength  = 1.0;  // Glow brightness
-uniform float base_alpha         = 0.5;  // Overall transparency
+uniform float emission_strength  = -1.15;  // Glow brightness
+uniform float base_alpha         = -0.5;  // Overall transparency
 
 // ——— Projection Mode ———
 // 0 = XY (Front), 1 = YZ (Side), 2 = XZ (Top)

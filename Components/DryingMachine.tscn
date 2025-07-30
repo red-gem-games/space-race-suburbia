@@ -625,7 +625,7 @@ mass = 75.0
 script = ExtResource("1_yvv8m")
 
 [node name="ControlPanel" type="RigidBody3D" parent="."]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.0704599, 0.947516, -0.690812)
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.0704599, 0.902495, -0.690812)
 visible = false
 mass = 10.0
 
@@ -639,7 +639,7 @@ transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, 0, 0, 2.5, 0, 0, 0)
 shape = SubResource("ConvexPolygonShape3D_fst5s")
 
 [node name="Door" type="RigidBody3D" parent="."]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.0801121, -0.0820642, 0.716073)
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.0801121, -0.127086, 0.716073)
 visible = false
 mass = 15.0
 
@@ -659,7 +659,7 @@ transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, 0, 0, 2.5, 0, 0, 0)
 shape = SubResource("ConvexPolygonShape3D_4u6p5")
 
 [node name="Drum" type="RigidBody3D" parent="."]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.140119, -0.0727095, -0.0170078)
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.140119, -0.117731, -0.0170078)
 visible = false
 mass = 40.0
 
@@ -673,7 +673,7 @@ transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, 0, 0, 2.5, 0, 0, 0)
 shape = SubResource("ConvexPolygonShape3D_nctpg")
 
 [node name="Hose" type="RigidBody3D" parent="."]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.0302327, -0.105451, -1.12571)
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.0302327, -0.150472, -1.12571)
 visible = false
 mass = 5.0
 
@@ -690,6 +690,7 @@ shape = SubResource("ConvexPolygonShape3D_hkown")
 shape = SubResource("ConvexPolygonShape3D_bsmju")
 
 [node name="Body" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0450215, 0)
 
 [node name="ControlPanel" type="MeshInstance3D" parent="Body"]
 transform = Transform3D(-1.09278e-07, 0, 2.5, 0, 2.5, 0, -2.5, 0, -1.09278e-07, 0.0548385, 0.952278, -0.693256)
@@ -723,6 +724,8 @@ mesh = SubResource("ArrayMesh_im5d3")
 skeleton = NodePath("")
 
 [node name="Outline" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0450215, 0)
+visible = false
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_ypmdt")
 skeleton = NodePath("")

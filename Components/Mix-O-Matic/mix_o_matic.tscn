@@ -1,0 +1,124 @@
+[gd_scene load_steps=15 format=3 uid="uid://50e0ko7nsyll"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8pryq"]
+albedo_color = Color(0.61, 0, 0.345667, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_puk5k"]
+lightmap_size_hint = Vector2i(23, 42)
+material = SubResource("StandardMaterial3D_8pryq")
+add_uv2 = true
+size = Vector3(2.633, 2.34, 1.283)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ws5gl"]
+transparency = 1
+albedo_color = Color(1, 0.52549, 0, 0.698039)
+metallic = 0.75
+metallic_specular = 1.0
+roughness = 0.6
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_4xm2l"]
+material = SubResource("StandardMaterial3D_ws5gl")
+top_radius = 1.316
+bottom_radius = 1.316
+height = 1.271
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_puk5k"]
+size = Vector3(2.646, 3.639, 1.5)
+
+[sub_resource type="BoxMesh" id="BoxMesh_rkmtd"]
+size = Vector3(2.49, 0.48, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wh40d"]
+albedo_color = Color(0, 1, 0.516667, 1)
+emission_enabled = true
+emission = Color(1, 1, 0, 1)
+emission_energy_multiplier = 4.0
+
+[sub_resource type="PrismMesh" id="PrismMesh_0wklr"]
+material = SubResource("StandardMaterial3D_wh40d")
+size = Vector3(0.25, 0.25, 0.17)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_iu27s"]
+albedo_color = Color(1, 0.283333, 0, 1)
+emission_enabled = true
+emission = Color(1, 0.916667, 0, 1)
+emission_energy_multiplier = 4.0
+
+[sub_resource type="PrismMesh" id="PrismMesh_8r40a"]
+material = SubResource("StandardMaterial3D_iu27s")
+size = Vector3(0.25, 0.25, 0.17)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lfl5p"]
+albedo_color = Color(0, 0.766667, 1, 1)
+emission_enabled = true
+emission = Color(0, 0.8, 1, 1)
+emission_energy_multiplier = 4.0
+
+[sub_resource type="PrismMesh" id="PrismMesh_0xu0c"]
+material = SubResource("StandardMaterial3D_lfl5p")
+size = Vector3(0.25, 0.25, 0.17)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_72jdu"]
+albedo_color = Color(0.166667, 1, 0, 1)
+metallic = 1.0
+emission_enabled = true
+emission = Color(0.0333333, 1, 0, 1)
+emission_energy_multiplier = 6.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_6e1i6"]
+material = SubResource("StandardMaterial3D_72jdu")
+size = Vector3(0.27, 0.25, 0.28)
+
+[node name="Mix_O_Matic" type="StaticBody3D"]
+
+[node name="Bottom" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25524, 0)
+mesh = SubResource("BoxMesh_puk5k")
+
+[node name="Top" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -0.000593722, 2.28473, 0.000603557)
+mesh = SubResource("CylinderMesh_4xm2l")
+
+[node name="Label3D" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0143264, 2.6534, 0.764786)
+pixel_size = 0.001
+text = "Mix-O-Matic
+"
+font_size = 338
+outline_size = 10
+
+[node name="Label3D2" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0143264, 3.11088, 0.764786)
+pixel_size = 0.001
+text = "Loot Box
+Placeholder"
+font_size = 203
+outline_size = 10
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.000549316, 1.86509, 0)
+shape = SubResource("BoxShape3D_puk5k")
+
+[node name="ControlPanel" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.919135, 0.393942, 0, -0.393942, 0.919135, 0, 1.90827, 0.508795)
+mesh = SubResource("BoxMesh_rkmtd")
+
+[node name="SizeUp" type="MeshInstance3D" parent="ControlPanel"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.97385, 0.0195459, 0.521867)
+mesh = SubResource("PrismMesh_0wklr")
+
+[node name="SizeDown" type="MeshInstance3D" parent="ControlPanel"]
+transform = Transform3D(-1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 3.55271e-15, 0, 1, -0.609004, 0.019546, 0.521867)
+mesh = SubResource("PrismMesh_8r40a")
+
+[node name="CatalogLeft" type="MeshInstance3D" parent="ControlPanel"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 1.77636e-15, 1, 0.536534, 0.019546, 0.521867)
+mesh = SubResource("PrismMesh_0xu0c")
+
+[node name="CatalogRight" type="MeshInstance3D" parent="ControlPanel"]
+transform = Transform3D(-4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 1.77636e-15, 1, 0.983609, 0.019546, 0.521867)
+mesh = SubResource("PrismMesh_0xu0c")
+
+[node name="PLAY" type="MeshInstance3D" parent="ControlPanel"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0207369, 0.00780654, 0.559821)
+mesh = SubResource("BoxMesh_6e1i6")

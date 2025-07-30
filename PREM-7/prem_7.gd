@@ -3,23 +3,30 @@ class_name PREM_7
 
 @onready var trig_anim: AnimationPlayer = $Trigger_Animation
 @onready var ctrl_anim: AnimationPlayer = $Control_Animation
-@onready var beam_anim: AnimationPlayer = $Beam_Animation
+@onready var touch_anim: AnimationPlayer = $Touch_Animation
 @onready var holo_anim: AnimationPlayer = $Hologram_Animation
-@onready var photon_glow: MeshInstance3D = $Multitool/Photon_Glow
-
+@onready var grab_anim: AnimationPlayer = $Grab_Animation
+@onready var back_panel: MeshInstance3D = $Multitool/Back_Panel
 @onready var object_inventory: Node3D = $Multitool/Object_Inventory
-
-#@onready var beam: RayCast3D = $Beam
-#@onready var beam: Node3D = $Multitool/Beam
-#@onready var beam_mesh: MeshInstance3D = $Multitool/Beam/Beam_Mesh
+@onready var photon_tip: MeshInstance3D = $Multitool/Photon_Tip
 
 @onready var hologram_shader: Shader = preload("res://Shaders/hologram.gdshader")
+
+var GLOW_SHADER := preload("res://Shaders/grabbed_glow.gdshader")
+var shader: Shader
+var shader_material: ShaderMaterial
 
 @onready var object_info: Node3D = $Object_Info
 
 var grabbed_object_name: StringName
-
 var handling_object: bool = false
+var touching_object: bool = false
+var beam_active: bool = false
+
+var inspect_object: bool = false
+var suspend_object: bool = false
+var extract_object: bool = false
+var fuse_object: bool = false
 
 var hol_body
 
@@ -34,21 +41,61 @@ var control_hologram_timer: Timer = Timer.new()
 var scale_tween: Tween
 var position_tween: Tween
 
+var c1: float
+var c2: float
+var c3: float
 
+var grab_object_complete: bool = false
 
 func _ready() -> void:
 	object_info.visible = false
 	object_info.scale = Vector3(0.001, 0.001, 0.001)
 	add_child(control_hologram_timer)
 	control_hologram_timer.one_shot = true
+	grab_anim.play("RESET")
+	touch_anim.play("RESET")
+	
+	#shader = Shader.new()
+	#shader.code = GLOW_SHADER.code
+	#shader_material = ShaderMaterial.new()
+	#shader_material.shader = GLOW_SHADER
+	#back_panel.set_surface_override_material(0, shader_material)
+	#back_panel.material_override = shader_material
+	#shader_material.set_shader_parameter("speed", 0.15)
+	#shader_material.set_shader_parameter("emission_strength", 1.0)
+	#shader_material.set_shader_parameter("base_alpha", 0.1)
+	#shader_material.set_shader_parameter("uv_projection_mode", 2)
+	
+	print("1. Add 'Fade Y (Min/Max)' back into Shader")
+	print("2. Launch Multicolored Beam into object when grabbing")
+	print("3. Once object is completely wrapped, release the beam (meaning it stops from the PREM-7 and the end lands within the object)")
+	print("--------------")
+	print("4. Add Tool Tips for various modes...first up is a widened split square that rotates when in extract mode")
 
 func _input(event: InputEvent) -> void:
 	pass
 
 
-
-
 func _process(delta: float) -> void:
+	
+	if suspend_object:
+		ctrl_anim.play("suspend")
+		suspend_object = false
+	
+	if touching_object and not beam_active:
+		touch_anim.play("touching_object")
+		beam_active = true
+	
+	if not touching_object and beam_active:
+		touch_anim.play_backwards("touching_object")
+		beam_active = false
+
+
+	rotation_degrees.z = 0.0
+	clamp(rotation_degrees.x, -0.5, 0.5)
+	
+	#shader_material.set_shader_parameter("emission_strength", 10.0)
+	#shader_material.set_shader_parameter("base_alpha", 2.0)
 
 	if controlled_object:
 		controlled_objects.insert(0, controlled_object.name)
@@ -56,14 +103,17 @@ func _process(delta: float) -> void:
 		controlled_object = null
 
 	if control_hologram_timer.time_left == 0.0 and control_hologram_active:
-		print('lol WHAT')
 		retract_hologram()
 
 func cast_beam():
-	beam_anim.play("grab_object")
+	grab_object_complete = false
+	grab_anim.play("grab_object")
 
 func retract_beam():
-	beam_anim.play_backwards("grab_object")
+	if grab_object_complete:
+		grab_anim.play("release_object")
+	else:
+		grab_anim.play("RESET")
 
 func handle_object():
 	#beam_mesh.visible = false
@@ -176,3 +226,17 @@ func scale_object(object, x_scale: float, y_scale: float, z_scale: float, wait_t
 	
 	scale_tween.set_trans(Tween.TRANS_LINEAR)
 	scale_tween.set_ease(Tween.EASE_IN_OUT)
+
+
+func _on_grab_animation_animation_finished(anim_name: StringName) -> void:
+	if anim_name == "grab_object":
+		grab_object_complete = true
+	if anim_name == "release_object":
+		if not touching_object:
+			touch_anim.play_backwards("touching_object")
+
+
+
+func _on_touch_animation_animation_finished(anim_name: StringName) -> void:
+	if anim_name == "touching_object":
+		touch_anim.play("extended_touch")

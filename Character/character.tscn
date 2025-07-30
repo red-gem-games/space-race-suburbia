@@ -144,7 +144,7 @@ script = ExtResource("1_pjt0s")
 [node name="Camera3D" type="Camera3D" parent="."]
 
 [node name="PREM-7" parent="Camera3D" instance=ExtResource("1_glpr6")]
-transform = Transform3D(0.997374, 0.00306327, 0.0723504, 0.00301924, 0.996477, -0.0838116, -0.0723522, 0.0838099, 0.993852, 0.741035, -0.445734, -0.571649)
+transform = Transform3D(0.995636, -0.0106614, 0.0927052, 0.0131577, 0.999565, -0.0263581, -0.0923839, 0.0274629, 0.995346, 0.650454, -0.376509, -0.520243)
 
 [node name="Grabbed_Container" type="Node3D" parent="Camera3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.15, 0)
@@ -162,7 +162,7 @@ shape = SubResource("CapsuleShape3D_jkkns")
 debug_color = Color(1, 0.264211, 0.231967, 1)
 
 [node name="PREM_7_Collision" type="CollisionShape3D" parent="."]
-transform = Transform3D(0.99966, -0.000969235, -0.0260622, 0.00109011, 0.999989, 0.00462401, 0.0260574, -0.00465084, 0.99965, 0.693697, -0.417464, -0.993595)
+transform = Transform3D(0.998958, -0.000877979, -0.0456316, 0.00109011, 0.999989, 0.004624, 0.0456271, -0.00466893, 0.998948, 0.621633, -0.417464, -0.994018)
 shape = SubResource("SphereShape3D_jkkns")
 debug_color = Color(0.843472, 0.664469, 7.70092e-07, 1)
 
@@ -171,3 +171,7 @@ transform = Transform3D(0.10524, 0.919412, 0.378954, -0.77564, 0.31437, -0.54731
 visible = false
 mesh = SubResource("SphereMesh_a23tb")
 surface_material_override/0 = SubResource("ShaderMaterial_uerqc")
+
+[node name="Control_Position" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.07525, 0, -3.36135)
+gizmo_extents = 0.7

@@ -48,6 +48,9 @@ var static_glow_active: bool = false
 var static_glow_task = null
 var flicker_obj_a: Node = null
 var flicker_obj_b: Node = null
+var flicker_obj_c: Node = null
+
+var time: float = 0.0
 
 
 
@@ -65,37 +68,59 @@ const GRAB_DAMPING := 1800.0
 const ROTATE_SPEED := 4.0  # Increase this for snappier rotation
 
 func _physics_process(delta: float) -> void:
-
 	
 	if grabbed_object:
 		# --- Force Movement Toward Target ---
-		var cam_pos = character.camera.global_transform.origin
-		var cam_dir = -character.camera.global_transform.basis.z
-		var target_pos = cam_pos + cam_dir * 6.0
+		var cam_transform = character.camera.global_transform
 
-		var obj_pos = grabbed_object.global_transform.origin
-		var direction = target_pos - obj_pos
-		var vel = grabbed_object.linear_velocity
+		var forward = -cam_transform.basis.z
+		var left = -cam_transform.basis.x
+		var up = cam_transform.basis.y
 
-		var force = (direction * GRAB_STIFFNESS) - (vel * GRAB_DAMPING)
-		grabbed_object.apply_central_force(force)
+		# Modify these to taste
+		var distance_forward
+		var offset_left
+		var offset_up
 
-
-		## --- Smooth LookAt Rotation ---
-		var object_pos = grabbed_object.global_transform.origin
-		var look_dir = -(character.global_position - object_pos).normalized()
-
-		look_dir.y += 0.15  # tweak this until it feels right
-		look_dir = look_dir.normalized()
-
-		var desired_basis = Basis().looking_at(look_dir, Vector3.UP)
-		var current_basis = grabbed_object.global_transform.basis
-		var smoothed_basis = lerp(current_basis, desired_basis, delta * 10.0)
-
-		var transform = grabbed_object.global_transform
-		transform.basis = smoothed_basis
-		grabbed_object.global_transform = transform
+		var target_pos
 		
+		if not character.extracting_object_active or character.fusing_object_active:
+			distance_forward = 6.0
+			offset_left = 0.0
+			offset_up = 0.0
+			target_pos = cam_transform.origin + forward * distance_forward + left * offset_left + up * offset_up
+		
+			var obj_pos = grabbed_object.global_transform.origin
+			var direction = target_pos - obj_pos
+			var vel = grabbed_object.linear_velocity
+
+			var force = (direction * GRAB_STIFFNESS) - (vel * GRAB_DAMPING)
+			grabbed_object.apply_central_force(force)
+
+
+			## --- Smooth LookAt Rotation ---
+			var object_pos = grabbed_object.global_transform.origin
+			var look_dir = -(character.global_position - object_pos).normalized()
+
+			look_dir.y += 0.15  # tweak this until it feels right
+			look_dir = look_dir.normalized()
+
+			var desired_basis = Basis().looking_at(look_dir, Vector3.UP)
+			var current_basis = grabbed_object.global_transform.basis
+			var smoothed_basis = lerp(current_basis, desired_basis, delta * 10.0)
+
+			var transform = grabbed_object.global_transform
+			transform.basis = smoothed_basis
+			grabbed_object.global_transform = transform
+		
+		else:
+			pass
+			#distance_forward = 6.0
+			#offset_left = 1.0
+			#offset_up = 0.5
+			#grabbed_object.reparent(character.control_pos)
+
+
 
 
 
@@ -219,7 +244,8 @@ func grab_object():
 	grabbed_object.collision_layer = 1
 	grabbed_object.collision_mask = 1
 	flicker_obj_a = grabbed_object.outline
-	flicker_obj_b = character.PREM_7.photon_glow
+	flicker_obj_b = character.PREM_7.back_panel
+	flicker_obj_c = character.PREM_7.photon_tip
 	grabbed_object.enable_object_glow(grabbed_object.outline)
 	grabbed_object.is_grabbed = true
 	grabbed_object.is_touchable = false
@@ -228,25 +254,32 @@ func grab_object():
 	grabbed_object.axis_lock_angular_x = true
 	grabbed_object.axis_lock_angular_y = true
 	grabbed_object.axis_lock_angular_z = true
+	grabbed_object.is_grabbed = true
+	grabbed_object.brightness_increasing = true
+	grabbed_object.glow_timer = 0.25
 	character.grab_object()
 
 
 
 func release_object():
-	print('how??')
 	#static_glow_active = false
 	grabbed_object.collision_layer = 3
 	grabbed_object.collision_mask = 3
 	flicker_obj_a.visible = true
 	flicker_obj_b.visible = true
+	flicker_obj_c.visible = true
 	flicker_obj_a = null
 	flicker_obj_b = null
+	flicker_obj_c = null
 	grabbed_object.is_grabbed = false
 	grabbed_object.is_touchable = true
 	grabbed_object.physics_mat.friction = 1.0
 	grabbed_object.axis_lock_angular_x = false
 	grabbed_object.axis_lock_angular_y = false
 	grabbed_object.axis_lock_angular_z = false
+	grabbed_object.is_grabbed = false
+	grabbed_object.brightness_increasing = false
+	grabbed_object.standard_material.emission_energy_multiplier = 3.0
 	character.release_object()
 	grabbed_object = null
 
@@ -255,7 +288,7 @@ func _input(event: InputEvent) -> void:
 	# Process Mouse Button events.
 	if event is InputEventMouseButton:
 
-		if event.button_index == MOUSE_BUTTON_LEFT:
+		if event.button_index == MOUSE_BUTTON_LEFT and not (character.extracting_object_active or character.fusing_object_active):
 			target = character.touched_object
 			if target is RigidBody3D:
 				if target.is_rocketship:
@@ -265,12 +298,21 @@ func _input(event: InputEvent) -> void:
 				grabbable_object = null
 			if event.is_pressed():
 				if grabbed_object:
+					grabbed_object.gravity_scale = 1.5
+					grabbed_object.is_suspended = false
 					release_object()
 					return
 				if grabbable_object:
 					grab_object()
 					return
-
+		elif event.button_index == MOUSE_BUTTON_RIGHT and not (character.extracting_object_active or character.fusing_object_active):
+			if event.is_pressed():
+				if grabbed_object:
+					grabbed_object.gravity_scale = 0.0
+					grabbed_object.freeze = false
+					grabbed_object.is_suspended = true
+					character.PREM_7.suspend_object = true
+					release_object()
 
 	if event is InputEventKey:
 		if event.keycode == KEY_R:
@@ -279,10 +321,19 @@ func _input(event: InputEvent) -> void:
 			character.distance_from_character = base_distance_in_front
 	
 		if event.keycode == KEY_E or event.keycode == KEY_F or event.keycode == KEY_Q:
+			#grabbed_object.reparent(assembly_object_container)
 			if not character.extracting_object_active and not character.fusing_object_active:
 				print('Resetting Rotation here, genius...')
+				grabbed_object.reparent(assembly_object_container)
+				grabbed_object.freeze = false
 				reset_rotation = true
 				character.distance_from_character = base_distance_in_front
+			else:
+				if character.extracting_object_active:
+					grabbed_object.reparent(character.control_pos)
+					grabbed_object.position = character.control_pos.position
+					grabbed_object.freeze = true
+
 
 		if event.keycode == KEY_SHIFT:
 			if event.is_pressed():
@@ -398,7 +449,7 @@ func _static_glow_loop() -> void:
 	rng.randomize()
 
 	while static_glow_active:
-		var delay = rng.randf_range(1.0, 4.0)
+		var delay = rng.randf_range(6.0, 12.0)
 		await get_tree().create_timer(delay).timeout
 
 		if not static_glow_active:
@@ -409,25 +460,54 @@ func _static_glow_loop() -> void:
 
 
 func _static_glow_blink(rng: RandomNumberGenerator) -> void:
-	var blink_pairs = rng.randi_range(3, 10)
+	var blink_pairs = rng.randi_range(8, 16)
 
 	for i in blink_pairs:
 		if not static_glow_active:
 			break
 
-		var duration = rng.randf_range(0.005, 0.015)
-		if flicker_obj_a and flicker_obj_b:
+		var duration = rng.randf_range(0.005, 0.02)
+		if flicker_obj_a and flicker_obj_b and flicker_obj_c:
 			flicker_obj_a.visible = true
 			flicker_obj_b.visible = true
+			flicker_obj_c.visible = true
 		await get_tree().create_timer(duration).timeout
 
 		if not static_glow_active:
 			break
-		if flicker_obj_a and flicker_obj_b:
+		if flicker_obj_a and flicker_obj_b and flicker_obj_c:
 			flicker_obj_a.visible = false
 			flicker_obj_b.visible = false
+			flicker_obj_c.visible = false
 		await get_tree().create_timer(duration).timeout
 
-	if flicker_obj_a and flicker_obj_b:
+	if flicker_obj_a and flicker_obj_b and flicker_obj_c:
 		flicker_obj_a.visible = true
 		flicker_obj_b.visible = true
+		flicker_obj_c.visible = true
+	
+	#var rand_ring = randf_range(0.5, 1.5)
+	#var rand_wave = randf_range(0.25, 1.0)
+	#var rand_all = randf_range(1.5, 3.0)
+	#var rand_c1 = randf_range(0.0, 5.0)
+	#var rand_c2 = randf_range(0.0, 5.0)
+	#var rand_c3 = randf_range(0.0, 5.0)
+
+	#character.PREM_7.shader_material.set_shader_parameter("ring_scale", rand_ring)
+	#character.PREM_7.shader_material.set_shader_parameter("wave_scale", rand_ring)
+	#character.PREM_7.shader_material.set_shader_parameter("random_scale", rand_ring)
+
+	#if grabbed_object:
+		#grabbed_object.shader_material.set_shader_parameter("ring_scale", rand_ring)
+		#grabbed_object.shader_material.set_shader_parameter("wave_scale", rand_ring)
+		#grabbed_object.shader_material.set_shader_parameter("random_scale", rand_ring)
+		#grabbed_object.shader_material.set_shader_parameter("c1", rand_c1)
+		#grabbed_object.shader_material.set_shader_parameter("c2", rand_c2)
+		#grabbed_object.shader_material.set_shader_parameter("c3", rand_c3)
+	#
+		#character.PREM_7.shader_material.set_shader_parameter("ring_scale", rand_ring)
+		#character.PREM_7.shader_material.set_shader_parameter("wave_scale", rand_ring)
+		#character.PREM_7.shader_material.set_shader_parameter("random_scale", rand_ring)
+		#character.PREM_7.shader_material.set_shader_parameter("c1", rand_c1)
+		#character.PREM_7.shader_material.set_shader_parameter("c2", rand_c2)
+		#character.PREM_7.shader_material.set_shader_parameter("c3", rand_c3)

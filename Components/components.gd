@@ -17,6 +17,7 @@ var COMPONENT_SCRIPT: Script = preload("res://Components/components.gd")
 var GLOW_SHADER := preload("res://Shaders/grabbed_glow.gdshader")
 var MANIPULATION_SHADER:= preload("res://Shaders/manipulation.gdshader")
 var manipulation_material: ShaderMaterial = ShaderMaterial.new()
+var GLOW_MATERIAL := preload("res://Shaders/Component_Glow.tres")
 
 var grid_positions: Dictionary = {}
 var assigned_grid_position := Vector3.ZERO
@@ -74,6 +75,7 @@ var damp_elapsed_time: float = 0.0
 var glow_body: MeshInstance3D
 var shader: Shader
 var shader_material: ShaderMaterial
+var standard_material: StandardMaterial3D
 
 var grab_particles: GPUParticles3D
 var grab_particles_shader: Shader
@@ -113,9 +115,17 @@ var physics_mat = PhysicsMaterial.new()
 
 var is_touched: bool = false
 var is_touchable: bool = true
+var glow_timer: float = 0.0
 var outline
 var resting_position
+var c1: float
+var c2: float
+var c3: float
 
+var forward
+var extract_pos_x: float
+var extract_pos_y: float
+var extract_pos_z: float
 
 
 func _ready() -> void:
@@ -144,8 +154,6 @@ func _ready() -> void:
 	
 	mass = 50.0
 	
-	print('Can I get the objects to drag a little less?')
-	
 	physics_mat.friction = 1.0
 	physics_mat.bounce = 0.0
 	self.physics_material_override = physics_mat
@@ -164,13 +172,13 @@ func _ready() -> void:
 		glow_body = outline
 		#glow_body.scale = Vector3(1.15, 1.15, 1.15)
 		shader_material.shader = GLOW_SHADER
-		glow_body.set_surface_override_material(0, shader_material)
+		standard_material = GLOW_MATERIAL
+		glow_body.set_surface_override_material(0, standard_material)
 		var outline_mesh : Mesh = base_mesh.mesh.create_outline(0.075)
 		glow_body = MeshInstance3D.new()
 		glow_body.name = "Outline"
 		glow_body.mesh = outline_mesh
-		glow_body.material_override = shader_material
-		shader_material.shader = shader
+		glow_body.material_override = standard_material
 		glow_body.visible = false
 		add_child(glow_body)
 	else:
@@ -187,15 +195,32 @@ func _ready() -> void:
 			#print('I, ', child.name, ' am an assembly component!')
 
 	resting_position = global_position.y
-
 	set_physics_process(true)
+	
+	#var rand_ring = randf_range(0.5, 1.5)
+	#var rand_wave = randf_range(0.25, 1.0)
+	#var rand_all = randf_range(1.5, 3.0)
+	#var rand_c1 = randf_range(0.0, 5.0)
+	#var rand_c2 = randf_range(0.0, 5.0)
+	#var rand_c3 = randf_range(0.0, 5.0)
+	#shader_material.set_shader_parameter("ring_scale", rand_ring)
+	#shader_material.set_shader_parameter("wave_scale", rand_wave)
+	#shader_material.set_shader_parameter("random_scale", rand_all)
+	#shader_material.set_shader_parameter("emission_strength", -0.25)
+	#shader_material.set_shader_parameter("base_alpha", -0.5)
+	#shader_material.set_shader_parameter("c1", rand_c1)
+	#shader_material.set_shader_parameter("c2", rand_c2)
+	#shader_material.set_shader_parameter("c3", rand_c3)
+	
 
 func _physics_process(delta: float) -> void:
 	
+	#shader_material.set_shader_parameter("c1", c1)
+	#shader_material.set_shader_parameter("c2", c2)
+	#shader_material.set_shader_parameter("c3", c3)
+	
 	if not is_grabbed and is_touching_ground and recently_grabbed:
-		print('this')
 		if linear_velocity == Vector3.ZERO and angular_velocity == Vector3.ZERO:
-			print('that')
 			freeze = true
 			resting_position = global_position.y
 			recently_grabbed = false
@@ -204,6 +229,7 @@ func _physics_process(delta: float) -> void:
 	if is_suspended:
 		linear_velocity = lerp(linear_velocity, Vector3(0.0, 0.0, 0.0), delta * 1.5)
 		angular_velocity = lerp(angular_velocity, Vector3(0.0, 0.0, 0.0), delta * 0.5)
+		freeze = false
 	
 	if is_assembly_component:
 		if not extraction_complete:
@@ -226,15 +252,14 @@ func _physics_process(delta: float) -> void:
 			#linear_damp = 0
 			#angular_damp = 0
 
+
 	if is_grabbed:
 		if position_tween:
 			position_tween.kill()
 		if glow_tween:
 			glow_tween.kill()
-		shader_material.set_shader_parameter("emission_strength", 1.0)
 		object_body.top_level = false
-		if is_suspended:
-			return
+
 		base_spawn_pos = global_position
 		#object_body.position = Vector3.ZERO
 		#global_transform = object_body.global_transform
@@ -248,50 +273,54 @@ func _physics_process(delta: float) -> void:
 		damp_elapsed_time = 0.0
 		damp_set = false
 
+var brightness_increasing: bool = true
+
 func _process(delta: float) -> void:
-	
 	if not is_grabbed:
 		if glow_tween:
 			glow_tween.kill()
 		if is_touchable:
-			#outline.position = object_body.position
-			if is_touched and not outline.visible:
-				var rand_speed = randfn(0.25, 0.1)
-				var rand_ring = randf_range(0.35, 0.75)
-				var rand_wave = randf_range(0.35, 0.75)
-				var rand_all = randf_range(0.5, 1.5)
-				print(rand_speed)
-				shader_material.set_shader_parameter("speed", rand_speed)
-				shader_material.set_shader_parameter("ring_scale", rand_ring)
-				shader_material.set_shader_parameter("wave_scale", rand_wave)
-				shader_material.set_shader_parameter("random_scale", rand_all)
-				shader_material.set_shader_parameter("emission_strength", -0.5)
-				if object_body.rotation_degrees.y == 0.0:
-					shader_material.set_shader_parameter("uv_projection_mode", 0)
-				else:
-					shader_material.set_shader_parameter("uv_projection_mode", 1)
-				outline.visible = true
+			if is_touched:
+				standard_material.emission = Color(0.6, 0.9, 0.6)
+				standard_material.emission_energy_multiplier = 2.0
+				if not outline.visible:
+					outline.visible = true
 				
 			if not is_touched:
+				#standard_material.emission = Color(0.63, 0.8, 0.62)
+				#standard_material.emission_energy_multiplier = 1.0
 				outline.visible = false
-			#else:
-				#if position_tween:
-					#position_tween.kill()
-				#if glow_tween:
-					#glow_tween.kill()
-				#if hover_tween:
-					#hover_tween.kill()
-				#is_touching_ground = true
-				#outline.visible = false
 
+
+	if is_grabbed:
+		print(get_parent())
+		if brightness_increasing:
+			glow_timer -= delta
+			standard_material.emission = lerp(standard_material.emission, Color.GREEN, delta * 3.0)
+			standard_material.emission_energy_multiplier = lerp(standard_material.emission_energy_multiplier, 100.0, delta)
+			if glow_timer <= 0.0:
+				brightness_increasing = false
+		else:
+			standard_material.emission_energy_multiplier = lerp(standard_material.emission_energy_multiplier, 1.9, delta * 7.0)
+			if standard_material.emission_energy_multiplier == 2.0:
+				is_grabbed = false
+				brightness_increasing = true
 	if is_extracting:
 		print('is currently extracting')
 		shake_timer -= delta
 		if not extract_in_motion:
+			extract_pos_x = position.x - 2.5
+			extract_pos_y = position.y + 0.5
+			extract_pos_z = position.z + 1.0
 			extract_object_motion()
 
 
-	#if extract_in_motion:
+	if extract_in_motion:
+		print('try moving forward rapidly and then extracting...you run into the object. Close, but not quite there yet.')
+		print('live')
+		#position.x = lerp(position.x, extract_pos_x, delta * 2.5)
+		#position.y = lerp(position.y, extract_pos_y, delta * 2.5)
+		#position.z = lerp(position.z, extract_pos_z, delta * 2.5)
 		#if shake_timer < 3.0 and shake_timer > 2.0:
 			#rotate_object(object_body, 0.0, -360.0, 0.0, 0.0, 0.35)
 			#rotate_object(glow_body, 0.0, -360.0, 0.0, 0.0, 0.35)
@@ -338,7 +367,6 @@ func _on_body_shape_entered(body_rid: RID, body: Node, body_shape_index: int, lo
 	
 	if body.name == 'Floor':
 		is_touching_ground = true
-		print('both??')
 
 	
 	#if body.name == "Left_Wall" and not touching_left_wall:
@@ -410,17 +438,17 @@ func set_outline(status: String, color: Color, opacity: float) -> void:
 
 	elif status == 'UPDATE':
 		color.a = 0.25
-		shader_material.set_shader_parameter("glow_color", color)
+		#shader_material.set_shader_parameter("glow_color", color)
 		glow_body.visible = true
 
 	elif status == 'ENHANCE':
 		color.a = opacity
-		shader_material.set_shader_parameter("glow_color", color)
+		#shader_material.set_shader_parameter("glow_color", color)
 		glow_body.visible = true
 
 	elif status == 'DIM':
 		color.a = 0.25
-		shader_material.set_shader_parameter("glow_color", color)
+		#shader_material.set_shader_parameter("glow_color", color)
 		glow_body.visible = true
 		
 	elif status == "EXTRACT":

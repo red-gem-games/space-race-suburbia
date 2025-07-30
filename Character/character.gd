@@ -14,7 +14,6 @@ var start_day: bool = false
 #@onready var beam: Node3D = PREM_7.beam
 #@onready var beam_mesh: Node3D = PREM_7.beam_mesh
 #@onready var beam_shader_mat := beam_mesh.get_active_material(0) as ShaderMaterial
-@onready var manipulation_cloud: MeshInstance3D = $Manipulation_Cloud
 
 var manipulate_ORANGE: Color = Color(1, 0.33, 0)
 var manipulate_GREEN: Color = Color(0, 1, 0)
@@ -94,7 +93,7 @@ const MODE_1: String = "SHIFT"
 const MODE_2: String = "SUSPEND"
 const MODE_3: String = "EXTRACT"
 const MODE_4: String = "FUSE"
-const MODE_1_COLOR: Color = Color.ORANGE
+const MODE_1_COLOR: Color = Color.GREEN
 const MODE_2_COLOR: Color = Color.BLUE
 const MODE_3_COLOR: Color = Color.RED
 const MODE_4_COLOR: Color = Color.WEB_PURPLE
@@ -213,6 +212,11 @@ var beam_lock: bool = false
 var current_yaw
 var current_pitch
 
+var time: float
+var oscillating_1: float
+var oscillating_2: float
+var oscillating_3: float
+
 var orbit_radius: float = 7.0
 var target_orbit_radius: float = orbit_radius
 var orbit_angle: float = 0.0  # Radians
@@ -220,7 +224,8 @@ var orbit_speed: float = 1.0  # Speed multiplier
 var input_direction_x: float = 0.0
 var input_direction_z: float = 0.0
 var grabbed_pos_set: bool = false
-var look_to
+
+@onready var control_pos = $Control_Position
 
 func _ready() -> void:
 	push_warning('General To Do List:')
@@ -250,10 +255,13 @@ func _ready() -> void:
 	control_timer.one_shot = true
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	prem7_original_rotation = PREM_7.rotation
-	manipulation_cloud.visible = false
 
 
 func _physics_process(delta: float) -> void:
+	
+	handle_prem7_decay(delta)
+	
+
 	
 	# Update ground distance
 	distance_to_ground = raycast_to_ground()
@@ -331,14 +339,14 @@ func _physics_process(delta: float) -> void:
 
 func _process(delta: float) -> void:
 	
-	
 	if extracting_object_active:
+		grabbed_object.is_extracting = true
 		scale_object(PREM_7.object_info, 1.0, 1.0, 1.0, 0.0, delta)
-		grabbed_object.position.x = lerp(grabbed_object.position.x, -2.0, delta * 2.5)
-		grabbed_object.position.z = lerp(grabbed_object.position.z, -5.5, delta * 2.5)
-		grabbed_rotation.x = lerp(grabbed_rotation.x, 15.0, delta * 2.5)
-		grabbed_rotation.y = lerp(grabbed_rotation.y, 25.0, delta * 2.5)
-		grabbed_rotation.z = lerp(grabbed_rotation.z, 0.0, delta * 2.5)
+		#grabbed_object.position.x = lerp(grabbed_object.position.x, grabbed_object.base_x_pos, delta * 2.5)
+		#grabbed_object.position.z = lerp(grabbed_object.position.z, grabbed_object.base_z_pos, delta * 2.5)
+		#grabbed_rotation.x = lerp(grabbed_rotation.x, 15.0, delta * 2.5)
+		#grabbed_rotation.y = lerp(grabbed_rotation.y, 25.0, delta * 2.5)
+		#grabbed_rotation.z = lerp(grabbed_rotation.z, 0.0, delta * 2.5)
 
 
 	if abs(delta - previous_delta) > delta_threshold:
@@ -351,20 +359,10 @@ func _process(delta: float) -> void:
 	if scroll_cooldown > 0.0:
 		scroll_cooldown -= delta
 
-
-	if not grabbed_object:
-		PREM_7.rotation = PREM_7.rotation.lerp(prem7_original_rotation, prem7_decay_speed * delta)
-		update_reticle_targeting()
+	PREM_7.rotation = PREM_7.rotation.lerp(prem7_original_rotation, prem7_decay_speed * delta)
+	update_reticle_targeting()
 
 	if grabbed_object:
-
-		look_to = grabbed_object.global_position
-		PREM_7.look_at(look_to)
-		#print("pos: ", grabbed_object.global_position)
-		#print("tra: ", grabbed_object.global_transform)
-		#look_to.x = look_to.x + 0.5
-		#look_to.y = look_to.y - 0.2
-
 		if shifting_object_active or extracting_object_active or fusing_object_active:
 			camera.fov = lerp(camera.fov, 55.0, delta * 10)
 			if not PREM_7.handling_object:
@@ -424,6 +422,8 @@ func _process(delta: float) -> void:
 		PREM_7.release_handle()
 		if camera.fov >= 74.9:
 			extracting_object_active = false
+			grabbed_object.extract_in_motion = false
+			grabbed_object.is_extracting = false
 			fusing_object_active = false
 
 ##--------------------------------------##
@@ -446,6 +446,7 @@ func _input(event: InputEvent) -> void:
 					PREM_7.trig_anim.play("trigger_pull")
 					#grab_object()
 				else:
+					left_mouse_down = false
 					PREM_7.trig_anim.play("trigger_release")
 					PREM_7.trig_anim.play("RESET")
 
@@ -484,7 +485,7 @@ func _input(event: InputEvent) -> void:
 				if event.is_pressed():
 					middle_mouse_down = true
 					PREM_7.ctrl_anim.play("RESET")
-					PREM_7.ctrl_anim.play("control_down")
+					PREM_7.ctrl_anim.play("inspect")
 					print("Object is being inspected!")
 					print('Add hologram tablet above PREM-7 that shoots out of top opening')
 					print('THEN, allow player to scroll through different inspection menus for object by scrolling with wheel')
@@ -581,14 +582,14 @@ func _input(event: InputEvent) -> void:
 					fuse_mode_active()
 					#suspending_object_active = true
 					beam_lock = false
-					grabbed_object.set_outline('FUSE', glow_color, 0.0)
+					#grabbed_object.set_outline('FUSE', glow_color, 0.0)
 					
 					#grabbed_object.is_suspended =! grabbed_object.is_suspended
 					#grabbed_object.object_rotation = grabbed_object.rotation_degrees
 					#grab_object()
 				else:
 					print('Stop Fusing')
-					grabbed_object.set_outline('GRAB', glow_color, glow_opacity)
+					#grabbed_object.set_outline('GRAB', glow_color, glow_opacity)
 					_on_reset_key()
 
 		if event.keycode == KEY_QUOTELEFT and pressed and not event.is_echo():
@@ -742,19 +743,16 @@ func _on_extract_key(down: bool) -> void:
 		right_mouse_down = true
 		handle_object('pressed')
 		print('Start Extracting - Make all other objects invisible?')
-		manipulation_cloud.visible = true
-		grabbed_object.set_outline('EXTRACT', glow_color, 0.0)
-		grabbed_object.start_extraction()
 		#grabbed_target_position.x -= 10
 	else:
 		grabbed_object.manipulation_mode('Inactive')
 		PREM_7.object_info.visible = false
 		grabbed_object.extract_active = false
+		grabbed_object.is_extracting = false
+		grabbed_object.extract_in_motion = false
 		handle_object('released')
 		right_mouse_down = false
 		print('Stop Extracting')
-		manipulation_cloud.visible = false
-		grabbed_object.set_outline('GRAB', glow_color, glow_opacity)
 
 func _on_reset_key() -> void:
 	print('RESETTING')
@@ -767,8 +765,8 @@ func _on_reset_key() -> void:
 
 func grab_object():
 	
-	look_to = grabbed_object.global_position
-	look_to.x += 1.0
+	#look_to = grabbed_object.global_position
+	#look_to.x += 1.0
 	#left_mouse_down = false
 	#PREM_7.trig_anim.play("RESET")
 	#PREM_7.trig_anim.play("trigger_pull")
@@ -778,7 +776,7 @@ func grab_object():
 	fusing_object_active = false
 	#beam.set_process(true)
 	#beam.object_is_grabbed = true
-	PREM_7.cast_beam()
+	#PREM_7.cast_beam()
 	HUD.reticle.visible = false
 	mouse_speed = base_mouse_speed / 100.0 * 15.0
 	pitch_max = grab_pitch_max
@@ -950,7 +948,7 @@ func handle_object(status):
 			glow_opacity = 0.6
 
 		## Set Outline Glow State AFTER Object is Grabbed
-		grabbed_object.set_outline('ENHANCE', glow_color, glow_opacity)
+		#grabbed_object.set_outline('ENHANCE', glow_color, glow_opacity)
 
 	if status == 'released':
 		PREM_7.trig_anim.play("trigger_release")
@@ -960,10 +958,10 @@ func handle_object(status):
 		_on_reset_key()
 		
 		## Reset Outline Glow State BEFORE Grabbed Object is Released
-		if not extracting_object_active:
-			grabbed_object.set_outline('DIM', glow_color, 0.0)
-		else:
-			grabbed_object.set_outline('EXTRACT', glow_color, 0.0)
+		#if not extracting_object_active:
+			#grabbed_object.set_outline('DIM', glow_color, 0.0)
+		#else:
+			#grabbed_object.set_outline('EXTRACT', glow_color, 0.0)
 
 		if current_mode == MODE_1:
 			print("Object has been Shifted!")
@@ -1025,7 +1023,7 @@ func handle_pitch_and_yaw(time):
 
 		# Interpolate between restricted and full downward pitch
 		var clamped_pitch_min = deg_to_rad(-25)
-		pitch_min = lerp(clamped_pitch_min, base_pitch_min, t)
+		pitch_min = lerp(clamped_pitch_min, base_pitch_min + 0.25, t)
 	else:
 		pitch_min = base_pitch_min
 
@@ -1187,7 +1185,7 @@ func change_mode(new_mode: String) -> void:
 			MODE_4: glow_color = MODE_4_COLOR
 			_: glow_color = Color.WHITE
 
-		grabbed_object.set_outline('UPDATE', glow_color, 0.0)
+		#grabbed_object.set_outline('UPDATE', glow_color, 0.0)
 
 func cycle_mode_direction(forward: bool = true) -> void:
 	var current_index = modes.find(current_mode)
@@ -1307,6 +1305,7 @@ func update_reticle_targeting() -> void:
 	var result = space_state.intersect_ray(query)
 
 	if result and not grabbed_object:
+		
 		if result.collider is RigidBody3D and not result.collider.is_rocketship:
 			if touched_object:
 				touched_object.is_touched = false
@@ -1317,19 +1316,26 @@ func update_reticle_targeting() -> void:
 				MODE_3: HUD.reticle.modulate = MODE_3_COLOR
 				MODE_4: HUD.reticle.modulate = MODE_4_COLOR
 				_: HUD.reticle.modulate = Color.WHITE
+			PREM_7.touching_object = true
 			result.collider.is_touched = true
 			touched_object = result.collider
+			
+			
+			#PREM_7.shader_material.set_shader_parameter("base_alpha", 0.1)
 		else:
 			HUD.reticle.modulate = Color.WHITE
 			if touched_object:
 				touched_object.is_touched = false
 				touched_object = null
-				
+				PREM_7.touching_object = false
+			#PREM_7.shader_material.set_shader_parameter("base_alpha", 0.0)
 	else:
 		if touched_object:
 			touched_object.is_touched = false
 			touched_object = null
+			PREM_7.touching_object = false
 		HUD.reticle.modulate = Color.WHITE
+		#PREM_7.shader_material.set_shader_parameter("base_alpha", 0.1)
 		
 
 func handle_prem7_decay(delta: float) -> void:

@@ -353,7 +353,7 @@ path_u_distance = 0.0
 path_joined = false
 
 [node name="PathBeam" type="PathFollow3D" parent="Path3D"]
-transform = Transform3D(-0.889062, -0.450487, -0.0803473, -0.0734013, -0.0329108, 0.996621, -0.451688, 0.892046, -0.0038068, 0.116575, -1.45701, -0.0901359)
+transform = Transform3D(-0.889062, -0.450487, -0.0803474, -0.0734013, -0.0329108, 0.996621, -0.451688, 0.892046, -0.0038068, 0.116575, -1.45701, -0.0901359)
 visible = false
 progress = 1.31188
 cubic_interp = false
