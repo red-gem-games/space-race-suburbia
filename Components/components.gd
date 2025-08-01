@@ -293,7 +293,6 @@ func _process(delta: float) -> void:
 
 
 	if is_grabbed:
-		print(get_parent())
 		if brightness_increasing:
 			glow_timer -= delta
 			standard_material.emission = lerp(standard_material.emission, Color.GREEN, delta * 3.0)
@@ -306,7 +305,6 @@ func _process(delta: float) -> void:
 				is_grabbed = false
 				brightness_increasing = true
 	if is_extracting:
-		print('is currently extracting')
 		shake_timer -= delta
 		if not extract_in_motion:
 			extract_pos_x = position.x - 2.5
@@ -314,32 +312,6 @@ func _process(delta: float) -> void:
 			extract_pos_z = position.z + 1.0
 			extract_object_motion()
 
-
-	if extract_in_motion:
-		print('try moving forward rapidly and then extracting...you run into the object. Close, but not quite there yet.')
-		print('live')
-		#position.x = lerp(position.x, extract_pos_x, delta * 2.5)
-		#position.y = lerp(position.y, extract_pos_y, delta * 2.5)
-		#position.z = lerp(position.z, extract_pos_z, delta * 2.5)
-		#if shake_timer < 3.0 and shake_timer > 2.0:
-			#rotate_object(object_body, 0.0, -360.0, 0.0, 0.0, 0.35)
-			#rotate_object(glow_body, 0.0, -360.0, 0.0, 0.0, 0.35)
-		#elif shake_timer < 2.0 and shake_timer > 1.0:
-			#rotate_object(object_body, -360.0, -360.0, 0.0, 0.0, 0.35)
-			#rotate_object(glow_body, -360.0, -360.0, 0.0, 0.0, 0.35)
-			#scale_object(object_body, 1.5, 1.5, 1.5, 0.25, 0.5)
-			#scale_object(glow_body, 1.5, 1.5, 1.5, 0.25, 0.5)
-		#elif shake_timer < 1.0 and shake_timer > 0.0:
-			#create_the_grid = true
-			#rotate_object(object_body, 0.0, 0.0, 0.0, 0.0, 0.35)
-			#rotate_object(glow_body, 0.0, 0.0, 0.0, 0.0, 0.35)
-			#scale_object(object_body, 0.001, 0.001, 0.001, 0.25, 0.15)
-			#scale_object(glow_body, 0.001, 0.001, 0.001, 0.25, 0.15)
-		#elif shake_timer <= 0.0:
-			#is_being_extracted = true
-			#extract_components()
-			#is_extracting = false
-			#extract_in_motion = false
 
 
 func enable_object_glow(object: Node) -> void:
@@ -696,9 +668,10 @@ func manipulation_mode(type):
 		for child in object_body.get_children():
 			if child is MeshInstance3D:
 				child.set_surface_override_material(0, manipulation_material)
+		collision_shape.disabled = true
 	
 	elif type == "Inactive":
+		collision_shape.disabled = false
 		for child in object_body.get_children():
 			if child is MeshInstance3D:
 				child.set_surface_override_material(0, null)
-				

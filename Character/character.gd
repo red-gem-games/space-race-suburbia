@@ -4,10 +4,12 @@ class_name character
 const is_character: bool = true
 var start_day: bool = false
 
+var object_data = {}
+var component_data_file = "res://components/component_data.json"
+
 @onready var collision_shape: CollisionShape3D = $CollisionShape3D
-@onready var extract_anim: AnimationPlayer = $Extract_Animation
 @onready var camera: Camera3D = $Camera3D
-@onready var grabbed_container: Node3D = $Camera3D/Grabbed_Container
+@onready var control_position: Node3D = $Camera3D/Control_Position
 @onready var PREM_7: Node3D = $"Camera3D/PREM-7"
 @onready var HUD: Control = $HUD
 @onready var char_obj_shape: CollisionShape3D
@@ -225,8 +227,6 @@ var input_direction_x: float = 0.0
 var input_direction_z: float = 0.0
 var grabbed_pos_set: bool = false
 
-@onready var control_pos = $Control_Position
-
 func _ready() -> void:
 	push_warning('General To Do List:')
 	push_warning('------ ALWAYS MAKE SURE THINGS WORK ON BOTH SCREENS ------')
@@ -255,6 +255,8 @@ func _ready() -> void:
 	control_timer.one_shot = true
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	prem7_original_rotation = PREM_7.rotation
+	object_data = load_json_file(component_data_file)
+	print(object_data)
 
 
 func _physics_process(delta: float) -> void:
@@ -328,6 +330,7 @@ func _physics_process(delta: float) -> void:
 
 	move_and_slide()
 	
+
 	handle_pitch_and_yaw(delta)
 
 	# Update jetpack thrust, hover, ceiling logic
@@ -338,16 +341,6 @@ func _physics_process(delta: float) -> void:
 
 
 func _process(delta: float) -> void:
-	
-	if extracting_object_active:
-		grabbed_object.is_extracting = true
-		scale_object(PREM_7.object_info, 1.0, 1.0, 1.0, 0.0, delta)
-		#grabbed_object.position.x = lerp(grabbed_object.position.x, grabbed_object.base_x_pos, delta * 2.5)
-		#grabbed_object.position.z = lerp(grabbed_object.position.z, grabbed_object.base_z_pos, delta * 2.5)
-		#grabbed_rotation.x = lerp(grabbed_rotation.x, 15.0, delta * 2.5)
-		#grabbed_rotation.y = lerp(grabbed_rotation.y, 25.0, delta * 2.5)
-		#grabbed_rotation.z = lerp(grabbed_rotation.z, 0.0, delta * 2.5)
-
 
 	if abs(delta - previous_delta) > delta_threshold:
 		screen_res_sway_multiplier = 55.0 * delta
@@ -501,6 +494,9 @@ func _input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
 		if Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
 			
+			if extracting_object_active:
+				return
+			
 			var input_strength_x = event.relative.x
 			var speed_factor_x = clamp(abs(input_strength_x), 0.0, 1.0)  # 0 at slow, 1 at fast
 			var resistance_x = lerp(1.0, 0.3, speed_factor_x)  # more resistance at high speed
@@ -555,6 +551,7 @@ func _input(event: InputEvent) -> void:
 		var down = event.pressed
 
 		if event.keycode == KEY_E and pressed:
+			desired_pitch = 0
 			_on_extract_key(down)
 		if event.keycode == KEY_R and pressed:
 			desired_pitch = 0
@@ -737,14 +734,18 @@ func _on_extract_key(down: bool) -> void:
 		extracting_object_active =! extracting_object_active
 		
 	if extracting_object_active:
+		grabbed_object.is_extracting = true
+		PREM_7.object_info.scale = Vector3(1.0, 1.0, 1.0)
 		PREM_7.object_info.visible = true
 		grabbed_object.extract_active = true
 		grabbed_object.manipulation_mode('Active')
+		activate_extraction_data()
 		right_mouse_down = true
 		handle_object('pressed')
 		print('Start Extracting - Make all other objects invisible?')
 		#grabbed_target_position.x -= 10
 	else:
+		gravity_strength = 10.0
 		grabbed_object.manipulation_mode('Inactive')
 		PREM_7.object_info.visible = false
 		grabbed_object.extract_active = false
@@ -937,8 +938,7 @@ func handle_object(status):
 				print('4. Once player has decided on a component, they will then press & hold -E- to extract')
 				print('5. That component snaps off and becomes the grabbed object, while the remaining body stays intact and falls to the ground')
 			else:
-				extract_anim.play('RESET')
-				extract_anim.play("extract_negative")
+				pass
 			glow_opacity = 0.5
 
 		elif current_mode == MODE_4:
@@ -1027,64 +1027,12 @@ func handle_pitch_and_yaw(time):
 	else:
 		pitch_min = base_pitch_min
 
-	#if beam_lock:
-		#var cam_pos = camera.global_transform.origin
-		#var target_pos = grabbed_object.global_transform.origin
-		#var dir = (target_pos - cam_pos).normalized()
-#
-		#var target_yaw = atan2(-dir.x, -dir.z)
-		#var look_vector = (grabbed_object.global_transform.origin - camera.global_transform.origin).normalized()
-		#var target_pitch = asin(look_vector.y)
-		#target_pitch = clamp(target_pitch, deg_to_rad(-89), deg_to_rad(89))
-#
-		#rotation.y = target_yaw
-		#camera.rotation.x = target_pitch
-#
-		#pitch = target_pitch
-		#desired_pitch = target_pitch
-		#desired_yaw = target_yaw
-		#yaw = desired_yaw
-		#
-		#velocity.x = 0.0
-		#velocity.z = 0.0  # Kill all physics-based movement
-		#move_and_slide()  # Just to satisfy the engine
-		#input_direction_x = lerp(input_direction_x, 0.0, time * 5.0)
-		#input_direction_z = lerp(input_direction_z, 0.0, time * 5.0)
-#
-		#if move_input["left"] and not shifting_object_active:
-			#input_direction_x -= 1.0
-		#if move_input["right"] and not shifting_object_active:
-			#input_direction_x += 1.0
-#
-		## Radial (toward/away from object)
-		#if move_input["up"] and not shifting_object_active:
-			#input_direction_z -= 1.0  # Move closer
-		#if move_input["down"] and not shifting_object_active:
-			#input_direction_z += 1.0  # Move away
-		#
-		#
-		#orbit_radius = clamp(orbit_radius + input_direction_z * time / 2, 5.0, 15.0)
-		#orbit_angle += input_direction_x * orbit_speed * time / orbit_radius
-		#orbit_angle = fmod(orbit_angle, TAU)
-		#
-		#print('Orbit Angle: ', orbit_angle)
-#
-		#var obj_pos = grabbed_object.global_transform.origin
-		#var orbit_offset = Vector3(
-			#orbit_radius * sin(orbit_angle),
-			#0.0,
-			#orbit_radius * cos(orbit_angle)
-		#)
-#
-		#global_position.x = lerp(global_position.x, obj_pos.x + orbit_offset.x, time * 5.0)
-		#global_position.z = lerp(global_position.z, obj_pos.z + orbit_offset.z, time * 5.0)
-
-	#if not beam_lock:
 	desired_pitch = clamp(desired_pitch, pitch_min, pitch_max)
 	yaw = lerp(yaw, desired_yaw, smoothing)
 	pitch = lerp(pitch, desired_pitch, smoothing)
 	rotation.y = yaw
 	camera.rotation.x = pitch
+
 
 func handle_jetpack(status, timing):
 	# Jetpack Ceiling Clamp
@@ -1252,11 +1200,12 @@ func clear_char_obj_shape():
 func handle_jetpack_logic(delta: float) -> void:
 	if extracting_object_active:
 		if airborne:
-			if not hover_lock:
-				hover_lock = true
-				hover_base_y = global_position.y
-				hover_bob_time = 0.0
-			handle_jetpack('7', delta)
+			hover_base_y = global_position.y
+			hover_bob_time = 0.0
+			current_jetpack_thrust = 0.0
+			current_jetpack_thrust = 0.0
+			vertical_velocity = 0.0
+			gravity_strength = 0.0
 		return
 
 	if jetpack_active:
@@ -1455,3 +1404,68 @@ func _on_collider_body_entered(body: Node3D) -> void:
 func _on_collider_body_shape_entered(body_rid: RID, body: Node3D, body_shape_index: int, local_shape_index: int) -> void:
 	if body is RigidBody3D:
 		print('?????')
+
+
+
+func load_json_file(filePath: String):
+	if FileAccess.file_exists(filePath):
+		
+		var dataFile = FileAccess.open(filePath, FileAccess.READ)
+		var parsedResult = JSON.parse_string(dataFile.get_as_text())
+	
+		if parsedResult is Dictionary:
+			return parsedResult
+		else:
+			print("Error reading file")
+	else:
+		print("File Doesn't Exist")
+
+func activate_extraction_data():
+	var obj_name = grabbed_object.name  # e.g. "WashingMachine"
+	if not object_data.has(obj_name):
+		print("No data found for object:", obj_name)
+		return
+	
+	var obj_info = object_data[obj_name]
+	var components = obj_info.get("components", [])
+
+	PREM_7.oi_main_name.text = obj_info.get("name", "Unknown Object")
+	PREM_7.oi_main_desc.text = obj_info.get("description", "")
+
+	# Clear everything first
+	PREM_7.oi_comp_1.text = ""
+	PREM_7.oi_stars_1.text = ""
+	PREM_7.oi_comp_2.text = ""
+	PREM_7.oi_stars_2.text = ""
+	PREM_7.oi_comp_3.text = ""
+	PREM_7.oi_stars_3.text = ""
+	PREM_7.oi_comp_4.text = ""
+	PREM_7.oi_stars_4.text = ""
+
+	# Now fill each visible component
+	for i in range(min(components.size(), 4)):
+		var comp = components[i]
+		match i:
+			0:
+				PREM_7.oi_comp_1.text = comp.get("name", "")
+				PREM_7.oi_stars_1.text = "★".repeat(int(comp.get("stars", 0)))
+			1:
+				PREM_7.oi_comp_2.text = comp.get("name", "")
+				PREM_7.oi_stars_2.text = "★".repeat(int(comp.get("stars", 0)))
+			2:
+				PREM_7.oi_comp_3.text = comp.get("name", "")
+				PREM_7.oi_stars_3.text = "★".repeat(int(comp.get("stars", 0)))
+			3:
+				PREM_7.oi_comp_4.text = comp.get("name", "")
+				PREM_7.oi_stars_4.text = "★".repeat(int(comp.get("stars", 0)))
+
+	# Optionally show first component detail (or add cycling later)
+	if components.size() > 0:
+		var first = components[0]
+		PREM_7.oi_comp_desc.text = first.get("description", "")
+		PREM_7.oi_comp_material.text = first.get("material", "")
+		PREM_7.oi_comp_durability.text = str(first.get("durability", 0))
+	else:
+		PREM_7.oi_comp_desc.text = ""
+		PREM_7.oi_comp_material.text = ""
+		PREM_7.oi_comp_durability.text = ""

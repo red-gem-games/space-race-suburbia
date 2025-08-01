@@ -6,8 +6,8 @@
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_jvmdh"]
 shader = ExtResource("3_yu8mg")
-shader_parameter/highlight_color = Vector4(1, 0, 0, 0.75)
-shader_parameter/falloff = 0.5
+shader_parameter/highlight_color = Vector4(0, 0, 0, 1)
+shader_parameter/falloff = 0.7
 
 [node name="HUD" type="Control"]
 layout_mode = 3
@@ -30,7 +30,7 @@ offset_bottom = 40.0
 layout_mode = 0
 offset_right = 2563.0
 offset_bottom = 1445.0
-color = Color(0.968627, 0.529412, 0, 0.152941)
+color = Color(0.97, 0.5335, 0, 0.223529)
 
 [node name="Reticle" type="Control" parent="CanvasLayer"]
 layout_mode = 3
@@ -59,7 +59,6 @@ grow_vertical = 2
 texture = ExtResource("1_37p78")
 
 [node name="Control_Color" type="ColorRect" parent="CanvasLayer"]
-visible = false
 material = SubResource("ShaderMaterial_jvmdh")
 offset_right = 2563.0
 offset_bottom = 1445.0

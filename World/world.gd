@@ -12,6 +12,9 @@ var last_held_object: RigidBody3D = null
 var _last_grabbed_pos := Vector3.ZERO
 var _release_velocity := Vector3.ZERO
 
+const GRAB_STIFFNESS := 18000.0
+const GRAB_DAMPING := 1800.0
+const ROTATE_SPEED := 4.0  # Increase this for snappier rotation
 
 var previous_grid_positions := {}
 var assembly_components_global_position: Vector3
@@ -52,9 +55,6 @@ var flicker_obj_c: Node = null
 
 var time: float = 0.0
 
-
-
-
 func _ready() -> void:
 	add_child(object_position_timer)
 	var somn = assembly_object_container.get_children()
@@ -62,10 +62,6 @@ func _ready() -> void:
 		child.character_body = character
 
 	start_static_glow_loop()
-
-const GRAB_STIFFNESS := 18000.0
-const GRAB_DAMPING := 1800.0
-const ROTATE_SPEED := 4.0  # Increase this for snappier rotation
 
 func _physics_process(delta: float) -> void:
 	
@@ -83,45 +79,43 @@ func _physics_process(delta: float) -> void:
 		var offset_up
 
 		var target_pos
-		
-		if not character.extracting_object_active or character.fusing_object_active:
+
+		if not character.extracting_object_active:
 			distance_forward = 6.0
 			offset_left = 0.0
 			offset_up = 0.0
-			target_pos = cam_transform.origin + forward * distance_forward + left * offset_left + up * offset_up
-		
-			var obj_pos = grabbed_object.global_transform.origin
-			var direction = target_pos - obj_pos
-			var vel = grabbed_object.linear_velocity
-
-			var force = (direction * GRAB_STIFFNESS) - (vel * GRAB_DAMPING)
-			grabbed_object.apply_central_force(force)
-
-
-			## --- Smooth LookAt Rotation ---
-			var object_pos = grabbed_object.global_transform.origin
-			var look_dir = -(character.global_position - object_pos).normalized()
-
-			look_dir.y += 0.15  # tweak this until it feels right
-			look_dir = look_dir.normalized()
-
-			var desired_basis = Basis().looking_at(look_dir, Vector3.UP)
-			var current_basis = grabbed_object.global_transform.basis
-			var smoothed_basis = lerp(current_basis, desired_basis, delta * 10.0)
-
-			var transform = grabbed_object.global_transform
-			transform.basis = smoothed_basis
-			grabbed_object.global_transform = transform
 		
 		else:
-			pass
-			#distance_forward = 6.0
-			#offset_left = 1.0
-			#offset_up = 0.5
-			#grabbed_object.reparent(character.control_pos)
+			distance_forward = 5.0
+			offset_left = 2.5
+			offset_up = 0.5
+			#grabbed_object.rotation_degrees = lerp(grabbed_object.rotation_degrees, Vector3(12.5, 26.0, 0.4), delta * 10.0)
+			
+		target_pos = cam_transform.origin + forward * distance_forward + left * offset_left + up * offset_up
+	
+		var obj_pos = grabbed_object.global_transform.origin
+		var direction = target_pos - obj_pos
+		var vel = grabbed_object.linear_velocity
+
+		var force = (direction * GRAB_STIFFNESS) - (vel * GRAB_DAMPING)
+		
+		grabbed_object.apply_central_force(force)
 
 
+		## --- Smooth LookAt Rotation ---
+		var object_pos = grabbed_object.global_transform.origin
+		var look_dir = -(character.global_position - object_pos).normalized()
 
+		look_dir.y += 0.15  # tweak this until it feels right
+		look_dir = look_dir.normalized()
+
+		var desired_basis = Basis().looking_at(look_dir, Vector3.UP)
+		var current_basis = grabbed_object.global_transform.basis
+		var smoothed_basis = lerp(current_basis, desired_basis, delta * 5.0)
+
+		var transform = grabbed_object.global_transform
+		transform.basis = smoothed_basis
+		grabbed_object.global_transform = transform
 
 
 	for child in $Extracted_Object.get_children():
@@ -321,18 +315,21 @@ func _input(event: InputEvent) -> void:
 			character.distance_from_character = base_distance_in_front
 	
 		if event.keycode == KEY_E or event.keycode == KEY_F or event.keycode == KEY_Q:
-			#grabbed_object.reparent(assembly_object_container)
+			if not grabbed_object:
+				return
 			if not character.extracting_object_active and not character.fusing_object_active:
 				print('Resetting Rotation here, genius...')
 				grabbed_object.reparent(assembly_object_container)
-				grabbed_object.freeze = false
+				grabbed_object.outline.visible = true
 				reset_rotation = true
 				character.distance_from_character = base_distance_in_front
+				flicker_obj_a = grabbed_object.outline
 			else:
 				if character.extracting_object_active:
-					grabbed_object.reparent(character.control_pos)
-					grabbed_object.position = character.control_pos.position
-					grabbed_object.freeze = true
+					grabbed_object.reparent(character.control_position)
+					grabbed_object.outline.visible = false
+					flicker_obj_a = character.PREM_7.object_info
+					#grabbed_object.freeze = true
 
 
 		if event.keycode == KEY_SHIFT:
@@ -340,6 +337,9 @@ func _input(event: InputEvent) -> void:
 				movement_speed = 2
 			else:
 				movement_speed = 1
+
+
+
 
 
 func spawn_grid():
@@ -449,7 +449,7 @@ func _static_glow_loop() -> void:
 	rng.randomize()
 
 	while static_glow_active:
-		var delay = rng.randf_range(6.0, 12.0)
+		var delay = rng.randf_range(2.0, 8.0)
 		await get_tree().create_timer(delay).timeout
 
 		if not static_glow_active:
@@ -460,7 +460,7 @@ func _static_glow_loop() -> void:
 
 
 func _static_glow_blink(rng: RandomNumberGenerator) -> void:
-	var blink_pairs = rng.randi_range(8, 16)
+	var blink_pairs = rng.randi_range(4, 16)
 
 	for i in blink_pairs:
 		if not static_glow_active:
@@ -485,29 +485,3 @@ func _static_glow_blink(rng: RandomNumberGenerator) -> void:
 		flicker_obj_a.visible = true
 		flicker_obj_b.visible = true
 		flicker_obj_c.visible = true
-	
-	#var rand_ring = randf_range(0.5, 1.5)
-	#var rand_wave = randf_range(0.25, 1.0)
-	#var rand_all = randf_range(1.5, 3.0)
-	#var rand_c1 = randf_range(0.0, 5.0)
-	#var rand_c2 = randf_range(0.0, 5.0)
-	#var rand_c3 = randf_range(0.0, 5.0)
-
-	#character.PREM_7.shader_material.set_shader_parameter("ring_scale", rand_ring)
-	#character.PREM_7.shader_material.set_shader_parameter("wave_scale", rand_ring)
-	#character.PREM_7.shader_material.set_shader_parameter("random_scale", rand_ring)
-
-	#if grabbed_object:
-		#grabbed_object.shader_material.set_shader_parameter("ring_scale", rand_ring)
-		#grabbed_object.shader_material.set_shader_parameter("wave_scale", rand_ring)
-		#grabbed_object.shader_material.set_shader_parameter("random_scale", rand_ring)
-		#grabbed_object.shader_material.set_shader_parameter("c1", rand_c1)
-		#grabbed_object.shader_material.set_shader_parameter("c2", rand_c2)
-		#grabbed_object.shader_material.set_shader_parameter("c3", rand_c3)
-	#
-		#character.PREM_7.shader_material.set_shader_parameter("ring_scale", rand_ring)
-		#character.PREM_7.shader_material.set_shader_parameter("wave_scale", rand_ring)
-		#character.PREM_7.shader_material.set_shader_parameter("random_scale", rand_ring)
-		#character.PREM_7.shader_material.set_shader_parameter("c1", rand_c1)
-		#character.PREM_7.shader_material.set_shader_parameter("c2", rand_c2)
-		#character.PREM_7.shader_material.set_shader_parameter("c3", rand_c3)

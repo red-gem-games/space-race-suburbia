@@ -17,6 +17,19 @@ var shader: Shader
 var shader_material: ShaderMaterial
 
 @onready var object_info: Node3D = $Object_Info
+@onready var oi_main_name: Label3D = $Object_Info/Main_Name
+@onready var oi_main_desc: Label3D = $Object_Info/Main_Desc
+@onready var oi_comp_desc: Label3D = $Object_Info/Description
+@onready var oi_comp_material: Label3D = $Object_Info/Material
+@onready var oi_comp_durability: Label3D = $Object_Info/Durability
+@onready var oi_comp_1: Label3D = $Object_Info/Component_1
+@onready var oi_stars_1: Label3D = $Object_Info/Stars_1
+@onready var oi_comp_2: Label3D = $Object_Info/Component_2
+@onready var oi_stars_2: Label3D = $Object_Info/Stars_2
+@onready var oi_comp_3: Label3D = $Object_Info/Component_3
+@onready var oi_stars_3: Label3D = $Object_Info/Stars_3
+@onready var oi_comp_4: Label3D = $Object_Info/Component_4
+@onready var oi_stars_4: Label3D = $Object_Info/Stars_4
 
 var grabbed_object_name: StringName
 var handling_object: bool = false

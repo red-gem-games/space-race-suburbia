@@ -736,6 +736,7 @@ skeleton = NodePath("")
 
 [node name="Outline" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0427239, 0.0143697, 0)
+visible = false
 cast_shadow = 0
 visibility_range_fade_mode = 1
 mesh = SubResource("ArrayMesh_41lno")

@@ -1946,132 +1946,138 @@ font_size = 80
 outline_size = 5
 
 [node name="Object_Info" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.801669, 0.872407, 0.349309)
-visible = false
-
-[node name="Main_Code" type="Label3D" parent="Object_Info"]
-transform = Transform3D(0.00984807, -0.000151344, -0.00172987, 0, 0.00996194, -0.000871557, 0.00173648, 0.000858316, 0.0098106, 0, 0.915, -3.536)
-pixel_size = 0.15
-modulate = Color(0, 1, 0.729412, 1)
-text = "###-AA"
-font_size = 80
-outline_size = 5
-horizontal_alignment = 0
-uppercase = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.682401, 0.872407, 0.349309)
 
 [node name="Main_Name" type="Label3D" parent="Object_Info"]
-transform = Transform3D(0.00984807, -0.000151344, -0.00172987, 0, 0.00996194, -0.000871557, 0.00173648, 0.000858316, 0.0098106, 0, 0.737, -3.536)
+transform = Transform3D(0.00984807, -0.000151344, -0.00172987, 0, 0.00996194, -0.000871557, 0.00173648, 0.000858316, 0.0098106, 0.993805, 0.669018, -3.34517)
 pixel_size = 0.25
 modulate = Color(0, 1, 0.729412, 1)
 text = "Machine Name"
 font_size = 80
 outline_size = 5
-horizontal_alignment = 0
 uppercase = true
 
-[node name="Main_Type" type="Label3D" parent="Object_Info"]
-transform = Transform3D(0.00984807, -0.000151344, -0.00172987, 0, 0.00996194, -0.000871557, 0.00173648, 0.000858316, 0.0098106, 0, 0.393, -3.536)
+[node name="Main_Desc" type="Label3D" parent="Object_Info"]
+transform = Transform3D(0.00984807, -0.000151344, -0.00172987, 0, 0.00996194, -0.000871557, 0.00173648, 0.000858316, 0.0098106, 0.968413, 0.455018, -3.36278)
 pixel_size = 0.15
 modulate = Color(0, 1, 0.729412, 1)
-text = "Machine Type"
+text = "Machine Description"
 font_size = 80
 outline_size = 5
-horizontal_alignment = 0
-uppercase = true
 
 [node name="Middle_Bar" type="MeshInstance3D" parent="Object_Info"]
-transform = Transform3D(0.984808, -0.0151344, -0.172987, 0, 0.996195, -0.0871557, 0.173648, 0.0858316, 0.98106, 1.05412, -0.492026, -3.43081)
+transform = Transform3D(0.985705, -0.0161801, -0.172838, 0.0131951, 1.06892, -0.0124129, 0.173305, 0.010642, 0.984, 0.928689, -0.501914, -3.39413)
 cast_shadow = 0
 mesh = SubResource("CylinderMesh_4qq6n")
 
-[node name="Information" type="Label3D" parent="Object_Info"]
-transform = Transform3D(0.00984807, -0.000151344, -0.00172987, 0, 0.00996194, -0.000871557, 0.00173648, 0.000858316, 0.0098106, 1.26018, -0.427685, -3.53628)
-pixel_size = 0.25
+[node name="Description" type="Label3D" parent="Object_Info"]
+transform = Transform3D(0.00984748, -0.000260348, -0.00172023, 0.000107767, 0.00995969, -0.000890435, 0.00173648, 0.000858316, 0.0098106, 0.989699, -0.087939, -3.37391)
+pixel_size = 0.15
 modulate = Color(0, 1, 0.729412, 1)
-text = "Description
-Stats
-Compatability"
-font_size = 80
+text = "Placeholder"
+font_size = 100
+outline_size = 5
+horizontal_alignment = 0
+
+[node name="Material" type="Label3D" parent="Object_Info"]
+transform = Transform3D(0.00984748, -0.000260348, -0.00172023, 0.000107767, 0.00995969, -0.000890435, 0.00173648, 0.000858316, 0.0098106, 0.994076, -0.487915, -3.37391)
+pixel_size = 0.15
+modulate = Color(0, 1, 0.729412, 1)
+text = "Placeholder"
+font_size = 100
+outline_size = 5
+horizontal_alignment = 0
+
+[node name="Durability" type="Label3D" parent="Object_Info"]
+transform = Transform3D(0.00984748, -0.000260348, -0.00172023, 0.000107767, 0.00995969, -0.000890435, 0.00173648, 0.000858316, 0.0098106, 0.998454, -0.887891, -3.37391)
+pixel_size = 0.15
+modulate = Color(0, 1, 0.729412, 1)
+text = "Placeholder"
+font_size = 100
 outline_size = 5
 horizontal_alignment = 0
 
 [node name="Component_1" type="Label3D" parent="Object_Info"]
-transform = Transform3D(0.00984807, -0.000151344, -0.00172987, 0, 0.00996194, -0.000871557, 0.00173648, 0.000858316, 0.0098106, 0, 0.0867527, -3.53628)
-transparency = 0.53
+transform = Transform3D(0.00984723, -0.000281729, -0.00171831, 0.000128907, 0.00995911, -0.000894126, 0.00173648, 0.000858316, 0.0098106, 0.84463, 0.078876, -3.40982)
 pixel_size = 0.15
 modulate = Color(0, 1, 0.729412, 1)
 text = "Component"
 font_size = 80
 outline_size = 5
-horizontal_alignment = 0
+horizontal_alignment = 2
 
-[node name="Component_Code_1" type="Label3D" parent="Object_Info"]
-transform = Transform3D(0.00984807, -0.000151344, -0.00172987, 0, 0.00996194, -0.000871557, 0.00173648, 0.000858316, 0.0098106, 0, -0.021153, -3.53628)
-transparency = 0.53
+[node name="Stars_1" type="Label3D" parent="Object_Info"]
+transform = Transform3D(0.00984723, -0.000281729, -0.00171831, 0.000128907, 0.00995911, -0.000894126, 0.00173648, 0.000858316, 0.0098106, 0.850805, -0.0245535, -3.41205)
 pixel_size = 0.075
 modulate = Color(0, 1, 0.729412, 1)
-text = "###-AA"
+text = "★"
 font_size = 80
 outline_size = 5
-horizontal_alignment = 0
+horizontal_alignment = 2
+uppercase = true
 
 [node name="Component_2" type="Label3D" parent="Object_Info"]
-transform = Transform3D(0.00984807, -0.000151344, -0.00172987, 0, 0.00996194, -0.000871557, 0.00173648, 0.000858316, 0.0098106, 0, -0.265705, -3.53628)
+transform = Transform3D(0.00984723, -0.000281729, -0.00171831, 0.000128907, 0.00995911, -0.000894126, 0.00173648, 0.000858316, 0.0098106, 0.849339, -0.280846, -3.40954)
+transparency = 0.75
 pixel_size = 0.15
 modulate = Color(0, 1, 0.729412, 1)
 text = "Component"
 font_size = 80
 outline_size = 5
-horizontal_alignment = 0
+horizontal_alignment = 2
 
-[node name="Component_Code_2" type="Label3D" parent="Object_Info"]
-transform = Transform3D(0.00984807, -0.000151344, -0.00172987, 0, 0.00996194, -0.000871557, 0.00173648, 0.000858316, 0.0098106, 0, -0.37361, -3.53628)
+[node name="Stars_2" type="Label3D" parent="Object_Info"]
+transform = Transform3D(0.00984723, -0.000281729, -0.00171831, 0.000128907, 0.00995911, -0.000894126, 0.00173648, 0.000858316, 0.0098106, 0.855517, -0.384523, -3.41205)
+transparency = 0.75
 pixel_size = 0.075
 modulate = Color(0, 1, 0.729412, 1)
-text = "###-AA"
+text = "★"
 font_size = 80
 outline_size = 5
-horizontal_alignment = 0
+horizontal_alignment = 2
+uppercase = true
 
 [node name="Component_3" type="Label3D" parent="Object_Info"]
-transform = Transform3D(0.00984807, -0.000151344, -0.00172987, 0, 0.00996194, -0.000871557, 0.00173648, 0.000858316, 0.0098106, 0, -0.633603, -3.53628)
-transparency = 0.53
+transform = Transform3D(0.00984723, -0.000281729, -0.00171831, 0.000128907, 0.00995911, -0.000894126, 0.00173648, 0.000858316, 0.0098106, 0.854051, -0.640815, -3.40954)
+transparency = 0.75
 pixel_size = 0.15
 modulate = Color(0, 1, 0.729412, 1)
 text = "Component"
 font_size = 80
 outline_size = 5
-horizontal_alignment = 0
+horizontal_alignment = 2
 
-[node name="Component_Code_3" type="Label3D" parent="Object_Info"]
-transform = Transform3D(0.00984807, -0.000151344, -0.00172987, 0, 0.00996194, -0.000871557, 0.00173648, 0.000858316, 0.0098106, 0, -0.741508, -3.53628)
-transparency = 0.53
+[node name="Stars_3" type="Label3D" parent="Object_Info"]
+transform = Transform3D(0.00984723, -0.000281729, -0.00171831, 0.000128907, 0.00995911, -0.000894126, 0.00173648, 0.000858316, 0.0098106, 0.860229, -0.744492, -3.41205)
+transparency = 0.75
 pixel_size = 0.075
 modulate = Color(0, 1, 0.729412, 1)
-text = "###-AA"
+text = "★"
 font_size = 80
 outline_size = 5
-horizontal_alignment = 0
+horizontal_alignment = 2
+uppercase = true
 
 [node name="Component_4" type="Label3D" parent="Object_Info"]
-transform = Transform3D(0.00984807, -0.000151344, -0.00172987, 0, 0.00996194, -0.000871557, 0.00173648, 0.000858316, 0.0098106, 0, -0.999629, -3.53628)
-transparency = 0.53
+transform = Transform3D(0.00984723, -0.000281729, -0.00171831, 0.000128907, 0.00995911, -0.000894126, 0.00173648, 0.000858316, 0.0098106, 0.858763, -1.00078, -3.40954)
+transparency = 0.75
 pixel_size = 0.15
 modulate = Color(0, 1, 0.729412, 1)
 text = "Component"
 font_size = 80
 outline_size = 5
-horizontal_alignment = 0
+horizontal_alignment = 2
 
-[node name="Component_Code_4" type="Label3D" parent="Object_Info"]
-transform = Transform3D(0.00984807, -0.000151344, -0.00172987, 0, 0.00996194, -0.000871557, 0.00173648, 0.000858316, 0.0098106, 0, -1.10754, -3.53628)
-transparency = 0.53
+[node name="Stars_4" type="Label3D" parent="Object_Info"]
+transform = Transform3D(0.00984723, -0.000281729, -0.00171831, 0.000128907, 0.00995911, -0.000894126, 0.00173648, 0.000858316, 0.0098106, 0.864941, -1.10446, -3.41205)
+transparency = 0.75
 pixel_size = 0.075
 modulate = Color(0, 1, 0.729412, 1)
-text = "###-AA"
+text = "★"
 font_size = 80
 outline_size = 5
-horizontal_alignment = 0
+horizontal_alignment = 2
+uppercase = true
 
 [node name="CSGPolygon3D" type="CSGPolygon3D" parent="."]
 transform = Transform3D(8.14441e-09, -5.40397e-09, -0.1, 0.0992546, -0.0121869, 8.74228e-09, -0.0121869, -0.0992546, 4.37114e-09, 0, 0.38, -0.449373)
