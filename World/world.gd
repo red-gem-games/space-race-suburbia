@@ -12,9 +12,13 @@ var last_held_object: RigidBody3D = null
 var _last_grabbed_pos := Vector3.ZERO
 var _release_velocity := Vector3.ZERO
 
-const GRAB_STIFFNESS := 18000.0
-const GRAB_DAMPING := 1800.0
-const ROTATE_SPEED := 4.0  # Increase this for snappier rotation
+var GRAB_STIFFNESS := BASE_GRAB_STIFFNESS
+var GRAB_DAMPING := BASE_GRAB_DAMPING
+var ROTATE_SPEED := BASE_ROTATE_SPEED  # Increase this for snappier rotation
+
+const BASE_GRAB_STIFFNESS := 18000.0
+const BASE_GRAB_DAMPING := 1800.0
+const BASE_ROTATE_SPEED := 4.0  # Increase this for snappier rotation
 
 var previous_grid_positions := {}
 var assembly_components_global_position: Vector3
@@ -54,6 +58,11 @@ var flicker_obj_b: Node = null
 var flicker_obj_c: Node = null
 
 var time: float = 0.0
+var current_spin_timer := 0.0
+var extraction_spin_initialized: bool = false
+
+
+
 
 func _ready() -> void:
 	add_child(object_position_timer)
@@ -79,28 +88,50 @@ func _physics_process(delta: float) -> void:
 		var offset_up
 
 		var target_pos
+		var smooth_speed
+		
+		#var extract_base_basis := Basis()
+		#var target_object_rot := grabbed_object.global_transform.basis
 
 		if not character.extracting_object_active:
 			distance_forward = 6.0
 			offset_left = 0.0
 			offset_up = 0.0
-		
+			smooth_speed = 6.0
+			current_spin_timer = 0.0
+			extraction_spin_initialized = false
+
 		else:
-			distance_forward = 5.0
+			distance_forward = 5.5
 			offset_left = 2.5
 			offset_up = 0.5
-			#grabbed_object.rotation_degrees = lerp(grabbed_object.rotation_degrees, Vector3(12.5, 26.0, 0.4), delta * 10.0)
-			
+			smooth_speed = 1.0
+			if not extraction_spin_initialized:
+				grabbed_object.rotation_degrees.x = lerp(grabbed_object.rotation_degrees.x, 12.5, delta * 5.0)
+				grabbed_object.rotation_degrees.y = lerp(grabbed_object.rotation_degrees.y, 22.5, delta * 5.0)
+				grabbed_object.rotation_degrees.z = lerp(grabbed_object.rotation_degrees.z, 2.0, delta * 5.0)
+				current_spin_timer += delta * 0.25
+				if current_spin_timer > 0.25:
+					extraction_spin_initialized = true
+			if extraction_spin_initialized:
+				# -- Mouse movement-based rotation offset --
+				var x_spd = character.current_mouse_speed_x / 1000.0
+				if x_spd < -0.01:
+					grabbed_object.rotate_y(x_spd)
+				else:
+					grabbed_object.rotate_y(0.0025 + x_spd)
+
+
 		target_pos = cam_transform.origin + forward * distance_forward + left * offset_left + up * offset_up
 	
 		var obj_pos = grabbed_object.global_transform.origin
 		var direction = target_pos - obj_pos
 		var vel = grabbed_object.linear_velocity
 
+		
 		var force = (direction * GRAB_STIFFNESS) - (vel * GRAB_DAMPING)
 		
 		grabbed_object.apply_central_force(force)
-
 
 		## --- Smooth LookAt Rotation ---
 		var object_pos = grabbed_object.global_transform.origin
@@ -111,11 +142,12 @@ func _physics_process(delta: float) -> void:
 
 		var desired_basis = Basis().looking_at(look_dir, Vector3.UP)
 		var current_basis = grabbed_object.global_transform.basis
-		var smoothed_basis = lerp(current_basis, desired_basis, delta * 5.0)
+		var smoothed_basis = lerp(current_basis, desired_basis, delta * smooth_speed)
 
 		var transform = grabbed_object.global_transform
 		transform.basis = smoothed_basis
-		grabbed_object.global_transform = transform
+		if not character.extracting_object_active:
+			grabbed_object.global_transform = transform
 
 
 	for child in $Extracted_Object.get_children():

@@ -631,6 +631,7 @@ shadow_mesh = SubResource("ArrayMesh_v118d")
 
 [node name="WashingMachine" type="RigidBody3D"]
 mass = 75.0
+angular_velocity = Vector3(0, 0.403695, 0)
 script = ExtResource("1_hnuj6")
 
 [node name="ControlPanel" type="RigidBody3D" parent="."]

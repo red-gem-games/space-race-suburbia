@@ -252,6 +252,8 @@ func _physics_process(delta: float) -> void:
 			#linear_damp = 0
 			#angular_damp = 0
 
+	if extract_in_motion:
+		angular_velocity = Vector3(0.0, 1.0, 0.0)
 
 	if is_grabbed:
 		if position_tween:

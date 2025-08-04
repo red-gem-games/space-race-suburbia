@@ -6,6 +6,11 @@ var start_day: bool = false
 
 var object_data = {}
 var component_data_file = "res://components/component_data.json"
+var current_component_index := 0
+var current_extraction_data = []  # Will hold the JSON components array
+var current_object_json: Dictionary = {}
+
+
 
 @onready var collision_shape: CollisionShape3D = $CollisionShape3D
 @onready var camera: Camera3D = $Camera3D
@@ -74,10 +79,13 @@ var max_y: float = 30.0       # The maximum Y allowed (adjust as needed)
 var base_pitch_factor: float = 3
 #var pitch_factor: float = base_pitch_factor # How much camera pitch affects the Y offset
 
-var prem7_decay_speed: float = 2.5     # Speed at which the rotation offset decays.
+var prem7_decay_speed: float = 5.0     # Speed at which the rotation offset decays.
 var mouse_speed_threshold: float = 2.0    # Mouse relative motion threshold below which decay occurs.
 var last_mouse_speed: float = 0.0         # Latest mouse movement magnitude.
 var last_mouse_time: float = 0.0          # Timestamp of the last mouse motion event.
+
+var smoothed_mouse_vel_x := 0.0
+var smoothed_mouse_vel_y := 0.0
 
 var grabbed_x_rotation: float
 var grabbed_y_rotation: float
@@ -261,10 +269,6 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	
-	handle_prem7_decay(delta)
-	
-
-	
 	# Update ground distance
 	distance_to_ground = raycast_to_ground()
 
@@ -330,8 +334,9 @@ func _physics_process(delta: float) -> void:
 
 	move_and_slide()
 	
-
 	handle_pitch_and_yaw(delta)
+	
+	
 
 	# Update jetpack thrust, hover, ceiling logic
 	handle_jetpack_logic(delta)
@@ -341,6 +346,8 @@ func _physics_process(delta: float) -> void:
 
 
 func _process(delta: float) -> void:
+	
+	handle_prem7_decay(delta)
 
 	if abs(delta - previous_delta) > delta_threshold:
 		screen_res_sway_multiplier = 55.0 * delta
@@ -451,8 +458,12 @@ func _input(event: InputEvent) -> void:
 				#else:
 					#handle_object('released')
 
-		elif event.button_index == MOUSE_BUTTON_WHEEL_UP:
-			if scroll_cooldown <= 0.0 and not middle_mouse_down and not right_mouse_down and not left_mouse_down:
+		elif event.button_index == MOUSE_BUTTON_WHEEL_UP and event.pressed:
+			if not middle_mouse_down and not right_mouse_down and not left_mouse_down:
+				if extracting_object_active:
+					print('Try scrolling outside of extract...still need to figure out INSPECT etc.')
+					scroll_extraction_data('UP')
+					return
 				PREM_7.switch_hologram('Up')
 				scroll_cooldown = scroll_cooldown_duration
 			#if right_mouse_down and shifting_object_active:
@@ -462,8 +473,12 @@ func _input(event: InputEvent) -> void:
 						#grabbed_target_position.y += 0.1
 
 
-		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
-			if scroll_cooldown <= 0.0 and not middle_mouse_down and not right_mouse_down and not left_mouse_down:
+		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN and event.pressed:
+			if not middle_mouse_down and not right_mouse_down and not left_mouse_down:
+				if extracting_object_active:
+					print('Try scrolling outside of extract...still need to figure out INSPECT etc.')
+					scroll_extraction_data('DOWN')
+					return
 				PREM_7.switch_hologram('Down')
 				scroll_cooldown = scroll_cooldown_duration
 			#if right_mouse_down and shifting_object_active:
@@ -491,36 +506,55 @@ func _input(event: InputEvent) -> void:
 					inspecting_object_active = false
 
 	# Process Mouse Motion events.
-	if event is InputEventMouseMotion:
-		if Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
-			
-			if extracting_object_active:
-				return
-			
-			var input_strength_x = event.relative.x
-			var speed_factor_x = clamp(abs(input_strength_x), 0.0, 1.0)  # 0 at slow, 1 at fast
-			var resistance_x = lerp(1.0, 0.3, speed_factor_x)  # more resistance at high speed
-			
-			var input_strength_y = event.relative.y
-			var speed_factor_y = clamp(abs(input_strength_y), 0.0, 0.5)
-			var resistance_y = lerp(1.0, 0.3, speed_factor_y)
+	if event is InputEventMouseMotion and Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
+		current_mouse_speed_x = event.relative.x
+		current_mouse_speed_y = event.relative.y
 
-			var max_offset = deg_to_rad(10.0)
-			var max_delta: float = 0.15 * screen_res_sway_multiplier #max look speed
+		# camera turning still lives here
+		if not extracting_object_active:
+			var max_delta: float = 0.15 * screen_res_sway_multiplier
 			var dx = clamp(event.relative.x * mouse_speed, -max_delta, max_delta)
 			var dy = clamp(event.relative.y * mouse_speed, -max_delta, max_delta)
-
-			current_mouse_speed_x = event.relative.x
-			current_mouse_speed_y = event.relative.y
-			
 			desired_yaw -= dx
 			desired_pitch -= dy
 			desired_pitch = clamp(desired_pitch, pitch_min, pitch_max)
 
-			prem7_rotation_offset.y += input_strength_x * prem7_rotation_speed * resistance_x
-			prem7_rotation_offset.x += input_strength_y * prem7_rotation_speed * resistance_y
-			prem7_rotation_offset.x = clamp(prem7_rotation_offset.x, -max_offset, max_offset)
-			prem7_rotation_offset.y = clamp(prem7_rotation_offset.y, -max_offset, max_offset)
+	#if event is InputEventMouseMotion:
+		#if Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
+			#
+			#
+			#var input_strength_x = event.relative.x
+			#var speed_factor_x = clamp(abs(input_strength_x), 0.0, 1.0)  # 0 at slow, 1 at fast
+			#var resistance_x = lerp(0.0, 0.5, speed_factor_x)  # more resistance at high speed
+			#
+			#var input_strength_y = event.relative.y
+			#var speed_factor_y = clamp(abs(input_strength_y), 0.0, 0.5)
+			#var resistance_y = lerp(0.0, 0.5, speed_factor_y)
+#
+			#var max_offset = deg_to_rad(100.0)
+			#var max_delta: float = 0.15 * screen_res_sway_multiplier #max look speed
+			#var dx = clamp(event.relative.x * mouse_speed, -max_delta, max_delta)
+			#var dy = clamp(event.relative.y * mouse_speed, -max_delta, max_delta)
+#
+			#current_mouse_speed_x = event.relative.x
+			#current_mouse_speed_y = event.relative.y
+#
+			#if extracting_object_active:
+				#prem7_rotation_offset.y += input_strength_x * -prem7_rotation_speed * resistance_x
+				#prem7_rotation_offset.x += input_strength_y * -prem7_rotation_speed * resistance_y
+				#prem7_rotation_offset.x = clamp(prem7_rotation_offset.x, -max_offset, max_offset)
+				#prem7_rotation_offset.y = clamp(prem7_rotation_offset.y, -max_offset, max_offset)
+				#return
+#
+			#else:
+				#prem7_rotation_offset.y += input_strength_x * prem7_rotation_speed * resistance_x
+				#prem7_rotation_offset.x += input_strength_y * prem7_rotation_speed * resistance_y
+				#prem7_rotation_offset.x = clamp(prem7_rotation_offset.x, -max_offset, max_offset)
+				#prem7_rotation_offset.y = clamp(prem7_rotation_offset.y, -max_offset, max_offset)
+				#desired_yaw -= dx
+				#desired_pitch -= dy
+				#desired_pitch = clamp(desired_pitch, pitch_min, pitch_max)
+
 
 			#else:
 				#if grabbed_object:
@@ -681,8 +715,7 @@ func _input(event: InputEvent) -> void:
 					hover_bob_time = 0.0
 		if event.keycode == KEY_SHIFT:
 			if pressed:
-				movement_speed = base_movement_speed * 2
-				mouse_speed = base_mouse_speed * 2
+				movement_speed = base_movement_speed * 1.5
 				rotation_sensitivity = base_rotation_sensitivity * 2
 				jetpack_accel_max = jetpack_accel_max * 2
 				jetpack_thrust_max = jetpack_thrust_max * 2
@@ -690,7 +723,6 @@ func _input(event: InputEvent) -> void:
 				current_jetpack_thrust = current_jetpack_thrust * 2
 			else:
 				movement_speed = base_movement_speed
-				mouse_speed = base_mouse_speed
 				rotation_sensitivity = base_rotation_sensitivity
 				jetpack_accel_max = jetpack_accel_max / 2
 				jetpack_thrust_max = jetpack_thrust_max / 2
@@ -740,7 +772,7 @@ func _on_extract_key(down: bool) -> void:
 		grabbed_object.extract_active = true
 		grabbed_object.manipulation_mode('Active')
 		activate_extraction_data()
-		right_mouse_down = true
+		right_mouse_down = false
 		handle_object('pressed')
 		print('Start Extracting - Make all other objects invisible?')
 		#grabbed_target_position.x -= 10
@@ -752,7 +784,7 @@ func _on_extract_key(down: bool) -> void:
 		grabbed_object.is_extracting = false
 		grabbed_object.extract_in_motion = false
 		handle_object('released')
-		right_mouse_down = false
+		#right_mouse_down = false
 		print('Stop Extracting')
 
 func _on_reset_key() -> void:
@@ -904,7 +936,7 @@ func handle_object(status):
 		PREM_7.trig_anim.play("RESET")
 		PREM_7.trig_anim.play("trigger_pull")
 		collision_layer = 1
-		right_mouse_down = true
+		#right_mouse_down = true
 
 		if current_mode == MODE_1:
 			print("Begin Shifting Object")
@@ -1288,16 +1320,36 @@ func update_reticle_targeting() -> void:
 		
 
 func handle_prem7_decay(delta: float) -> void:
-	
-	#if PREM_7.hologram_active:
-		#prem7_rotation_offset.x = lerp(prem7_rotation_offset.x, 0.025, prem7_decay_speed * delta)
-		#prem7_rotation_offset.y = lerp(prem7_rotation_offset.y, 0.005, prem7_decay_speed * delta)
+	# Smooth the raw input so it doesn't jump
+	var smoothing_speed := 15.0  # lower = floatier, higher = snappier
+	smoothed_mouse_vel_x = lerp(smoothed_mouse_vel_x, current_mouse_speed_x * 10, smoothing_speed * delta)
+	smoothed_mouse_vel_y = lerp(smoothed_mouse_vel_y, current_mouse_speed_y * 10, smoothing_speed * delta)
 
+	# Scale sway based on smoothed velocity
+	var sway_force_x = smoothed_mouse_vel_x * prem7_rotation_speed * delta
+	var sway_force_y = smoothed_mouse_vel_y * prem7_rotation_speed * delta
+
+	if extracting_object_active:
+		prem7_rotation_offset.y += -sway_force_x * 2
+		prem7_rotation_offset.x += -sway_force_y * 4
+	else:
+		prem7_rotation_offset.y += sway_force_x * 4
+		prem7_rotation_offset.x += sway_force_y * 10
+
+	# Clamp to prevent flipping out
+	var max_offset = deg_to_rad(25.0)
+	prem7_rotation_offset.x = clamp(prem7_rotation_offset.x, -max_offset, max_offset)
+	prem7_rotation_offset.y = clamp(prem7_rotation_offset.y, -max_offset, max_offset)
+
+	# Decay back toward original pose
 	prem7_rotation_offset = prem7_rotation_offset.lerp(Vector3.ZERO, prem7_decay_speed * delta)
+
 	PREM_7.rotation = prem7_original_rotation + prem7_rotation_offset
-	object_sway_offset.x = lerp(object_sway_offset.x, 0.0, object_sway_decay_x * delta)
-	object_sway_offset.y = lerp(object_sway_offset.y, 0.0, object_sway_decay_y * delta)
-	#print(prem7_rotation_offset)
+
+	# Decay the raw mouse speed too (optional, for safety)
+	current_mouse_speed_x = lerp(current_mouse_speed_x, 0.0, 5.0 * delta)
+	current_mouse_speed_y = lerp(current_mouse_speed_y, 0.0, 5.0 * delta)
+
 
 func update_grabbed_object_physics(delta: float) -> void:
 	if not grabbed_object:
@@ -1422,10 +1474,16 @@ func load_json_file(filePath: String):
 
 func activate_extraction_data():
 	var obj_name = grabbed_object.name  # e.g. "WashingMachine"
-	if not object_data.has(obj_name):
-		print("No data found for object:", obj_name)
+	if object_data.has(obj_name):
+		current_object_json = object_data[obj_name]
+		current_extraction_data = current_object_json.get("components", [])
+		current_component_index = 0
+		update_component_display()
+	else:
+		print("No component data found for", obj_name)
+		current_extraction_data = []
 		return
-	
+
 	var obj_info = object_data[obj_name]
 	var components = obj_info.get("components", [])
 
@@ -1469,3 +1527,47 @@ func activate_extraction_data():
 		PREM_7.oi_comp_desc.text = ""
 		PREM_7.oi_comp_material.text = ""
 		PREM_7.oi_comp_durability.text = ""
+
+
+func scroll_extraction_data(dir):
+	if current_extraction_data.size() == 0:
+		return  # nothing to scroll through
+
+	if dir == 'UP':
+		current_component_index -= 1
+	elif dir == 'DOWN':
+		current_component_index += 1
+
+	# Wrap index
+	var count = current_extraction_data.size()
+	current_component_index = (current_component_index + count) % count
+
+	update_component_display()
+
+func update_component_display():
+	var comp = current_extraction_data[current_component_index]
+	print(comp)
+	PREM_7.oi_comp_desc.text = comp.get("description", "??")
+	PREM_7.oi_comp_material.text = comp.get("material", "??")
+	PREM_7.oi_comp_durability.text = str(comp.get("durability", 0))
+
+	var alphas = [0.75, 0.75, 0.75, 0.75]
+	alphas[current_component_index] = 0.0
+
+	var comp_labels = [
+		PREM_7.oi_comp_1,
+		PREM_7.oi_comp_2,
+		PREM_7.oi_comp_3,
+		PREM_7.oi_comp_4
+	]
+
+	var star_labels = [
+		PREM_7.oi_stars_1,
+		PREM_7.oi_stars_2,
+		PREM_7.oi_stars_3,
+		PREM_7.oi_stars_4
+	]
+
+	for i in range(4):
+		comp_labels[i].transparency = alphas[i]
+		star_labels[i].transparency = alphas[i]
