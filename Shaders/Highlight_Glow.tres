@@ -1,0 +1,11 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://fin2sluroi4x"]
+
+[resource]
+render_priority = 1
+transparency = 1
+cull_mode = 2
+depth_draw_mode = 1
+emission_enabled = true
+emission = Color(0.721, 0.07, 1, 1)
+emission_energy_multiplier = 16.0
+rim = 0.2

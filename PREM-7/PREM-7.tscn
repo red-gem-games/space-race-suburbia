@@ -1,8 +1,10 @@
-[gd_scene load_steps=84 format=4 uid="uid://bpvm0l41dywjs"]
+[gd_scene load_steps=87 format=4 uid="uid://bpvm0l41dywjs"]
 
 [ext_resource type="Script" uid="uid://so25svauxmkt" path="res://PREM-7/prem_7.gd" id="1_iarxa"]
 [ext_resource type="Shader" uid="uid://vetnq53dk60g" path="res://Shaders/grabbed_glow.gdshader" id="2_4qq6n"]
 [ext_resource type="ArrayMesh" uid="uid://dxs73vc1sll8t" path="res://PREM-7/new_array_mesh.tres" id="5_t05xm"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_t05xm"]
 
 [sub_resource type="Animation" id="Animation_caqm6"]
 length = 0.001
@@ -235,9 +237,48 @@ tracks/2/keys = {
 "times": PackedFloat32Array(0, 0.06, 0.12)
 }
 
+[sub_resource type="Animation" id="Animation_k44yu"]
+resource_name = "extract"
+length = 0.12
+step = 0.001
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Multitool/Button:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0),
+"points": PackedFloat32Array(-0.1072, -0.03, 0, 0.03, 0, -0.109147, -0.03, 0, 0.03, 0, -0.1072, -0.03, 0, 0.03, 0),
+"times": PackedFloat32Array(0, 0.06, 0.12)
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Multitool/Button:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0),
+"points": PackedFloat32Array(0.0198131, -0.03, 0, 0.03, 0, -0.0780031, -0.03, 0, 0.03, 0, 0.0198131, -0.03, 0, 0.03, 0),
+"times": PackedFloat32Array(0, 0.06, 0.12)
+}
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Multitool/Button:position:z")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0),
+"points": PackedFloat32Array(0.292164, -0.03, 0, 0.03, 0, 0.346491, -0.03, 0, 0.03, 0, 0.292164, -0.03, 0, 0.03, 0),
+"times": PackedFloat32Array(0, 0.06, 0.12)
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_3tjq7"]
 _data = {
 &"RESET": SubResource("Animation_yppce"),
+&"extract": SubResource("Animation_k44yu"),
 &"inspect": SubResource("Animation_iarxa"),
 &"suspend": SubResource("Animation_8d6ws")
 }
@@ -1689,18 +1730,43 @@ shader_parameter/emission_strength = 1.0
 shader_parameter/base_alpha = 0.5
 shader_parameter/uv_projection_mode = 0
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4qq6n"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_8m00m"]
+size = Vector2(2.96, 2.41)
 
-[sub_resource type="CylinderMesh" id="CylinderMesh_4qq6n"]
-material = SubResource("StandardMaterial3D_4qq6n")
-top_radius = 0.01
-bottom_radius = 0.01
-height = 1.25
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_l5ika"]
+transparency = 1
+albedo_color = Color(1, 1, 1, 0.309804)
+metallic = 1.0
+roughness = 0.44
+emission_enabled = true
+emission = Color(0.6, 0, 1, 1)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_t05xm"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_4qq6n"]
+size = Vector2(1.74, 1.44)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_s7cmo"]
+transparency = 1
+albedo_color = Color(1, 1, 1, 0.454902)
+metallic = 1.0
+roughness = 0.44
+emission_enabled = true
+emission = Color(0.456833, 0.13, 0.5, 1)
+emission_energy_multiplier = 4.25
 
 [node name="PREM-7" type="Node3D"]
 script = ExtResource("1_iarxa")
+
+[node name="Loading_Wedge?????" type="CSGPolygon3D" parent="."]
+transform = Transform3D(8.14441e-09, -5.40397e-09, -0.1, 0.0992546, -0.0121869, 8.74228e-09, -0.0121869, -0.0992546, 4.37114e-09, 0, 0.38, -0.449373)
+visible = false
+transparency = 0.64
+cast_shadow = 0
+operation = 1
+mode = 1
+spin_degrees = 245.0
+spin_sides = 64
+smooth_faces = true
+material = SubResource("StandardMaterial3D_t05xm")
 
 [node name="Trigger_Animation" type="AnimationPlayer" parent="."]
 libraries = {
@@ -1946,12 +2012,23 @@ font_size = 80
 outline_size = 5
 
 [node name="Object_Info" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.682401, 0.872407, 0.349309)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.682401, 0.992415, 0.349309)
+
+[node name="Screen" type="MeshInstance3D" parent="Object_Info"]
+transform = Transform3D(1.29301, -0.164923, 0.0303976, 0.0219264, -0.0353472, -1.3151, 0.232438, 0.92077, -0.0450403, 1.76164, -0.163989, -4.58052)
+mesh = SubResource("PlaneMesh_8m00m")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("StandardMaterial3D_l5ika")
+
+[node name="Sub_Screen" type="MeshInstance3D" parent="Object_Info"]
+transform = Transform3D(1.39276, -0.16287, 0.030448, 0.0236179, -0.0349071, -1.31728, 0.25037, 0.909307, -0.045115, 2.43456, -0.348875, -4.47476)
+mesh = SubResource("PlaneMesh_4qq6n")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("StandardMaterial3D_s7cmo")
 
 [node name="Main_Name" type="Label3D" parent="Object_Info"]
 transform = Transform3D(0.00984807, -0.000151344, -0.00172987, 0, 0.00996194, -0.000871557, 0.00173648, 0.000858316, 0.0098106, 0.993805, 0.669018, -3.34517)
 pixel_size = 0.25
-modulate = Color(0, 1, 0.729412, 1)
 text = "Machine Name"
 font_size = 80
 outline_size = 5
@@ -1960,39 +2037,70 @@ uppercase = true
 [node name="Main_Desc" type="Label3D" parent="Object_Info"]
 transform = Transform3D(0.00984807, -0.000151344, -0.00172987, 0, 0.00996194, -0.000871557, 0.00173648, 0.000858316, 0.0098106, 0.968413, 0.455018, -3.36278)
 pixel_size = 0.15
-modulate = Color(0, 1, 0.729412, 1)
 text = "Machine Description"
 font_size = 80
 outline_size = 5
 
-[node name="Middle_Bar" type="MeshInstance3D" parent="Object_Info"]
-transform = Transform3D(0.985705, -0.0161801, -0.172838, 0.0131951, 1.06892, -0.0124129, 0.173305, 0.010642, 0.984, 0.928689, -0.501914, -3.39413)
-cast_shadow = 0
-mesh = SubResource("CylinderMesh_4qq6n")
-
-[node name="Description" type="Label3D" parent="Object_Info"]
-transform = Transform3D(0.00984748, -0.000260348, -0.00172023, 0.000107767, 0.00995969, -0.000890435, 0.00173648, 0.000858316, 0.0098106, 0.989699, -0.087939, -3.37391)
+[node name="Fit_lbl" type="Label3D" parent="Object_Info"]
+transform = Transform3D(0.00984748, -0.000260348, -0.00172023, 0.000107767, 0.00995969, -0.000890435, 0.00173648, 0.000858316, 0.0098106, 1.16849, 0.155919, -3.33753)
 pixel_size = 0.15
-modulate = Color(0, 1, 0.729412, 1)
-text = "Placeholder"
+text = "Fit"
+font_size = 60
+outline_size = 5
+horizontal_alignment = 0
+
+[node name="Life_lbl" type="Label3D" parent="Object_Info"]
+transform = Transform3D(0.00984748, -0.000260348, -0.00172023, 0.000107767, 0.00995969, -0.000890435, 0.00173648, 0.000858316, 0.0098106, 2.04586, 0.178335, -3.1427)
+pixel_size = 0.15
+text = "Life"
+font_size = 60
+outline_size = 5
+horizontal_alignment = 0
+
+[node name="Weight_lbl" type="Label3D" parent="Object_Info"]
+transform = Transform3D(0.00984748, -0.000260348, -0.00172023, 0.000107767, 0.00995969, -0.000890435, 0.00173648, 0.000858316, 0.0098106, 1.12844, -0.527274, -3.33753)
+pixel_size = 0.15
+text = "Weight"
+font_size = 60
+outline_size = 5
+horizontal_alignment = 0
+
+[node name="Durability_lbl" type="Label3D" parent="Object_Info"]
+transform = Transform3D(0.00984748, -0.000260348, -0.00172023, 0.000107767, 0.00995969, -0.000890435, 0.00173648, 0.000858316, 0.0098106, 1.94324, -0.514138, -3.19291)
+pixel_size = 0.15
+text = "Durability"
+font_size = 60
+outline_size = 5
+horizontal_alignment = 0
+
+[node name="Fit" type="Label3D" parent="Object_Info"]
+transform = Transform3D(0.00984748, -0.000260348, -0.00172023, 0.000107767, 0.00995969, -0.000890435, 0.00173648, 0.000858316, 0.0098106, 1.14662, -0.087939, -3.33753)
+pixel_size = 0.15
+text = "Fit"
 font_size = 100
 outline_size = 5
 horizontal_alignment = 0
 
-[node name="Material" type="Label3D" parent="Object_Info"]
-transform = Transform3D(0.00984748, -0.000260348, -0.00172023, 0.000107767, 0.00995969, -0.000890435, 0.00173648, 0.000858316, 0.0098106, 0.994076, -0.487915, -3.37391)
+[node name="Life" type="Label3D" parent="Object_Info"]
+transform = Transform3D(0.00984748, -0.000260348, -0.00172023, 0.000107767, 0.00995969, -0.000890435, 0.00173648, 0.000858316, 0.0098106, 2.02398, -0.0655228, -3.1427)
 pixel_size = 0.15
-modulate = Color(0, 1, 0.729412, 1)
-text = "Placeholder"
+text = "Life"
+font_size = 100
+outline_size = 5
+horizontal_alignment = 0
+
+[node name="Weight" type="Label3D" parent="Object_Info"]
+transform = Transform3D(0.00984748, -0.000260348, -0.00172023, 0.000107767, 0.00995969, -0.000890435, 0.00173648, 0.000858316, 0.0098106, 1.0338, -0.778534, -3.33753)
+pixel_size = 0.15
+text = "Weight"
 font_size = 100
 outline_size = 5
 horizontal_alignment = 0
 
 [node name="Durability" type="Label3D" parent="Object_Info"]
-transform = Transform3D(0.00984748, -0.000260348, -0.00172023, 0.000107767, 0.00995969, -0.000890435, 0.00173648, 0.000858316, 0.0098106, 0.998454, -0.887891, -3.37391)
+transform = Transform3D(0.00984748, -0.000260348, -0.00172023, 0.000107767, 0.00995969, -0.000890435, 0.00173648, 0.000858316, 0.0098106, 1.84859, -0.765398, -3.19291)
 pixel_size = 0.15
-modulate = Color(0, 1, 0.729412, 1)
-text = "Placeholder"
+text = "Durability"
 font_size = 100
 outline_size = 5
 horizontal_alignment = 0
@@ -2000,7 +2108,6 @@ horizontal_alignment = 0
 [node name="Component_1" type="Label3D" parent="Object_Info"]
 transform = Transform3D(0.00984723, -0.000281729, -0.00171831, 0.000128907, 0.00995911, -0.000894126, 0.00173648, 0.000858316, 0.0098106, 0.84463, 0.078876, -3.40982)
 pixel_size = 0.15
-modulate = Color(0, 1, 0.729412, 1)
 text = "Component"
 font_size = 80
 outline_size = 5
@@ -2009,7 +2116,6 @@ horizontal_alignment = 2
 [node name="Stars_1" type="Label3D" parent="Object_Info"]
 transform = Transform3D(0.00984723, -0.000281729, -0.00171831, 0.000128907, 0.00995911, -0.000894126, 0.00173648, 0.000858316, 0.0098106, 0.850805, -0.0245535, -3.41205)
 pixel_size = 0.075
-modulate = Color(0, 1, 0.729412, 1)
 text = "★"
 font_size = 80
 outline_size = 5
@@ -2020,7 +2126,6 @@ uppercase = true
 transform = Transform3D(0.00984723, -0.000281729, -0.00171831, 0.000128907, 0.00995911, -0.000894126, 0.00173648, 0.000858316, 0.0098106, 0.849339, -0.280846, -3.40954)
 transparency = 0.75
 pixel_size = 0.15
-modulate = Color(0, 1, 0.729412, 1)
 text = "Component"
 font_size = 80
 outline_size = 5
@@ -2030,7 +2135,6 @@ horizontal_alignment = 2
 transform = Transform3D(0.00984723, -0.000281729, -0.00171831, 0.000128907, 0.00995911, -0.000894126, 0.00173648, 0.000858316, 0.0098106, 0.855517, -0.384523, -3.41205)
 transparency = 0.75
 pixel_size = 0.075
-modulate = Color(0, 1, 0.729412, 1)
 text = "★"
 font_size = 80
 outline_size = 5
@@ -2041,7 +2145,6 @@ uppercase = true
 transform = Transform3D(0.00984723, -0.000281729, -0.00171831, 0.000128907, 0.00995911, -0.000894126, 0.00173648, 0.000858316, 0.0098106, 0.854051, -0.640815, -3.40954)
 transparency = 0.75
 pixel_size = 0.15
-modulate = Color(0, 1, 0.729412, 1)
 text = "Component"
 font_size = 80
 outline_size = 5
@@ -2051,7 +2154,6 @@ horizontal_alignment = 2
 transform = Transform3D(0.00984723, -0.000281729, -0.00171831, 0.000128907, 0.00995911, -0.000894126, 0.00173648, 0.000858316, 0.0098106, 0.860229, -0.744492, -3.41205)
 transparency = 0.75
 pixel_size = 0.075
-modulate = Color(0, 1, 0.729412, 1)
 text = "★"
 font_size = 80
 outline_size = 5
@@ -2062,7 +2164,6 @@ uppercase = true
 transform = Transform3D(0.00984723, -0.000281729, -0.00171831, 0.000128907, 0.00995911, -0.000894126, 0.00173648, 0.000858316, 0.0098106, 0.858763, -1.00078, -3.40954)
 transparency = 0.75
 pixel_size = 0.15
-modulate = Color(0, 1, 0.729412, 1)
 text = "Component"
 font_size = 80
 outline_size = 5
@@ -2072,23 +2173,11 @@ horizontal_alignment = 2
 transform = Transform3D(0.00984723, -0.000281729, -0.00171831, 0.000128907, 0.00995911, -0.000894126, 0.00173648, 0.000858316, 0.0098106, 0.864941, -1.10446, -3.41205)
 transparency = 0.75
 pixel_size = 0.075
-modulate = Color(0, 1, 0.729412, 1)
 text = "★"
 font_size = 80
 outline_size = 5
 horizontal_alignment = 2
 uppercase = true
-
-[node name="CSGPolygon3D" type="CSGPolygon3D" parent="."]
-transform = Transform3D(8.14441e-09, -5.40397e-09, -0.1, 0.0992546, -0.0121869, 8.74228e-09, -0.0121869, -0.0992546, 4.37114e-09, 0, 0.38, -0.449373)
-transparency = 0.64
-cast_shadow = 0
-operation = 1
-mode = 1
-spin_degrees = 245.0
-spin_sides = 64
-smooth_faces = true
-material = SubResource("StandardMaterial3D_t05xm")
 
 [connection signal="animation_finished" from="Touch_Animation" to="." method="_on_touch_animation_animation_finished"]
 [connection signal="animation_finished" from="Grab_Animation" to="." method="_on_grab_animation_animation_finished"]

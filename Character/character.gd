@@ -234,6 +234,7 @@ var orbit_speed: float = 1.0  # Speed multiplier
 var input_direction_x: float = 0.0
 var input_direction_z: float = 0.0
 var grabbed_pos_set: bool = false
+var extraction_height: float
 
 func _ready() -> void:
 	push_warning('General To Do List:')
@@ -264,7 +265,6 @@ func _ready() -> void:
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	prem7_original_rotation = PREM_7.rotation
 	object_data = load_json_file(component_data_file)
-	print(object_data)
 
 
 func _physics_process(delta: float) -> void:
@@ -461,10 +461,10 @@ func _input(event: InputEvent) -> void:
 		elif event.button_index == MOUSE_BUTTON_WHEEL_UP and event.pressed:
 			if not middle_mouse_down and not right_mouse_down and not left_mouse_down:
 				if extracting_object_active:
-					print('Try scrolling outside of extract...still need to figure out INSPECT etc.')
 					scroll_extraction_data('UP')
 					return
-				PREM_7.switch_hologram('Up')
+				print('Still need to figure out INSPECT, Cycling Stored Components, etc.')
+				#PREM_7.switch_hologram('Up')
 				scroll_cooldown = scroll_cooldown_duration
 			#if right_mouse_down and shifting_object_active:
 				#if grabbed_target_position.y <= max_y:
@@ -476,10 +476,9 @@ func _input(event: InputEvent) -> void:
 		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN and event.pressed:
 			if not middle_mouse_down and not right_mouse_down and not left_mouse_down:
 				if extracting_object_active:
-					print('Try scrolling outside of extract...still need to figure out INSPECT etc.')
 					scroll_extraction_data('DOWN')
 					return
-				PREM_7.switch_hologram('Down')
+				print('Still need to figure out INSPECT, Cycling Stored Components, etc.')
 				scroll_cooldown = scroll_cooldown_duration
 			#if right_mouse_down and shifting_object_active:
 				#if grabbed_target_position.y >= 0.5:
@@ -519,65 +518,6 @@ func _input(event: InputEvent) -> void:
 			desired_pitch -= dy
 			desired_pitch = clamp(desired_pitch, pitch_min, pitch_max)
 
-	#if event is InputEventMouseMotion:
-		#if Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
-			#
-			#
-			#var input_strength_x = event.relative.x
-			#var speed_factor_x = clamp(abs(input_strength_x), 0.0, 1.0)  # 0 at slow, 1 at fast
-			#var resistance_x = lerp(0.0, 0.5, speed_factor_x)  # more resistance at high speed
-			#
-			#var input_strength_y = event.relative.y
-			#var speed_factor_y = clamp(abs(input_strength_y), 0.0, 0.5)
-			#var resistance_y = lerp(0.0, 0.5, speed_factor_y)
-#
-			#var max_offset = deg_to_rad(100.0)
-			#var max_delta: float = 0.15 * screen_res_sway_multiplier #max look speed
-			#var dx = clamp(event.relative.x * mouse_speed, -max_delta, max_delta)
-			#var dy = clamp(event.relative.y * mouse_speed, -max_delta, max_delta)
-#
-			#current_mouse_speed_x = event.relative.x
-			#current_mouse_speed_y = event.relative.y
-#
-			#if extracting_object_active:
-				#prem7_rotation_offset.y += input_strength_x * -prem7_rotation_speed * resistance_x
-				#prem7_rotation_offset.x += input_strength_y * -prem7_rotation_speed * resistance_y
-				#prem7_rotation_offset.x = clamp(prem7_rotation_offset.x, -max_offset, max_offset)
-				#prem7_rotation_offset.y = clamp(prem7_rotation_offset.y, -max_offset, max_offset)
-				#return
-#
-			#else:
-				#prem7_rotation_offset.y += input_strength_x * prem7_rotation_speed * resistance_x
-				#prem7_rotation_offset.x += input_strength_y * prem7_rotation_speed * resistance_y
-				#prem7_rotation_offset.x = clamp(prem7_rotation_offset.x, -max_offset, max_offset)
-				#prem7_rotation_offset.y = clamp(prem7_rotation_offset.y, -max_offset, max_offset)
-				#desired_yaw -= dx
-				#desired_pitch -= dy
-				#desired_pitch = clamp(desired_pitch, pitch_min, pitch_max)
-
-
-			#else:
-				#if grabbed_object:
-					#shift_it = true
-					#prem7_rotation_offset.y -= input_strength_x * prem7_rotation_speed * resistance_x / 15.0
-					#if z_rotate_mode:
-						#print('in z rotate mode')
-						#grabbed_rotation.z += event.relative.x * rotation_sensitivity / 3
-						#var local_forward: Vector3 = grabbed_object.global_transform.basis.z
-						#grabbed_object.rotate(local_forward, deg_to_rad(event.relative.x * mouse_speed * 0))
-					#else:
-						#prem7_rotation_offset.x -= input_strength_y * prem7_rotation_speed * resistance_y / 15.0
-						#grabbed_rotation.y += event.relative.x * rotation_sensitivity / 3
-						#grabbed_rotation.x += event.relative.y * rotation_sensitivity / 3
-						#prem7_rotation_offset.x = clamp(prem7_rotation_offset.x, -max_offset, max_offset)
-						#prem7_rotation_offset.y = clamp(prem7_rotation_offset.y, -max_offset, max_offset)
-						#PREM_7.rotation = prem7_original_rotation + prem7_rotation_offset
-						#horizontal_delta = event.relative.x * mouse_speed * 10
-						#vertical_delta = event.relative.y * mouse_speed * 10 
-						#grabbed_object.rotate_y(deg_to_rad(horizontal_delta))
-						#var local_right: Vector3 = grabbed_object.global_transform.basis.x
-						#grabbed_object.rotate(local_right, deg_to_rad(vertical_delta))
-
 	# Process Keyboard events.
 	if event is InputEventKey and not event.is_echo():
 		var pressed = event.is_pressed()
@@ -585,8 +525,9 @@ func _input(event: InputEvent) -> void:
 		var down = event.pressed
 
 		if event.keycode == KEY_E and pressed:
-			desired_pitch = 0
-			_on_extract_key(down)
+			if grabbed_object:
+				desired_pitch = 0
+				_on_extract_key(down)
 		if event.keycode == KEY_R and pressed:
 			desired_pitch = 0
 			_on_reset_key()
@@ -758,7 +699,7 @@ func _input(event: InputEvent) -> void:
 ##---------------------------------------##
 
 func _on_extract_key(down: bool) -> void:
-	if not grabbed_object or fusing_object_active:
+	if fusing_object_active:
 		return
 	if grabbed_object.is_stepladder or grabbed_object.is_rocketship:
 		return
@@ -766,6 +707,7 @@ func _on_extract_key(down: bool) -> void:
 		extracting_object_active =! extracting_object_active
 		
 	if extracting_object_active:
+		PREM_7.ctrl_anim.play("extract")
 		grabbed_object.is_extracting = true
 		PREM_7.object_info.scale = Vector3(1.0, 1.0, 1.0)
 		PREM_7.object_info.visible = true
@@ -777,6 +719,7 @@ func _on_extract_key(down: bool) -> void:
 		print('Start Extracting - Make all other objects invisible?')
 		#grabbed_target_position.x -= 10
 	else:
+		PREM_7.ctrl_anim.play_backwards("extract")
 		gravity_strength = 10.0
 		grabbed_object.manipulation_mode('Inactive')
 		PREM_7.object_info.visible = false
@@ -1473,7 +1416,7 @@ func load_json_file(filePath: String):
 		print("File Doesn't Exist")
 
 func activate_extraction_data():
-	var obj_name = grabbed_object.name  # e.g. "WashingMachine"
+	var obj_name = grabbed_object.name
 	if object_data.has(obj_name):
 		current_object_json = object_data[obj_name]
 		current_extraction_data = current_object_json.get("components", [])
@@ -1489,6 +1432,7 @@ func activate_extraction_data():
 
 	PREM_7.oi_main_name.text = obj_info.get("name", "Unknown Object")
 	PREM_7.oi_main_desc.text = obj_info.get("description", "")
+	extraction_height = obj_info.get("height", "")
 
 	# Clear everything first
 	PREM_7.oi_comp_1.text = ""
@@ -1505,6 +1449,7 @@ func activate_extraction_data():
 		var comp = components[i]
 		match i:
 			0:
+				
 				PREM_7.oi_comp_1.text = comp.get("name", "")
 				PREM_7.oi_stars_1.text = "★".repeat(int(comp.get("stars", 0)))
 			1:
@@ -1520,12 +1465,14 @@ func activate_extraction_data():
 	# Optionally show first component detail (or add cycling later)
 	if components.size() > 0:
 		var first = components[0]
-		PREM_7.oi_comp_desc.text = first.get("description", "")
-		PREM_7.oi_comp_material.text = first.get("material", "")
+		PREM_7.oi_comp_fit.text = first.get("fit", "")
+		PREM_7.oi_comp_life.text = str(first.get("life", 0))
+		PREM_7.oi_comp_weight.text = str(first.get("durability", 0))
 		PREM_7.oi_comp_durability.text = str(first.get("durability", 0))
 	else:
-		PREM_7.oi_comp_desc.text = ""
-		PREM_7.oi_comp_material.text = ""
+		PREM_7.oi_comp_fit.text = ""
+		PREM_7.oi_comp_life.text = ""
+		PREM_7.oi_comp_weight.text = ""
 		PREM_7.oi_comp_durability.text = ""
 
 
@@ -1546,9 +1493,9 @@ func scroll_extraction_data(dir):
 
 func update_component_display():
 	var comp = current_extraction_data[current_component_index]
-	print(comp)
-	PREM_7.oi_comp_desc.text = comp.get("description", "??")
-	PREM_7.oi_comp_material.text = comp.get("material", "??")
+	PREM_7.oi_comp_fit.text = comp.get("fit", "??")
+	PREM_7.oi_comp_life.text = str(comp.get("life", 0))
+	PREM_7.oi_comp_weight.text = str(comp.get("weight", 0))
 	PREM_7.oi_comp_durability.text = str(comp.get("durability", 0))
 
 	var alphas = [0.75, 0.75, 0.75, 0.75]
@@ -1571,3 +1518,27 @@ func update_component_display():
 	for i in range(4):
 		comp_labels[i].transparency = alphas[i]
 		star_labels[i].transparency = alphas[i]
+
+	var target_name = comp.get("name", "").replace(" ", "").to_lower()
+	var found_child_index := -1
+	var found_child_name := ""
+
+	for i in range(grabbed_object.get_child_count()):
+		var child = grabbed_object.get_child(i)
+		if child.name.to_lower().contains(target_name):
+			found_child_index = i
+			found_child_name = child.name
+			break
+
+	if found_child_index != -1:
+		var matched_child = grabbed_object.get_child(found_child_index)
+		print(matched_child, " is the index'ed RigidBody3D, which will be used during actual extraction!")
+		for child in grabbed_object.get_children():
+			if child is MeshInstance3D:
+				for mesh in child.get_children():
+					if mesh.name == found_child_name:
+						grabbed_object.set_extract_glow(mesh, "Selected")
+					else:
+						grabbed_object.set_extract_glow(mesh, "Deselected")
+	else:
+		print("No matching child found for component: ", comp.get("name", "??"))

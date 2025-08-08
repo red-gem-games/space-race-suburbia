@@ -19,8 +19,9 @@ var shader_material: ShaderMaterial
 @onready var object_info: Node3D = $Object_Info
 @onready var oi_main_name: Label3D = $Object_Info/Main_Name
 @onready var oi_main_desc: Label3D = $Object_Info/Main_Desc
-@onready var oi_comp_desc: Label3D = $Object_Info/Description
-@onready var oi_comp_material: Label3D = $Object_Info/Material
+@onready var oi_comp_fit: Label3D = $Object_Info/Fit
+@onready var oi_comp_life: Label3D = $Object_Info/Life
+@onready var oi_comp_weight: Label3D = $Object_Info/Weight
 @onready var oi_comp_durability: Label3D = $Object_Info/Durability
 @onready var oi_comp_1: Label3D = $Object_Info/Component_1
 @onready var oi_stars_1: Label3D = $Object_Info/Stars_1
@@ -90,10 +91,6 @@ func _input(event: InputEvent) -> void:
 
 
 func _process(delta: float) -> void:
-	
-	if suspend_object:
-		ctrl_anim.play("suspend")
-		suspend_object = false
 	
 	if touching_object and not beam_active:
 		touch_anim.play("touching_object")

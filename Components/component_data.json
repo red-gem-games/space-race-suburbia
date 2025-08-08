@@ -1,81 +1,119 @@
 {
     "WashingMachine": {
         "name": "Washing Machine",
-        "description": "Leaks on occasion.",
+        "description": "Look Good on Launch Day.",
+        "height": 0.35,
         "components": [
             {
                 "name": "Control Panel",
                 "stars": 1,
-                "description": "Clean your clothes or launch your rocket. Tough Choice.",
-                "material": "Aluminum, Plastic",
-                "durability": 15
+                "fit": "Guidance",
+                "life": 66,
+                "weight": 10,
+                "durability": 3
             },
             {
                 "name": "Door",
                 "stars": 2,
-                "description": "For your viewing pleasure.",
-                "material": "Stainless steel, Glass",
-                "durability": 35
+                "fit": "Structure",
+                "life": 100,
+                "weight": 15,
+                "durability": 5
             },
             {
-                "name": "Drum",
+                "name": "Wash Basket",
                 "stars": 2,
-                "description": "Reflective booster housing. Percussionists welcome.",
-                "material": "Titanium",
-                "durability": 50
+                "fit": "Propulsion",
+                "life": 15,
+                "weight": 44,
+                "durability": 8
             },
             {
-                "name": "Hose",
+                "name": "Inlet Hose",
                 "stars": 1,
-                "description": "Common supply line. Beware of the dirty sock water.",
-                "material": "Rubber, Aluminum",
-                "durability": 10
+                "fit": "Propulsion",
+                "life": 80,
+                "weight": 6,
+                "durability": 5
             }
         ]
     },
     "DryingMachine": {
         "name": "Drying Machine",
         "description": "Tumble Dry Only.",
+        "height": 0.35,
         "components": [
             {
                 "name": "Control Panel",
                 "stars": 1,
-                "description": "Set to high and let it rip.",
-                "material": "Aluminum, Plastic",
-                "durability": 15
+                "fit": "Guidance",
+                "life": 66,
+                "weight": 10,
+                "durability": 3
             },
             {
                 "name": "Door",
                 "stars": 2,
-                "description": "For your viewing pleasure.",
-                "material": "Stainless steel, Glass",
-                "durability": 35
+                "fit": "Structure",
+                "life": 100,
+                "weight": 15,
+                "durability": 5
             },
             {
                 "name": "Drum",
                 "stars": 2,
-                "description":  "Reflective booster housing. Percussionists welcome.",
-                "material": "Titanium",
-                "durability": 50
+                "fit": "Propulsion",
+                "life": 15,
+                "weight": 44,
+                "durability": 8
             },
             {
                 "name": "Vent Hose",
                 "stars": 1,
-                "description": "Might want to take the lint out first.",
-                "material": "Rubber, Aluminum",
-                "durability": 10
+                "fit": "Propulsion",
+                "life": 80,
+                "weight": 6,
+                "durability": 5
             }
         ]
     },
    "WaterHeater": {
     "name": "Water Heater",
-    "description": "TBD",
-    "components": []
+    "description": "Leaks on occasion.",
+    "height": 0.1,
+    "components": [
+        {
+            "name": "Heating Coil",
+            "stars": 1,
+            "fit": "Propulsion",
+            "life": 75,
+            "weight": 25,
+            "durability": 4
+        },
+        {
+            "name": "Drip Pan",
+            "stars": 2,
+            "fit": "Payload",
+            "life": 60,
+            "weight": 8,
+            "durability": 6
+        },
+        {
+            "name": "Supply Pipes",
+            "stars": 2,
+            "fit": "Propulsion",
+            "life": 55,
+            "weight": 21,
+            "durability": 4
+        }
+    ]
+
     },
    
    "Fridge": {
        "name": "Refrigerator",
        "description": "Still smells like leftovers.",
+       "height": 1.0,
        "components": []
        
     },
@@ -83,12 +121,14 @@
     "Microwave": {
         "name": "Microwave",
         "description": "TBD.",
+        "height": 1.0,
         "components": []
     },
     
     "DeepFreezer": {
         "name": "Deep Freezer",
         "description": "TBD.",
+        "height": 1.0,
         "components": []
 
     }

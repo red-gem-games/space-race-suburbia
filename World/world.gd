@@ -92,6 +92,13 @@ func _physics_process(delta: float) -> void:
 		
 		#var extract_base_basis := Basis()
 		#var target_object_rot := grabbed_object.global_transform.basis
+		
+				## --- Smooth LookAt Rotation ---
+		var object_pos = grabbed_object.global_transform.origin
+		var look_dir = -(character.global_position - object_pos).normalized()
+
+		look_dir.y += 0.15  # tweak this until it feels right
+		look_dir = look_dir.normalized()
 
 		if not character.extracting_object_active:
 			distance_forward = 6.0
@@ -104,22 +111,21 @@ func _physics_process(delta: float) -> void:
 		else:
 			distance_forward = 5.5
 			offset_left = 2.5
-			offset_up = 0.5
+			offset_up = character.extraction_height
 			smooth_speed = 1.0
 			if not extraction_spin_initialized:
-				grabbed_object.rotation_degrees.x = lerp(grabbed_object.rotation_degrees.x, 12.5, delta * 5.0)
+				grabbed_object.rotation_degrees.x = lerp(grabbed_object.rotation_degrees.x, 0.0, delta * 5.0)
 				grabbed_object.rotation_degrees.y = lerp(grabbed_object.rotation_degrees.y, 22.5, delta * 5.0)
-				grabbed_object.rotation_degrees.z = lerp(grabbed_object.rotation_degrees.z, 2.0, delta * 5.0)
-				current_spin_timer += delta * 0.25
+				grabbed_object.rotation_degrees.z = lerp(grabbed_object.rotation_degrees.z, 0.0, delta * 5.0)
+				current_spin_timer += delta * 0.5
 				if current_spin_timer > 0.25:
 					extraction_spin_initialized = true
 			if extraction_spin_initialized:
-				# -- Mouse movement-based rotation offset --
 				var x_spd = character.current_mouse_speed_x / 1000.0
-				if x_spd < -0.01:
-					grabbed_object.rotate_y(x_spd)
-				else:
-					grabbed_object.rotate_y(0.0025 + x_spd)
+				grabbed_object.rotation_degrees.x = lerp(grabbed_object.rotation_degrees.x, 0.0, delta * 5.0)
+				grabbed_object.rotation_degrees.z = lerp(grabbed_object.rotation_degrees.z, 0.0, delta * 5.0)
+				grabbed_object.rotate_y(0.0025 + x_spd)
+
 
 
 		target_pos = cam_transform.origin + forward * distance_forward + left * offset_left + up * offset_up
@@ -133,12 +139,7 @@ func _physics_process(delta: float) -> void:
 		
 		grabbed_object.apply_central_force(force)
 
-		## --- Smooth LookAt Rotation ---
-		var object_pos = grabbed_object.global_transform.origin
-		var look_dir = -(character.global_position - object_pos).normalized()
 
-		look_dir.y += 0.15  # tweak this until it feels right
-		look_dir = look_dir.normalized()
 
 		var desired_basis = Basis().looking_at(look_dir, Vector3.UP)
 		var current_basis = grabbed_object.global_transform.basis
@@ -269,10 +270,10 @@ func grab_object():
 	character.grabbed_object = grabbed_object
 	grabbed_object.collision_layer = 1
 	grabbed_object.collision_mask = 1
-	flicker_obj_a = grabbed_object.outline
+	flicker_obj_a = grabbed_object.object_body
 	flicker_obj_b = character.PREM_7.back_panel
 	flicker_obj_c = character.PREM_7.photon_tip
-	grabbed_object.enable_object_glow(grabbed_object.outline)
+	#grabbed_object.enable_object_glow(grabbed_object.outline)
 	grabbed_object.is_grabbed = true
 	grabbed_object.is_touchable = false
 	grabbed_object.freeze = false
@@ -334,6 +335,7 @@ func _input(event: InputEvent) -> void:
 		elif event.button_index == MOUSE_BUTTON_RIGHT and not (character.extracting_object_active or character.fusing_object_active):
 			if event.is_pressed():
 				if grabbed_object:
+					character.PREM_7.ctrl_anim.play("suspend")
 					grabbed_object.gravity_scale = 0.0
 					grabbed_object.freeze = false
 					grabbed_object.is_suspended = true
@@ -352,16 +354,17 @@ func _input(event: InputEvent) -> void:
 			if not character.extracting_object_active and not character.fusing_object_active:
 				print('Resetting Rotation here, genius...')
 				grabbed_object.reparent(assembly_object_container)
-				grabbed_object.outline.visible = true
 				reset_rotation = true
 				character.distance_from_character = base_distance_in_front
-				flicker_obj_a = grabbed_object.outline
+				flicker_obj_a = grabbed_object.object_body
+				grabbed_object.object_body.visible = true
+				grabbed_object.set_glitch(false)
 			else:
 				if character.extracting_object_active:
 					grabbed_object.reparent(character.control_position)
-					grabbed_object.outline.visible = false
 					flicker_obj_a = character.PREM_7.object_info
-					#grabbed_object.freeze = true
+					grabbed_object.object_body.visible = true
+					grabbed_object.set_glitch(false)
 
 
 		if event.keycode == KEY_SHIFT:
@@ -481,7 +484,7 @@ func _static_glow_loop() -> void:
 	rng.randomize()
 
 	while static_glow_active:
-		var delay = rng.randf_range(2.0, 8.0)
+		var delay = rng.randf_range(2.0, 6.0)
 		await get_tree().create_timer(delay).timeout
 
 		if not static_glow_active:
@@ -492,7 +495,7 @@ func _static_glow_loop() -> void:
 
 
 func _static_glow_blink(rng: RandomNumberGenerator) -> void:
-	var blink_pairs = rng.randi_range(4, 16)
+	var blink_pairs = rng.randi_range(8, 16)
 
 	for i in blink_pairs:
 		if not static_glow_active:
@@ -503,6 +506,8 @@ func _static_glow_blink(rng: RandomNumberGenerator) -> void:
 			flicker_obj_a.visible = true
 			flicker_obj_b.visible = true
 			flicker_obj_c.visible = true
+			if grabbed_object.is_extracting:
+				grabbed_object.set_glitch(false)
 		await get_tree().create_timer(duration).timeout
 
 		if not static_glow_active:
@@ -511,9 +516,13 @@ func _static_glow_blink(rng: RandomNumberGenerator) -> void:
 			flicker_obj_a.visible = false
 			flicker_obj_b.visible = false
 			flicker_obj_c.visible = false
+			if grabbed_object.is_extracting:
+				grabbed_object.set_glitch(true)
 		await get_tree().create_timer(duration).timeout
 
 	if flicker_obj_a and flicker_obj_b and flicker_obj_c:
 		flicker_obj_a.visible = true
 		flicker_obj_b.visible = true
 		flicker_obj_c.visible = true
+		if grabbed_object.is_extracting:
+			grabbed_object.set_glitch(false)

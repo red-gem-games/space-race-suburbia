@@ -17,7 +17,11 @@ var COMPONENT_SCRIPT: Script = preload("res://Components/components.gd")
 var GLOW_SHADER := preload("res://Shaders/grabbed_glow.gdshader")
 var MANIPULATION_SHADER:= preload("res://Shaders/manipulation.gdshader")
 var manipulation_material: ShaderMaterial = ShaderMaterial.new()
+var GLASS_MATERIAL: = preload("res://Shaders/Glass_Material.tres")
 var GLOW_MATERIAL := preload("res://Shaders/Component_Glow.tres")
+var EXTRACTION_SHADER := preload("res://Shaders/extract_selection.gdshader")
+var extraction_material: ShaderMaterial = ShaderMaterial.new()
+var EXTRACT_MATERIAL := preload("res://Shaders/Highlight_Glow.tres")
 
 var grid_positions: Dictionary = {}
 var assigned_grid_position := Vector3.ZERO
@@ -127,6 +131,10 @@ var extract_pos_x: float
 var extract_pos_y: float
 var extract_pos_z: float
 
+var glitch: bool = false
+var extract_hue := 0.0
+var extract_speed := 0.1  # How fast the hue rotates
+
 
 func _ready() -> void:
 	
@@ -142,6 +150,7 @@ func _ready() -> void:
 	particles_material = ShaderMaterial.new()
 	
 	manipulation_material.shader = MANIPULATION_SHADER
+	extraction_material.shader = EXTRACTION_SHADER
 	
 	contact_monitor = true
 	continuous_cd = true
@@ -157,46 +166,42 @@ func _ready() -> void:
 	physics_mat.friction = 1.0
 	physics_mat.bounce = 0.0
 	self.physics_material_override = physics_mat
-
+	shader_material.shader = GLOW_SHADER
+	standard_material = GLOW_MATERIAL
 	var base_mesh : MeshInstance3D = null
 	for child in get_children():
 		if child is MeshInstance3D:
-			if child.name == "Outline":
-				base_mesh = child
-				outline = child
-			else:
-				object_body = child
+			base_mesh = child
+			object_body = child
 
-	if base_mesh:
-		#var outline_mesh = base_mesh.duplicate()
-		glow_body = outline
-		#glow_body.scale = Vector3(1.15, 1.15, 1.15)
-		shader_material.shader = GLOW_SHADER
-		standard_material = GLOW_MATERIAL
-		glow_body.set_surface_override_material(0, standard_material)
-		var outline_mesh : Mesh = base_mesh.mesh.create_outline(0.075)
-		glow_body = MeshInstance3D.new()
-		glow_body.name = "Outline"
-		glow_body.mesh = outline_mesh
-		glow_body.material_override = standard_material
-		glow_body.visible = false
-		add_child(glow_body)
-	else:
-		push_warning("%s has no MeshInstance3D child to outline!" % name)
+	#if base_mesh:
+		##var outline_mesh = base_mesh.duplicate()
+		#glow_body = outline
+		##glow_body.scale = Vector3(1.15, 1.15, 1.15)
+#
+		#var outline_mesh : Mesh = base_mesh.mesh.create_outline(0.075)
+		#glow_body = MeshInstance3D.new()
+		#glow_body.name = "Outline"
+		#glow_body.mesh = outline_mesh
+		#glow_body.material_override = standard_material
+		#glow_body.visible = false
+		#add_child(glow_body)
+	#else:
+		#push_warning("%s has no MeshInstance3D child to outline!" % name)
 
 	for child in get_children():
 		if child is RigidBody3D:
 			assembly_components.append(child)
 			child.collision_layer = 0
 			child.collision_mask = 0
-			#child.freeze = true
-			child.name = "%s_%s" % [name, child.name]  # <--- this is the new line
+			child.freeze = true
 
 			#print('I, ', child.name, ' am an assembly component!')
 
 	resting_position = global_position.y
 	set_physics_process(true)
 	
+	print(name)
 	#var rand_ring = randf_range(0.5, 1.5)
 	#var rand_wave = randf_range(0.25, 1.0)
 	#var rand_all = randf_range(1.5, 3.0)
@@ -283,15 +288,19 @@ func _process(delta: float) -> void:
 			glow_tween.kill()
 		if is_touchable:
 			if is_touched:
-				standard_material.emission = Color(0.6, 0.9, 0.6)
-				standard_material.emission_energy_multiplier = 2.0
-				if not outline.visible:
-					outline.visible = true
+				for child in object_body.get_children():
+					child.set_material_overlay(standard_material)
+					standard_material.emission = Color(0.6, 0.9, 0.6)
+					standard_material.emission_energy_multiplier = 2.0
+				#if not outline.visible:
+					#outline.visible = true
 				
 			if not is_touched:
+				for child in object_body.get_children():
+					child.set_material_overlay(null)
 				#standard_material.emission = Color(0.63, 0.8, 0.62)
 				#standard_material.emission_energy_multiplier = 1.0
-				outline.visible = false
+				#outline.visible = false
 
 
 	if is_grabbed:
@@ -308,6 +317,12 @@ func _process(delta: float) -> void:
 				brightness_increasing = true
 	if is_extracting:
 		shake_timer -= delta
+		#extract_hue += delta * extract_speed
+		#if extract_hue >= 360.0:
+			#extract_hue = 0.0
+		#var color = Color.from_hsv(extract_hue, 0.75, 0.25)
+		#EXTRACT_MATERIAL.emission_enabled = true
+		#EXTRACT_MATERIAL.emission = color
 		if not extract_in_motion:
 			extract_pos_x = position.x - 2.5
 			extract_pos_y = position.y + 0.5
@@ -319,7 +334,6 @@ func _process(delta: float) -> void:
 func enable_object_glow(object: Node) -> void:
 	# Start the transparency tween
 	var t := create_tween()
-	# Phase 1: 0.99 → 0.95 from 0.0 to 0.4s
 	t.tween_property(object, "transparency", 0.875, 0.25)
 
 
@@ -665,15 +679,52 @@ func change_glow(object, amt: float, dur: float):
 	glow_tween.set_trans(Tween.TRANS_LINEAR)
 	glow_tween.set_ease(Tween.EASE_IN_OUT)
 
+var original_materials := {}
+
 func manipulation_mode(type):
 	if type == "Active":
+		original_materials.clear()
+		
 		for child in object_body.get_children():
 			if child is MeshInstance3D:
-				child.set_surface_override_material(0, manipulation_material)
-		collision_shape.disabled = true
-	
+				var surface_count = child.mesh.get_surface_count()
+				var overrides := {}
+
+				for i in range(surface_count):
+					var original_override = child.get_surface_override_material(i)
+					overrides[i] = original_override  # might be null, that’s fine
+					
+					child.set_surface_override_material(i, manipulation_material)
+
+				original_materials[child] = overrides
+		# Cycle through colors in EXTRACT_MATERIAL here
+		for child in get_children():
+			if child is CollisionShape3D:
+				child.disabled = true
+
 	elif type == "Inactive":
 		collision_shape.disabled = false
+
 		for child in object_body.get_children():
 			if child is MeshInstance3D:
-				child.set_surface_override_material(0, null)
+				child.set_material_overlay(standard_material)
+				if original_materials.has(child):
+					var overrides = original_materials[child]
+					for i in overrides.keys():
+						child.set_surface_override_material(i, overrides[i])  # could be null
+
+		original_materials.clear()
+
+		for child in get_children():
+			if child is CollisionShape3D:
+				child.disabled = false
+
+
+func set_glitch(status):
+	manipulation_material.set_shader_parameter("enable_glitch", status)
+
+func set_extract_glow(component, selection):
+	if selection == 'Selected':
+		component.set_material_overlay(EXTRACT_MATERIAL)
+	elif selection == 'Deselected':
+		component.set_material_overlay(null)

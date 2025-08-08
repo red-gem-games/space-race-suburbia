@@ -1,10 +1,10 @@
 shader_type spatial;
-render_mode unshaded, blend_mix;
+render_mode blend_mix, cull_disabled, depth_prepass_alpha;
 
 // Grupo: Textura Base
 group_uniforms base_texture;
 uniform sampler2D albedo_texture : source_color;
-uniform float albedo_alpha : hint_range(0.0, 1.0) = 0.4;
+uniform float albedo_alpha : hint_range(0.0, 1.0) = 0.25;
 
 // Grupo: Tinte y Borde
 group_uniforms tint_edge;
@@ -12,24 +12,24 @@ uniform vec4 tint_color : source_color = vec4(0.5, 0.0, 1.0, 1.0); // #FF8000
 uniform vec4 edge_color : source_color = vec4(1.0, 0.9, 1.0, 1.0); // #FF0000
 uniform float edge_power : hint_range(0.0, 1.0) = 1.0;
 uniform float edge_size : hint_range(0.1, 5.0) = 5.0;
-uniform float edge_intensity : hint_range(0.0, 2.0) = 0.25;
+uniform float edge_intensity : hint_range(0.0, 2.0) = 1.0;
 
 // Grupo: Scanlines
 group_uniforms scanlines;
 uniform sampler2D scanline_texture;
 uniform vec4 scanline_tint : source_color = vec4(1.0, 1.0, 1.0, 0.0); // #FF8000
 uniform float scanline_intensity : hint_range(0.0, 2.0) = 0.0;
-uniform float scanline_density : hint_range(0.0, 10.0) = 5.0;
-uniform float scanline_thickness : hint_range(0.1, 3.0) = 1.0;
+uniform float scanline_density : hint_range(0.0, 10.0) = 2.0;
+uniform float scanline_thickness : hint_range(0.1, 3.0) = 0.75;
 uniform float scanline_spacing : hint_range(0.5, 4.0) = 1.0;
 uniform float scanline_angle : hint_range(0.0, 6.283) = 0.0;
-uniform float scanline_speed = 0.2;
+uniform float scanline_speed = 2.0;
 
 // Grupo: Glitch
 group_uniforms glitch;
-uniform bool enable_glitch = true;
+uniform bool enable_glitch = false;
 uniform float glitch_intensity : hint_range(0.0, 1.0) = 0.0;
-uniform float shake_power : hint_range(0.0, 1.0) = 0.0;
+uniform float shake_power : hint_range(0.0, 1.0) = 0.075;
 uniform float shake_rate : hint_range(0.0, 1.0) = 1.0;
 uniform float shake_speed : hint_range(0.0, 10.0) = 2.0;
 uniform float shake_block_size : hint_range(1.0, 100.0) = 100.0;

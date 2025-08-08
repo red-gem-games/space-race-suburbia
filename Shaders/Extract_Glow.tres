@@ -1,0 +1,11 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://63sme6lpgnkm"]
+
+[resource]
+transparency = 1
+blend_mode = 3
+cull_mode = 2
+depth_draw_mode = 1
+emission_enabled = true
+emission = Color(1, 1, 1, 1)
+emission_energy_multiplier = 15.0
+rim_enabled = true
