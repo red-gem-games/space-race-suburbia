@@ -2,13 +2,6 @@ extends RigidBody3D
 class_name assembly_objects
 
 
-
-
-
-
-
-@onready var collision_shape: CollisionShape3D = $CollisionShape3D
-
 var object_body: MeshInstance3D
 var machine_name: StringName
 var component_name: StringName
@@ -134,6 +127,10 @@ var extract_pos_z: float
 var glitch: bool = false
 var extract_hue := 0.0
 var extract_speed := 0.1  # How fast the hue rotates
+var current_scale: Vector3
+
+var extract_body: MeshInstance3D
+var extraction_scale: float
 
 
 func _ready() -> void:
@@ -173,6 +170,7 @@ func _ready() -> void:
 		if child is MeshInstance3D:
 			base_mesh = child
 			object_body = child
+			current_scale = object_body.scale
 
 	#if base_mesh:
 		##var outline_mesh = base_mesh.duplicate()
@@ -316,18 +314,13 @@ func _process(delta: float) -> void:
 				is_grabbed = false
 				brightness_increasing = true
 	if is_extracting:
-		shake_timer -= delta
-		#extract_hue += delta * extract_speed
-		#if extract_hue >= 360.0:
-			#extract_hue = 0.0
-		#var color = Color.from_hsv(extract_hue, 0.75, 0.25)
-		#EXTRACT_MATERIAL.emission_enabled = true
-		#EXTRACT_MATERIAL.emission = color
-		if not extract_in_motion:
-			extract_pos_x = position.x - 2.5
-			extract_pos_y = position.y + 0.5
-			extract_pos_z = position.z + 1.0
-			extract_object_motion()
+		pass
+		#shake_timer -= delta
+		#if not extract_in_motion:
+			##extract_pos_x = position.x - 2.5
+			##extract_pos_y = position.y + 0.5
+			##extract_pos_z = position.z + 1.0
+			#extract_object_motion()
 
 
 
@@ -574,20 +567,20 @@ func extract_component():
 	extraction_complete = true
 	queue_free()
 
-func extract_object_motion():
-	print(' -------- MOTION ACTIVATED --------- ')
-
-	if not extract_in_motion:
-		base_x_rot = rotation_degrees.x
-		base_y_rot = rotation_degrees.y
-		base_z_rot = rotation_degrees.z
-
-		base_x_pos = position.x
-		base_y_pos = position.y
-		base_z_pos=  position.z
-		ext_z_pos= base_z_pos + 4.0
-
-	extract_in_motion = true
+#func extract_object_motion():
+	#print(' -------- MOTION ACTIVATED --------- ')
+#
+	#if not extract_in_motion:
+		#base_x_rot = rotation_degrees.x
+		#base_y_rot = rotation_degrees.y
+		#base_z_rot = rotation_degrees.z
+#
+		#base_x_pos = position.x
+		#base_y_pos = position.y
+		#base_z_pos=  position.z
+		#ext_z_pos= base_z_pos + 4.0
+#
+	#extract_in_motion = true
 
 func complete_extraction():
 	component_name = name.split("_", true, 1)[1]
@@ -682,10 +675,11 @@ func change_glow(object, amt: float, dur: float):
 var original_materials := {}
 
 func manipulation_mode(type):
+	
 	if type == "Active":
 		original_materials.clear()
 		
-		for child in object_body.get_children():
+		for child in extract_body.get_children():
 			if child is MeshInstance3D:
 				var surface_count = child.mesh.get_surface_count()
 				var overrides := {}
@@ -697,15 +691,10 @@ func manipulation_mode(type):
 					child.set_surface_override_material(i, manipulation_material)
 
 				original_materials[child] = overrides
-		# Cycle through colors in EXTRACT_MATERIAL here
-		for child in get_children():
-			if child is CollisionShape3D:
-				child.disabled = true
 
 	elif type == "Inactive":
-		collision_shape.disabled = false
 
-		for child in object_body.get_children():
+		for child in extract_body.get_children():
 			if child is MeshInstance3D:
 				child.set_material_overlay(standard_material)
 				if original_materials.has(child):
@@ -714,10 +703,6 @@ func manipulation_mode(type):
 						child.set_surface_override_material(i, overrides[i])  # could be null
 
 		original_materials.clear()
-
-		for child in get_children():
-			if child is CollisionShape3D:
-				child.disabled = false
 
 
 func set_glitch(status):

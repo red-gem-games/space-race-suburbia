@@ -16,21 +16,17 @@ var GLOW_SHADER := preload("res://Shaders/grabbed_glow.gdshader")
 var shader: Shader
 var shader_material: ShaderMaterial
 
-@onready var object_info: Node3D = $Object_Info
-@onready var oi_main_name: Label3D = $Object_Info/Main_Name
-@onready var oi_main_desc: Label3D = $Object_Info/Main_Desc
-@onready var oi_comp_fit: Label3D = $Object_Info/Fit
-@onready var oi_comp_life: Label3D = $Object_Info/Life
-@onready var oi_comp_weight: Label3D = $Object_Info/Weight
-@onready var oi_comp_durability: Label3D = $Object_Info/Durability
-@onready var oi_comp_1: Label3D = $Object_Info/Component_1
-@onready var oi_stars_1: Label3D = $Object_Info/Stars_1
-@onready var oi_comp_2: Label3D = $Object_Info/Component_2
-@onready var oi_stars_2: Label3D = $Object_Info/Stars_2
-@onready var oi_comp_3: Label3D = $Object_Info/Component_3
-@onready var oi_stars_3: Label3D = $Object_Info/Stars_3
-@onready var oi_comp_4: Label3D = $Object_Info/Component_4
-@onready var oi_stars_4: Label3D = $Object_Info/Stars_4
+@onready var machine_info: Node3D = $Machine_Info
+@onready var machine_name: Label3D = $Machine_Info/All_Data/Main/Main_Name
+@onready var machine_desc: Label3D = $Machine_Info/All_Data/Main/Main_Desc
+@onready var component_name: Label3D = $Machine_Info/All_Data/Component/Comp_Name
+@onready var component_stars: Label3D = $Machine_Info/All_Data/Component/Comp_Stars
+@onready var component_module: Label3D = $Machine_Info/All_Data/Module/Data
+@onready var component_power: Label3D = $Machine_Info/All_Data/Power/Data
+@onready var component_mass: Label3D = $Machine_Info/All_Data/Mass/Data
+@onready var component_lift: Label3D = $Machine_Info/All_Data/Lift/Data
+
+@onready var control_position: Node3D = $Control_Position
 
 var grabbed_object_name: StringName
 var handling_object: bool = false
@@ -62,8 +58,8 @@ var c3: float
 var grab_object_complete: bool = false
 
 func _ready() -> void:
-	object_info.visible = false
-	object_info.scale = Vector3(0.001, 0.001, 0.001)
+	machine_info.visible = false
+	machine_info.scale = Vector3(0.6, 0.6, 0.6)
 	add_child(control_hologram_timer)
 	control_hologram_timer.one_shot = true
 	grab_anim.play("RESET")

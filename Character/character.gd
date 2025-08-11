@@ -14,7 +14,6 @@ var current_object_json: Dictionary = {}
 
 @onready var collision_shape: CollisionShape3D = $CollisionShape3D
 @onready var camera: Camera3D = $Camera3D
-@onready var control_position: Node3D = $Camera3D/Control_Position
 @onready var PREM_7: Node3D = $"Camera3D/PREM-7"
 @onready var HUD: Control = $HUD
 @onready var char_obj_shape: CollisionShape3D
@@ -234,7 +233,9 @@ var orbit_speed: float = 1.0  # Speed multiplier
 var input_direction_x: float = 0.0
 var input_direction_z: float = 0.0
 var grabbed_pos_set: bool = false
-var extraction_height: float
+var extraction_scale: float
+var extract_body: MeshInstance3D
+var extraction_started: bool = false
 
 func _ready() -> void:
 	push_warning('General To Do List:')
@@ -347,6 +348,15 @@ func _physics_process(delta: float) -> void:
 
 func _process(delta: float) -> void:
 	
+	if grabbed_object:
+		if extracting_object_active:
+			if extraction_started:
+				if control_timer.time_left == 0.0:
+					print('EXTRACT THAT OBJECT')
+					control_timer.stop()
+					extraction_started = false
+					extracting_object_active = false
+	
 	handle_prem7_decay(delta)
 
 	if abs(delta - previous_delta) > delta_threshold:
@@ -364,16 +374,16 @@ func _process(delta: float) -> void:
 
 	if grabbed_object:
 		if shifting_object_active or extracting_object_active or fusing_object_active:
-			camera.fov = lerp(camera.fov, 55.0, delta * 10)
+			camera.fov = lerp(camera.fov, 55.0, delta * 10.0)
 			if not PREM_7.handling_object:
 				PREM_7.handle_object()
 				if extracting_object_active:
-					HUD.set_highlight_color(manipulate_ORANGE, 0.5)
+					#HUD.set_highlight_color(manipulate_ORANGE, 0.5)
 					grabbed_object.extract_active = true
 				elif fusing_object_active:
-					HUD.set_highlight_color(manipulate_BLUE, 0.7)
+					#HUD.set_highlight_color(manipulate_BLUE, 0.7)
 					grabbed_object.fuse_active = true
-				HUD.control_color.visible = true
+				#HUD.control_color.visible = true
 				print('***   Make sure to lerp these shaders / standard materials   ***')
 		else:
 			camera.fov = lerp(camera.fov, 75.0, delta * 10)
@@ -533,7 +543,16 @@ func _input(event: InputEvent) -> void:
 			_on_reset_key()
 		
 		if event.keycode == KEY_Q:
-			print('Add action logic here :)')
+			if pressed:
+				extraction_started = true
+				control_timer.start(1.0)
+				print("pressing q...start timer")
+			if not pressed and control_timer.time_left > 0.0:
+				extraction_started = false
+				control_timer.stop()
+				print("releasing q...reset timer...extract object?")
+			#if released or q_timer == 0.0:
+				#print("releasing q...reset timer")
 			#if event.pressed:
 				#suspending_object_active = true
 				#print('add SUSPEND visuals')
@@ -673,16 +692,16 @@ func _input(event: InputEvent) -> void:
 		if event.keycode == KEY_CTRL:
 			print('IF YOU WAIT A FEW SECONDS BEFORE CONTROLLING, IT"S LIKE THE OBJECT SINKS???')
 			print('Instead...lets do a teleport effect here - dissolve out and reappear in the PREM-7')
-			if not grabbed_object:
-				return
-			if grabbed_object.is_stepladder or grabbed_object.is_rocketship:
-				return
-			if pressed and grab_timer.time_left == 0.0:
-				control_object()
-				PREM_7.ctrl_anim.play("RESET")
-				PREM_7.ctrl_anim.play("control_down")
-			else:
-				pass
+			#if not grabbed_object:
+				#return
+			#if grabbed_object.is_stepladder or grabbed_object.is_rocketship:
+				#return
+			#if pressed and grab_timer.time_left == 0.0:
+				#control_object()
+				#PREM_7.ctrl_anim.play("RESET")
+				#PREM_7.ctrl_anim.play("control_down")
+			#else:
+				#pass
 
 
 		if event.keycode == KEY_Z:
@@ -707,22 +726,27 @@ func _on_extract_key(down: bool) -> void:
 		extracting_object_active =! extracting_object_active
 		
 	if extracting_object_active:
+		#grabbed_object.object_body.scale = Vector3(0.25, 0.25, 0.25)
+
+		#grabbed_object.visible = false
 		PREM_7.ctrl_anim.play("extract")
 		grabbed_object.is_extracting = true
-		PREM_7.object_info.scale = Vector3(1.0, 1.0, 1.0)
-		PREM_7.object_info.visible = true
+		#PREM_7.machine_info.scale = Vector3(1.0, 1.0, 1.0)
+		PREM_7.machine_info.visible = true
 		grabbed_object.extract_active = true
-		grabbed_object.manipulation_mode('Active')
 		activate_extraction_data()
+
+		grabbed_object.manipulation_mode('Active')
 		right_mouse_down = false
 		handle_object('pressed')
 		print('Start Extracting - Make all other objects invisible?')
 		#grabbed_target_position.x -= 10
 	else:
+		#PREM_7.machine_info.scale = Vector3.ZERO
 		PREM_7.ctrl_anim.play_backwards("extract")
 		gravity_strength = 10.0
-		grabbed_object.manipulation_mode('Inactive')
-		PREM_7.object_info.visible = false
+		grabbed_object.visible = true
+		#PREM_7.machine_info.visible = false
 		grabbed_object.extract_active = false
 		grabbed_object.is_extracting = false
 		grabbed_object.extract_in_motion = false
@@ -740,13 +764,15 @@ func _on_reset_key() -> void:
 		distance_factor = 0
 
 func grab_object():
-	
+	grabbed_object.extract_body = grabbed_object.object_body.duplicate()
+	grabbed_object.extract_body.position = Vector3(0.0, -0.25, 0.0)
+	grabbed_object.extract_body.scale = Vector3.ZERO
+	PREM_7.control_position.add_child(grabbed_object.extract_body)
 	#look_to = grabbed_object.global_position
 	#look_to.x += 1.0
 	#left_mouse_down = false
 	#PREM_7.trig_anim.play("RESET")
 	#PREM_7.trig_anim.play("trigger_pull")
-
 	print('Grab')
 	extracting_object_active = false
 	fusing_object_active = false
@@ -760,76 +786,19 @@ func grab_object():
 	#grabbed_initial_mouse = get_viewport().get_mouse_position()
 	#grabbed_distance = (grabbed_object.global_transform.origin - camera.global_transform.origin).length()
 	object_is_grabbed = true
-	#grabbed_object.gravity_scale = 1.75
-	#grabbed_object.is_touching_ground = false
-	#grabbed_target_position = grabbed_object.position
+
 	if grabbed_object.is_suspended:
 		#beam_lock = true
 		print('When grabbing a suspended object, this needs to be a more gradual movement in terms of both moving towards the object and the direction in which you are looking')
-		#grabbed_rotation = grabbed_object.global_rotation_degrees
-		#grabbed_object.gravity_scale = 0.0
-		#suspending_object_active = true
-		#var dir = (grabbed_object.global_transform.origin - camera.global_transform.origin)
-		#orbit_angle = atan2(dir.x, dir.z) + PI
 		return
-	#suspending_object_active = false
 	grabbed_initial_rotation = rotation_degrees
-	#grabbed_global_rotation = grabbed_object.rotation_degrees
-	#grabbed_rotation.x = shortest_angle_diff_value(grabbed_initial_rotation.x, grabbed_global_rotation.x)
-	#var sanitized_initial_y = wrapf(grabbed_initial_rotation.y, -180.0, 180.0)
-	#var sanitized_global_y = wrapf(grabbed_global_rotation.y, -180.0, 180.0)
-	#grabbed_rotation.y = shortest_angle_diff_value(sanitized_initial_y, sanitized_global_y)
-	#grabbed_rotation.y = shortest_angle_diff_value(grabbed_initial_rotation.y, grabbed_global_rotation.y)
-	#grabbed_rotation.z = shortest_angle_diff_value(grabbed_initial_rotation.z, grabbed_global_rotation.z)
-	#grabbed_object.collision_shape.disabled = true
-	#grabbed_object.freeze = false
-	#grabbed_object.sleeping = false
-	#PREM_7.holo_anim.play("RESET")
-	#PREM_7.grabbed_object_name = grabbed_object.name
-	#PREM_7.cast_hologram('Grabbed')
-	#create_char_obj_shape(grabbed_object)
-	#grab_timer.start(0.25)
-	#if assembly_component_selection:
-		#jetpack_active = false
-		#vertical_velocity = 0.0
-		#hover_lock = false
-		#assembly_component_selection = false
-	#var space_state = get_world_3d().direct_space_state
-	#var from = camera.global_transform.origin
-	#var to = from + (-camera.global_transform.basis.z) * 100.0
-	#var query = PhysicsRayQueryParameters3D.new()
-	#query.from = from
-	#query.to = to
-	#query.exclude = [self]
-	#var result = space_state.intersect_ray(query)
-	#if result:
-		#var target_body = result.collider
-		#if target_body is RigidBody3D and not target_body.is_rocketship:
-			#grabbed_object = target_body
-			#grabbed_object.angular_velocity = Vector3.ZERO
-			#grabbed_object.is_grabbed = true
-			#PREM_7.cast_beam()
-			#var object_children = grabbed_object.get_children()
-			#for child in object_children:
-				#if child is MeshInstance3D:
-					#grabbed_mesh = child
-				#elif child is CollisionShape3D:
-					#grabbed_collision = child
-			#
-			#match current_mode:
-				#MODE_1:
-					#glow_color = MODE_1_COLOR
-				#MODE_2:
-					#glow_color = MODE_2_COLOR
-				#MODE_3:
-					#glow_color = MODE_3_COLOR
-				#MODE_4:
-					#glow_color = MODE_4_COLOR
 	
 	
 
 
 func release_object():
+	PREM_7.control_position.remove_child(grabbed_object.extract_body)
+	grabbed_object.extract_body = null
 	if touched_object:
 		touched_object.is_touched = false
 		touched_object = null
@@ -966,7 +935,6 @@ func handle_object(status):
 
 func control_object():
 	if grabbed_object:
-		control_timer.start(1.0)
 		clear_char_obj_shape()
 		grabbed_object.is_controlled = true
 		controlled_object = grabbed_object
@@ -1417,128 +1385,97 @@ func load_json_file(filePath: String):
 
 func activate_extraction_data():
 	var obj_name = grabbed_object.name
-	if object_data.has(obj_name):
-		current_object_json = object_data[obj_name]
-		current_extraction_data = current_object_json.get("components", [])
-		current_component_index = 0
-		update_component_display()
-	else:
+	if not object_data.has(obj_name):
 		print("No component data found for", obj_name)
 		current_extraction_data = []
 		return
 
-	var obj_info = object_data[obj_name]
-	var components = obj_info.get("components", [])
+	current_object_json = object_data[obj_name]
+	current_extraction_data = current_object_json.get("components", [])
+	current_component_index = 0
 
-	PREM_7.oi_main_name.text = obj_info.get("name", "Unknown Object")
-	PREM_7.oi_main_desc.text = obj_info.get("description", "")
-	extraction_height = obj_info.get("height", "")
+	# machine-level labels
+	PREM_7.machine_name.text = current_object_json.get("name", "Unknown Object")
+	PREM_7.machine_desc.text = current_object_json.get("description", "")
+	extraction_scale = current_object_json.get("scale", 0.0)
 
-	# Clear everything first
-	PREM_7.oi_comp_1.text = ""
-	PREM_7.oi_stars_1.text = ""
-	PREM_7.oi_comp_2.text = ""
-	PREM_7.oi_stars_2.text = ""
-	PREM_7.oi_comp_3.text = ""
-	PREM_7.oi_stars_3.text = ""
-	PREM_7.oi_comp_4.text = ""
-	PREM_7.oi_stars_4.text = ""
-
-	# Now fill each visible component
-	for i in range(min(components.size(), 4)):
-		var comp = components[i]
-		match i:
-			0:
-				
-				PREM_7.oi_comp_1.text = comp.get("name", "")
-				PREM_7.oi_stars_1.text = "★".repeat(int(comp.get("stars", 0)))
-			1:
-				PREM_7.oi_comp_2.text = comp.get("name", "")
-				PREM_7.oi_stars_2.text = "★".repeat(int(comp.get("stars", 0)))
-			2:
-				PREM_7.oi_comp_3.text = comp.get("name", "")
-				PREM_7.oi_stars_3.text = "★".repeat(int(comp.get("stars", 0)))
-			3:
-				PREM_7.oi_comp_4.text = comp.get("name", "")
-				PREM_7.oi_stars_4.text = "★".repeat(int(comp.get("stars", 0)))
-
-	# Optionally show first component detail (or add cycling later)
-	if components.size() > 0:
-		var first = components[0]
-		PREM_7.oi_comp_fit.text = first.get("fit", "")
-		PREM_7.oi_comp_life.text = str(first.get("life", 0))
-		PREM_7.oi_comp_weight.text = str(first.get("durability", 0))
-		PREM_7.oi_comp_durability.text = str(first.get("durability", 0))
-	else:
-		PREM_7.oi_comp_fit.text = ""
-		PREM_7.oi_comp_life.text = ""
-		PREM_7.oi_comp_weight.text = ""
-		PREM_7.oi_comp_durability.text = ""
+	update_component_display()
 
 
 func scroll_extraction_data(dir):
-	if current_extraction_data.size() == 0:
-		return  # nothing to scroll through
+	if current_extraction_data.is_empty():
+		return
 
-	if dir == 'UP':
+	if dir == "UP":
 		current_component_index -= 1
-	elif dir == 'DOWN':
+	elif dir == "DOWN":
 		current_component_index += 1
 
-	# Wrap index
 	var count = current_extraction_data.size()
 	current_component_index = (current_component_index + count) % count
 
 	update_component_display()
 
+
 func update_component_display():
-	var comp = current_extraction_data[current_component_index]
-	PREM_7.oi_comp_fit.text = comp.get("fit", "??")
-	PREM_7.oi_comp_life.text = str(comp.get("life", 0))
-	PREM_7.oi_comp_weight.text = str(comp.get("weight", 0))
-	PREM_7.oi_comp_durability.text = str(comp.get("durability", 0))
+	if current_extraction_data.is_empty():
+		# Clear panel if you want, or just bail.
+		PREM_7.component_name.text = ""
+		PREM_7.component_stars.text = ""
+		PREM_7.component_module.text = ""
+		PREM_7.component_power.text = ""
+		PREM_7.component_mass.text = ""
+		PREM_7.component_lift.text = ""
+		return
 
-	var alphas = [0.75, 0.75, 0.75, 0.75]
-	alphas[current_component_index] = 0.0
+	var comp: Dictionary = current_extraction_data[current_component_index]
 
-	var comp_labels = [
-		PREM_7.oi_comp_1,
-		PREM_7.oi_comp_2,
-		PREM_7.oi_comp_3,
-		PREM_7.oi_comp_4
-	]
+	# ---- UI: one component only ----
+	PREM_7.component_name.text  = comp.get("name", "??")
+	PREM_7.component_stars.text = "★".repeat(int(comp.get("stars", 0)))
 
-	var star_labels = [
-		PREM_7.oi_stars_1,
-		PREM_7.oi_stars_2,
-		PREM_7.oi_stars_3,
-		PREM_7.oi_stars_4
-	]
+	# Use your new fields; fall back to old ones if missing.
+	PREM_7.component_module.text = str(comp.get("module", comp.get("fit", "")))
+	PREM_7.component_power.text  = str(comp.get("power",  comp.get("life", 0)))
+	PREM_7.component_mass.text   = str(comp.get("mass",   comp.get("weight", 0)))
+	PREM_7.component_lift.text   = str(comp.get("lift",   comp.get("durability", 0)))
 
-	for i in range(4):
-		comp_labels[i].transparency = alphas[i]
-		star_labels[i].transparency = alphas[i]
+	# ---- Selection: match CollisionShape3D "<Name>_Shape" ----
+	var target_id := _normalize_id(comp.get("name", ""))  # "Control Panel" -> "controlpanel"
 
-	var target_name = comp.get("name", "").replace(" ", "").to_lower()
-	var found_child_index := -1
-	var found_child_name := ""
+	var matched_base_name := ""
+	for child in grabbed_object.get_children():
+		if child is CollisionShape3D:
+			var base := _base_from_shape(child.name)       # "ControlPanel_Shape" -> "ControlPanel"
+			if _normalize_id(base) == target_id:
+				matched_base_name = base
+				break
 
-	for i in range(grabbed_object.get_child_count()):
-		var child = grabbed_object.get_child(i)
-		if child.name.to_lower().contains(target_name):
-			found_child_index = i
-			found_child_name = child.name
-			break
-
-	if found_child_index != -1:
-		var matched_child = grabbed_object.get_child(found_child_index)
-		print(matched_child, " is the index'ed RigidBody3D, which will be used during actual extraction!")
-		for child in grabbed_object.get_children():
-			if child is MeshInstance3D:
-				for mesh in child.get_children():
-					if mesh.name == found_child_name:
-						grabbed_object.set_extract_glow(mesh, "Selected")
-					else:
-						grabbed_object.set_extract_glow(mesh, "Deselected")
+	# Highlight meshes under Body/object_body by base name
+	var body_in_use
+	if matched_base_name != "":
+		if grabbed_object.extract_body:
+			body_in_use = grabbed_object.extract_body
+		else:
+			body_in_use = grabbed_object.object_body
+		for mesh in body_in_use.get_children():
+			if mesh is MeshInstance3D:
+				if mesh.name == matched_base_name:
+					grabbed_object.set_extract_glow(mesh, "Selected")
+				else:
+					grabbed_object.set_extract_glow(mesh, "Deselected")
 	else:
-		print("No matching child found for component: ", comp.get("name", "??"))
+		# No match? Kill selection so you don’t leave stale glows on.
+		for mesh in body_in_use.get_children():
+			if mesh is MeshInstance3D:
+				grabbed_object.set_extract_glow(mesh, "Deselected")
+		print("No matching CollisionShape3D for component:", comp.get("name", "??"))
+
+
+func _normalize_id(s: String) -> String:
+	return s.replace(" ", "").to_lower()
+
+func _base_from_shape(name: String) -> String:
+	if name.ends_with("_Shape"):
+		return name.substr(0, name.length() - "_Shape".length())
+	return name

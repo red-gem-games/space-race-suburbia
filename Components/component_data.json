@@ -1,110 +1,110 @@
 {
     "WashingMachine": {
         "name": "Washing Machine",
-        "description": "Look Good on Launch Day.",
-        "height": 0.35,
+        "description": "Clean Clothes, Clean Launch.",
+        "scale": 0.6,
         "components": [
             {
-                "name": "Control Panel",
-                "stars": 1,
-                "fit": "Guidance",
-                "life": 66,
-                "weight": 10,
-                "durability": 3
-            },
-            {
-                "name": "Door",
+                "name": "Washer Door",
                 "stars": 2,
-                "fit": "Structure",
-                "life": 100,
-                "weight": 15,
-                "durability": 5
+                "module": "Structure",
+                "power": 100,
+                "mass": 15,
+                "lift": 5
             },
             {
                 "name": "Wash Basket",
                 "stars": 2,
-                "fit": "Propulsion",
-                "life": 15,
-                "weight": 44,
-                "durability": 8
+                "module": "Propulsion",
+                "power": 15,
+                "mass": 44,
+                "lift": 8
             },
             {
                 "name": "Inlet Hose",
                 "stars": 1,
-                "fit": "Propulsion",
-                "life": 80,
-                "weight": 6,
-                "durability": 5
-            }
+                "module": "Propulsion",
+                "power": 80,
+                "mass": 6,
+                "lift": 5
+            },
+            {
+                "name": "Control Panel",
+                "stars": 1,
+                "module": "Guidance",
+                "power": 66,
+                "mass": 10,
+                "lift": 3
+            },
         ]
     },
     "DryingMachine": {
         "name": "Drying Machine",
-        "description": "Tumble Dry Only.",
-        "height": 0.35,
+        "description": "Fairly Resistant to Heat.",
+        "scale": 0.6,
         "components": [
             {
-                "name": "Control Panel",
-                "stars": 1,
-                "fit": "Guidance",
-                "life": 66,
-                "weight": 10,
-                "durability": 3
+                "name": "Dryer Door",
+                "stars": 2,
+                "module": "Structure",
+                "power": 100,
+                "mass": 15,
+                "lift": 5
             },
             {
-                "name": "Door",
+                "name": "Tumble Drum",
                 "stars": 2,
-                "fit": "Structure",
-                "life": 100,
-                "weight": 15,
-                "durability": 5
-            },
-            {
-                "name": "Drum",
-                "stars": 2,
-                "fit": "Propulsion",
-                "life": 15,
-                "weight": 44,
-                "durability": 8
+                "module": "Propulsion",
+                "power": 15,
+                "mass": 44,
+                "lift": 8
             },
             {
                 "name": "Vent Hose",
                 "stars": 1,
-                "fit": "Propulsion",
-                "life": 80,
-                "weight": 6,
-                "durability": 5
+                "module": "Propulsion",
+                "power": 80,
+                "mass": 6,
+                "lift": 5
+            },
+            {
+                "name": "Control Panel",
+                "stars": 1,
+                "module": "Guidance",
+                "power": 66,
+                "mass": 10,
+                "lift": 3
             }
         ]
     },
    "WaterHeater": {
     "name": "Water Heater",
-    "description": "Leaks on occasion.",
-    "height": 0.1,
+    "description": "Pressure is Important.",
+    "scale": 0.5,
     "components": [
         {
             "name": "Heating Coil",
             "stars": 1,
-            "fit": "Propulsion",
-            "life": 75,
-            "weight": 25,
-            "durability": 4
+            "module": "Propulsion",
+            "power": 75,
+            "mass": 25,
+            "lift": 4
         },
         {
             "name": "Drip Pan",
             "stars": 2,
-            "fit": "Payload",
-            "life": 60,
-            "weight": 8,
-            "durability": 6
+            "module": "Payload",
+            "power": 60,
+            "mass": 8,
+            "lift": 6
         },
         {
             "name": "Supply Pipes",
             "stars": 2,
-            "fit": "Propulsion",
-            "life": 55,
-            "weight": 21,
-            "durability": 4
+            "module": "Propulsion",
+            "power": 55,
+            "mass": 21,
+            "lift": 4
         }
     ]
 
@@ -113,7 +113,7 @@
    "Fridge": {
        "name": "Refrigerator",
        "description": "Still smells like leftovers.",
-       "height": 1.0,
+       "scale": 0.8,
        "components": []
        
     },
@@ -121,14 +121,14 @@
     "Microwave": {
         "name": "Microwave",
         "description": "TBD.",
-        "height": 1.0,
+        "scale": 1.0,
         "components": []
     },
     
     "DeepFreezer": {
         "name": "Deep Freezer",
         "description": "TBD.",
-        "height": 1.0,
+        "scale": 1.0,
         "components": []
 
     }

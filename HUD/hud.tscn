@@ -1,13 +1,17 @@
-[gd_scene load_steps=5 format=3 uid="uid://baomcogkgkbvv"]
+[gd_scene load_steps=7 format=3 uid="uid://baomcogkgkbvv"]
 
 [ext_resource type="Texture2D" uid="uid://dj7bpyq468f67" path="res://Assets/UI/Reticle.png" id="1_37p78"]
 [ext_resource type="Script" uid="uid://bi78c7lvurqh7" path="res://HUD/hud.gd" id="1_64ctp"]
 [ext_resource type="Shader" uid="uid://dh6juv5sqkcvo" path="res://Shaders/control_object.gdshader" id="3_yu8mg"]
+[ext_resource type="Texture2D" uid="uid://cv0xlti56yuxi" path="res://Assets/UI/KEY.png" id="4_jvmdh"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_jvmdh"]
 shader = ExtResource("3_yu8mg")
 shader_parameter/highlight_color = Vector4(0, 0, 0, 1)
 shader_parameter/falloff = 0.7
+
+[sub_resource type="LabelSettings" id="LabelSettings_yu8mg"]
+font_size = 100
 
 [node name="HUD" type="Control"]
 layout_mode = 3
@@ -89,3 +93,36 @@ offset_bottom = 1073.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(1, 0, 0, 0.133333)
+
+[node name="Control" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 127.0
+offset_top = 605.0
+offset_right = 336.0
+offset_bottom = 894.0
+scale = Vector2(0.56, 0.56)
+
+[node name="Key" type="Sprite2D" parent="CanvasLayer/Control"]
+position = Vector2(445.179, 1310.19)
+scale = Vector2(0.0847249, 0.0847249)
+texture = ExtResource("4_jvmdh")
+
+[node name="Q_KEY" type="Label" parent="CanvasLayer/Control"]
+offset_left = 376.929
+offset_top = 1092.86
+offset_right = 510.929
+offset_bottom = 1510.86
+text = "Q"
+label_settings = SubResource("LabelSettings_yu8mg")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Instructions" type="Label" parent="CanvasLayer/Control"]
+offset_left = 102.0
+offset_top = 1093.0
+offset_right = 1940.0
+offset_bottom = 1511.0
+text = "Hold         to Extract Component"
+label_settings = SubResource("LabelSettings_yu8mg")
+vertical_alignment = 1

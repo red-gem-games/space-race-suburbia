@@ -101,6 +101,17 @@ func _physics_process(delta: float) -> void:
 		look_dir = look_dir.normalized()
 
 		if not character.extracting_object_active:
+			if grabbed_object.object_body.scale.y < 0.99:
+				grabbed_object.object_body.scale = lerp(grabbed_object.object_body.scale, grabbed_object.current_scale, delta * 5.0)
+				grabbed_object.extract_body.scale = lerp(grabbed_object.extract_body.scale, Vector3.ZERO, delta * 20.0)
+				grabbed_object.extract_body.position.y = lerp(grabbed_object.extract_body.position.y, -0.25, delta * 20.0)
+				character.PREM_7.machine_info.scale = lerp(character.PREM_7.machine_info.scale, Vector3.ZERO, delta * 10.0)
+				if grabbed_object.object_body.scale.y > 0.01:
+					grabbed_object.object_body.visible = true
+				if character.PREM_7.machine_info.scale.y <= 0.5:
+					character.PREM_7.machine_info.visible = false
+				if grabbed_object.extract_body.scale.y <= 0.01:
+					grabbed_object.extract_body.visible = false
 			distance_forward = 6.0
 			offset_left = 0.0
 			offset_up = 0.0
@@ -109,22 +120,37 @@ func _physics_process(delta: float) -> void:
 			extraction_spin_initialized = false
 
 		else:
-			distance_forward = 5.5
-			offset_left = 2.5
-			offset_up = character.extraction_height
+			character.PREM_7.machine_info.visible = true
+			grabbed_object.extract_body.visible = true
+			distance_forward = 6.0
+			offset_left = 0.0
+			offset_up = 0.0
 			smooth_speed = 1.0
+			if grabbed_object.object_body.scale.y >= 0.01:
+				grabbed_object.object_body.scale = lerp(grabbed_object.object_body.scale, Vector3.ZERO, delta * 20.0)
+				if grabbed_object.object_body.scale.y < 0.02:
+					grabbed_object.object_body.visible = false
 			if not extraction_spin_initialized:
-				grabbed_object.rotation_degrees.x = lerp(grabbed_object.rotation_degrees.x, 0.0, delta * 5.0)
-				grabbed_object.rotation_degrees.y = lerp(grabbed_object.rotation_degrees.y, 22.5, delta * 5.0)
-				grabbed_object.rotation_degrees.z = lerp(grabbed_object.rotation_degrees.z, 0.0, delta * 5.0)
+
+				grabbed_object.extract_body.rotation_degrees.x = lerp(grabbed_object.extract_body.rotation_degrees.x, 0.0, delta * 5.0)
+				grabbed_object.extract_body.rotation_degrees.y = lerp(grabbed_object.extract_body.rotation_degrees.y, 0.0, delta * 5.0)
+				grabbed_object.extract_body.rotation_degrees.z = lerp(grabbed_object.extract_body.rotation_degrees.z, 0.0, delta * 5.0)
 				current_spin_timer += delta * 0.5
+				var scale_norm = character.extraction_scale / 5
+				grabbed_object.extract_body.scale = lerp(grabbed_object.extract_body.scale, Vector3(scale_norm, scale_norm, scale_norm), delta * 5.0)
+				grabbed_object.extract_body.position.y = lerp(grabbed_object.extract_body.position.y, 0.1, delta * 5.0)
+				character.PREM_7.machine_info.scale = lerp(character.PREM_7.machine_info.scale, Vector3.ONE, delta * 5.0)
 				if current_spin_timer > 0.25:
+					grabbed_object.manipulation_material
 					extraction_spin_initialized = true
 			if extraction_spin_initialized:
 				var x_spd = character.current_mouse_speed_x / 1000.0
-				grabbed_object.rotation_degrees.x = lerp(grabbed_object.rotation_degrees.x, 0.0, delta * 5.0)
-				grabbed_object.rotation_degrees.z = lerp(grabbed_object.rotation_degrees.z, 0.0, delta * 5.0)
-				grabbed_object.rotate_y(0.0025 + x_spd)
+				var y_spd = character.current_mouse_speed_y / 1000.0
+				grabbed_object.extract_body.rotate_y(0.0025 + x_spd)
+				grabbed_object.extract_body.rotate_x(y_spd)
+				if y_spd < 0.01:
+					grabbed_object.extract_body.rotation_degrees.x = lerp(grabbed_object.extract_body.rotation_degrees.x, 0.0, delta)
+				grabbed_object.extract_body.rotation_degrees.z = lerp(grabbed_object.extract_body.rotation_degrees.z, 0.0, delta * 5.0)
 
 
 
@@ -348,22 +374,21 @@ func _input(event: InputEvent) -> void:
 			reset_rotation = true
 			character.distance_from_character = base_distance_in_front
 	
-		if event.keycode == KEY_E or event.keycode == KEY_F or event.keycode == KEY_Q:
+		if event.keycode == KEY_E or event.keycode == KEY_F:
 			if not grabbed_object:
 				return
 			if not character.extracting_object_active and not character.fusing_object_active:
 				print('Resetting Rotation here, genius...')
-				grabbed_object.reparent(assembly_object_container)
+				#grabbed_object.reparent(assembly_object_container)
 				reset_rotation = true
 				character.distance_from_character = base_distance_in_front
 				flicker_obj_a = grabbed_object.object_body
-				grabbed_object.object_body.visible = true
+				for child in grabbed_object.object_body.get_children():
+					child.set_material_overlay(grabbed_object.standard_material)
 				grabbed_object.set_glitch(false)
 			else:
 				if character.extracting_object_active:
-					grabbed_object.reparent(character.control_position)
-					flicker_obj_a = character.PREM_7.object_info
-					grabbed_object.object_body.visible = true
+					flicker_obj_a = character.PREM_7.machine_info
 					grabbed_object.set_glitch(false)
 
 
@@ -503,26 +528,36 @@ func _static_glow_blink(rng: RandomNumberGenerator) -> void:
 
 		var duration = rng.randf_range(0.005, 0.02)
 		if flicker_obj_a and flicker_obj_b and flicker_obj_c:
-			flicker_obj_a.visible = true
+			if grabbed_object.is_extracting:
+				flicker_obj_a.visible = true
+				grabbed_object.set_glitch(false)
+			else:
+				for child in grabbed_object.object_body.get_children():
+					child.set_material_overlay(grabbed_object.standard_material)
 			flicker_obj_b.visible = true
 			flicker_obj_c.visible = true
-			if grabbed_object.is_extracting:
-				grabbed_object.set_glitch(false)
 		await get_tree().create_timer(duration).timeout
 
 		if not static_glow_active:
 			break
 		if flicker_obj_a and flicker_obj_b and flicker_obj_c:
-			flicker_obj_a.visible = false
+			if grabbed_object.is_extracting:
+				flicker_obj_a.visible = false
+				grabbed_object.set_glitch(true)
+			else:
+				for child in grabbed_object.object_body.get_children():
+					child.set_material_overlay(null)
 			flicker_obj_b.visible = false
 			flicker_obj_c.visible = false
-			if grabbed_object.is_extracting:
-				grabbed_object.set_glitch(true)
 		await get_tree().create_timer(duration).timeout
 
 	if flicker_obj_a and flicker_obj_b and flicker_obj_c:
-		flicker_obj_a.visible = true
+		if grabbed_object.is_extracting:
+			flicker_obj_a.visible = true
+			grabbed_object.set_glitch(false)
+		else:
+			for child in grabbed_object.object_body.get_children():
+				child.set_material_overlay(grabbed_object.standard_material)
 		flicker_obj_b.visible = true
 		flicker_obj_c.visible = true
-		if grabbed_object.is_extracting:
-			grabbed_object.set_glitch(false)
+			

@@ -1,4 +1,4 @@
-[gd_scene load_steps=87 format=4 uid="uid://bpvm0l41dywjs"]
+[gd_scene load_steps=86 format=4 uid="uid://bpvm0l41dywjs"]
 
 [ext_resource type="Script" uid="uid://so25svauxmkt" path="res://PREM-7/prem_7.gd" id="1_iarxa"]
 [ext_resource type="Shader" uid="uid://vetnq53dk60g" path="res://Shaders/grabbed_glow.gdshader" id="2_4qq6n"]
@@ -160,6 +160,94 @@ tracks/2/keys = {
 "points": PackedFloat32Array(0.292164, -0.03, 0, 0.03, 0),
 "times": PackedFloat32Array(0)
 }
+tracks/3/type = "bezier"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Multitool/Back_Panel:surface_material_override/0:emission:r")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(0, -0.06, 0, 0.06, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/4/type = "bezier"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Multitool/Back_Panel:surface_material_override/0:emission:g")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(1, -0.06, 0, 0.06, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/5/type = "bezier"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Multitool/Back_Panel:surface_material_override/0:emission:b")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(0.0166667, -0.06, 0, 0.06, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/6/type = "bezier"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("Multitool/Back_Panel:surface_material_override/0:emission:a")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(1, -0.06, 0, 0.06, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/7/type = "bezier"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("Multitool/Photon_Tip:mesh:material:emission:r")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(0.477333, -0.06, 0, 0.06, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/8/type = "bezier"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("Multitool/Photon_Tip:mesh:material:emission:g")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(1, -0.06, 0, 0.06, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/9/type = "bezier"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("Multitool/Photon_Tip:mesh:material:emission:b")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(0.36, -0.06, 0, 0.06, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/10/type = "bezier"
+tracks/10/imported = false
+tracks/10/enabled = true
+tracks/10/path = NodePath("Multitool/Photon_Tip:mesh:material:emission:a")
+tracks/10/interp = 1
+tracks/10/loop_wrap = true
+tracks/10/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(1, -0.06, 0, 0.06, 0),
+"times": PackedFloat32Array(0)
+}
 
 [sub_resource type="Animation" id="Animation_iarxa"]
 resource_name = "inspect"
@@ -273,6 +361,94 @@ tracks/2/keys = {
 "handle_modes": PackedInt32Array(0, 0, 0),
 "points": PackedFloat32Array(0.292164, -0.03, 0, 0.03, 0, 0.346491, -0.03, 0, 0.03, 0, 0.292164, -0.03, 0, 0.03, 0),
 "times": PackedFloat32Array(0, 0.06, 0.12)
+}
+tracks/3/type = "bezier"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Multitool/Back_Panel:surface_material_override/0:emission:r")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(0, -0.06, 0, 0.06, 0, 0.7, -0.06, 0, 0.06, 0),
+"times": PackedFloat32Array(0, 0.12)
+}
+tracks/4/type = "bezier"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Multitool/Back_Panel:surface_material_override/0:emission:g")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(1, -0.06, 0, 0.06, 0, 0, -0.06, 0, 0.06, 0),
+"times": PackedFloat32Array(0, 0.12)
+}
+tracks/5/type = "bezier"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Multitool/Back_Panel:surface_material_override/0:emission:b")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(0.0166667, -0.06, 0, 0.06, 0, 1, -0.06, 0, 0.06, 0),
+"times": PackedFloat32Array(0, 0.12)
+}
+tracks/6/type = "bezier"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("Multitool/Back_Panel:surface_material_override/0:emission:a")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(1, -0.06, 0, 0.06, 0, 1, -0.06, 0, 0.06, 0),
+"times": PackedFloat32Array(0, 0.12)
+}
+tracks/7/type = "bezier"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("Multitool/Photon_Tip:mesh:material:emission:r")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(0.477333, -0.06, 0, 0.06, 0, 0.765333, -0.06, 0, 0.06, 0),
+"times": PackedFloat32Array(0, 0.12)
+}
+tracks/8/type = "bezier"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("Multitool/Photon_Tip:mesh:material:emission:g")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(1, -0.06, 0, 0.06, 0, 0.36, -0.06, 0, 0.06, 0),
+"times": PackedFloat32Array(0, 0.12)
+}
+tracks/9/type = "bezier"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("Multitool/Photon_Tip:mesh:material:emission:b")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(0.36, -0.06, 0, 0.06, 0, 1, -0.06, 0, 0.06, 0),
+"times": PackedFloat32Array(0, 0.12)
+}
+tracks/10/type = "bezier"
+tracks/10/imported = false
+tracks/10/enabled = true
+tracks/10/path = NodePath("Multitool/Photon_Tip:mesh:material:emission:a")
+tracks/10/interp = 1
+tracks/10/loop_wrap = true
+tracks/10/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(1, -0.06, 0, 0.06, 0, 1, -0.06, 0, 0.06, 0),
+"times": PackedFloat32Array(0, 0.12)
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_3tjq7"]
@@ -1730,19 +1906,8 @@ shader_parameter/emission_strength = 1.0
 shader_parameter/base_alpha = 0.5
 shader_parameter/uv_projection_mode = 0
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_8m00m"]
-size = Vector2(2.96, 2.41)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_l5ika"]
-transparency = 1
-albedo_color = Color(1, 1, 1, 0.309804)
-metallic = 1.0
-roughness = 0.44
-emission_enabled = true
-emission = Color(0.6, 0, 1, 1)
-
-[sub_resource type="PlaneMesh" id="PlaneMesh_4qq6n"]
-size = Vector2(1.74, 1.44)
+[sub_resource type="PlaneMesh" id="PlaneMesh_t05xm"]
+size = Vector2(1.79, 0.27)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_s7cmo"]
 transparency = 1
@@ -1752,6 +1917,9 @@ roughness = 0.44
 emission_enabled = true
 emission = Color(0.456833, 0.13, 0.5, 1)
 emission_energy_multiplier = 4.25
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_4qq6n"]
+size = Vector2(0.88, 0.5)
 
 [node name="PREM-7" type="Node3D"]
 script = ExtResource("1_iarxa")
@@ -2011,173 +2179,235 @@ Mass: 85 kg"
 font_size = 80
 outline_size = 5
 
-[node name="Object_Info" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.682401, 0.992415, 0.349309)
+[node name="Machine_Info" type="Node3D" parent="."]
+transform = Transform3D(0.582882, 0, 0.142296, 0, 0.6, 0, -0.142296, 0, 0.582882, -0.502882, 0.180405, 0.13641)
 
-[node name="Screen" type="MeshInstance3D" parent="Object_Info"]
-transform = Transform3D(1.29301, -0.164923, 0.0303976, 0.0219264, -0.0353472, -1.3151, 0.232438, 0.92077, -0.0450403, 1.76164, -0.163989, -4.58052)
-mesh = SubResource("PlaneMesh_8m00m")
-skeleton = NodePath("../..")
-surface_material_override/0 = SubResource("StandardMaterial3D_l5ika")
+[node name="All_Data" type="Node3D" parent="Machine_Info"]
+transform = Transform3D(0.25, 0, 3.72529e-09, 0, 0.25, 0, -3.72529e-09, 0, 0.25, -0.539668, 0.328448, -0.107834)
 
-[node name="Sub_Screen" type="MeshInstance3D" parent="Object_Info"]
-transform = Transform3D(1.39276, -0.16287, 0.030448, 0.0236179, -0.0349071, -1.31728, 0.25037, 0.909307, -0.045115, 2.43456, -0.348875, -4.47476)
-mesh = SubResource("PlaneMesh_4qq6n")
-skeleton = NodePath("../..")
-surface_material_override/0 = SubResource("StandardMaterial3D_s7cmo")
+[node name="Main" type="Node3D" parent="Machine_Info/All_Data"]
+transform = Transform3D(1, 0, 5.96046e-08, 0, 1, 0, -5.96046e-08, 0, 1, 1.26848, -0.0692308, -0.989777)
 
-[node name="Main_Name" type="Label3D" parent="Object_Info"]
-transform = Transform3D(0.00984807, -0.000151344, -0.00172987, 0, 0.00996194, -0.000871557, 0.00173648, 0.000858316, 0.0098106, 0.993805, 0.669018, -3.34517)
+[node name="Main_Name" type="Label3D" parent="Machine_Info/All_Data/Main"]
+transform = Transform3D(0.00999999, 0, 0, 0, 0.00984807, -0.00173648, 0, 0.00173648, 0.00984807, -0.1, 0.37, 0)
 pixel_size = 0.25
+render_priority = 1
+outline_render_priority = 1
+outline_modulate = Color(0.666667, 0, 1, 1)
 text = "Machine Name"
 font_size = 80
 outline_size = 5
 uppercase = true
 
-[node name="Main_Desc" type="Label3D" parent="Object_Info"]
-transform = Transform3D(0.00984807, -0.000151344, -0.00172987, 0, 0.00996194, -0.000871557, 0.00173648, 0.000858316, 0.0098106, 0.968413, 0.455018, -3.36278)
+[node name="Main_Desc" type="Label3D" parent="Machine_Info/All_Data/Main"]
+transform = Transform3D(0.00999999, -2.91038e-11, -2.32831e-10, 0, 0.00984807, -0.00173648, 2.32831e-10, 0.00173648, 0.00984807, -0.1, 0.210779, 1.19209e-07)
 pixel_size = 0.15
+render_priority = 1
+outline_render_priority = 1
+outline_modulate = Color(0.666667, 0, 1, 1)
 text = "Machine Description"
 font_size = 80
 outline_size = 5
 
-[node name="Fit_lbl" type="Label3D" parent="Object_Info"]
-transform = Transform3D(0.00984748, -0.000260348, -0.00172023, 0.000107767, 0.00995969, -0.000890435, 0.00173648, 0.000858316, 0.0098106, 1.16849, 0.155919, -3.33753)
+[node name="Type" type="Label3D" parent="Machine_Info/All_Data/Main"]
+transform = Transform3D(0.00999999, -5.82077e-11, -2.32831e-10, 0, 0.00984807, -0.00173648, 2.32831e-10, 0.00173648, 0.00984807, -0.1, 0.134632, 0)
 pixel_size = 0.15
-text = "Fit"
-font_size = 60
+render_priority = 1
+outline_render_priority = 1
+outline_modulate = Color(0.666667, 0, 1, 1)
+text = "^^NEON SIGN STYLE^^"
+font_size = 30
 outline_size = 5
-horizontal_alignment = 0
 
-[node name="Life_lbl" type="Label3D" parent="Object_Info"]
-transform = Transform3D(0.00984748, -0.000260348, -0.00172023, 0.000107767, 0.00995969, -0.000890435, 0.00173648, 0.000858316, 0.0098106, 2.04586, 0.178335, -3.1427)
-pixel_size = 0.15
-text = "Life"
-font_size = 60
-outline_size = 5
-horizontal_alignment = 0
+[node name="Component" type="Node3D" parent="Machine_Info/All_Data"]
+transform = Transform3D(1, 0, 1.49012e-08, 0, 1, 0, -1.49012e-08, 0, 1, 1.27345, -0.339721, -1.02188)
 
-[node name="Weight_lbl" type="Label3D" parent="Object_Info"]
-transform = Transform3D(0.00984748, -0.000260348, -0.00172023, 0.000107767, 0.00995969, -0.000890435, 0.00173648, 0.000858316, 0.0098106, 1.12844, -0.527274, -3.33753)
-pixel_size = 0.15
-text = "Weight"
-font_size = 60
-outline_size = 5
-horizontal_alignment = 0
-
-[node name="Durability_lbl" type="Label3D" parent="Object_Info"]
-transform = Transform3D(0.00984748, -0.000260348, -0.00172023, 0.000107767, 0.00995969, -0.000890435, 0.00173648, 0.000858316, 0.0098106, 1.94324, -0.514138, -3.19291)
-pixel_size = 0.15
-text = "Durability"
-font_size = 60
-outline_size = 5
-horizontal_alignment = 0
-
-[node name="Fit" type="Label3D" parent="Object_Info"]
-transform = Transform3D(0.00984748, -0.000260348, -0.00172023, 0.000107767, 0.00995969, -0.000890435, 0.00173648, 0.000858316, 0.0098106, 1.14662, -0.087939, -3.33753)
-pixel_size = 0.15
-text = "Fit"
-font_size = 100
-outline_size = 5
-horizontal_alignment = 0
-
-[node name="Life" type="Label3D" parent="Object_Info"]
-transform = Transform3D(0.00984748, -0.000260348, -0.00172023, 0.000107767, 0.00995969, -0.000890435, 0.00173648, 0.000858316, 0.0098106, 2.02398, -0.0655228, -3.1427)
-pixel_size = 0.15
-text = "Life"
-font_size = 100
-outline_size = 5
-horizontal_alignment = 0
-
-[node name="Weight" type="Label3D" parent="Object_Info"]
-transform = Transform3D(0.00984748, -0.000260348, -0.00172023, 0.000107767, 0.00995969, -0.000890435, 0.00173648, 0.000858316, 0.0098106, 1.0338, -0.778534, -3.33753)
-pixel_size = 0.15
-text = "Weight"
-font_size = 100
-outline_size = 5
-horizontal_alignment = 0
-
-[node name="Durability" type="Label3D" parent="Object_Info"]
-transform = Transform3D(0.00984748, -0.000260348, -0.00172023, 0.000107767, 0.00995969, -0.000890435, 0.00173648, 0.000858316, 0.0098106, 1.84859, -0.765398, -3.19291)
-pixel_size = 0.15
-text = "Durability"
-font_size = 100
-outline_size = 5
-horizontal_alignment = 0
-
-[node name="Component_1" type="Label3D" parent="Object_Info"]
-transform = Transform3D(0.00984723, -0.000281729, -0.00171831, 0.000128907, 0.00995911, -0.000894126, 0.00173648, 0.000858316, 0.0098106, 0.84463, 0.078876, -3.40982)
-pixel_size = 0.15
+[node name="Comp_Name" type="Label3D" parent="Machine_Info/All_Data/Component"]
+transform = Transform3D(0.00999999, 5.82077e-11, 0, 0, 0.00984807, -0.00173648, 0, 0.00173648, 0.00984807, -0.1, 0.292195, -1.19209e-07)
+pixel_size = 0.25
+render_priority = 1
+outline_render_priority = 1
+outline_modulate = Color(0.666667, 0, 1, 1)
 text = "Component"
-font_size = 80
-outline_size = 5
-horizontal_alignment = 2
-
-[node name="Stars_1" type="Label3D" parent="Object_Info"]
-transform = Transform3D(0.00984723, -0.000281729, -0.00171831, 0.000128907, 0.00995911, -0.000894126, 0.00173648, 0.000858316, 0.0098106, 0.850805, -0.0245535, -3.41205)
-pixel_size = 0.075
-text = "★"
-font_size = 80
-outline_size = 5
-horizontal_alignment = 2
+font_size = 50
+outline_size = 3
 uppercase = true
 
-[node name="Component_2" type="Label3D" parent="Object_Info"]
-transform = Transform3D(0.00984723, -0.000281729, -0.00171831, 0.000128907, 0.00995911, -0.000894126, 0.00173648, 0.000858316, 0.0098106, 0.849339, -0.280846, -3.40954)
-transparency = 0.75
+[node name="Comp_Stars" type="Label3D" parent="Machine_Info/All_Data/Component"]
+transform = Transform3D(0.00999999, 0, 0, 0, 0.00984807, -0.00173648, 0, 0.00173648, 0.00984807, -0.1, 0.18, 0)
 pixel_size = 0.15
-text = "Component"
-font_size = 80
-outline_size = 5
-horizontal_alignment = 2
+render_priority = 1
+outline_render_priority = 1
+outline_modulate = Color(0.666667, 0, 1, 1)
+text = "★★★★★"
+font_size = 50
+outline_size = 3
 
-[node name="Stars_2" type="Label3D" parent="Object_Info"]
-transform = Transform3D(0.00984723, -0.000281729, -0.00171831, 0.000128907, 0.00995911, -0.000894126, 0.00173648, 0.000858316, 0.0098106, 0.855517, -0.384523, -3.41205)
-transparency = 0.75
-pixel_size = 0.075
-text = "★"
-font_size = 80
-outline_size = 5
-horizontal_alignment = 2
-uppercase = true
+[node name="Screen" type="MeshInstance3D" parent="Machine_Info/All_Data/Component"]
+transform = Transform3D(1, 0, 0, 0, -0.139173, -0.990268, -2.98023e-08, 0.990268, -0.139173, -0.0965228, 0.23568, -0.0104811)
+mesh = SubResource("PlaneMesh_t05xm")
+skeleton = NodePath("../../../..")
+surface_material_override/0 = SubResource("StandardMaterial3D_s7cmo")
 
-[node name="Component_3" type="Label3D" parent="Object_Info"]
-transform = Transform3D(0.00984723, -0.000281729, -0.00171831, 0.000128907, 0.00995911, -0.000894126, 0.00173648, 0.000858316, 0.0098106, 0.854051, -0.640815, -3.40954)
-transparency = 0.75
+[node name="Module" type="Node3D" parent="Machine_Info/All_Data"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.27301, -0.722635, -1.12281)
+
+[node name="Title" type="Label3D" parent="Machine_Info/All_Data/Module"]
+transform = Transform3D(0.00706579, 5.82077e-11, 9.31323e-10, 0, 0.00747988, -0.00187715, -2.32831e-10, 0.0013189, 0.0106459, -0.561126, 0.395211, 0.0710367)
 pixel_size = 0.15
-text = "Component"
-font_size = 80
+render_priority = 1
+outline_render_priority = 1
+outline_modulate = Color(0.796078, 0.286275, 0.929412, 1)
+text = "Module Type"
+font_size = 60
 outline_size = 5
-horizontal_alignment = 2
 
-[node name="Stars_3" type="Label3D" parent="Object_Info"]
-transform = Transform3D(0.00984723, -0.000281729, -0.00171831, 0.000128907, 0.00995911, -0.000894126, 0.00173648, 0.000858316, 0.0098106, 0.860229, -0.744492, -3.41205)
-transparency = 0.75
-pixel_size = 0.075
-text = "★"
-font_size = 80
-outline_size = 5
-horizontal_alignment = 2
-uppercase = true
-
-[node name="Component_4" type="Label3D" parent="Object_Info"]
-transform = Transform3D(0.00984723, -0.000281729, -0.00171831, 0.000128907, 0.00995911, -0.000894126, 0.00173648, 0.000858316, 0.0098106, 0.858763, -1.00078, -3.40954)
-transparency = 0.75
+[node name="Data" type="Label3D" parent="Machine_Info/All_Data/Module"]
+transform = Transform3D(0.00706579, 2.91038e-11, 4.65661e-10, 0, 0.00747988, -0.00187715, -4.65661e-10, 0.0013189, 0.0106459, -0.528537, 0.228942, 0.0534912)
 pixel_size = 0.15
-text = "Component"
-font_size = 80
+render_priority = 1
+outline_render_priority = 1
+outline_modulate = Color(0.666667, 0, 1, 1)
+text = "*String*"
+font_size = 100
 outline_size = 5
-horizontal_alignment = 2
 
-[node name="Stars_4" type="Label3D" parent="Object_Info"]
-transform = Transform3D(0.00984723, -0.000281729, -0.00171831, 0.000128907, 0.00995911, -0.000894126, 0.00173648, 0.000858316, 0.0098106, 0.864941, -1.10446, -3.41205)
-transparency = 0.75
-pixel_size = 0.075
-text = "★"
-font_size = 80
+[node name="Type" type="Label3D" parent="Machine_Info/All_Data/Module"]
+transform = Transform3D(0.00706579, 0, 0, 0, 0.00747988, -0.00187715, 0, 0.0013189, 0.0106459, -0.57, 0.0474968, 0.034)
+pixel_size = 0.15
+render_priority = 1
+outline_render_priority = 1
+outline_modulate = Color(0.796078, 0.286275, 0.929412, 1)
+text = "String"
+font_size = 60
 outline_size = 5
-horizontal_alignment = 2
-uppercase = true
+
+[node name="Screen" type="MeshInstance3D" parent="Machine_Info/All_Data/Module"]
+transform = Transform3D(1, 4.47035e-08, -1.11759e-08, 0, -0.139173, -0.990268, -4.47035e-08, 0.990268, -0.139173, -0.551838, 0.215596, 0.0340638)
+mesh = SubResource("PlaneMesh_4qq6n")
+skeleton = NodePath("../../../..")
+surface_material_override/0 = SubResource("StandardMaterial3D_s7cmo")
+
+[node name="Power" type="Node3D" parent="Machine_Info/All_Data"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.18845, -0.72276, -1.12305)
+
+[node name="Title" type="Label3D" parent="Machine_Info/All_Data/Power"]
+transform = Transform3D(0.00706579, 5.82077e-11, 9.31323e-10, 0, 0.00747988, -0.00187715, -2.32831e-10, 0.0013189, 0.0106459, -0.551125, 0.395211, 0.071037)
+pixel_size = 0.15
+render_priority = 1
+outline_render_priority = 1
+outline_modulate = Color(0.796078, 0.286275, 0.929412, 1)
+text = "Power Level"
+font_size = 60
+outline_size = 5
+
+[node name="Data" type="Label3D" parent="Machine_Info/All_Data/Power"]
+transform = Transform3D(0.00706579, 2.91038e-11, 4.65661e-10, 0, 0.00747988, -0.00187715, -4.65661e-10, 0.0013189, 0.0106459, -0.528537, 0.228942, 0.0534912)
+pixel_size = 0.15
+render_priority = 1
+outline_render_priority = 1
+outline_modulate = Color(0.666667, 0, 1, 1)
+text = "*Power Bar*"
+font_size = 100
+outline_size = 5
+
+[node name="Type" type="Label3D" parent="Machine_Info/All_Data/Power"]
+transform = Transform3D(0.00706579, 0, 0, 0, 0.00747988, -0.00187715, 0, 0.0013189, 0.0106459, -0.57, 0.0474968, 0.034)
+pixel_size = 0.15
+render_priority = 1
+outline_render_priority = 1
+outline_modulate = Color(0.796078, 0.286275, 0.929412, 1)
+text = "Power Bar"
+font_size = 60
+outline_size = 5
+
+[node name="Screen" type="MeshInstance3D" parent="Machine_Info/All_Data/Power"]
+transform = Transform3D(1, 5.96046e-08, -1.86265e-08, 0, -0.139173, -0.990268, -5.96046e-08, 0.990268, -0.139173, -0.551838, 0.215596, 0.0340638)
+mesh = SubResource("PlaneMesh_4qq6n")
+skeleton = NodePath("../../../..")
+surface_material_override/0 = SubResource("StandardMaterial3D_s7cmo")
+
+[node name="Mass" type="Node3D" parent="Machine_Info/All_Data"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.27301, -1.243, -1.194)
+
+[node name="Title" type="Label3D" parent="Machine_Info/All_Data/Mass"]
+transform = Transform3D(0.00706579, 5.82077e-11, 9.31323e-10, 0, 0.00747988, -0.00187715, -2.32831e-10, 0.0013189, 0.0106459, -0.561126, 0.395211, 0.0710367)
+pixel_size = 0.15
+render_priority = 1
+outline_render_priority = 1
+outline_modulate = Color(0.796078, 0.286275, 0.929412, 1)
+text = "Mass Index"
+font_size = 60
+outline_size = 5
+
+[node name="Data" type="Label3D" parent="Machine_Info/All_Data/Mass"]
+transform = Transform3D(0.00706579, 2.91038e-11, 4.65661e-10, 0, 0.00747988, -0.00187715, -4.65661e-10, 0.0013189, 0.0106459, -0.528537, 0.228942, 0.0534912)
+pixel_size = 0.15
+render_priority = 1
+outline_render_priority = 1
+outline_modulate = Color(0.666667, 0, 1, 1)
+text = "*Scale*"
+font_size = 100
+outline_size = 5
+
+[node name="Type" type="Label3D" parent="Machine_Info/All_Data/Mass"]
+transform = Transform3D(0.00706579, 5.82077e-11, 4.65661e-10, 0, 0.00747988, -0.00187715, -2.32831e-10, 0.0013189, 0.0106459, -0.545909, 0.0671344, 0.0282274)
+pixel_size = 0.15
+render_priority = 1
+outline_render_priority = 1
+outline_modulate = Color(0.796078, 0.286275, 0.929412, 1)
+text = "Flat Number 
+(Half Circle w/ Arrow)"
+font_size = 60
+outline_size = 5
+
+[node name="Screen" type="MeshInstance3D" parent="Machine_Info/All_Data/Mass"]
+transform = Transform3D(1, 4.47035e-08, -1.11759e-08, 0, -0.139173, -0.990268, -4.47035e-08, 0.990268, -0.139173, -0.551838, 0.215596, 0.0340638)
+mesh = SubResource("PlaneMesh_4qq6n")
+skeleton = NodePath("../../../..")
+surface_material_override/0 = SubResource("StandardMaterial3D_s7cmo")
+
+[node name="Lift" type="Node3D" parent="Machine_Info/All_Data"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.18845, -1.243, -1.194)
+
+[node name="Title" type="Label3D" parent="Machine_Info/All_Data/Lift"]
+transform = Transform3D(0.00706579, 5.82077e-11, 9.31323e-10, 0, 0.00747988, -0.00187715, -2.32831e-10, 0.0013189, 0.0106459, -0.551125, 0.395211, 0.071037)
+pixel_size = 0.15
+render_priority = 1
+outline_render_priority = 1
+outline_modulate = Color(0.796078, 0.286275, 0.929412, 1)
+text = "Lift Factor"
+font_size = 60
+outline_size = 5
+
+[node name="Data" type="Label3D" parent="Machine_Info/All_Data/Lift"]
+transform = Transform3D(0.00706579, 2.91038e-11, 4.65661e-10, 0, 0.00747988, -0.00187715, -4.65661e-10, 0.0013189, 0.0106459, -0.528537, 0.228942, 0.0534912)
+pixel_size = 0.15
+render_priority = 1
+outline_render_priority = 1
+outline_modulate = Color(0.666667, 0, 1, 1)
+text = "*Multiplier*"
+font_size = 100
+outline_size = 5
+
+[node name="Type" type="Label3D" parent="Machine_Info/All_Data/Lift"]
+transform = Transform3D(0.00706579, 0, 0, 0, 0.00747988, -0.00187715, 0, 0.0013189, 0.0106459, -0.57, 0.0474968, 0.034)
+pixel_size = 0.15
+render_priority = 1
+outline_render_priority = 1
+outline_modulate = Color(0.796078, 0.286275, 0.929412, 1)
+text = "Multiplier"
+font_size = 60
+outline_size = 5
+
+[node name="Screen" type="MeshInstance3D" parent="Machine_Info/All_Data/Lift"]
+transform = Transform3D(1, 5.96046e-08, -1.86265e-08, 0, -0.139173, -0.990268, -5.96046e-08, 0.990268, -0.139173, -0.551838, 0.215596, 0.0340638)
+mesh = SubResource("PlaneMesh_4qq6n")
+skeleton = NodePath("../../../..")
+surface_material_override/0 = SubResource("StandardMaterial3D_s7cmo")
+
+[node name="Control_Position" type="Node3D" parent="."]
+transform = Transform3D(0.814636, -0.077773, -0.574735, -0.00739489, 0.989494, -0.14438, 0.579926, 0.121867, 0.805502, -0.0550965, 0.418735, -0.460591)
 
 [connection signal="animation_finished" from="Touch_Animation" to="." method="_on_touch_animation_animation_finished"]
 [connection signal="animation_finished" from="Grab_Animation" to="." method="_on_grab_animation_animation_finished"]
