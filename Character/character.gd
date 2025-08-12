@@ -237,8 +237,8 @@ var grabbed_pos_set: bool = false
 var extraction_scale: float
 var extract_body: MeshInstance3D
 var extraction_started: bool = false
-var extract_alpha = 0.75
-var extract_edge = 0.75
+var extract_alpha = 0.25
+var extract_edge = 1.75
 var extract_time = 1.0
 var selected_component_mesh: MeshInstance3D
 var selected_component_col: CollisionShape3D
@@ -361,8 +361,8 @@ func _process(delta: float) -> void:
 			grabbed_object.manipulation_material.set_shader_parameter("edge_intensity", extract_edge)
 			if extraction_started:
 				if extract_time >= 0.002:
-					extract_alpha -= delta / 2.5
-					extract_edge -= delta * 2.0
+					extract_alpha -= delta / 1.1
+					extract_edge -= delta * 2.25
 					extract_time -= delta
 				print(extract_time)
 				grabbed_object.EXTRACT_MATERIAL.albedo_color.a = lerp(grabbed_object.EXTRACT_MATERIAL.albedo_color.a, 0.0, delta * 2.5)
@@ -372,11 +372,11 @@ func _process(delta: float) -> void:
 					extract_component(selected_component_mesh, selected_component_col)
 					_on_action_key('up')
 			else:
-				grabbed_object.EXTRACT_MATERIAL.emission_energy_multiplier = lerp(grabbed_object.EXTRACT_MATERIAL.emission_energy_multiplier, 12.0, delta * 7.5)
+				grabbed_object.EXTRACT_MATERIAL.emission_energy_multiplier = lerp(grabbed_object.EXTRACT_MATERIAL.emission_energy_multiplier, 7.5, delta * 7.5)
 				grabbed_object.EXTRACT_MATERIAL.albedo_color = lerp(grabbed_object.EXTRACT_MATERIAL.albedo_color, Color.WHITE, delta * 7.5)
 				selected_component_mesh.position = lerp(selected_component_mesh.position, selected_component_pos, delta * 7.5)
-				extract_alpha = lerp(extract_alpha, 0.25, delta * 7.5)
-				extract_edge = lerp(extract_edge, 1.75, delta * 7.5)
+				extract_alpha = lerp(extract_alpha, 0.75, delta * 7.5)
+				extract_edge = lerp(extract_edge, 2.0, delta * 7.5)
 				extract_time = lerp(extract_time, 1.0, delta * 7.5)
 
 

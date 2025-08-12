@@ -8,7 +8,7 @@ uniform float albedo_alpha : hint_range(0.0, 1.0) = 0.25;
 
 // Grupo: Tinte y Borde
 group_uniforms tint_edge;
-uniform vec4 tint_color : source_color = vec4(0.5, 0.0, 1.0, 1.0); // #FF8000
+uniform vec4 tint_color : source_color = vec4(0.5, 0.0, 1.0, 0.75); // #FF8000
 uniform vec4 edge_color : source_color = vec4(1.0, 0.9, 1.0, 1.0); // #FF0000
 uniform float edge_power : hint_range(0.0, 1.0) = 1.0;
 uniform float edge_size : hint_range(0.1, 5.0) = 5.0;
