@@ -672,38 +672,22 @@ func change_glow(object, amt: float, dur: float):
 	glow_tween.set_trans(Tween.TRANS_LINEAR)
 	glow_tween.set_ease(Tween.EASE_IN_OUT)
 
-var original_materials := {}
 
 func manipulation_mode(type):
 	
 	if type == "Active":
-		original_materials.clear()
 		
 		for child in extract_body.get_children():
 			if child is MeshInstance3D:
 				var surface_count = child.mesh.get_surface_count()
-				var overrides := {}
-
 				for i in range(surface_count):
-					var original_override = child.get_surface_override_material(i)
-					overrides[i] = original_override  # might be null, that’s fine
-					
 					child.set_surface_override_material(i, manipulation_material)
-
-				original_materials[child] = overrides
 
 	elif type == "Inactive":
 
 		for child in extract_body.get_children():
 			if child is MeshInstance3D:
 				child.set_material_overlay(standard_material)
-				if original_materials.has(child):
-					var overrides = original_materials[child]
-					for i in overrides.keys():
-						child.set_surface_override_material(i, overrides[i])  # could be null
-
-		original_materials.clear()
-
 
 func set_glitch(status):
 	manipulation_material.set_shader_parameter("enable_glitch", status)
@@ -711,5 +695,11 @@ func set_glitch(status):
 func set_extract_glow(component, selection):
 	if selection == 'Selected':
 		component.set_material_overlay(EXTRACT_MATERIAL)
+		var surface_count = component.mesh.get_surface_count()
+		for i in range(surface_count):
+			component.set_surface_override_material(i, null)
 	elif selection == 'Deselected':
 		component.set_material_overlay(null)
+		var surface_count = component.mesh.get_surface_count()
+		for i in range(surface_count):
+			component.set_surface_override_material(i, manipulation_material)

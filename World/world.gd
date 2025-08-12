@@ -131,7 +131,6 @@ func _physics_process(delta: float) -> void:
 				if grabbed_object.object_body.scale.y < 0.02:
 					grabbed_object.object_body.visible = false
 			if not extraction_spin_initialized:
-
 				grabbed_object.extract_body.rotation_degrees.x = lerp(grabbed_object.extract_body.rotation_degrees.x, 0.0, delta * 5.0)
 				grabbed_object.extract_body.rotation_degrees.y = lerp(grabbed_object.extract_body.rotation_degrees.y, 0.0, delta * 5.0)
 				grabbed_object.extract_body.rotation_degrees.z = lerp(grabbed_object.extract_body.rotation_degrees.z, 0.0, delta * 5.0)

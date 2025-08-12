@@ -233,9 +233,17 @@ var orbit_speed: float = 1.0  # Speed multiplier
 var input_direction_x: float = 0.0
 var input_direction_z: float = 0.0
 var grabbed_pos_set: bool = false
+
 var extraction_scale: float
 var extract_body: MeshInstance3D
 var extraction_started: bool = false
+var extract_alpha = 0.75
+var extract_edge = 0.75
+var extract_time = 1.0
+var selected_component_mesh: MeshInstance3D
+var selected_component_col: CollisionShape3D
+var selected_component_pos: Vector3
+var fresh_component: RigidBody3D
 
 func _ready() -> void:
 	push_warning('General To Do List:')
@@ -345,18 +353,33 @@ func _physics_process(delta: float) -> void:
 	# Handle grounded/airborne vertical velocity
 	update_vertical_velocity()
 
-
 func _process(delta: float) -> void:
 	
 	if grabbed_object:
 		if extracting_object_active:
+			grabbed_object.manipulation_material.set_shader_parameter("albedo_alpha", extract_alpha)
+			grabbed_object.manipulation_material.set_shader_parameter("edge_intensity", extract_edge)
 			if extraction_started:
+				if extract_time >= 0.002:
+					extract_alpha -= delta / 2.5
+					extract_edge -= delta * 2.0
+					extract_time -= delta
+				print(extract_time)
+				grabbed_object.EXTRACT_MATERIAL.albedo_color.a = lerp(grabbed_object.EXTRACT_MATERIAL.albedo_color.a, 0.0, delta * 2.5)
+				grabbed_object.EXTRACT_MATERIAL.emission_energy_multiplier = lerp(grabbed_object.EXTRACT_MATERIAL.emission_energy_multiplier, 0.0, delta * 2.5)
+				selected_component_mesh.position = lerp(selected_component_mesh.position, Vector3.ZERO, delta * 2.5)
 				if control_timer.time_left == 0.0:
-					print('EXTRACT THAT OBJECT')
-					control_timer.stop()
-					extraction_started = false
-					extracting_object_active = false
-	
+					extract_component(selected_component_mesh, selected_component_col)
+					_on_action_key('up')
+			else:
+				grabbed_object.EXTRACT_MATERIAL.emission_energy_multiplier = lerp(grabbed_object.EXTRACT_MATERIAL.emission_energy_multiplier, 12.0, delta * 7.5)
+				grabbed_object.EXTRACT_MATERIAL.albedo_color = lerp(grabbed_object.EXTRACT_MATERIAL.albedo_color, Color.WHITE, delta * 7.5)
+				selected_component_mesh.position = lerp(selected_component_mesh.position, selected_component_pos, delta * 7.5)
+				extract_alpha = lerp(extract_alpha, 0.25, delta * 7.5)
+				extract_edge = lerp(extract_edge, 1.75, delta * 7.5)
+				extract_time = lerp(extract_time, 1.0, delta * 7.5)
+
+
 	handle_prem7_decay(delta)
 
 	if abs(delta - previous_delta) > delta_threshold:
@@ -544,13 +567,9 @@ func _input(event: InputEvent) -> void:
 		
 		if event.keycode == KEY_Q:
 			if pressed:
-				extraction_started = true
-				control_timer.start(1.0)
-				print("pressing q...start timer")
-			if not pressed and control_timer.time_left > 0.0:
-				extraction_started = false
-				control_timer.stop()
-				print("releasing q...reset timer...extract object?")
+				_on_action_key('down')
+			if not pressed:
+				_on_action_key('up')
 			#if released or q_timer == 0.0:
 				#print("releasing q...reset timer")
 			#if event.pressed:
@@ -717,6 +736,16 @@ func _input(event: InputEvent) -> void:
 ##------------GAME MECHANICS-------------##
 ##---------------------------------------##
 
+func _on_action_key(status: String):
+	if status == "down":
+		extraction_started = true
+		control_timer.start(extract_time)
+		print("pressing q...start timer")
+	if status == "up":
+		extraction_started = false
+		control_timer.stop()
+		print("releasing q...reset timer...extract object?")
+
 func _on_extract_key(down: bool) -> void:
 	if fusing_object_active:
 		return
@@ -735,14 +764,18 @@ func _on_extract_key(down: bool) -> void:
 		PREM_7.machine_info.visible = true
 		grabbed_object.extract_active = true
 		activate_extraction_data()
-
 		grabbed_object.manipulation_mode('Active')
+		var count = current_extraction_data.size()
+		for i in range(count):
+			scroll_extraction_data('DOWN')
+
 		right_mouse_down = false
 		handle_object('pressed')
 		print('Start Extracting - Make all other objects invisible?')
 		#grabbed_target_position.x -= 10
 	else:
 		#PREM_7.machine_info.scale = Vector3.ZERO
+		selected_component_mesh.position = selected_component_pos
 		PREM_7.ctrl_anim.play_backwards("extract")
 		gravity_strength = 10.0
 		grabbed_object.visible = true
@@ -797,6 +830,7 @@ func grab_object():
 
 
 func release_object():
+	grabbed_object.object_body.scale = Vector3.ONE
 	PREM_7.control_position.remove_child(grabbed_object.extract_body)
 	grabbed_object.extract_body = null
 	if touched_object:
@@ -1405,6 +1439,10 @@ func activate_extraction_data():
 func scroll_extraction_data(dir):
 	if current_extraction_data.is_empty():
 		return
+	
+	print('working?')
+	selected_component_mesh = null
+	selected_component_col = null
 
 	if dir == "UP":
 		current_component_index -= 1
@@ -1443,29 +1481,31 @@ func update_component_display():
 	# ---- Selection: match CollisionShape3D "<Name>_Shape" ----
 	var target_id := _normalize_id(comp.get("name", ""))  # "Control Panel" -> "controlpanel"
 
-	var matched_base_name := ""
 	for child in grabbed_object.get_children():
 		if child is CollisionShape3D:
-			var base := _base_from_shape(child.name)       # "ControlPanel_Shape" -> "ControlPanel"
+			var base := _base_from_shape(child.name) 
 			if _normalize_id(base) == target_id:
-				matched_base_name = base
+				selected_component_col = child
+				selected_component_col.name = base
 				break
 
 	# Highlight meshes under Body/object_body by base name
 	var body_in_use
-	if matched_base_name != "":
+	if selected_component_col.name != "":
 		if grabbed_object.extract_body:
 			body_in_use = grabbed_object.extract_body
 		else:
 			body_in_use = grabbed_object.object_body
 		for mesh in body_in_use.get_children():
 			if mesh is MeshInstance3D:
-				if mesh.name == matched_base_name:
+				if mesh.name == selected_component_col.name:
 					grabbed_object.set_extract_glow(mesh, "Selected")
+					selected_component_mesh = mesh
+					selected_component_pos = mesh.position
 				else:
 					grabbed_object.set_extract_glow(mesh, "Deselected")
 	else:
-		# No match? Kill selection so you don’t leave stale glows on.
+		# No match
 		for mesh in body_in_use.get_children():
 			if mesh is MeshInstance3D:
 				grabbed_object.set_extract_glow(mesh, "Deselected")
@@ -1479,3 +1519,7 @@ func _base_from_shape(name: String) -> String:
 	if name.ends_with("_Shape"):
 		return name.substr(0, name.length() - "_Shape".length())
 	return name
+
+func extract_component(mesh, col):
+	print("Combine ", mesh, " with ", col)
+	pass

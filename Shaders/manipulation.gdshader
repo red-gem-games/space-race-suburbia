@@ -1,5 +1,5 @@
 shader_type spatial;
-render_mode blend_mix, cull_disabled, depth_prepass_alpha;
+render_mode blend_mix;
 
 // Grupo: Textura Base
 group_uniforms base_texture;
