@@ -172,56 +172,14 @@ func _ready() -> void:
 			object_body = child
 			current_scale = object_body.scale
 
-	#if base_mesh:
-		##var outline_mesh = base_mesh.duplicate()
-		#glow_body = outline
-		##glow_body.scale = Vector3(1.15, 1.15, 1.15)
-#
-		#var outline_mesh : Mesh = base_mesh.mesh.create_outline(0.075)
-		#glow_body = MeshInstance3D.new()
-		#glow_body.name = "Outline"
-		#glow_body.mesh = outline_mesh
-		#glow_body.material_override = standard_material
-		#glow_body.visible = false
-		#add_child(glow_body)
-	#else:
-		#push_warning("%s has no MeshInstance3D child to outline!" % name)
-
-	for child in get_children():
-		if child is RigidBody3D:
-			assembly_components.append(child)
-			child.collision_layer = 0
-			child.collision_mask = 0
-			child.freeze = true
-
-			#print('I, ', child.name, ' am an assembly component!')
-
 	resting_position = global_position.y
 	set_physics_process(true)
-	
-	print(name)
-	#var rand_ring = randf_range(0.5, 1.5)
-	#var rand_wave = randf_range(0.25, 1.0)
-	#var rand_all = randf_range(1.5, 3.0)
-	#var rand_c1 = randf_range(0.0, 5.0)
-	#var rand_c2 = randf_range(0.0, 5.0)
-	#var rand_c3 = randf_range(0.0, 5.0)
-	#shader_material.set_shader_parameter("ring_scale", rand_ring)
-	#shader_material.set_shader_parameter("wave_scale", rand_wave)
-	#shader_material.set_shader_parameter("random_scale", rand_all)
-	#shader_material.set_shader_parameter("emission_strength", -0.25)
-	#shader_material.set_shader_parameter("base_alpha", -0.5)
-	#shader_material.set_shader_parameter("c1", rand_c1)
-	#shader_material.set_shader_parameter("c2", rand_c2)
-	#shader_material.set_shader_parameter("c3", rand_c3)
-	
+
+	if name == "Stepladder":
+		is_stepladder = true
 
 func _physics_process(delta: float) -> void:
-	
-	#shader_material.set_shader_parameter("c1", c1)
-	#shader_material.set_shader_parameter("c2", c2)
-	#shader_material.set_shader_parameter("c3", c3)
-	
+
 	if not is_grabbed and is_touching_ground and recently_grabbed:
 		if linear_velocity == Vector3.ZERO and angular_velocity == Vector3.ZERO:
 			freeze = true
@@ -240,20 +198,6 @@ func _physics_process(delta: float) -> void:
 	
 	var up_vector = global_transform.basis.y
 	var alignment = up_vector.dot(Vector3.UP)
-	
-	#if not is_suspended:
-		#if abs(alignment) < 0.01 and is_touching_ground:
-			#if not damp_set:
-				#dampen_assembly_object(delta * 0.025)
-		#elif alignment > 0.99 and is_touching_ground:
-			#if not damp_set:
-				#dampen_assembly_object(delta * 0.025)
-		#elif alignment < -0.99 and is_touching_ground:
-			#if not damp_set:
-				#dampen_assembly_object(delta * 0.025)
-		#else:
-			#linear_damp = 0
-			#angular_damp = 0
 
 	if extract_in_motion:
 		angular_velocity = Vector3(0.0, 1.0, 0.0)
@@ -266,12 +210,6 @@ func _physics_process(delta: float) -> void:
 		object_body.top_level = false
 
 		base_spawn_pos = global_position
-		#object_body.position = Vector3.ZERO
-		#global_transform = object_body.global_transform
-		#collision_shape.global_transform = object_body.global_transform
-		#object_body.global_transform = collision_shape.global_transform
-		#global_position.y = object_body.global_position.y
-		#outline.global_position.y = object_body.global_position.y
 		linear_damp = 0
 		angular_damp = 0
 		contact_monitor = true
@@ -348,7 +286,6 @@ func _on_body_shape_entered(body_rid: RID, body: Node, body_shape_index: int, lo
 	
 	if body.name == 'Floor':
 		is_touching_ground = true
-
 	
 	#if body.name == "Left_Wall" and not touching_left_wall:
 		#touching_wall_count += 1

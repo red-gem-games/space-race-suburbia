@@ -19,12 +19,17 @@ var shader_material: ShaderMaterial
 @onready var machine_info: Node3D = $Machine_Info
 @onready var machine_name: Label3D = $Machine_Info/All_Data/Main/Main_Name
 @onready var machine_desc: Label3D = $Machine_Info/All_Data/Main/Main_Desc
-@onready var component_name: Label3D = $Machine_Info/All_Data/Component/Comp_Name
-@onready var component_stars: Label3D = $Machine_Info/All_Data/Component/Comp_Stars
-@onready var component_module: Label3D = $Machine_Info/All_Data/Module/Data
-@onready var component_power: Label3D = $Machine_Info/All_Data/Power/Data
-@onready var component_mass: Label3D = $Machine_Info/All_Data/Mass/Data
-@onready var component_lift: Label3D = $Machine_Info/All_Data/Lift/Data
+@onready var component_name: Label3D = $Machine_Info/All_Data/Component/Screen/Comp_Name
+@onready var component_stars: Label3D = $Machine_Info/All_Data/Component/Screen/Comp_Stars
+@onready var component_module: Label3D = $Machine_Info/All_Data/Module/Screen/Data
+@onready var component_power: Label3D = $Machine_Info/All_Data/Power/Screen/Data
+@onready var component_mass: Label3D = $Machine_Info/All_Data/Mass/Screen/Data
+@onready var component_lift: Label3D = $Machine_Info/All_Data/Lift/Screen/Data
+
+@onready var module_screen: MeshInstance3D = $Machine_Info/All_Data/Module/Screen
+@onready var power_screen: MeshInstance3D = $Machine_Info/All_Data/Power/Screen
+@onready var mass_screen: MeshInstance3D = $Machine_Info/All_Data/Mass/Screen
+@onready var lift_screen: MeshInstance3D = $Machine_Info/All_Data/Lift/Screen
 
 @onready var control_position: Node3D = $Control_Position
 
@@ -81,9 +86,6 @@ func _ready() -> void:
 	print("3. Once object is completely wrapped, release the beam (meaning it stops from the PREM-7 and the end lands within the object)")
 	print("--------------")
 	print("4. Add Tool Tips for various modes...first up is a widened split square that rotates when in extract mode")
-
-func _input(event: InputEvent) -> void:
-	pass
 
 
 func _process(delta: float) -> void:

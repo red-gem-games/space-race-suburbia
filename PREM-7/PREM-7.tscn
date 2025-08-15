@@ -1,4 +1,4 @@
-[gd_scene load_steps=86 format=4 uid="uid://bpvm0l41dywjs"]
+[gd_scene load_steps=94 format=4 uid="uid://bpvm0l41dywjs"]
 
 [ext_resource type="Script" uid="uid://so25svauxmkt" path="res://PREM-7/prem_7.gd" id="1_iarxa"]
 [ext_resource type="Shader" uid="uid://vetnq53dk60g" path="res://Shaders/grabbed_glow.gdshader" id="2_4qq6n"]
@@ -249,86 +249,10 @@ tracks/10/keys = {
 "times": PackedFloat32Array(0)
 }
 
-[sub_resource type="Animation" id="Animation_iarxa"]
-resource_name = "inspect"
-length = 0.12
-step = 0.001
-tracks/0/type = "bezier"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Multitool/Button:position:x")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"handle_modes": PackedInt32Array(0, 0, 0),
-"points": PackedFloat32Array(-0.1072, -0.03, 0, 0.03, 0, -0.109147, -0.03, 0, 0.03, 0, -0.1072, -0.03, 0, 0.03, 0),
-"times": PackedFloat32Array(0, 0.06, 0.12)
-}
-tracks/1/type = "bezier"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Multitool/Button:position:y")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"handle_modes": PackedInt32Array(0, 0, 0),
-"points": PackedFloat32Array(0.0198131, -0.03, 0, 0.03, 0, -0.0780031, -0.03, 0, 0.03, 0, 0.0198131, -0.03, 0, 0.03, 0),
-"times": PackedFloat32Array(0, 0.06, 0.12)
-}
-tracks/2/type = "bezier"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Multitool/Button:position:z")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"handle_modes": PackedInt32Array(0, 0, 0),
-"points": PackedFloat32Array(0.292164, -0.03, 0, 0.03, 0, 0.346491, -0.03, 0, 0.03, 0, 0.292164, -0.03, 0, 0.03, 0),
-"times": PackedFloat32Array(0, 0.06, 0.12)
-}
-
-[sub_resource type="Animation" id="Animation_8d6ws"]
-resource_name = "suspend"
-length = 0.12
-step = 0.001
-tracks/0/type = "bezier"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Multitool/Button:position:x")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"handle_modes": PackedInt32Array(0, 0, 0),
-"points": PackedFloat32Array(-0.1072, -0.03, 0, 0.03, 0, -0.109147, -0.03, 0, 0.03, 0, -0.1072, -0.03, 0, 0.03, 0),
-"times": PackedFloat32Array(0, 0.06, 0.12)
-}
-tracks/1/type = "bezier"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Multitool/Button:position:y")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"handle_modes": PackedInt32Array(0, 0, 0),
-"points": PackedFloat32Array(0.0198131, -0.03, 0, 0.03, 0, -0.0780031, -0.03, 0, 0.03, 0, 0.0198131, -0.03, 0, 0.03, 0),
-"times": PackedFloat32Array(0, 0.06, 0.12)
-}
-tracks/2/type = "bezier"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Multitool/Button:position:z")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"handle_modes": PackedInt32Array(0, 0, 0),
-"points": PackedFloat32Array(0.292164, -0.03, 0, 0.03, 0, 0.346491, -0.03, 0, 0.03, 0, 0.292164, -0.03, 0, 0.03, 0),
-"times": PackedFloat32Array(0, 0.06, 0.12)
-}
-
 [sub_resource type="Animation" id="Animation_k44yu"]
 resource_name = "extract"
-length = 0.12
-step = 0.001
+length = 0.25
+step = 0.01
 tracks/0/type = "bezier"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -338,7 +262,7 @@ tracks/0/loop_wrap = true
 tracks/0/keys = {
 "handle_modes": PackedInt32Array(0, 0, 0),
 "points": PackedFloat32Array(-0.1072, -0.03, 0, 0.03, 0, -0.109147, -0.03, 0, 0.03, 0, -0.1072, -0.03, 0, 0.03, 0),
-"times": PackedFloat32Array(0, 0.06, 0.12)
+"times": PackedFloat32Array(0, 0.12, 0.25)
 }
 tracks/1/type = "bezier"
 tracks/1/imported = false
@@ -349,7 +273,7 @@ tracks/1/loop_wrap = true
 tracks/1/keys = {
 "handle_modes": PackedInt32Array(0, 0, 0),
 "points": PackedFloat32Array(0.0198131, -0.03, 0, 0.03, 0, -0.0780031, -0.03, 0, 0.03, 0, 0.0198131, -0.03, 0, 0.03, 0),
-"times": PackedFloat32Array(0, 0.06, 0.12)
+"times": PackedFloat32Array(0, 0.12, 0.25)
 }
 tracks/2/type = "bezier"
 tracks/2/imported = false
@@ -360,7 +284,7 @@ tracks/2/loop_wrap = true
 tracks/2/keys = {
 "handle_modes": PackedInt32Array(0, 0, 0),
 "points": PackedFloat32Array(0.292164, -0.03, 0, 0.03, 0, 0.346491, -0.03, 0, 0.03, 0, 0.292164, -0.03, 0, 0.03, 0),
-"times": PackedFloat32Array(0, 0.06, 0.12)
+"times": PackedFloat32Array(0, 0.12, 0.25)
 }
 tracks/3/type = "bezier"
 tracks/3/imported = false
@@ -451,9 +375,124 @@ tracks/10/keys = {
 "times": PackedFloat32Array(0, 0.12)
 }
 
+[sub_resource type="Animation" id="Animation_iarxa"]
+resource_name = "inspect"
+length = 0.25
+step = 0.001
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Multitool/Button:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0),
+"points": PackedFloat32Array(-0.1072, -0.03, 0, 0.03, 0, -0.109147, -0.03, 0, 0.03, 0, -0.1072, -0.03, 0, 0.03, 0),
+"times": PackedFloat32Array(0, 0.12, 0.25)
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Multitool/Button:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0),
+"points": PackedFloat32Array(0.0198131, -0.03, 0, 0.03, 0, -0.0780031, -0.03, 0, 0.03, 0, 0.0198131, -0.03, 0, 0.03, 0),
+"times": PackedFloat32Array(0, 0.12, 0.25)
+}
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Multitool/Button:position:z")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0),
+"points": PackedFloat32Array(0.292164, -0.03, 0, 0.03, 0, 0.346491, -0.03, 0, 0.03, 0, 0.292164, -0.03, 0, 0.03, 0),
+"times": PackedFloat32Array(0, 0.12, 0.25)
+}
+
+[sub_resource type="Animation" id="Animation_8d6ws"]
+resource_name = "suspend"
+length = 0.25
+step = 0.001
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Multitool/Button:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0),
+"points": PackedFloat32Array(-0.1072, -0.03, 0, 0.03, 0, -0.109147, -0.03, 0, 0.03, 0, -0.1072, -0.03, 0, 0.03, 0),
+"times": PackedFloat32Array(0, 0.12, 0.25)
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Multitool/Button:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0),
+"points": PackedFloat32Array(0.0198131, -0.03, 0, 0.03, 0, -0.0780031, -0.03, 0, 0.03, 0, 0.0198131, -0.03, 0, 0.03, 0),
+"times": PackedFloat32Array(0, 0.12, 0.25)
+}
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Multitool/Button:position:z")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0),
+"points": PackedFloat32Array(0.292164, -0.03, 0, 0.03, 0, 0.346491, -0.03, 0, 0.03, 0, 0.292164, -0.03, 0, 0.03, 0),
+"times": PackedFloat32Array(0, 0.12, 0.25)
+}
+
+[sub_resource type="Animation" id="Animation_gssec"]
+resource_name = "activate"
+length = 0.25
+step = 0.001
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Multitool/Button:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(-0.1072, -0.03, 0, 0.03, 0, -0.109147, -0.03, 0, 0.03, 0),
+"times": PackedFloat32Array(0, 0.249)
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Multitool/Button:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(0.0198131, -0.03, 0, 0.03, 0, -0.0780031, -0.03, 0, 0.03, 0),
+"times": PackedFloat32Array(0, 0.249)
+}
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Multitool/Button:position:z")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(0.292164, -0.03, 0, 0.03, 0, 0.346491, -0.03, 0, 0.03, 0),
+"times": PackedFloat32Array(0, 0.249)
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_3tjq7"]
 _data = {
 &"RESET": SubResource("Animation_yppce"),
+&"activate": SubResource("Animation_gssec"),
 &"extract": SubResource("Animation_k44yu"),
 &"inspect": SubResource("Animation_iarxa"),
 &"suspend": SubResource("Animation_8d6ws")
@@ -933,31 +972,30 @@ length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Hologram:rotation")
+tracks/0/path = NodePath("Hologram:visible")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0, -0.174533, 0)]
+"update": 1,
+"values": [false]
 }
-tracks/1/type = "value"
+tracks/1/type = "bezier"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Hologram:visible")
+tracks/1/path = NodePath("Hologram:scale:x")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [false]
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(0.001, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
 }
 tracks/2/type = "bezier"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("Hologram:scale:x")
+tracks/2/path = NodePath("Hologram:scale:y")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
@@ -968,7 +1006,7 @@ tracks/2/keys = {
 tracks/3/type = "bezier"
 tracks/3/imported = false
 tracks/3/enabled = true
-tracks/3/path = NodePath("Hologram:scale:y")
+tracks/3/path = NodePath("Hologram:scale:z")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
@@ -979,58 +1017,59 @@ tracks/3/keys = {
 tracks/4/type = "bezier"
 tracks/4/imported = false
 tracks/4/enabled = true
-tracks/4/path = NodePath("Hologram:scale:z")
+tracks/4/path = NodePath("Hologram:rotation:x")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {
 "handle_modes": PackedInt32Array(0),
-"points": PackedFloat32Array(0.001, -0.25, 0, 0.25, 0),
+"points": PackedFloat32Array(0, -0.25, 0, 0.25, 0),
 "times": PackedFloat32Array(0)
 }
 tracks/5/type = "bezier"
 tracks/5/imported = false
 tracks/5/enabled = true
-tracks/5/path = NodePath("Hologram:rotation:x")
+tracks/5/path = NodePath("Hologram:rotation:y")
 tracks/5/interp = 1
 tracks/5/loop_wrap = true
 tracks/5/keys = {
 "handle_modes": PackedInt32Array(0),
-"points": PackedFloat32Array(0, -0.25, 0, 0.25, 0),
+"points": PackedFloat32Array(-0.174533, -0.25, 0, 0.25, 0),
 "times": PackedFloat32Array(0)
 }
 tracks/6/type = "bezier"
 tracks/6/imported = false
 tracks/6/enabled = true
-tracks/6/path = NodePath("Hologram:rotation:y")
+tracks/6/path = NodePath("Hologram:rotation:z")
 tracks/6/interp = 1
 tracks/6/loop_wrap = true
 tracks/6/keys = {
 "handle_modes": PackedInt32Array(0),
-"points": PackedFloat32Array(-0.174533, -0.25, 0, 0.25, 0),
+"points": PackedFloat32Array(0, -0.25, 0, 0.25, 0),
 "times": PackedFloat32Array(0)
 }
-tracks/7/type = "bezier"
+tracks/7/type = "value"
 tracks/7/imported = false
 tracks/7/enabled = true
-tracks/7/path = NodePath("Hologram:rotation:z")
+tracks/7/path = NodePath("Details:visible")
 tracks/7/interp = 1
 tracks/7/loop_wrap = true
 tracks/7/keys = {
-"handle_modes": PackedInt32Array(0),
-"points": PackedFloat32Array(0, -0.25, 0, 0.25, 0),
-"times": PackedFloat32Array(0)
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
 }
 tracks/8/type = "value"
 tracks/8/imported = false
 tracks/8/enabled = true
-tracks/8/path = NodePath("Details:visible")
+tracks/8/path = NodePath("Multitool/Object_Inventory:rotation")
 tracks/8/interp = 1
 tracks/8/loop_wrap = true
 tracks/8/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [false]
+"update": 0,
+"values": [Vector3(0, 0, 0)]
 }
 
 [sub_resource type="Animation" id="Animation_5hhbi"]
@@ -1218,20 +1257,20 @@ tracks/3/keys = {
 
 [sub_resource type="Animation" id="Animation_l5ika"]
 resource_name = "spin_hologram"
-length = 25.0
+length = 8.0
 loop_mode = 1
 step = 0.01
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Hologram:rotation")
+tracks/0/path = NodePath("Multitool/Object_Inventory:rotation")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 25),
+"times": PackedFloat32Array(0, 8),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector3(0, -0.174533, 0), Vector3(0, -6.45772, 0)]
+"values": [Vector3(0, 0, 0), Vector3(0, 6.28319, 0)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_3nktn"]
@@ -1247,7 +1286,8 @@ _data = {
 resource_name = "Material.003"
 cull_mode = 2
 albedo_color = Color(0, 0.132903, 0.0299002, 1)
-roughness = 0.464286
+metallic = 1.0
+roughness = 0.6
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_gdvc8"]
 _surfaces = [{
@@ -1347,7 +1387,6 @@ emission_energy_multiplier = 12.0
 transparency = 3
 alpha_hash_scale = 0.01
 alpha_antialiasing_mode = 0
-blend_mode = 3
 cull_mode = 2
 albedo_color = Color(1, 1, 1, 0)
 emission_enabled = true
@@ -1399,7 +1438,7 @@ resource_name = "Material.012"
 cull_mode = 2
 albedo_color = Color(1, 0.813669, 0, 1)
 metallic = 1.0
-roughness = 0.2
+roughness = 0.25
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_j3ia4"]
 _surfaces = [{
@@ -1440,7 +1479,8 @@ resource_name = "Primary"
 cull_mode = 2
 albedo_color = Color(0.964541, 0.76761, 0.226277, 1)
 metallic = 1.0
-roughness = 0.9
+roughness = 0.6
+backlight = Color(1, 1, 1, 1)
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_42eo6"]
 _surfaces = [{
@@ -1650,8 +1690,8 @@ shadow_mesh = SubResource("ArrayMesh_yjyol")
 resource_name = "Material.007"
 cull_mode = 2
 albedo_color = Color(0, 0.313286, 0.0721585, 1)
-metallic = 0.5
-roughness = 0.25
+metallic = 1.0
+roughness = 0.6
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_2q26a"]
 _surfaces = [{
@@ -1689,8 +1729,8 @@ shadow_mesh = SubResource("ArrayMesh_2q26a")
 resource_name = "Material.008"
 cull_mode = 2
 albedo_color = Color(0, 0.313726, 0.0705884, 1)
-metallic = 0.5
-roughness = 0.25
+metallic = 1.0
+roughness = 0.5
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_x70lr"]
 _surfaces = [{
@@ -1728,8 +1768,8 @@ shadow_mesh = SubResource("ArrayMesh_x70lr")
 resource_name = "Material.010"
 cull_mode = 2
 albedo_color = Color(0, 0.313286, 0.0721585, 1)
-metallic = 0.5
-roughness = 0.25
+metallic = 1.0
+roughness = 0.6
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_rvdh4"]
 _surfaces = [{
@@ -1767,8 +1807,8 @@ shadow_mesh = SubResource("ArrayMesh_rvdh4")
 resource_name = "Material.011"
 cull_mode = 2
 albedo_color = Color(0, 0.313286, 0.0721585, 1)
-metallic = 0.5
-roughness = 0.25
+metallic = 1.0
+roughness = 0.6
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_ijfxc"]
 _surfaces = [{
@@ -1844,6 +1884,31 @@ material = SubResource("StandardMaterial3D_6dr8p")
 inner_radius = 0.075
 outer_radius = 0.034
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_l5ika"]
+albedo_color = Color(0.0509804, 0.219608, 0.0705882, 1)
+metallic = 1.0
+roughness = 0.6
+
+[sub_resource type="BoxMesh" id="BoxMesh_8m00m"]
+material = SubResource("StandardMaterial3D_l5ika")
+size = Vector3(1.52, 38.75, 15.39)
+
+[sub_resource type="BoxMesh" id="BoxMesh_l5ika"]
+material = SubResource("StandardMaterial3D_l5ika")
+size = Vector3(1.52, 38.75, 7.38)
+
+[sub_resource type="BoxMesh" id="BoxMesh_6dr8p"]
+material = SubResource("StandardMaterial3D_l5ika")
+size = Vector3(1.52, 38.75, 4.7)
+
+[sub_resource type="BoxMesh" id="BoxMesh_4qq6n"]
+material = SubResource("StandardMaterial3D_l5ika")
+size = Vector3(1.52, 26.63, 1.57)
+
+[sub_resource type="BoxMesh" id="BoxMesh_t05xm"]
+material = SubResource("StandardMaterial3D_l5ika")
+size = Vector3(7.53, 26.41, 1.57)
+
 [sub_resource type="Gradient" id="Gradient_6dr8p"]
 colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1)
 
@@ -1909,7 +1974,7 @@ shader_parameter/uv_projection_mode = 0
 [sub_resource type="PlaneMesh" id="PlaneMesh_t05xm"]
 size = Vector2(1.79, 0.27)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_s7cmo"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4qq6n"]
 transparency = 1
 albedo_color = Color(1, 1, 1, 0.454902)
 metallic = 1.0
@@ -1920,6 +1985,15 @@ emission_energy_multiplier = 4.25
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_4qq6n"]
 size = Vector2(0.88, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_s7cmo"]
+transparency = 1
+albedo_color = Color(1, 1, 1, 0.454902)
+metallic = 1.0
+roughness = 0.44
+emission_enabled = true
+emission = Color(0.364333, 0.13, 0.5, 1)
+emission_energy_multiplier = 4.25
 
 [node name="PREM-7" type="Node3D"]
 script = ExtResource("1_iarxa")
@@ -1967,8 +2041,7 @@ libraries = {
 transform = Transform3D(-0.246939, -0.00781692, -0.022926, -0.00958782, 0.249578, 0.00654291, 0.0378046, 0.0122367, -0.148093, 0.00330822, -0.113262, -0.384817)
 
 [node name="Object_Inventory" type="Node3D" parent="Multitool"]
-transform = Transform3D(0.00996917, 0, 0.000784591, 0, 0.01, 0, -0.000784591, 0, 0.00996917, -0.13, 0.51, 2.89)
-visible = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.17, 2.5, 1.168)
 
 [node name="Button" type="MeshInstance3D" parent="Multitool"]
 transform = Transform3D(0, 4.47035e-08, 1, -1, 1.2666e-07, 9.31323e-10, -3.72529e-08, -2.5, 0, -0.1072, 0.0198131, 0.292164)
@@ -2136,6 +2209,43 @@ explosiveness = 0.04
 process_material = SubResource("ParticleProcessMaterial_4qq6n")
 draw_pass_1 = SubResource("TorusMesh_t05xm")
 
+[node name="Stickers" type="Node3D" parent="Multitool"]
+
+[node name="p1" type="MeshInstance3D" parent="Multitool/Stickers"]
+transform = Transform3D(0.00813098, -0.00582118, 5.82077e-11, 0.00582119, 0.00813093, -2.91038e-11, -2.32831e-10, 1.16415e-10, 0.00999998, 0.313644, 0.912199, 1.46939)
+mesh = SubResource("BoxMesh_8m00m")
+skeleton = NodePath("../../Object_Inventory")
+
+[node name="p2" type="MeshInstance3D" parent="Multitool/Stickers"]
+transform = Transform3D(0.00813098, -0.00582118, 5.82077e-11, 0.00582119, 0.00813092, -2.91038e-11, -4.65661e-10, 5.23869e-10, 0.00999998, 0.314121, 0.911303, 1.32674)
+mesh = SubResource("BoxMesh_l5ika")
+skeleton = NodePath("../../Object_Inventory")
+
+[node name="p3" type="MeshInstance3D" parent="Multitool/Stickers"]
+transform = Transform3D(0.00813098, -0.00582117, 5.82077e-11, 0.00582117, 0.00813092, -2.91038e-11, -2.32831e-09, 2.15368e-09, 0.00999998, 0.315203, 0.911233, 1.23449)
+mesh = SubResource("BoxMesh_6dr8p")
+skeleton = NodePath("../../Object_Inventory")
+
+[node name="p7" type="MeshInstance3D" parent="Multitool/Stickers"]
+transform = Transform3D(-0.000232731, -0.00685322, -0.00727854, 0.000106172, 0.00727833, -0.00685652, 0.00999666, -0.000236866, -9.66133e-05, 0.33741, 0.843913, -0.482214)
+mesh = SubResource("BoxMesh_4qq6n")
+skeleton = NodePath("../../Object_Inventory")
+
+[node name="p8" type="MeshInstance3D" parent="Multitool/Stickers"]
+transform = Transform3D(-0.000224771, -0.0067903, -0.00733751, 8.61207e-05, 0.00733769, -0.00679322, 0.00999703, -0.0002159, -0.000106436, 0.337633, 0.844268, -0.456975)
+mesh = SubResource("BoxMesh_4qq6n")
+skeleton = NodePath("../../Object_Inventory")
+
+[node name="p9" type="MeshInstance3D" parent="Multitool/Stickers"]
+transform = Transform3D(-0.000222561, -0.00679517, -0.00733306, 1.51235e-05, 0.00733454, -0.00679711, 0.00999744, -0.000162385, -0.000152943, 0.337157, 0.845072, -0.430757)
+mesh = SubResource("BoxMesh_4qq6n")
+skeleton = NodePath("../../Object_Inventory")
+
+[node name="p10" type="MeshInstance3D" parent="Multitool/Stickers"]
+transform = Transform3D(-3.44588e-05, -0.00680415, -0.007328, 5.69676e-05, 0.00732768, -0.00680425, 0.0099997, -6.52081e-05, 1.35365e-05, 0.3388, 0.845865, -0.373221)
+mesh = SubResource("BoxMesh_t05xm")
+skeleton = NodePath("../../Object_Inventory")
+
 [node name="SpotLight3D" type="SpotLight3D" parent="."]
 transform = Transform3D(0.498528, 0.142093, -0.855149, -0.0715637, 0.989853, 0.122756, 0.863915, 1.72568e-07, 0.503638, -1.85658, 0.509018, 0.0778424)
 light_specular = 1.0
@@ -2222,8 +2332,14 @@ outline_size = 5
 [node name="Component" type="Node3D" parent="Machine_Info/All_Data"]
 transform = Transform3D(1, 0, 1.49012e-08, 0, 1, 0, -1.49012e-08, 0, 1, 1.27345, -0.339721, -1.02188)
 
-[node name="Comp_Name" type="Label3D" parent="Machine_Info/All_Data/Component"]
-transform = Transform3D(0.00999999, 5.82077e-11, 0, 0, 0.00984807, -0.00173648, 0, 0.00173648, 0.00984807, -0.1, 0.292195, -1.19209e-07)
+[node name="Screen" type="MeshInstance3D" parent="Machine_Info/All_Data/Component"]
+transform = Transform3D(1, 0, 0, 0, -0.139173, -0.990268, -2.98023e-08, 0.990268, -0.139173, -0.0965228, 0.23568, -0.0104811)
+mesh = SubResource("PlaneMesh_t05xm")
+skeleton = NodePath("../../../..")
+surface_material_override/0 = SubResource("StandardMaterial3D_4qq6n")
+
+[node name="Comp_Name" type="Label3D" parent="Machine_Info/All_Data/Component/Screen"]
+transform = Transform3D(0.00999999, 5.82077e-11, -2.32831e-10, 0, 0.000348995, 0.0099939, -2.91038e-11, -0.0099939, 0.000348995, -0.0034771, 0.00251353, -0.0574241)
 pixel_size = 0.25
 render_priority = 1
 outline_render_priority = 1
@@ -2233,8 +2349,8 @@ font_size = 50
 outline_size = 3
 uppercase = true
 
-[node name="Comp_Stars" type="Label3D" parent="Machine_Info/All_Data/Component"]
-transform = Transform3D(0.00999999, 0, 0, 0, 0.00984807, -0.00173648, 0, 0.00173648, 0.00984807, -0.1, 0.18, 0)
+[node name="Comp_Stars" type="Label3D" parent="Machine_Info/All_Data/Component/Screen"]
+transform = Transform3D(0.00999999, 0, -2.32831e-10, 0, 0.000348995, 0.0099939, -2.91038e-11, -0.0099939, 0.000348995, -0.0034771, 0.0181282, 0.053679)
 pixel_size = 0.15
 render_priority = 1
 outline_render_priority = 1
@@ -2243,17 +2359,17 @@ text = "★★★★★"
 font_size = 50
 outline_size = 3
 
-[node name="Screen" type="MeshInstance3D" parent="Machine_Info/All_Data/Component"]
-transform = Transform3D(1, 0, 0, 0, -0.139173, -0.990268, -2.98023e-08, 0.990268, -0.139173, -0.0965228, 0.23568, -0.0104811)
-mesh = SubResource("PlaneMesh_t05xm")
-skeleton = NodePath("../../../..")
-surface_material_override/0 = SubResource("StandardMaterial3D_s7cmo")
-
 [node name="Module" type="Node3D" parent="Machine_Info/All_Data"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.27301, -0.722635, -1.12281)
 
-[node name="Title" type="Label3D" parent="Machine_Info/All_Data/Module"]
-transform = Transform3D(0.00706579, 5.82077e-11, 9.31323e-10, 0, 0.00747988, -0.00187715, -2.32831e-10, 0.0013189, 0.0106459, -0.561126, 0.395211, 0.0710367)
+[node name="Screen" type="MeshInstance3D" parent="Machine_Info/All_Data/Module"]
+transform = Transform3D(1, 3.00522e-07, -2.10145e-08, 2.10145e-08, -0.139173, -0.990268, -3.00522e-07, 0.990268, -0.139173, -0.551838, 0.215596, 0.0340638)
+mesh = SubResource("PlaneMesh_4qq6n")
+skeleton = NodePath("../../../..")
+surface_material_override/0 = SubResource("StandardMaterial3D_s7cmo")
+
+[node name="Title" type="Label3D" parent="Machine_Info/All_Data/Module/Screen"]
+transform = Transform3D(0.01, -2.61934e-10, -3.0268e-09, 2.79397e-09, 0.000348992, 0.00999391, -2.03727e-10, -0.00999391, 0.000348992, -0.00928831, 0.0116155, -0.183013)
 pixel_size = 0.15
 render_priority = 1
 outline_render_priority = 1
@@ -2262,18 +2378,8 @@ text = "Module Type"
 font_size = 60
 outline_size = 5
 
-[node name="Data" type="Label3D" parent="Machine_Info/All_Data/Module"]
-transform = Transform3D(0.00706579, 2.91038e-11, 4.65661e-10, 0, 0.00747988, -0.00187715, -4.65661e-10, 0.0013189, 0.0106459, -0.528537, 0.228942, 0.0534912)
-pixel_size = 0.15
-render_priority = 1
-outline_render_priority = 1
-outline_modulate = Color(0.666667, 0, 1, 1)
-text = "*String*"
-font_size = 100
-outline_size = 5
-
-[node name="Type" type="Label3D" parent="Machine_Info/All_Data/Module"]
-transform = Transform3D(0.00706579, 0, 0, 0, 0.00747988, -0.00187715, 0, 0.0013189, 0.0106459, -0.57, 0.0474968, 0.034)
+[node name="Type" type="Label3D" parent="Machine_Info/All_Data/Module/Screen"]
+transform = Transform3D(0.01, -3.20142e-10, -3.25963e-09, 3.0268e-09, 0.000348992, 0.00999391, -2.32831e-10, -0.00999391, 0.000348992, -0.0181623, 0.0233315, 0.166472)
 pixel_size = 0.15
 render_priority = 1
 outline_render_priority = 1
@@ -2282,17 +2388,27 @@ text = "String"
 font_size = 60
 outline_size = 5
 
-[node name="Screen" type="MeshInstance3D" parent="Machine_Info/All_Data/Module"]
-transform = Transform3D(1, 4.47035e-08, -1.11759e-08, 0, -0.139173, -0.990268, -4.47035e-08, 0.990268, -0.139173, -0.551838, 0.215596, 0.0340638)
-mesh = SubResource("PlaneMesh_4qq6n")
-skeleton = NodePath("../../../..")
-surface_material_override/0 = SubResource("StandardMaterial3D_s7cmo")
+[node name="Data" type="Label3D" parent="Machine_Info/All_Data/Module/Screen"]
+transform = Transform3D(0.01, -2.03727e-10, -2.79397e-09, 2.56114e-09, 0.000348992, 0.00999391, -1.74623e-10, -0.00999391, 0.000348992, 0.0233006, 0.0173808, -0.0159199)
+pixel_size = 0.15
+render_priority = 1
+outline_render_priority = 1
+outline_modulate = Color(0.666667, 0, 1, 1)
+text = "*String*"
+font_size = 100
+outline_size = 5
 
 [node name="Power" type="Node3D" parent="Machine_Info/All_Data"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.18845, -0.72276, -1.12305)
 
-[node name="Title" type="Label3D" parent="Machine_Info/All_Data/Power"]
-transform = Transform3D(0.00706579, 5.82077e-11, 9.31323e-10, 0, 0.00747988, -0.00187715, -2.32831e-10, 0.0013189, 0.0106459, -0.551125, 0.395211, 0.071037)
+[node name="Screen" type="MeshInstance3D" parent="Machine_Info/All_Data/Power"]
+transform = Transform3D(1, 5.96046e-08, -1.86265e-08, 0, -0.139173, -0.990268, -5.96046e-08, 0.990268, -0.139173, -0.551838, 0.215596, 0.0340638)
+mesh = SubResource("PlaneMesh_4qq6n")
+skeleton = NodePath("../../../..")
+surface_material_override/0 = SubResource("StandardMaterial3D_s7cmo")
+
+[node name="Title" type="Label3D" parent="Machine_Info/All_Data/Power/Screen"]
+transform = Transform3D(0.01, -2.03727e-10, -4.65661e-10, 2.32831e-10, 0.00034899, 0.00999391, -2.91038e-11, -0.00999391, 0.00034899, 0.00071311, 0.011616, -0.183013)
 pixel_size = 0.15
 render_priority = 1
 outline_render_priority = 1
@@ -2301,18 +2417,8 @@ text = "Power Level"
 font_size = 60
 outline_size = 5
 
-[node name="Data" type="Label3D" parent="Machine_Info/All_Data/Power"]
-transform = Transform3D(0.00706579, 2.91038e-11, 4.65661e-10, 0, 0.00747988, -0.00187715, -4.65661e-10, 0.0013189, 0.0106459, -0.528537, 0.228942, 0.0534912)
-pixel_size = 0.15
-render_priority = 1
-outline_render_priority = 1
-outline_modulate = Color(0.666667, 0, 1, 1)
-text = "*Power Bar*"
-font_size = 100
-outline_size = 5
-
-[node name="Type" type="Label3D" parent="Machine_Info/All_Data/Power"]
-transform = Transform3D(0.00706579, 0, 0, 0, 0.00747988, -0.00187715, 0, 0.0013189, 0.0106459, -0.57, 0.0474968, 0.034)
+[node name="Type" type="Label3D" parent="Machine_Info/All_Data/Power/Screen"]
+transform = Transform3D(0.01, -2.32831e-10, -6.98492e-10, 4.65661e-10, 0.00034899, 0.00999391, -8.73115e-11, -0.00999391, 0.00034899, -0.0181623, 0.0233316, 0.166472)
 pixel_size = 0.15
 render_priority = 1
 outline_render_priority = 1
@@ -2321,17 +2427,27 @@ text = "Power Bar"
 font_size = 60
 outline_size = 5
 
-[node name="Screen" type="MeshInstance3D" parent="Machine_Info/All_Data/Power"]
-transform = Transform3D(1, 5.96046e-08, -1.86265e-08, 0, -0.139173, -0.990268, -5.96046e-08, 0.990268, -0.139173, -0.551838, 0.215596, 0.0340638)
-mesh = SubResource("PlaneMesh_4qq6n")
-skeleton = NodePath("../../../..")
-surface_material_override/0 = SubResource("StandardMaterial3D_s7cmo")
+[node name="Data" type="Label3D" parent="Machine_Info/All_Data/Power/Screen"]
+transform = Transform3D(0.01, -1.45519e-10, -2.32831e-10, 0, 0.00034899, 0.00999391, 0, -0.00999391, 0.00034899, 0.0233004, 0.017381, -0.0159199)
+pixel_size = 0.15
+render_priority = 1
+outline_render_priority = 1
+outline_modulate = Color(0.666667, 0, 1, 1)
+text = "*Power Bar*"
+font_size = 100
+outline_size = 5
 
 [node name="Mass" type="Node3D" parent="Machine_Info/All_Data"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.27301, -1.243, -1.194)
 
-[node name="Title" type="Label3D" parent="Machine_Info/All_Data/Mass"]
-transform = Transform3D(0.00706579, 5.82077e-11, 9.31323e-10, 0, 0.00747988, -0.00187715, -2.32831e-10, 0.0013189, 0.0106459, -0.561126, 0.395211, 0.0710367)
+[node name="Screen" type="MeshInstance3D" parent="Machine_Info/All_Data/Mass"]
+transform = Transform3D(1, 4.47035e-08, -1.11759e-08, 0, -0.139173, -0.990268, -4.47035e-08, 0.990268, -0.139173, -0.551838, 0.215596, 0.0340638)
+mesh = SubResource("PlaneMesh_4qq6n")
+skeleton = NodePath("../../../..")
+surface_material_override/0 = SubResource("StandardMaterial3D_s7cmo")
+
+[node name="Title" type="Label3D" parent="Machine_Info/All_Data/Mass/Screen"]
+transform = Transform3D(0.01, -8.73115e-11, -4.65661e-10, 2.32831e-10, 0.00034899, 0.00999391, -2.91038e-11, -0.00999391, 0.00034899, -0.00928831, 0.0116155, -0.183013)
 pixel_size = 0.15
 render_priority = 1
 outline_render_priority = 1
@@ -2340,18 +2456,8 @@ text = "Mass Index"
 font_size = 60
 outline_size = 5
 
-[node name="Data" type="Label3D" parent="Machine_Info/All_Data/Mass"]
-transform = Transform3D(0.00706579, 2.91038e-11, 4.65661e-10, 0, 0.00747988, -0.00187715, -4.65661e-10, 0.0013189, 0.0106459, -0.528537, 0.228942, 0.0534912)
-pixel_size = 0.15
-render_priority = 1
-outline_render_priority = 1
-outline_modulate = Color(0.666667, 0, 1, 1)
-text = "*Scale*"
-font_size = 100
-outline_size = 5
-
-[node name="Type" type="Label3D" parent="Machine_Info/All_Data/Mass"]
-transform = Transform3D(0.00706579, 5.82077e-11, 4.65661e-10, 0, 0.00747988, -0.00187715, -2.32831e-10, 0.0013189, 0.0106459, -0.545909, 0.0671344, 0.0282274)
+[node name="Type" type="Label3D" parent="Machine_Info/All_Data/Mass/Screen"]
+transform = Transform3D(0.01, -8.73115e-11, -4.65661e-10, 2.32831e-10, 0.00034899, 0.00999391, -2.91038e-11, -0.00999391, 0.00034899, 0.00592852, 0.0148822, 0.147829)
 pixel_size = 0.15
 render_priority = 1
 outline_render_priority = 1
@@ -2361,17 +2467,27 @@ text = "Flat Number
 font_size = 60
 outline_size = 5
 
-[node name="Screen" type="MeshInstance3D" parent="Machine_Info/All_Data/Mass"]
-transform = Transform3D(1, 4.47035e-08, -1.11759e-08, 0, -0.139173, -0.990268, -4.47035e-08, 0.990268, -0.139173, -0.551838, 0.215596, 0.0340638)
-mesh = SubResource("PlaneMesh_4qq6n")
-skeleton = NodePath("../../../..")
-surface_material_override/0 = SubResource("StandardMaterial3D_s7cmo")
+[node name="Data" type="Label3D" parent="Machine_Info/All_Data/Mass/Screen"]
+transform = Transform3D(0.01, -2.91038e-11, -2.32831e-10, 0, 0.00034899, 0.00999391, 0, -0.00999391, 0.00034899, 0.0233006, 0.0173808, -0.01592)
+pixel_size = 0.15
+render_priority = 1
+outline_render_priority = 1
+outline_modulate = Color(0.666667, 0, 1, 1)
+text = "*Scale*"
+font_size = 100
+outline_size = 5
 
 [node name="Lift" type="Node3D" parent="Machine_Info/All_Data"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.18845, -1.243, -1.194)
 
-[node name="Title" type="Label3D" parent="Machine_Info/All_Data/Lift"]
-transform = Transform3D(0.00706579, 5.82077e-11, 9.31323e-10, 0, 0.00747988, -0.00187715, -2.32831e-10, 0.0013189, 0.0106459, -0.551125, 0.395211, 0.071037)
+[node name="Screen" type="MeshInstance3D" parent="Machine_Info/All_Data/Lift"]
+transform = Transform3D(1, 5.96046e-08, -1.86265e-08, 0, -0.139173, -0.990268, -5.96046e-08, 0.990268, -0.139173, -0.551838, 0.215596, 0.0340638)
+mesh = SubResource("PlaneMesh_4qq6n")
+skeleton = NodePath("../../../..")
+surface_material_override/0 = SubResource("StandardMaterial3D_s7cmo")
+
+[node name="Title" type="Label3D" parent="Machine_Info/All_Data/Lift/Screen"]
+transform = Transform3D(0.01, -2.03727e-10, -4.65661e-10, 2.32831e-10, 0.00034899, 0.00999391, -2.91038e-11, -0.00999391, 0.00034899, 0.000712633, 0.0116156, -0.183013)
 pixel_size = 0.15
 render_priority = 1
 outline_render_priority = 1
@@ -2380,18 +2496,8 @@ text = "Lift Factor"
 font_size = 60
 outline_size = 5
 
-[node name="Data" type="Label3D" parent="Machine_Info/All_Data/Lift"]
-transform = Transform3D(0.00706579, 2.91038e-11, 4.65661e-10, 0, 0.00747988, -0.00187715, -4.65661e-10, 0.0013189, 0.0106459, -0.528537, 0.228942, 0.0534912)
-pixel_size = 0.15
-render_priority = 1
-outline_render_priority = 1
-outline_modulate = Color(0.666667, 0, 1, 1)
-text = "*Multiplier*"
-font_size = 100
-outline_size = 5
-
-[node name="Type" type="Label3D" parent="Machine_Info/All_Data/Lift"]
-transform = Transform3D(0.00706579, 0, 0, 0, 0.00747988, -0.00187715, 0, 0.0013189, 0.0106459, -0.57, 0.0474968, 0.034)
+[node name="Type" type="Label3D" parent="Machine_Info/All_Data/Lift/Screen"]
+transform = Transform3D(0.01, -2.32831e-10, -6.98492e-10, 4.65661e-10, 0.00034899, 0.00999391, -8.73115e-11, -0.00999391, 0.00034899, -0.0181618, 0.0233316, 0.166472)
 pixel_size = 0.15
 render_priority = 1
 outline_render_priority = 1
@@ -2400,14 +2506,18 @@ text = "Multiplier"
 font_size = 60
 outline_size = 5
 
-[node name="Screen" type="MeshInstance3D" parent="Machine_Info/All_Data/Lift"]
-transform = Transform3D(1, 5.96046e-08, -1.86265e-08, 0, -0.139173, -0.990268, -5.96046e-08, 0.990268, -0.139173, -0.551838, 0.215596, 0.0340638)
-mesh = SubResource("PlaneMesh_4qq6n")
-skeleton = NodePath("../../../..")
-surface_material_override/0 = SubResource("StandardMaterial3D_s7cmo")
+[node name="Data" type="Label3D" parent="Machine_Info/All_Data/Lift/Screen"]
+transform = Transform3D(0.01, -1.45519e-10, -2.32831e-10, 0, 0.00034899, 0.00999391, 0, -0.00999391, 0.00034899, 0.0233009, 0.0173808, -0.01592)
+pixel_size = 0.15
+render_priority = 1
+outline_render_priority = 1
+outline_modulate = Color(0.666667, 0, 1, 1)
+text = "*Multiplier*"
+font_size = 100
+outline_size = 5
 
 [node name="Control_Position" type="Node3D" parent="."]
-transform = Transform3D(0.814636, -0.077773, -0.574735, -0.00739489, 0.989494, -0.14438, 0.579926, 0.121867, 0.805502, -0.0550965, 0.418735, -0.460591)
+transform = Transform3D(0.816545, -0.0553647, -0.57462, -0.034534, 0.988922, -0.144356, 0.576248, 0.137717, 0.805588, -0.0550965, 0.418735, -0.460591)
 
 [connection signal="animation_finished" from="Touch_Animation" to="." method="_on_touch_animation_animation_finished"]
 [connection signal="animation_finished" from="Grab_Animation" to="." method="_on_grab_animation_animation_finished"]

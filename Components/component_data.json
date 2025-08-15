@@ -7,6 +7,7 @@
             {
                 "name": "Washer Door",
                 "stars": 2,
+                "scale": 1.75,
                 "module": "Structure",
                 "power": 100,
                 "mass": 15,
@@ -15,6 +16,7 @@
             {
                 "name": "Wash Basket",
                 "stars": 2,
+                "scale": 1.25,
                 "module": "Propulsion",
                 "power": 15,
                 "mass": 44,
@@ -23,6 +25,7 @@
             {
                 "name": "Inlet Hose",
                 "stars": 1,
+                "scale": 1.5,
                 "module": "Propulsion",
                 "power": 80,
                 "mass": 6,
@@ -31,6 +34,7 @@
             {
                 "name": "Control Panel",
                 "stars": 1,
+                "scale": 1.5,
                 "module": "Guidance",
                 "power": 66,
                 "mass": 10,
@@ -46,6 +50,7 @@
             {
                 "name": "Dryer Door",
                 "stars": 2,
+                "scale": 1.75,
                 "module": "Structure",
                 "power": 100,
                 "mass": 15,
@@ -54,6 +59,7 @@
             {
                 "name": "Tumble Drum",
                 "stars": 2,
+                "scale": 1.25,
                 "module": "Propulsion",
                 "power": 15,
                 "mass": 44,
@@ -62,6 +68,7 @@
             {
                 "name": "Vent Hose",
                 "stars": 1,
+                "scale": 1.5,
                 "module": "Propulsion",
                 "power": 80,
                 "mass": 6,
@@ -70,6 +77,7 @@
             {
                 "name": "Control Panel",
                 "stars": 1,
+                "scale": 1.5,
                 "module": "Guidance",
                 "power": 66,
                 "mass": 10,
@@ -85,6 +93,7 @@
         {
             "name": "Heating Coil",
             "stars": 1,
+            "scale": 1.15,
             "module": "Propulsion",
             "power": 75,
             "mass": 25,
@@ -93,6 +102,7 @@
         {
             "name": "Drip Pan",
             "stars": 2,
+            "scale": 1.25,
             "module": "Payload",
             "power": 60,
             "mass": 8,
@@ -101,6 +111,7 @@
         {
             "name": "Supply Pipes",
             "stars": 2,
+            "scale": 1.1,
             "module": "Propulsion",
             "power": 55,
             "mass": 21,
