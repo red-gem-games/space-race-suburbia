@@ -1,4 +1,4 @@
-[gd_scene load_steps=94 format=4 uid="uid://bpvm0l41dywjs"]
+[gd_scene load_steps=97 format=4 uid="uid://bpvm0l41dywjs"]
 
 [ext_resource type="Script" uid="uid://so25svauxmkt" path="res://PREM-7/prem_7.gd" id="1_iarxa"]
 [ext_resource type="Shader" uid="uid://vetnq53dk60g" path="res://Shaders/grabbed_glow.gdshader" id="2_4qq6n"]
@@ -1286,7 +1286,7 @@ _data = {
 resource_name = "Material.003"
 cull_mode = 2
 albedo_color = Color(0, 0.132903, 0.0299002, 1)
-metallic = 1.0
+metallic = 0.85
 roughness = 0.6
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_gdvc8"]
@@ -1356,6 +1356,8 @@ shadow_mesh = SubResource("ArrayMesh_364h7")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3nktn"]
 albedo_color = Color(0, 0, 0, 1)
+metallic = 1.0
+roughness = 0.0
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_8m00m"]
 resource_name = "PREM-7_v2_Sphere_004"
@@ -1909,6 +1911,27 @@ size = Vector3(1.52, 26.63, 1.57)
 material = SubResource("StandardMaterial3D_l5ika")
 size = Vector3(7.53, 26.41, 1.57)
 
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_8m00m"]
+direction = Vector3(0, 1, 0)
+spread = 20.0
+initial_velocity_min = 7.67
+initial_velocity_max = 7.67
+gravity = Vector3(0, 0, 0)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8d6ws"]
+transparency = 3
+alpha_hash_scale = 1.0
+alpha_antialiasing_mode = 0
+albedo_color = Color(1, 1, 1, 0.113725)
+emission_enabled = true
+emission = Color(0.7, 0, 1, 1)
+emission_energy_multiplier = 154.9
+
+[sub_resource type="SphereMesh" id="SphereMesh_dpu46"]
+material = SubResource("StandardMaterial3D_8d6ws")
+radius = 0.003
+height = 0.005
+
 [sub_resource type="Gradient" id="Gradient_6dr8p"]
 colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1)
 
@@ -2245,6 +2268,15 @@ skeleton = NodePath("../../Object_Inventory")
 transform = Transform3D(-3.44588e-05, -0.00680415, -0.007328, 5.69676e-05, 0.00732768, -0.00680425, 0.0099997, -6.52081e-05, 1.35365e-05, 0.3388, 0.845865, -0.373221)
 mesh = SubResource("BoxMesh_t05xm")
 skeleton = NodePath("../../Object_Inventory")
+
+[node name="GPUParticles3D" type="GPUParticles3D" parent="Multitool"]
+transform = Transform3D(0.999999, -3.72529e-09, 2.98023e-08, 1.11759e-08, 1, -3.72529e-09, -4.47035e-08, 4.47035e-08, 1, -0.122589, 0.716615, 1.07609)
+amount = 500
+lifetime = 0.24
+speed_scale = 0.09
+randomness = 1.0
+process_material = SubResource("ParticleProcessMaterial_8m00m")
+draw_pass_1 = SubResource("SphereMesh_dpu46")
 
 [node name="SpotLight3D" type="SpotLight3D" parent="."]
 transform = Transform3D(0.498528, 0.142093, -0.855149, -0.0715637, 0.989853, 0.122756, 0.863915, 1.72568e-07, 0.503638, -1.85658, 0.509018, 0.0778424)

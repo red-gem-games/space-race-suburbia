@@ -2,6 +2,9 @@ shader_type spatial;
 render_mode blend_mix;
 
 // Grupo: Textura Base
+
+uniform float alpha_multiplier : hint_range(0.0, 1.0) = 1.0;
+
 group_uniforms base_texture;
 uniform sampler2D albedo_texture : source_color;
 uniform float albedo_alpha : hint_range(0.0, 1.0) = 0.25;
@@ -104,7 +107,7 @@ void fragment() {
     }
 
     ALBEDO = tinted.rgb + edge_effect.rgb + scan.rgb;
-    ALPHA = 0.5;
+    ALPHA = max(tinted.a, max(edge_effect.a, scan.a)) * alpha_multiplier;
 }
 
 //void light() {

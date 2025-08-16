@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=4 uid="uid://dgbmgxjwa2xtf"]
+[gd_scene load_steps=31 format=4 uid="uid://dgbmgxjwa2xtf"]
 
 [ext_resource type="Texture2D" uid="uid://b6b71hj45b54m" path="res://Assets/Blender/WaterHeater/WaterHeater_GameReady_T_Coil_DF.png" id="1_dxc35"]
 [ext_resource type="Script" uid="uid://clwwid0cs6u32" path="res://Components/components.gd" id="1_hfy47"]
@@ -14,9 +14,8 @@
 [ext_resource type="Texture2D" uid="uid://db6pxq6n1qtxf" path="res://Assets/Blender/WaterHeater/WaterHeater_GameReady_T_Shell_MT-T_Shell_RG.png" id="11_dlaor"]
 [ext_resource type="Texture2D" uid="uid://ckvcbrufvhtmk" path="res://Assets/Blender/WaterHeater/WaterHeater_GameReady_T_Shell_NR.png" id="12_onvkh"]
 
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_dxc35"]
-height = 3.80478
-radius = 0.808105
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_hfy47"]
+points = PackedVector3Array(5.1413, 11.8279, 6.26268, -8.20936, -13.7129, -1.86114, -7.62703, -13.7129, -3.60251, 6.88352, -14.873, 3.94137, 5.1413, 14.1481, -5.92535, -4.14418, 12.4061, 7.42411, -7.04668, 12.7662, -3.31243, 3.39908, -12.5455, -7.08678, -2.40355, -14.2875, 8.00559, 6.88352, 21.698, 2.19847, -2.23742, 13.359, -7.1074, 7.46426, -14.873, -1.86114, -7.62703, -13.7129, 3.94137, -7.65701, 12.8598, 1.51999, -4.14418, -13.1274, -7.08678, 8.045, 19.3705, 2.19847, 3.39908, 21.698, -1.27966, 1.65686, -14.2875, 8.00559, 6.88352, 14.1481, -3.60404, 5.72204, 21.1161, 3.94137, 1.50854, 11.6143, 7.3372, 5.72204, -12.5455, -5.34541, -2.9827, -14.873, 5.68274, -4.41273, 13.4067, -6.05797, -2.40355, -13.1274, -7.66826, 1.52795, 13.3307, -7.08732, -5.8864, -13.7129, 6.26268, 5.1413, -14.2875, 6.26268, 6.88352, 19.3705, 4.52132, -7.08766, 12.8229, 3.13318, -7.04629, -13.1274, -4.76547, 7.46426, -14.873, 2.19847)
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_hfy47"]
 height = 0.278717
@@ -25,6 +24,10 @@ radius = 1.12939
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_dxc35"]
 radius = 0.351455
 height = 2.33077
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_dxc35"]
+height = 3.80478
+radius = 0.808105
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_hfy47"]
 radius = 0.201294
@@ -218,8 +221,8 @@ shadow_mesh = SubResource("ArrayMesh_1bxpg")
 script = ExtResource("1_hfy47")
 
 [node name="HeatingCoil_Shape" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0057233, 0.110245, 0)
-shape = SubResource("CylinderShape3D_dxc35")
+transform = Transform3D(-0.0707847, 0, 0, 0, -0.0707847, 0, 0, 0, -0.0707847, -0.0296527, -0.0260578, 0.008643)
+shape = SubResource("ConvexPolygonShape3D_hfy47")
 
 [node name="DripPan_Shape" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0057233, -1.72557, 0)
@@ -230,6 +233,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.834316, -0.578444, 0.14408
 shape = SubResource("CapsuleShape3D_dxc35")
 
 [node name="OuterShell_Shape" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0057233, 0.110245, 0)
+shape = SubResource("CylinderShape3D_dxc35")
+
+[node name="UpperShell_Shape" type="CollisionShape3D" parent="."]
 transform = Transform3D(0.0185225, -0.116946, -0.992966, 0.987688, 0.156434, 0, 0.155334, -0.98074, 0.118404, 0.0236178, 2.16467, -0.0306205)
 shape = SubResource("CapsuleShape3D_hfy47")
 

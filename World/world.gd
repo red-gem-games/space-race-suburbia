@@ -140,12 +140,14 @@ func _physics_process(delta: float) -> void:
 				grabbed_object.extract_body.position.y = lerp(grabbed_object.extract_body.position.y, 0.1, delta * 5.0)
 				character.PREM_7.machine_info.scale = lerp(character.PREM_7.machine_info.scale, Vector3.ONE, delta * 5.0)
 				if current_spin_timer > 0.25:
-					grabbed_object.manipulation_material
 					extraction_spin_initialized = true
 			if extraction_spin_initialized:
 				var x_spd = character.current_mouse_speed_x / 1000.0
 				var y_spd = character.current_mouse_speed_y / 1000.0
-				grabbed_object.extract_body.rotate_y(0.0025 + x_spd)
+				if character.extraction_started:
+					x_spd = 0.0
+					y_spd = 0.0
+				grabbed_object.extract_body.rotate_y(character.extract_speed + x_spd)
 				grabbed_object.extract_body.rotate_x(y_spd)
 				if y_spd < 0.01:
 					grabbed_object.extract_body.rotation_degrees.x = lerp(grabbed_object.extract_body.rotation_degrees.x, 0.0, delta)
