@@ -257,6 +257,7 @@ var selected_component_rot: Vector3
 var fresh_component: RigidBody3D
 
 
+
 func _ready() -> void:
 	push_warning('General To Do List:')
 	push_warning('------ ALWAYS MAKE SURE THINGS WORK ON BOTH SCREENS ------')
@@ -372,12 +373,15 @@ func _process(delta: float) -> void:
 			var lift_labels = PREM_7.lift_screen.get_children()
 			var screen_labels = module_labels + power_labels + mass_labels + lift_labels
 			
-			if extraction_recently_completed:
-				#fresh_component.scale = lerp(fresh_component.scale, Vector3(comp_scale_x, comp_scale_y, comp_scale_z), delta * 2.5)
-				print(fresh_component.scale)
-				fresh_component.position.z = lerp(fresh_component.position.z, -20.0, delta * 2.5)
-				#PREM_7.object_inventory.scale = lerp(PREM_7.object_inventory.scale, Vector3.ONE, delta * 2.5)
-				#PREM_7.object_inventory.position.z = lerp(PREM_7.object_inventory.position.z, 10.0, delta * 2.5)
+			#if extraction_recently_completed:
+				#fresh_component.position.z = lerp(fresh_component.position.z, -20.0, delta * 2.5)
+				#if fresh_component.position.z < -5.0:
+					#fresh_component.EXTRACT_MATERIAL.emission_energy_multiplier = lerp(fresh_component.EXTRACT_MATERIAL.emission_energy_multiplier, 0.0, delta / 5.0)
+				#if fresh_component.position.z < -15.0:
+					#fresh_component.EXTRACT_MATERIAL.albedo_color.a = lerp(fresh_component.EXTRACT_MATERIAL.albedo_color.a, 0.0, delta * 4.0)
+
+				#fresh_component.EXTRACT_MATERIAL.emission = lerp(fresh_component.EXTRACT_MATERIAL.emission, Color.TRANSPARENT, delta * 3.5)
+					
 				
 			
 			if extraction_started:
@@ -386,7 +390,7 @@ func _process(delta: float) -> void:
 					extract_edge -= delta * 2.25
 					extract_time -= delta
 				grabbed_object.EXTRACT_MATERIAL.albedo_color = lerp(grabbed_object.EXTRACT_MATERIAL.albedo_color, Color.PURPLE, delta)
-				grabbed_object.EXTRACT_MATERIAL.emission = lerp(grabbed_object.EXTRACT_MATERIAL.emission, Color.WHITE, delta * 5.0)
+				grabbed_object.EXTRACT_MATERIAL.emission = lerp(grabbed_object.EXTRACT_MATERIAL.emission, Color.WHITE, delta)
 				grabbed_object.EXTRACT_MATERIAL.emission_energy_multiplier = lerp(grabbed_object.EXTRACT_MATERIAL.emission_energy_multiplier, selected_component_glow, delta * 5.0)
 				PREM_7.module_screen.scale = lerp(PREM_7.module_screen.scale, Vector3.ZERO, delta * 3.5)
 				PREM_7.power_screen.scale = lerp(PREM_7.power_screen.scale, Vector3.ZERO, delta * 3.5)
@@ -430,9 +434,11 @@ func _process(delta: float) -> void:
 				for child in screen_labels:
 					child.modulate.a = lerp(child.modulate.a, 1.0, delta * 7.5)
 					child.outline_modulate.a = lerp(child.outline_modulate.a, 1.0, delta * 7.5)
-				grabbed_object.EXTRACT_MATERIAL.emission = lerp(grabbed_object.EXTRACT_MATERIAL.emission, Color.TRANSPARENT, delta * 7.5)
-				grabbed_object.EXTRACT_MATERIAL.emission_energy_multiplier = lerp(grabbed_object.EXTRACT_MATERIAL.emission_energy_multiplier, 2.5, delta * 7.5)
-				grabbed_object.EXTRACT_MATERIAL.albedo_color = lerp(grabbed_object.EXTRACT_MATERIAL.albedo_color, Color.TRANSPARENT, delta * 7.5)
+				grabbed_object.EXTRACT_MATERIAL.emission = lerp(grabbed_object.EXTRACT_MATERIAL.emission, Color.BLUE_VIOLET, delta * 7.5)
+				grabbed_object.EXTRACT_MATERIAL.albedo_color = lerp(grabbed_object.EXTRACT_MATERIAL.albedo_color, Color.PURPLE, delta * 7.5)
+				grabbed_object.EXTRACT_MATERIAL.albedo_color.a = 0.25
+				grabbed_object.EXTRACT_MATERIAL.emission_energy_multiplier = lerp(grabbed_object.EXTRACT_MATERIAL.emission_energy_multiplier, 5.0, delta * 7.5)
+
 				selected_component_mesh.position = lerp(selected_component_mesh.position, selected_component_pos, delta * 7.5)
 				selected_component_mesh.scale = lerp(selected_component_mesh.scale, Vector3(x, y, z), delta * 7.5)
 				extract_alpha = lerp(extract_alpha, 0.25, delta * 7.5)
@@ -1413,7 +1419,7 @@ func extract_component(mesh, col):
 	fresh_component.add_child(fresh_mesh)
 	fresh_component.add_child(fresh_col)
 	
-	fresh_mesh.scale = true_scale
+	#fresh_mesh.scale = true_scale
 	
 	fresh_mesh.position = Vector3.ZERO
 	fresh_col.position = Vector3.ZERO
@@ -1442,7 +1448,7 @@ func extract_component(mesh, col):
 	#inventory.add_child(new_mesh)
 	add_child(fresh_component)
 
-	fresh_component.position = Vector3(2.0, -1.0, -6.0)
+	fresh_component.position = Vector3(2.0, -0.95, -4.0)
 	#new_mesh.rotation_degrees = Vector3(0, new_mesh.rotation_degrees.y + 28, 0)
 	
 	#PREM_7.holo_anim.play("spin_hologram")
@@ -1457,7 +1463,7 @@ func extract_component(mesh, col):
 	
 
 func complete_extraction(mesh: MeshInstance3D):
-	await get_tree().create_timer(1.0).timeout
+	await get_tree().create_timer(2.0).timeout
 	#fresh_component.set_extract_glow('Complete')
 	var surface_count = mesh.mesh.get_surface_count()
 	mesh.set_material_overlay(null)

@@ -446,7 +446,6 @@ func extract_component():
 		extracted_object_container.add_child(component)
 		
 		await get_tree().process_frame  # <-- Let it reparent
-		
 		component.set_script(COMPONENT_SCRIPT)
 		component.call_deferred("_ready")
 		await get_tree().create_timer(0.001).timeout

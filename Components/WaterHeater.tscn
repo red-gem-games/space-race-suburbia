@@ -1,6 +1,5 @@
-[gd_scene load_steps=31 format=4 uid="uid://dgbmgxjwa2xtf"]
+[gd_scene load_steps=30 format=4 uid="uid://dgbmgxjwa2xtf"]
 
-[ext_resource type="Texture2D" uid="uid://b6b71hj45b54m" path="res://Assets/Blender/WaterHeater/WaterHeater_GameReady_T_Coil_DF.png" id="1_dxc35"]
 [ext_resource type="Script" uid="uid://clwwid0cs6u32" path="res://Components/components.gd" id="1_hfy47"]
 [ext_resource type="Texture2D" uid="uid://deb6e4luk4pot" path="res://Assets/Blender/WaterHeater/WaterHeater_GameReady_T_Coil_MT-T_Coil_RG.png" id="2_hfy47"]
 [ext_resource type="Texture2D" uid="uid://b2q8sg62gx4mk" path="res://Assets/Blender/WaterHeater/WaterHeater_GameReady_T_Coil_NR.png" id="3_wct5i"]
@@ -36,10 +35,11 @@ height = 0.834101
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_icq3v"]
 resource_name = "M_BakeCoil"
 cull_mode = 2
-albedo_texture = ExtResource("1_dxc35")
+vertex_color_use_as_albedo = true
 metallic = 1.0
 metallic_texture = ExtResource("2_hfy47")
 metallic_texture_channel = 2
+roughness = 0.0
 roughness_texture = ExtResource("2_hfy47")
 roughness_texture_channel = 1
 normal_enabled = true
@@ -86,6 +86,7 @@ albedo_texture = ExtResource("4_78n6r")
 metallic = 1.0
 metallic_texture = ExtResource("5_hpy3l")
 metallic_texture_channel = 2
+roughness = 0.0
 roughness_texture = ExtResource("5_hpy3l")
 roughness_texture_channel = 1
 normal_enabled = true
@@ -132,6 +133,7 @@ albedo_texture = ExtResource("7_ksh5h")
 metallic = 1.0
 metallic_texture = ExtResource("8_u5mof")
 metallic_texture_channel = 2
+roughness = 0.0
 roughness_texture = ExtResource("8_u5mof")
 roughness_texture_channel = 1
 normal_enabled = true

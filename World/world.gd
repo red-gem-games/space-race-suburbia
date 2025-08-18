@@ -60,7 +60,7 @@ var flicker_obj_c: Node = null
 var time: float = 0.0
 var current_spin_timer := 0.0
 var extraction_spin_initialized: bool = false
-
+var COMPONENT_SCRIPT: Script = preload("res://Components/components.gd")
 
 
 
@@ -72,8 +72,76 @@ func _ready() -> void:
 
 	start_static_glow_loop()
 
+
+var f_comp: RigidBody3D
+var launching_component: bool = false
+
+func launch_comp(obj, time):
+	obj.scale = lerp(obj.scale, character.true_scale, time * 3.0)
+	await get_tree().create_timer(1.5).timeout
+	launching_component = false
+
 func _physics_process(delta: float) -> void:
 	
+	if launching_component:
+		for child in f_comp.get_children():
+			if child is MeshInstance3D:
+				launch_comp(child, delta)
+
+	if character.extraction_recently_completed:
+		launching_component = true
+		
+		f_comp = character.fresh_component
+		f_comp.reparent(assembly_object_container)
+		assembly_object_array.append(f_comp)
+		var forward = -character.camera.global_transform.basis.z.normalized()
+		f_comp.apply_impulse(forward * 30.0)
+
+		f_comp.set_script(COMPONENT_SCRIPT)
+		
+		f_comp.shader = Shader.new()
+		f_comp.shader.code = f_comp.GLOW_SHADER.code
+		f_comp.shader_material = ShaderMaterial.new()
+		
+		f_comp.grab_particles_shader = Shader.new()
+		f_comp.grab_particles_shader.code = preload("res://Shaders/particle_glow.gdshader").code
+		f_comp.particles_material = ShaderMaterial.new()
+		
+		f_comp.manipulation_material.shader = f_comp.MANIPULATION_SHADER
+		f_comp.extraction_material.shader = f_comp.EXTRACTION_SHADER
+		
+		f_comp.contact_monitor = true
+		f_comp.continuous_cd = true
+		f_comp.max_contacts_reported = 1000
+		f_comp.gravity_scale = 1.5
+		
+		f_comp.collision_layer = 3
+		f_comp.collision_mask = 3
+		
+		f_comp.mass = 50.0
+		
+		for child in f_comp.get_children():
+			if child is MeshInstance3D:
+				#f_comp.base_mesh = child
+				f_comp.object_body = child
+				f_comp.current_scale = f_comp.object_body.scale
+		
+		f_comp.physics_mat.friction = 1.0
+		f_comp.physics_mat.bounce = 0.0
+		f_comp.physics_material_override = f_comp.physics_mat
+		f_comp.shader_material.shader = f_comp.GLOW_SHADER
+		f_comp.standard_material = f_comp.GLOW_MATERIAL
+
+		f_comp.resting_position = f_comp.global_position.y
+
+		if f_comp.name == "Stepladder":
+			f_comp.is_stepladder = true
+		
+		f_comp.set_physics_process(true)
+		f_comp.set_process(true)
+		
+		character.extraction_recently_completed = false
+
 	if grabbed_object:
 		# --- Force Movement Toward Target ---
 		var cam_transform = character.camera.global_transform
