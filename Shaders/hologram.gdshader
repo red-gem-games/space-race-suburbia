@@ -15,7 +15,7 @@ uniform vec4 tint_color : source_color = vec4(0.5, 0.0, 1.0, 0.75); // #FF8000
 uniform vec4 edge_color : source_color = vec4(1.0, 0.9, 1.0, 1.0); // #FF0000
 uniform float edge_power : hint_range(0.0, 1.0) = 1.0;
 uniform float edge_size : hint_range(0.1, 5.0) = 5.0;
-uniform float edge_intensity : hint_range(0.0, 2.0) = 1.0;
+uniform float edge_intensity : hint_range(0.0, 5.0) = 1.0;
 
 // Grupo: Scanlines
 group_uniforms scanlines;
@@ -91,20 +91,30 @@ void fragment() {
     vec4 edge_effect = edge * edge_intensity * edge_color;
 
     vec4 scan = vec4(0.0);
-    if (scanline_density > 0.001) {
-        vec2 screen_uv = FRAGCOORD.xy / VIEWPORT_SIZE;
-        vec2 dir = vec2(cos(scanline_angle), sin(scanline_angle));
-        float scan_pos = (screen_uv.x * dir.x + screen_uv.y * dir.y);
-        float spacing = mix(50.0, 10.0, scanline_density / 10.0) * scanline_spacing;
-        float time_offset = TIME * scanline_speed;
-        float line = fract(scan_pos * spacing + time_offset);
-        line = smoothstep(
-            0.5 - 0.1 * scanline_thickness,
-            0.5 + 0.1 * scanline_thickness,
-            abs(line - 0.5)
-        );
-        scan = vec4(scanline_tint.rgb * line * scanline_intensity, line * scanline_tint.a);
-    }
+	if (scanline_density > 0.001) {
+	    // rotate UVs by scanline_angle
+	    float c = cos(scanline_angle);
+	    float s = sin(scanline_angle);
+	    mat2 R = mat2(vec2(c, -s), vec2(s, c));
+
+	    // center UVs so rotation is around the middle
+	    vec2 uv2 = (UV - vec2(0.5)) * R;
+
+	    // scale density/spacing
+	    float spacing = mix(50.0, 10.0, scanline_density / 10.0) * scanline_spacing;
+
+	    // animate along rotated X
+	    float line = fract(uv2.x * spacing + TIME * scanline_speed);
+
+	    // thickness shaping
+	    line = smoothstep(
+	        0.5 - 0.1 * scanline_thickness,
+	        0.5 + 0.1 * scanline_thickness,
+	        abs(line - 0.5)
+	    );
+
+	    scan = vec4(scanline_tint.rgb * line * scanline_intensity, line * scanline_tint.a);
+	}
 
     ALBEDO = tinted.rgb + edge_effect.rgb + scan.rgb;
     ALPHA = max(tinted.a, max(edge_effect.a, scan.a)) * alpha_multiplier;

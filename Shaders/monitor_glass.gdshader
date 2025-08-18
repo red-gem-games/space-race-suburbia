@@ -37,12 +37,12 @@ void fragment() {
 	// This is haven't any effect, if "normal_enable" is disabled
 	float normal = 0.0;
 	if (normal_enable) normal = texture(normal_map, UV).g * normal_map_strength / 10.0;
-	
+
 	float blur_level = 1.0;
 	vec3 new_view = texture(SCREEN_TEXTURE, vec2(SCREEN_UV.x + normal, SCREEN_UV.y + normal)).rgb;
 	if (blur_enable) {
 		blur_level = blur_strength;
-		
+
 		// Take some color from near pixels: 2, 4, 6 and 8 (if 5 is center)
 		new_view += texture(SCREEN_TEXTURE, vec2(SCREEN_UV.x, SCREEN_UV.y + normal + float(blur_radius) / 5000.0)).rgb * blur_level;
 		new_view += texture(SCREEN_TEXTURE, vec2(SCREEN_UV.x + normal + float(blur_radius) / 10000.0, SCREEN_UV.y)).rgb * blur_level;
@@ -61,7 +61,7 @@ void fragment() {
 		blur_level = 1.0;
 		new_view *= 16.0;
 	}
-	
+
 	// Albedo and simple material sets
 	if (shaded) {
 		vec3 new_color = (((new_view * 10.0 / blur_level) / 2.0) * (glass_color.rgb) - (vec3(1.0) - 1.0 + glass_color.a));
@@ -75,8 +75,8 @@ void fragment() {
 		// I don't even know, how I get this...
 		ALBEDO = (((new_view * 10.0 / blur_level) / 2.0) * (glass_color.rgb) - (vec3(1.0) - 1.0 + glass_color.a) + glass_color.rgb * glass_color.a) * bright;
 	}
-	
-	
+
+
 	// Normal Map sets
 	if (normal_enable) {
 		NORMAL += texture(normal_map, UV).g * normal_map_strength;

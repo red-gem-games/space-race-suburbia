@@ -630,13 +630,16 @@ func set_glitch(status):
 	manipulation_material.set_shader_parameter("enable_glitch", status)
 
 func set_extract_glow(component, selection):
+	var surface_count = component.mesh.get_surface_count()
 	if selection == 'Selected':
 		component.set_material_overlay(EXTRACT_MATERIAL)
-		var surface_count = component.mesh.get_surface_count()
 		for i in range(surface_count):
 			component.set_surface_override_material(i, null)
 	elif selection == 'Deselected':
 		component.set_material_overlay(null)
-		var surface_count = component.mesh.get_surface_count()
 		for i in range(surface_count):
 			component.set_surface_override_material(i, manipulation_material)
+	elif selection == 'Complete':
+		component.set_material_overlay(null)
+		for i in range(surface_count):
+			component.set_surface_override_material(i, null)

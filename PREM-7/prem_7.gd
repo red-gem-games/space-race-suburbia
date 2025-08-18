@@ -184,7 +184,7 @@ func switch_hologram(dir):
 func retract_hologram():
 	control_hologram_timer.stop()
 	control_hologram_active = false
-	holo_anim.play("retract_hologram")
+	holo_anim.play_backwards("cast_hologram")
 	print('Retracting hologram!')
 
 func _instance_component_by_name(name: StringName) -> RigidBody3D:

@@ -1,7 +1,7 @@
-[gd_scene load_steps=97 format=4 uid="uid://bpvm0l41dywjs"]
+[gd_scene load_steps=99 format=4 uid="uid://bpvm0l41dywjs"]
 
 [ext_resource type="Script" uid="uid://so25svauxmkt" path="res://PREM-7/prem_7.gd" id="1_iarxa"]
-[ext_resource type="Shader" uid="uid://vetnq53dk60g" path="res://Shaders/grabbed_glow.gdshader" id="2_4qq6n"]
+[ext_resource type="Shader" uid="uid://cgr7dnph387rx" path="res://PREM-7/prem_7_holo_glow.gdshader" id="2_t05xm"]
 [ext_resource type="ArrayMesh" uid="uid://dxs73vc1sll8t" path="res://PREM-7/new_array_mesh.tres" id="5_t05xm"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_t05xm"]
@@ -249,6 +249,44 @@ tracks/10/keys = {
 "times": PackedFloat32Array(0)
 }
 
+[sub_resource type="Animation" id="Animation_gssec"]
+resource_name = "activate"
+length = 0.25
+step = 0.001
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Multitool/Button:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(-0.1072, -0.03, 0, 0.03, 0, -0.109147, -0.03, 0, 0.03, 0),
+"times": PackedFloat32Array(0, 0.249)
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Multitool/Button:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(0.0198131, -0.03, 0, 0.03, 0, -0.0780031, -0.03, 0, 0.03, 0),
+"times": PackedFloat32Array(0, 0.249)
+}
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Multitool/Button:position:z")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(0.292164, -0.03, 0, 0.03, 0, 0.346491, -0.03, 0, 0.03, 0),
+"times": PackedFloat32Array(0, 0.249)
+}
+
 [sub_resource type="Animation" id="Animation_k44yu"]
 resource_name = "extract"
 length = 0.25
@@ -449,44 +487,6 @@ tracks/2/keys = {
 "handle_modes": PackedInt32Array(0, 0, 0),
 "points": PackedFloat32Array(0.292164, -0.03, 0, 0.03, 0, 0.346491, -0.03, 0, 0.03, 0, 0.292164, -0.03, 0, 0.03, 0),
 "times": PackedFloat32Array(0, 0.12, 0.25)
-}
-
-[sub_resource type="Animation" id="Animation_gssec"]
-resource_name = "activate"
-length = 0.25
-step = 0.001
-tracks/0/type = "bezier"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Multitool/Button:position:x")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"handle_modes": PackedInt32Array(0, 0),
-"points": PackedFloat32Array(-0.1072, -0.03, 0, 0.03, 0, -0.109147, -0.03, 0, 0.03, 0),
-"times": PackedFloat32Array(0, 0.249)
-}
-tracks/1/type = "bezier"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Multitool/Button:position:y")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"handle_modes": PackedInt32Array(0, 0),
-"points": PackedFloat32Array(0.0198131, -0.03, 0, 0.03, 0, -0.0780031, -0.03, 0, 0.03, 0),
-"times": PackedFloat32Array(0, 0.249)
-}
-tracks/2/type = "bezier"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Multitool/Button:position:z")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"handle_modes": PackedInt32Array(0, 0),
-"points": PackedFloat32Array(0.292164, -0.03, 0, 0.03, 0, 0.346491, -0.03, 0, 0.03, 0),
-"times": PackedFloat32Array(0, 0.249)
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_3tjq7"]
@@ -972,7 +972,7 @@ length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Hologram:visible")
+tracks/0/path = NodePath("Details:visible")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -981,95 +981,127 @@ tracks/0/keys = {
 "update": 1,
 "values": [false]
 }
-tracks/1/type = "bezier"
+tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Hologram:scale:x")
+tracks/1/path = NodePath("Multitool/Object_Inventory:rotation")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"handle_modes": PackedInt32Array(0),
-"points": PackedFloat32Array(0.001, -0.25, 0, 0.25, 0),
-"times": PackedFloat32Array(0)
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
 }
 tracks/2/type = "bezier"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("Hologram:scale:y")
+tracks/2/path = NodePath("Holo_Glow:mesh:material:shader_parameter/tip_fade_start")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
 "handle_modes": PackedInt32Array(0),
-"points": PackedFloat32Array(0.001, -0.25, 0, 0.25, 0),
+"points": PackedFloat32Array(0, -0.175, 0, 0.175, 0),
 "times": PackedFloat32Array(0)
 }
 tracks/3/type = "bezier"
 tracks/3/imported = false
 tracks/3/enabled = true
-tracks/3/path = NodePath("Hologram:scale:z")
+tracks/3/path = NodePath("Holo_Glow:position:x")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
 "handle_modes": PackedInt32Array(0),
-"points": PackedFloat32Array(0.001, -0.25, 0, 0.25, 0),
+"points": PackedFloat32Array(0, -0.175, 0, 0.175, 0),
 "times": PackedFloat32Array(0)
 }
 tracks/4/type = "bezier"
 tracks/4/imported = false
 tracks/4/enabled = true
-tracks/4/path = NodePath("Hologram:rotation:x")
+tracks/4/path = NodePath("Holo_Glow:position:y")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {
 "handle_modes": PackedInt32Array(0),
-"points": PackedFloat32Array(0, -0.25, 0, 0.25, 0),
+"points": PackedFloat32Array(0, -0.175, 0, 0.175, 0),
 "times": PackedFloat32Array(0)
 }
 tracks/5/type = "bezier"
 tracks/5/imported = false
 tracks/5/enabled = true
-tracks/5/path = NodePath("Hologram:rotation:y")
+tracks/5/path = NodePath("Holo_Glow:position:z")
 tracks/5/interp = 1
 tracks/5/loop_wrap = true
 tracks/5/keys = {
 "handle_modes": PackedInt32Array(0),
-"points": PackedFloat32Array(-0.174533, -0.25, 0, 0.25, 0),
+"points": PackedFloat32Array(-0.537, -0.175, 0, 0.175, 0),
 "times": PackedFloat32Array(0)
 }
 tracks/6/type = "bezier"
 tracks/6/imported = false
 tracks/6/enabled = true
-tracks/6/path = NodePath("Hologram:rotation:z")
+tracks/6/path = NodePath("Square_Glow:position:x")
 tracks/6/interp = 1
 tracks/6/loop_wrap = true
 tracks/6/keys = {
 "handle_modes": PackedInt32Array(0),
-"points": PackedFloat32Array(0, -0.25, 0, 0.25, 0),
+"points": PackedFloat32Array(-0.003, -0.125, 0, 0.125, 0),
 "times": PackedFloat32Array(0)
 }
-tracks/7/type = "value"
+tracks/7/type = "bezier"
 tracks/7/imported = false
 tracks/7/enabled = true
-tracks/7/path = NodePath("Details:visible")
+tracks/7/path = NodePath("Square_Glow:position:y")
 tracks/7/interp = 1
 tracks/7/loop_wrap = true
 tracks/7/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [false]
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(0, -0.125, 0, 0.125, 0),
+"times": PackedFloat32Array(0)
 }
-tracks/8/type = "value"
+tracks/8/type = "bezier"
 tracks/8/imported = false
 tracks/8/enabled = true
-tracks/8/path = NodePath("Multitool/Object_Inventory:rotation")
+tracks/8/path = NodePath("Square_Glow:position:z")
 tracks/8/interp = 1
 tracks/8/loop_wrap = true
 tracks/8/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0, 0, 0)]
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(-0.533, -0.125, 0, 0.125, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/9/type = "bezier"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("Square_Glow:scale:x")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(0.25, -0.125, 0, 0.125, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/10/type = "bezier"
+tracks/10/imported = false
+tracks/10/enabled = true
+tracks/10/path = NodePath("Square_Glow:scale:y")
+tracks/10/interp = 1
+tracks/10/loop_wrap = true
+tracks/10/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(0.25, -0.125, 0, 0.125, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/11/type = "bezier"
+tracks/11/imported = false
+tracks/11/enabled = true
+tracks/11/path = NodePath("Square_Glow:scale:z")
+tracks/11/interp = 1
+tracks/11/loop_wrap = true
+tracks/11/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(0.25, -0.125, 0, 0.125, 0),
+"times": PackedFloat32Array(0)
 }
 
 [sub_resource type="Animation" id="Animation_5hhbi"]
@@ -1124,136 +1156,123 @@ tracks/3/keys = {
 
 [sub_resource type="Animation" id="Animation_3nktn"]
 resource_name = "cast_hologram"
-length = 0.5
-step = 0.01
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Hologram:visible")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [true]
-}
-tracks/1/type = "bezier"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Hologram:scale:x")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"handle_modes": PackedInt32Array(0, 0),
-"points": PackedFloat32Array(0.001, -0.25, 0, 0.25, 0, 0.085, -0.25, 0, 0.25, 0),
-"times": PackedFloat32Array(0, 0.5)
-}
-tracks/2/type = "bezier"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Hologram:scale:y")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"handle_modes": PackedInt32Array(0, 0),
-"points": PackedFloat32Array(0.001, -0.25, 0, 0.25, 0, 0.085, -0.25, 0, 0.25, 0),
-"times": PackedFloat32Array(0, 0.5)
-}
-tracks/3/type = "bezier"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("Hologram:scale:z")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"handle_modes": PackedInt32Array(0, 0),
-"points": PackedFloat32Array(0.001, -0.25, 0, 0.25, 0, 0.085, -0.25, 0, 0.25, 0),
-"times": PackedFloat32Array(0, 0.5)
-}
-tracks/4/type = "bezier"
-tracks/4/imported = false
-tracks/4/enabled = true
-tracks/4/path = NodePath("Hologram:rotation:x")
-tracks/4/interp = 1
-tracks/4/loop_wrap = true
-tracks/4/keys = {
-"handle_modes": PackedInt32Array(0),
-"points": PackedFloat32Array(0, -0.25, 0, 0.25, 0),
-"times": PackedFloat32Array(0)
-}
-tracks/5/type = "bezier"
-tracks/5/imported = false
-tracks/5/enabled = true
-tracks/5/path = NodePath("Hologram:rotation:y")
-tracks/5/interp = 1
-tracks/5/loop_wrap = true
-tracks/5/keys = {
-"handle_modes": PackedInt32Array(0),
-"points": PackedFloat32Array(-0.174533, -0.25, 0, 0.25, 0),
-"times": PackedFloat32Array(0)
-}
-tracks/6/type = "bezier"
-tracks/6/imported = false
-tracks/6/enabled = true
-tracks/6/path = NodePath("Hologram:rotation:z")
-tracks/6/interp = 1
-tracks/6/loop_wrap = true
-tracks/6/keys = {
-"handle_modes": PackedInt32Array(0),
-"points": PackedFloat32Array(0, -0.25, 0, 0.25, 0),
-"times": PackedFloat32Array(0)
-}
-
-[sub_resource type="Animation" id="Animation_61m6q"]
-resource_name = "retract_hologram"
-length = 0.5
+length = 0.25
 step = 0.01
 tracks/0/type = "bezier"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Hologram:scale:x")
+tracks/0/path = NodePath("Holo_Glow:mesh:material:shader_parameter/tip_fade_start")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
 "handle_modes": PackedInt32Array(0, 0),
-"points": PackedFloat32Array(0.085, -0.25, 0, 0.25, 0, 0.001, -0.25, 0, 0.25, 0),
-"times": PackedFloat32Array(0, 0.5)
+"points": PackedFloat32Array(0, -0.175, 0, 0.175, 0, 0.8, -0.175, 0, 0.175, 0),
+"times": PackedFloat32Array(0, 0.25)
 }
 tracks/1/type = "bezier"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Hologram:scale:y")
+tracks/1/path = NodePath("Holo_Glow:position:x")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
 "handle_modes": PackedInt32Array(0, 0),
-"points": PackedFloat32Array(0.085, -0.25, 0, 0.25, 0, 0.001, -0.25, 0, 0.25, 0),
-"times": PackedFloat32Array(0, 0.5)
+"points": PackedFloat32Array(0, -0.175, 0, 0.175, 0, 0, -0.175, 0, 0.175, 0),
+"times": PackedFloat32Array(0, 0.25)
 }
 tracks/2/type = "bezier"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("Hologram:scale:z")
+tracks/2/path = NodePath("Holo_Glow:position:y")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
 "handle_modes": PackedInt32Array(0, 0),
-"points": PackedFloat32Array(0.085, -0.25, 0, 0.25, 0, 0.001, -0.25, 0, 0.25, 0),
-"times": PackedFloat32Array(0, 0.5)
+"points": PackedFloat32Array(0, -0.175, 0, 0.175, 0, 0.23, -0.175, 0, 0.175, 0),
+"times": PackedFloat32Array(0, 0.25)
 }
-tracks/3/type = "value"
+tracks/3/type = "bezier"
 tracks/3/imported = false
 tracks/3/enabled = true
-tracks/3/path = NodePath("Hologram:visible")
+tracks/3/path = NodePath("Holo_Glow:position:z")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
-"times": PackedFloat32Array(0.5),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [false]
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(-0.537, -0.175, 0, 0.175, 0, -0.537, -0.175, 0, 0.175, 0),
+"times": PackedFloat32Array(0, 0.25)
 }
+tracks/4/type = "bezier"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Square_Glow:position:x")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(-0.003, -0.125, 0, 0.125, 0, -0.003, -0.125, 0, 0.125, 0),
+"times": PackedFloat32Array(0, 0.25)
+}
+tracks/5/type = "bezier"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Square_Glow:position:y")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(0.1, -0.125, 0, 0.125, 0, 0.134, -0.125, 0, 0.125, 0),
+"times": PackedFloat32Array(0, 0.25)
+}
+tracks/6/type = "bezier"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("Square_Glow:position:z")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(-0.533, -0.125, 0, 0.125, 0, -0.533, -0.125, 0, 0.125, 0),
+"times": PackedFloat32Array(0, 0.25)
+}
+tracks/7/type = "bezier"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("Square_Glow:scale:x")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(0.5, -0.125, 0, 0.125, 0, 1, -0.125, 0, 0.125, 0),
+"times": PackedFloat32Array(0, 0.25)
+}
+tracks/8/type = "bezier"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("Square_Glow:scale:y")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(0.5, -0.125, 0, 0.125, 0, 1, -0.125, 0, 0.125, 0),
+"times": PackedFloat32Array(0, 0.25)
+}
+tracks/9/type = "bezier"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("Square_Glow:scale:z")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(0.5, -0.125, 0, 0.125, 0, 1, -0.125, 0, 0.125, 0),
+"times": PackedFloat32Array(0, 0.25)
+}
+
+[sub_resource type="Animation" id="Animation_61m6q"]
+resource_name = "retract_hologram"
+length = 0.25
+step = 0.01
 
 [sub_resource type="Animation" id="Animation_l5ika"]
 resource_name = "spin_hologram"
@@ -1914,23 +1933,213 @@ size = Vector3(7.53, 26.41, 1.57)
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_8m00m"]
 direction = Vector3(0, 1, 0)
 spread = 20.0
-initial_velocity_min = 7.67
+initial_velocity_min = -4.53
 initial_velocity_max = 7.67
 gravity = Vector3(0, 0, 0)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8d6ws"]
 transparency = 3
-alpha_hash_scale = 1.0
+alpha_hash_scale = 2.0
 alpha_antialiasing_mode = 0
-albedo_color = Color(1, 1, 1, 0.113725)
+blend_mode = 3
+albedo_color = Color(0.8, 0, 1, 0.0862745)
 emission_enabled = true
 emission = Color(0.7, 0, 1, 1)
-emission_energy_multiplier = 154.9
+emission_energy_multiplier = 500.0
 
 [sub_resource type="SphereMesh" id="SphereMesh_dpu46"]
 material = SubResource("StandardMaterial3D_8d6ws")
 radius = 0.003
 height = 0.005
+
+[sub_resource type="Shader" id="Shader_8m00m"]
+code = "shader_type spatial;
+render_mode blend_mix;
+
+// Grupo: Textura Base
+
+uniform float alpha_multiplier : hint_range(0.0, 1.0) = 1.0;
+
+group_uniforms base_texture;
+uniform sampler2D albedo_texture : source_color;
+uniform float albedo_alpha : hint_range(0.0, 1.0) = 0.25;
+
+// Grupo: Tinte y Borde
+group_uniforms tint_edge;
+uniform vec4 tint_color : source_color = vec4(0.5, 0.0, 1.0, 0.75); // #FF8000
+uniform vec4 edge_color : source_color = vec4(1.0, 0.9, 1.0, 1.0); // #FF0000
+uniform float edge_power : hint_range(0.0, 1.0) = 1.0;
+uniform float edge_size : hint_range(0.1, 5.0) = 5.0;
+uniform float edge_intensity : hint_range(0.0, 5.0) = 1.0;
+
+// Grupo: Scanlines
+group_uniforms scanlines;
+uniform sampler2D scanline_texture;
+uniform vec4 scanline_tint : source_color = vec4(1.0, 1.0, 1.0, 0.0); // #FF8000
+uniform float scanline_intensity : hint_range(0.0, 2.0) = 0.0;
+uniform float scanline_density : hint_range(0.0, 10.0) = 2.0;
+uniform float scanline_thickness : hint_range(0.1, 3.0) = 0.75;
+uniform float scanline_spacing : hint_range(0.5, 4.0) = 1.0;
+uniform float scanline_angle : hint_range(0.0, 6.283) = 0.0;
+uniform float scanline_speed = 2.0;
+
+// Grupo: Glitch
+group_uniforms glitch;
+uniform bool enable_glitch = false;
+uniform float glitch_intensity : hint_range(0.0, 1.0) = 0.0;
+uniform float shake_power : hint_range(0.0, 1.0) = 0.075;
+uniform float shake_rate : hint_range(0.0, 1.0) = 1.0;
+uniform float shake_speed : hint_range(0.0, 10.0) = 2.0;
+uniform float shake_block_size : hint_range(1.0, 100.0) = 100.0;
+uniform float shake_color_rate : hint_range(0.0, 1.0) = 0.5;
+
+float random(float seed) {
+    return fract(sin(seed * 12345.678) * 43758.5453);
+}
+
+varying float enable_shift;
+
+void vertex() {
+    if (enable_glitch) {
+        float adjusted_time = mod(TIME, 5.0);
+        enable_shift = float(random(trunc(adjusted_time * shake_speed)) < shake_rate);
+        float offset_x = (random((trunc(VERTEX.y * shake_block_size) / shake_block_size) + adjusted_time) - 0.5) * shake_power * enable_shift;
+        VERTEX.x += offset_x;
+    } else {
+        enable_shift = 0.0;
+    }
+}
+
+void fragment() {
+    float adjusted_time = mod(TIME, 5.0);
+    vec2 fixed_uv = UV;
+
+    if (enable_glitch && glitch_intensity > 0.001) {
+        fixed_uv.x += (random((trunc(UV.y * shake_block_size) / shake_block_size) + adjusted_time) - 0.5) * shake_power * enable_shift;
+    }
+
+    // RGB split glitch (nuevo)
+    vec4 color;
+    if (enable_glitch && shake_color_rate > 0.0) {
+        float offset = shake_color_rate * enable_shift;
+        float offset_strength = glitch_intensity;
+
+        vec2 uv_r = fixed_uv + vec2(offset, 0.0);
+        vec2 uv_g = fixed_uv;
+        vec2 uv_b = fixed_uv - vec2(offset, 0.0);
+
+        float r = texture(albedo_texture, uv_r).r;
+        float g = texture(albedo_texture, uv_g).g;
+        float b = texture(albedo_texture, uv_b).b;
+
+        color = vec4(r, g, b, 1.0);
+    } else {
+        color = texture(albedo_texture, fixed_uv);
+    }
+
+    color.a *= albedo_alpha;
+    vec4 tinted = mix(color, color * tint_color, tint_color.a);
+
+    float edge = 1.0 - dot(NORMAL, VIEW);
+    edge = pow(edge, mix(8.0, 2.0, edge_power));
+    edge = smoothstep(0.5 - edge_size * 0.1, 0.5 + edge_size * 0.1, edge);
+    vec4 edge_effect = edge * edge_intensity * edge_color;
+
+    vec4 scan = vec4(0.0);
+	if (scanline_density > 0.001) {
+	    // rotate UVs by scanline_angle
+	    float c = cos(scanline_angle);
+	    float s = sin(scanline_angle);
+	    mat2 R = mat2(vec2(c, -s), vec2(s, c));
+
+	    // center UVs so rotation is around the middle
+	    vec2 uv2 = (UV - vec2(0.5)) * R;
+
+	    // scale density/spacing
+	    float spacing = mix(50.0, 10.0, scanline_density / 10.0) * scanline_spacing;
+
+	    // animate along rotated X
+	    float line = fract(uv2.x * spacing + TIME * scanline_speed);
+
+	    // thickness shaping
+	    line = smoothstep(
+	        0.5 - 0.1 * scanline_thickness,
+	        0.5 + 0.1 * scanline_thickness,
+	        abs(line - 0.5)
+	    );
+
+	    scan = vec4(scanline_tint.rgb * line * scanline_intensity, line * scanline_tint.a);
+	}
+
+    ALBEDO = tinted.rgb + edge_effect.rgb + scan.rgb;
+    ALPHA = max(tinted.a, max(edge_effect.a, scan.a)) * alpha_multiplier;
+}
+
+//void light() {
+//	// Called for every pixel for every light affecting the CanvasItem.
+//	// Uncomment to replace the default light processing function with this one.
+//}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_t05xm"]
+render_priority = 0
+shader = SubResource("Shader_8m00m")
+shader_parameter/alpha_multiplier = 1.0
+shader_parameter/albedo_alpha = 0.25
+shader_parameter/tint_color = Color(0.482, 0.26, 1, 1)
+shader_parameter/edge_color = Color(0.462, 0, 0.99, 1)
+shader_parameter/edge_power = 1.0
+shader_parameter/edge_size = 5.0
+shader_parameter/edge_intensity = 5.0
+shader_parameter/scanline_tint = Color(1, 0.61, 0.6165, 1)
+shader_parameter/scanline_intensity = 0.699
+shader_parameter/scanline_density = 2.338
+shader_parameter/scanline_thickness = 3.0
+shader_parameter/scanline_spacing = 1.042
+shader_parameter/scanline_angle = 0.226
+shader_parameter/scanline_speed = 4.27
+shader_parameter/enable_glitch = false
+shader_parameter/glitch_intensity = 0.0
+shader_parameter/shake_power = 0.075
+shader_parameter/shake_rate = 1.0
+shader_parameter/shake_speed = 2.0
+shader_parameter/shake_block_size = 100.0
+shader_parameter/shake_color_rate = 0.5
+
+[sub_resource type="BoxMesh" id="BoxMesh_njh5b"]
+material = SubResource("ShaderMaterial_t05xm")
+size = Vector3(0.1, 0.1, 0.08)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_6dr8p"]
+render_priority = 0
+shader = ExtResource("2_t05xm")
+shader_parameter/tip_fade_start = 0.0
+shader_parameter/tip_fade_end = 1.0
+shader_parameter/tip_uv_invert = true
+shader_parameter/base_color = Color(0.504, 0.15, 1, 0.5)
+shader_parameter/falloff_power = 0.1
+shader_parameter/facing_boost = 10.0
+shader_parameter/facing_power = 3.0
+shader_parameter/boost_along_y = 1.0
+shader_parameter/feather_sharpness = 4.0
+shader_parameter/feather_intensity = 1.0
+shader_parameter/near_fade_start = 4.0
+shader_parameter/near_fade_end = 1.0
+shader_parameter/far_fade_start = 25.0
+shader_parameter/far_fade_end = 80.0
+shader_parameter/max_brightness = 10.0
+shader_parameter/depth_feather_enabled = true
+shader_parameter/depth_fade_distance = 0.01
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_3nktn"]
+material = SubResource("ShaderMaterial_6dr8p")
+flip_faces = true
+top_radius = 0.15
+bottom_radius = 0.05
+height = 0.56
+rings = 16
+cap_top = false
+cap_bottom = false
 
 [sub_resource type="Gradient" id="Gradient_6dr8p"]
 colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1)
@@ -1965,34 +2174,6 @@ scale_curve = SubResource("CurveXYZTexture_vuyi1")
 color = Color(1.26103e-05, 0.840319, 1.15514e-06, 1)
 color_ramp = SubResource("GradientTexture1D_61m6q")
 turbulence_noise_strength = 10.89
-
-[sub_resource type="Curve" id="Curve_4qq6n"]
-_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.668168, 0.457143), 0.0, 0.0, 0, 0]
-point_count = 2
-
-[sub_resource type="TubeTrailMesh" id="TubeTrailMesh_t05xm"]
-flip_faces = true
-radius = 0.31
-radial_steps = 6
-sections = 3
-section_length = 0.1
-curve = SubResource("Curve_4qq6n")
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_l5ika"]
-render_priority = 0
-shader = ExtResource("2_4qq6n")
-shader_parameter/speed = 0.1
-shader_parameter/ring_scale = 1.5
-shader_parameter/wave_scale = 4.0
-shader_parameter/random_scale = 10.0
-shader_parameter/noise_scale = 0.1
-shader_parameter/c1 = 0.18
-shader_parameter/c2 = 0.5
-shader_parameter/c3 = 2.98
-shader_parameter/c4 = 3.25
-shader_parameter/emission_strength = 1.0
-shader_parameter/base_alpha = 0.5
-shader_parameter/uv_projection_mode = 0
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_t05xm"]
 size = Vector2(1.79, 0.27)
@@ -2271,12 +2452,22 @@ skeleton = NodePath("../../Object_Inventory")
 
 [node name="GPUParticles3D" type="GPUParticles3D" parent="Multitool"]
 transform = Transform3D(0.999999, -3.72529e-09, 2.98023e-08, 1.11759e-08, 1, -3.72529e-09, -4.47035e-08, 4.47035e-08, 1, -0.122589, 0.716615, 1.07609)
-amount = 500
+visible = false
+amount = 1000
 lifetime = 0.24
 speed_scale = 0.09
 randomness = 1.0
 process_material = SubResource("ParticleProcessMaterial_8m00m")
 draw_pass_1 = SubResource("SphereMesh_dpu46")
+
+[node name="Square_Glow" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.246126, -0.00631742, 0.0433853, 0.00862615, 0.249533, -0.0126013, -0.0429859, 0.013903, 0.245884, -0.003, 0, -0.533)
+mesh = SubResource("BoxMesh_njh5b")
+skeleton = NodePath("../Holo_Glow")
+
+[node name="Holo_Glow" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.537)
+mesh = SubResource("CylinderMesh_3nktn")
 
 [node name="SpotLight3D" type="SpotLight3D" parent="."]
 transform = Transform3D(0.498528, 0.142093, -0.855149, -0.0715637, 0.989853, 0.122756, 0.863915, 1.72568e-07, 0.503638, -1.85658, 0.509018, 0.0778424)
@@ -2300,15 +2491,8 @@ process_material = SubResource("ParticleProcessMaterial_s7cmo")
 draw_pass_1 = ExtResource("5_t05xm")
 
 [node name="Hologram" type="Node3D" parent="."]
-transform = Transform3D(0.000984808, 0, -0.000173648, 0, 0.001, 0, 0.000173648, 0, 0.000984808, 0, 0.364234, -0.515807)
+transform = Transform3D(0.0837087, 0, -0.0147601, 0, 0.085, 0, 0.0147601, 0, 0.0837087, 0, 0.364234, -0.515807)
 visible = false
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Hologram"]
-transform = Transform3D(984.808, -1.51808e-05, -173.648, 0, -1000, 8.74228e-05, -173.648, -8.60946e-05, -984.808, -5.11024, -122.655, -28.9816)
-cast_shadow = 0
-mesh = SubResource("TubeTrailMesh_t05xm")
-skeleton = NodePath("../..")
-surface_material_override/0 = SubResource("ShaderMaterial_l5ika")
 
 [node name="Details" type="Label3D" parent="."]
 transform = Transform3D(0.00965926, 0, 0.00258819, 0, 0.01, 0, -0.00258819, 0, 0.00965926, 0.0143264, 0.38144, -0.565982)
