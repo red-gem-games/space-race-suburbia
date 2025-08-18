@@ -235,6 +235,7 @@ var input_direction_x: float = 0.0
 var input_direction_z: float = 0.0
 var grabbed_pos_set: bool = false
 
+var true_scale: Vector3
 var extraction_scale: float
 var extraction_started: bool = false
 var comp_scale_x
@@ -253,7 +254,7 @@ var selected_component_pos: Vector3
 var selected_component_scale: float
 var selected_component_glow: float
 var selected_component_rot: Vector3
-var fresh_component: MeshInstance3D
+var fresh_component: RigidBody3D
 
 
 func _ready() -> void:
@@ -372,21 +373,21 @@ func _process(delta: float) -> void:
 			var screen_labels = module_labels + power_labels + mass_labels + lift_labels
 			
 			if extraction_recently_completed:
-				fresh_component.scale = lerp(fresh_component.scale, Vector3(comp_scale_x, comp_scale_y, comp_scale_z), delta * 2.5)
+				#fresh_component.scale = lerp(fresh_component.scale, Vector3(comp_scale_x, comp_scale_y, comp_scale_z), delta * 2.5)
 				print(fresh_component.scale)
 				fresh_component.position.z = lerp(fresh_component.position.z, -20.0, delta * 2.5)
 				#PREM_7.object_inventory.scale = lerp(PREM_7.object_inventory.scale, Vector3.ONE, delta * 2.5)
 				#PREM_7.object_inventory.position.z = lerp(PREM_7.object_inventory.position.z, 10.0, delta * 2.5)
-				complete_extraction()
+				
 			
 			if extraction_started:
 				if extract_time >= 0.002:
 					extract_alpha -= delta / 1.1
 					extract_edge -= delta * 2.25
 					extract_time -= delta
-				grabbed_object.EXTRACT_MATERIAL.albedo_color = lerp(grabbed_object.EXTRACT_MATERIAL.albedo_color, Color.BLACK, delta * 1.25)
-				grabbed_object.EXTRACT_MATERIAL.emission = lerp(grabbed_object.EXTRACT_MATERIAL.emission, Color.WHITE, delta / 1.25)
-				grabbed_object.EXTRACT_MATERIAL.emission_energy_multiplier = lerp(grabbed_object.EXTRACT_MATERIAL.emission_energy_multiplier, selected_component_glow, delta * 2.5)
+				grabbed_object.EXTRACT_MATERIAL.albedo_color = lerp(grabbed_object.EXTRACT_MATERIAL.albedo_color, Color.PURPLE, delta)
+				grabbed_object.EXTRACT_MATERIAL.emission = lerp(grabbed_object.EXTRACT_MATERIAL.emission, Color.WHITE, delta * 5.0)
+				grabbed_object.EXTRACT_MATERIAL.emission_energy_multiplier = lerp(grabbed_object.EXTRACT_MATERIAL.emission_energy_multiplier, selected_component_glow, delta * 5.0)
 				PREM_7.module_screen.scale = lerp(PREM_7.module_screen.scale, Vector3.ZERO, delta * 3.5)
 				PREM_7.power_screen.scale = lerp(PREM_7.power_screen.scale, Vector3.ZERO, delta * 3.5)
 				PREM_7.mass_screen.scale = lerp(PREM_7.mass_screen.scale, Vector3.ZERO, delta * 3.5)
@@ -1358,6 +1359,8 @@ func update_component_display():
 		for mesh in body_in_use.get_children():
 			if mesh is MeshInstance3D:
 				if mesh.name == selected_component_col.name:
+					true_scale = mesh.scale
+					print('MESH SCALE: ', true_scale)
 					grabbed_object.set_extract_glow(mesh, "Selected")
 					selected_component_mesh = mesh
 					selected_component_pos = mesh.position
@@ -1401,11 +1404,19 @@ func extract_component(mesh, col):
 
 	material.set_shader_parameter("alpha_multiplier", 0.0)
 
-	fresh_component = mesh.duplicate()
+	fresh_component = RigidBody3D.new()
 	fresh_component.name = mesh.name
 	
-	var xtra = 1.75
-	var s = extraction_scale
+	var fresh_mesh = mesh.duplicate()
+	var fresh_col = col.duplicate()
+	
+	fresh_component.add_child(fresh_mesh)
+	fresh_component.add_child(fresh_col)
+	
+	fresh_mesh.scale = true_scale
+	
+	fresh_mesh.position = Vector3.ZERO
+	fresh_col.position = Vector3.ZERO
 	
 	var grabbed_body = grabbed_object.get_children()
 	var grabbed_children
@@ -1418,37 +1429,42 @@ func extract_component(mesh, col):
 				child.queue_free()
 				child = null
 
-	fresh_component.scale = Vector3.ZERO
+	#fresh_component.scale = Vector3.ZERO
 	#new_mesh.scale = Vector3(s / xtra, s / xtra, s / xtra)
 
 	mesh.get_parent().remove_child(mesh)
 	mesh.queue_free()
 	mesh = null
-
+	
+	col.get_parent().remove_child(col)
+	col.queue_free()
+	col = null
 	#inventory.add_child(new_mesh)
 	add_child(fresh_component)
 
 	fresh_component.position = Vector3(2.0, -1.0, -6.0)
 	#new_mesh.rotation_degrees = Vector3(0, new_mesh.rotation_degrees.y + 28, 0)
 	
-	col.get_parent().remove_child(col)
-	col.queue_free()
-	col = null
-
-	PREM_7.holo_anim.play("spin_hologram")
+	#PREM_7.holo_anim.play("spin_hologram")
 	
 	extraction_recently_completed = true
 	
+	complete_extraction(fresh_mesh)
 	
+	print('Rigid Pos: ', fresh_component.position)
+	print('Mesh Pos: ', fresh_mesh.position)
+	print('Col Pos: ', fresh_col.position)
 	
 
-func complete_extraction():
+func complete_extraction(mesh: MeshInstance3D):
 	await get_tree().create_timer(1.0).timeout
 	#fresh_component.set_extract_glow('Complete')
-	var surface_count = fresh_component.mesh.get_surface_count()
-	fresh_component.set_material_overlay(null)
+	var surface_count = mesh.mesh.get_surface_count()
+	mesh.set_material_overlay(null)
 	for i in range(surface_count):
-		fresh_component.set_surface_override_material(i, null)
-	var shape = CollisionShape3D.new()
-	shape.shape = fresh_component.mesh.create_convex_shape(true)
-	fresh_component.add_child(shape)
+		mesh.set_surface_override_material(i, null)
+
+	mesh.visible = true
+	#var shape = CollisionShape3D.new()
+	#shape.shape = mesh.mesh.create_convex_shape(true)
+	#mesh.add_child(shape)

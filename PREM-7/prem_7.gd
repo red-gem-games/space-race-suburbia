@@ -12,6 +12,8 @@ class_name PREM_7
 
 @onready var hologram_shader: Shader = preload("res://Shaders/hologram.gdshader")
 
+@onready var holo_glow: Shader = preload("res://PREM-7/prem_7_holo_glow.gdshader")
+
 var GLOW_SHADER := preload("res://Shaders/grabbed_glow.gdshader")
 var shader: Shader
 var shader_material: ShaderMaterial
