@@ -65,7 +65,6 @@ var extraction_spin_initialized: bool = false
 
 
 
-
 func _ready() -> void:
 	add_child(object_position_timer)
 	var somn = assembly_object_container.get_children()
@@ -78,6 +77,12 @@ func _ready() -> void:
 var previous_position_value: Vector3
 
 func _physics_process(delta: float) -> void:
+	
+	if character.new_component:
+		if character.new_component.ready_to_move:
+			character.new_component.reparent(assembly_object_container)
+			print_tree_pretty()
+			character.new_component.ready_to_move = false
 
 	if grabbed_object:
 		# --- Force Movement Toward Target ---

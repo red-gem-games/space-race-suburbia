@@ -35,7 +35,7 @@
                 "lift": 5
             },
             {
-                "name": "Control Panel",
+                "name": "Washer Panel",
                 "stars": 1,
                 "scale": 1.5,
                 "glow": 8.75,
@@ -82,7 +82,7 @@
                 "lift": 5
             },
             {
-                "name": "Control Panel",
+                "name": "Dryer Panel",
                 "stars": 1,
                 "scale": 1.5,
                 "glow": 8.75,

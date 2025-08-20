@@ -3,6 +3,8 @@
 shader_type spatial;
 render_mode unshaded, blend_mix, cull_back;
 
+uniform float alpha_multiplier : hint_range(0.0, 1.0) = 1.0;
+
 // Tip fade (UV-based)
 uniform float tip_fade_start : hint_range(0.0, 1.0) = 0.8; // where the fade begins (along height)
 uniform float tip_fade_end   : hint_range(0.0, 1.0) = 1.0;  // fully faded by here
@@ -90,7 +92,7 @@ brightness *= tip_fade;
 float final_alpha = feather_alpha * depth_mult * dist_fade * tip_fade;
 
 ALBEDO = base_color.rgb * brightness;
-ALPHA  = clamp(final_alpha * base_color.a, 0.0, 1.0);
+ALPHA  = clamp(final_alpha * base_color.a, 0.0, 1.0) * alpha_multiplier;
 
 
 	if (ALPHA < 0.001) {

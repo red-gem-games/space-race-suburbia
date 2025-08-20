@@ -1,16 +1,18 @@
-[gd_scene load_steps=9 format=3 uid="uid://f722yn8gdiyj"]
+[gd_scene load_steps=10 format=3 uid="uid://f722yn8gdiyj"]
 
 [ext_resource type="PackedScene" uid="uid://bpvm0l41dywjs" path="res://PREM-7/PREM-7.tscn" id="1_glpr6"]
 [ext_resource type="Script" uid="uid://sw8eis2eqpyj" path="res://Character/character.gd" id="1_pjt0s"]
 [ext_resource type="PackedScene" uid="uid://baomcogkgkbvv" path="res://HUD/hud.tscn" id="3_wa5vi"]
 [ext_resource type="Shader" uid="uid://vetnq53dk60g" path="res://Shaders/grabbed_glow.gdshader" id="4_twwou"]
 
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_jkkns"]
-radius = 1.25
-height = 4.5
+[sub_resource type="SphereShape3D" id="SphereShape3D_twwou"]
+radius = 1.78806
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_jkkns"]
-radius = 1.16
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_twwou"]
+height = 4.51953
+radius = 1.7959
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_a23tb"]
 
 [sub_resource type="SphereMesh" id="SphereMesh_a23tb"]
 flip_faces = true
@@ -46,15 +48,20 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -6)
 
 [node name="HUD" parent="." instance=ExtResource("3_wa5vi")]
 
+[node name="Collision_Top" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.579313, 0)
+shape = SubResource("SphereShape3D_twwou")
+debug_color = Color(0.766667, 1, 0, 1)
+
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.416348, 0.188805)
-shape = SubResource("CapsuleShape3D_jkkns")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.388315, 0)
+shape = SubResource("CylinderShape3D_twwou")
 debug_color = Color(1, 0.264211, 0.231967, 1)
 
-[node name="PREM_7_Collision" type="CollisionShape3D" parent="."]
-transform = Transform3D(0.998958, -0.000877979, -0.0456316, 0.00109011, 0.999989, 0.004624, 0.0456271, -0.00466893, 0.998948, 0.621633, -0.417464, -0.994018)
-shape = SubResource("SphereShape3D_jkkns")
-debug_color = Color(0.843472, 0.664469, 7.70092e-07, 1)
+[node name="Collision_Bottom" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.707107, -0.707107, 0, 0.707107, 0.707107, -0.0314026, -2.30869, 0)
+shape = SubResource("SphereShape3D_a23tb")
+debug_color = Color(0.766667, 1, 0, 1)
 
 [node name="Manipulation_Cloud" type="MeshInstance3D" parent="."]
 transform = Transform3D(0.10524, 0.919412, 0.378954, -0.77564, 0.31437, -0.547314, -0.622339, -0.236333, 0.746217, 0.28, 4.5, -4.687)

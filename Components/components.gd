@@ -35,6 +35,8 @@ var is_grabbed: bool = false
 var recently_grabbed: bool = false
 var is_released: bool = false
 
+var ready_to_move: bool = false
+
 var is_suspended: bool = false
 
 var base_spawn_pos: Vector3
@@ -136,8 +138,6 @@ var extraction_scale: float
 
 func _ready() -> void:
 	
-
-	
 	shader = Shader.new()
 	shader.code = GLOW_SHADER.code
 	shader_material = ShaderMaterial.new()
@@ -153,10 +153,10 @@ func _ready() -> void:
 	continuous_cd = true
 	max_contacts_reported = 1000
 	gravity_scale = 1.5
-	freeze = true
+	#freeze = true
 	
-	collision_layer = 3
-	collision_mask = 3
+	collision_layer = 1
+	collision_mask = 1
 	
 	mass = 50.0
 	
@@ -187,7 +187,7 @@ func _physics_process(delta: float) -> void:
 
 	if not is_grabbed and is_touching_ground and recently_grabbed:
 		if linear_velocity == Vector3.ZERO and angular_velocity == Vector3.ZERO:
-			freeze = true
+			#freeze = true
 			resting_position = global_position.y
 			recently_grabbed = false
 			print('-------- ', name, ' is frozen! --------')
@@ -197,13 +197,12 @@ func _physics_process(delta: float) -> void:
 		angular_velocity = lerp(angular_velocity, Vector3(0.0, 0.0, 0.0), delta * 0.5)
 		freeze = false
 	
-	if is_assembly_component:
-		if not extraction_complete:
-			complete_extraction()
+	#if is_assembly_component:
+		#if not extraction_complete:
+			#complete_extraction()
 
 	if extract_in_motion:
 		angular_velocity = Vector3(0.0, 1.0, 0.0)
-
 	if is_grabbed:
 		if position_tween:
 			position_tween.kill()
@@ -254,6 +253,10 @@ func _process(delta: float) -> void:
 				is_grabbed = false
 				brightness_increasing = true
 
+	if ready_to_move:
+		assembly_components.append(self)
+		is_assembly_component = true
+		is_full_size = true
 
 func enable_object_glow(object: Node) -> void:
 	# Start the transparency tween
@@ -281,9 +284,14 @@ func _on_body_shape_entered(body_rid: RID, body: Node, body_shape_index: int, lo
 	if body is character:
 		body.is_on_floor()
 
+	if name == 'Stepladder':
+		if body is CharacterBody3D:
+			body.is_touching_stepladder = true
 
 func _on_body_shape_exited(body_rid: RID, body: Node, body_shape_index: int, local_shape_index: int) -> void:
-	pass
+	if name == 'Stepladder':
+		if body is CharacterBody3D:
+			body.is_touching_stepladder = false
 
 
 func set_outline(status: String, color: Color, opacity: float) -> void:

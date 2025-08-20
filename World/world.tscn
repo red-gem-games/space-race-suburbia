@@ -190,6 +190,8 @@ directional_shadow_pancake_size = 80.0
 
 [node name="Floor" type="StaticBody3D" parent="." groups=["Ground"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+collision_layer = 3
+collision_mask = 3
 collision_priority = 100.0
 input_ray_pickable = false
 
@@ -204,6 +206,8 @@ mesh = SubResource("PlaneMesh_fj7yv")
 
 [node name="Garage_Floor" type="StaticBody3D" parent="Floor" groups=["Ground"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.7833, 0.360101, 47.7116)
+collision_layer = 3
+collision_mask = 3
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Floor/Garage_Floor"]
 transform = Transform3D(13.843, 0, 0, 0, 2.659, 0, 0, 0, 10.151, 5.71963, -1.05, -9.3864)
@@ -260,7 +264,7 @@ shape = SubResource("BoxShape3D_0wqet")
 environment = SubResource("Environment_tlwt5")
 
 [node name="Character" parent="." instance=ExtResource("1_f3sb7")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.383, 1.28761, 46.7)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.383, 1.10852, 46.7)
 
 [node name="Extracted_Object" type="Node3D" parent="."]
 

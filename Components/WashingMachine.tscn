@@ -331,7 +331,7 @@ shadow_mesh = SubResource("ArrayMesh_pdel4")
 mass = 75.0
 script = ExtResource("1_hnuj6")
 
-[node name="ControlPanel_Shape" type="CollisionShape3D" parent="."]
+[node name="WasherPanel_Shape" type="CollisionShape3D" parent="."]
 transform = Transform3D(-1.09278e-07, 0, 2.5, 0, 2.5, 0, -2.5, 0, -1.09278e-07, 0.0121146, 0.966648, -0.693256)
 shape = SubResource("ConvexPolygonShape3D_ckldo")
 
@@ -354,7 +354,7 @@ shape = SubResource("ConvexPolygonShape3D_ag0sl")
 [node name="Body" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0427239, 0.0143697, 0)
 
-[node name="ControlPanel" type="MeshInstance3D" parent="Body"]
+[node name="WasherPanel" type="MeshInstance3D" parent="Body"]
 transform = Transform3D(-1.09278e-07, 0, 2.5, 0, 2.5, 0, -2.5, 0, -1.09278e-07, 0.0548385, 0.952278, -0.693256)
 mesh = SubResource("ArrayMesh_p4s3u")
 skeleton = NodePath("")

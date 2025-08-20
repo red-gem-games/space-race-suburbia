@@ -12,8 +12,6 @@ class_name PREM_7
 
 @onready var hologram_shader: Shader = preload("res://Shaders/hologram.gdshader")
 
-@onready var holo_glow: Shader = preload("res://PREM-7/prem_7_holo_glow.gdshader")
-
 var GLOW_SHADER := preload("res://Shaders/grabbed_glow.gdshader")
 var shader: Shader
 var shader_material: ShaderMaterial
@@ -210,12 +208,8 @@ func _instance_component_by_name(name: StringName) -> RigidBody3D:
 
 
 func _on_hologram_animation_animation_finished(anim_name: StringName) -> void:
-	if anim_name == "cast_hologram":
+	if anim_name == "cast_hologram" or anim_name == "retract_hologram":
 		holo_anim.play("spin_hologram")
-
-
-
-
 
 func move_object(object, x_pos: float, y_pos: float, z_pos: float, wait_time: float, duration: float):
 	await get_tree().create_timer(wait_time).timeout

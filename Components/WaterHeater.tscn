@@ -243,7 +243,6 @@ transform = Transform3D(0.0185225, -0.116946, -0.992966, 0.987688, 0.156434, 0, 
 shape = SubResource("CapsuleShape3D_hfy47")
 
 [node name="Body" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.05, 0, 0)
 
 [node name="HeatingCoil" type="MeshInstance3D" parent="Body"]
 transform = Transform3D(-0.0707847, 0, 0, 0, -0.0707847, 0, 0, 0, -0.0707847, -0.0296527, -0.0260578, 0.008643)
