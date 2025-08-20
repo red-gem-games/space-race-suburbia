@@ -41,6 +41,9 @@ script = ExtResource("1_pjt0s")
 [node name="PREM-7" parent="Camera3D" instance=ExtResource("1_glpr6")]
 transform = Transform3D(0.995636, -0.0106614, 0.0927052, 0.0131577, 0.999565, -0.0263581, -0.0923839, 0.0274629, 0.995346, 0.650454, -0.342057, -0.520243)
 
+[node name="Object_Position" type="Node3D" parent="Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -6)
+
 [node name="HUD" parent="." instance=ExtResource("3_wa5vi")]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]

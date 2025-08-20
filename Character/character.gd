@@ -10,16 +10,16 @@ var current_component_index := 0
 var current_extraction_data = []  # Will hold the JSON components array
 var current_object_json: Dictionary = {}
 
-
+var COMPONENT_SCRIPT: Script = preload("res://Components/components.gd")
 
 @onready var collision_shape: CollisionShape3D = $CollisionShape3D
 @onready var camera: Camera3D = $Camera3D
 @onready var PREM_7: Node3D = $"Camera3D/PREM-7"
 @onready var HUD: Control = $HUD
 @onready var char_obj_shape: CollisionShape3D
-#@onready var beam: Node3D = PREM_7.beam
-#@onready var beam_mesh: Node3D = PREM_7.beam_mesh
-#@onready var beam_shader_mat := beam_mesh.get_active_material(0) as ShaderMaterial
+
+@onready var obj_pos_node: Node3D = $Camera3D/Object_Position
+var object_position: Vector3
 
 var manipulate_ORANGE: Color = Color(1, 0.33, 0)
 var manipulate_GREEN: Color = Color(0, 1, 0)
@@ -266,6 +266,7 @@ func _ready() -> void:
 	push_warning('KEY_R: Reset Values (Which Ones?)')
 	
 	
+	
 	add_child(grab_timer)
 	grab_timer.one_shot = true
 	add_child(control_timer)
@@ -278,6 +279,11 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
+	
+	#if grabbed_object:
+		#grabbed_object.global_transform.origin = lerp(grabbed_object.global_transform.origin, object_position, delta * 5.0)
+	
+	#object_position = obj_pos_node.global_position
 	
 	# Update ground distance
 	distance_to_ground = raycast_to_ground()
@@ -354,11 +360,28 @@ func _physics_process(delta: float) -> void:
 	# Handle grounded/airborne vertical velocity
 	update_vertical_velocity()
 
+
+var f_comp: RigidBody3D
+var launching_component: bool = false
+
+func launch_comp(obj, time):
+	obj.scale = lerp(obj.scale, true_scale, time)
+	for child in fresh_component.get_children():
+		if child is CollisionShape3D:
+			child.disabled = false
+	await get_tree().create_timer(3.0).timeout
+	launching_component = false
+
 func _process(delta: float) -> void:
 
+	if launching_component:
+		for child in f_comp.get_children():
+			if child is MeshInstance3D:
+				launch_comp(child, delta)
+
 	if grabbed_object:
+
 		if extracting_object_active:
-			
 			var x = comp_scale_x
 			var y = comp_scale_y
 			var z = comp_scale_z
@@ -373,16 +396,61 @@ func _process(delta: float) -> void:
 			var lift_labels = PREM_7.lift_screen.get_children()
 			var screen_labels = module_labels + power_labels + mass_labels + lift_labels
 			
-			#if extraction_recently_completed:
-				#fresh_component.position.z = lerp(fresh_component.position.z, -20.0, delta * 2.5)
-				#if fresh_component.position.z < -5.0:
-					#fresh_component.EXTRACT_MATERIAL.emission_energy_multiplier = lerp(fresh_component.EXTRACT_MATERIAL.emission_energy_multiplier, 0.0, delta / 5.0)
-				#if fresh_component.position.z < -15.0:
-					#fresh_component.EXTRACT_MATERIAL.albedo_color.a = lerp(fresh_component.EXTRACT_MATERIAL.albedo_color.a, 0.0, delta * 4.0)
 
-				#fresh_component.EXTRACT_MATERIAL.emission = lerp(fresh_component.EXTRACT_MATERIAL.emission, Color.TRANSPARENT, delta * 3.5)
-					
+			if extraction_recently_completed:
+				launching_component = true
 				
+				f_comp = fresh_component
+				
+				f_comp.set_script(COMPONENT_SCRIPT)
+				
+				f_comp.shader = Shader.new()
+				f_comp.shader.code = f_comp.GLOW_SHADER.code
+				f_comp.shader_material = ShaderMaterial.new()
+				
+				f_comp.grab_particles_shader = Shader.new()
+				f_comp.grab_particles_shader.code = preload("res://Shaders/particle_glow.gdshader").code
+				f_comp.particles_material = ShaderMaterial.new()
+				
+				f_comp.manipulation_material.shader = f_comp.MANIPULATION_SHADER
+				f_comp.extraction_material.shader = f_comp.EXTRACTION_SHADER
+				
+				f_comp.contact_monitor = true
+				f_comp.continuous_cd = true
+				f_comp.max_contacts_reported = 1000
+				f_comp.gravity_scale = 0.0
+				
+				f_comp.collision_layer = 3
+				f_comp.collision_mask = 3
+				
+				f_comp.mass = 50.0
+				
+				for child in f_comp.get_children():
+					if child is MeshInstance3D:
+						#f_comp.base_mesh = child
+						f_comp.object_body = child
+						f_comp.current_scale = f_comp.object_body.scale
+				
+				f_comp.physics_mat.friction = 1.0
+				f_comp.physics_mat.bounce = 0.0
+				f_comp.physics_material_override = f_comp.physics_mat
+				f_comp.shader_material.shader = f_comp.GLOW_SHADER
+				f_comp.standard_material = f_comp.GLOW_MATERIAL
+
+				f_comp.resting_position = f_comp.global_position.y
+
+				if f_comp.name == "Stepladder":
+					f_comp.is_stepladder = true
+				
+				f_comp.set_physics_process(true)
+				f_comp.set_process(true)
+				var forward = -camera.global_transform.basis.z.normalized()
+				var spin = camera.global_transform.basis.y.normalized()
+	
+				f_comp.apply_impulse(forward * 250.0)
+				f_comp.apply_torque_impulse(spin * 250.0)
+				
+				extraction_recently_completed = false
 			
 			if extraction_started:
 				if extract_time >= 0.002:
@@ -831,7 +899,9 @@ func _on_extract_key(down: bool) -> void:
 	if extracting_object_active:
 		#grabbed_object.object_body.scale = Vector3(0.25, 0.25, 0.25)
 
-		#grabbed_object.visible = false
+		for child in grabbed_object.get_children():
+			if child is CollisionShape3D:
+				child.disabled = true
 		PREM_7.ctrl_anim.play("extract")
 		PREM_7.holo_anim.play("cast_hologram")
 		grabbed_object.is_extracting = true
@@ -847,12 +917,14 @@ func _on_extract_key(down: bool) -> void:
 		var count = current_extraction_data.size()
 		for i in range(count):
 			scroll_extraction_data('DOWN')
-
 		right_mouse_down = false
 		handle_object('pressed')
 		print('Start Extracting - Make all other objects invisible?')
 		#grabbed_target_position.x -= 10
 	else:
+		for child in grabbed_object.get_children():
+			if child is CollisionShape3D:
+				child.disabled = false
 		selected_component_mesh.scale.x = comp_scale_x
 		selected_component_mesh.scale.y = comp_scale_y
 		selected_component_mesh.scale.z = comp_scale_z
@@ -922,7 +994,6 @@ func release_object():
 	initial_grab = false
 	pitch_max = base_pitch_max
 	HUD.reticle.visible = true
-	grabbed_object.is_grabbed = false
 	grabbed_object.recently_grabbed = true
 	grabbed_object.is_released = true
 	if grabbed_object.is_suspended:
@@ -1412,10 +1483,12 @@ func extract_component(mesh, col):
 
 	fresh_component = RigidBody3D.new()
 	fresh_component.name = mesh.name
+	#fresh_component.position = mesh.position
 	
 	var fresh_mesh = mesh.duplicate()
 	var fresh_col = col.duplicate()
 	
+	fresh_component.position = Vector3(1.0, -0.5, -3.0)
 	fresh_component.add_child(fresh_mesh)
 	fresh_component.add_child(fresh_col)
 	
@@ -1423,6 +1496,8 @@ func extract_component(mesh, col):
 	
 	fresh_mesh.position = Vector3.ZERO
 	fresh_col.position = Vector3.ZERO
+	
+	fresh_mesh.scale = Vector3.ZERO
 	
 	var grabbed_body = grabbed_object.get_children()
 	var grabbed_children
@@ -1448,7 +1523,7 @@ func extract_component(mesh, col):
 	#inventory.add_child(new_mesh)
 	add_child(fresh_component)
 
-	fresh_component.position = Vector3(2.0, -0.95, -4.0)
+	#fresh_component.position = Vector3(2.0, -0.85, -4.0)
 	#new_mesh.rotation_degrees = Vector3(0, new_mesh.rotation_degrees.y + 28, 0)
 	
 	#PREM_7.holo_anim.play("spin_hologram")

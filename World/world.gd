@@ -19,6 +19,8 @@ var ROTATE_SPEED := BASE_ROTATE_SPEED  # Increase this for snappier rotation
 const BASE_GRAB_STIFFNESS := 18000.0
 const BASE_GRAB_DAMPING := 1800.0
 const BASE_ROTATE_SPEED := 4.0  # Increase this for snappier rotation
+const MIN_FORCE := -200000.0 
+const MAX_FORCE := 200000.0    
 
 var previous_grid_positions := {}
 var assembly_components_global_position: Vector3
@@ -60,7 +62,7 @@ var flicker_obj_c: Node = null
 var time: float = 0.0
 var current_spin_timer := 0.0
 var extraction_spin_initialized: bool = false
-var COMPONENT_SCRIPT: Script = preload("res://Components/components.gd")
+
 
 
 
@@ -73,74 +75,9 @@ func _ready() -> void:
 	start_static_glow_loop()
 
 
-var f_comp: RigidBody3D
-var launching_component: bool = false
-
-func launch_comp(obj, time):
-	obj.scale = lerp(obj.scale, character.true_scale, time * 3.0)
-	await get_tree().create_timer(1.5).timeout
-	launching_component = false
+var previous_position_value: Vector3
 
 func _physics_process(delta: float) -> void:
-	
-	if launching_component:
-		for child in f_comp.get_children():
-			if child is MeshInstance3D:
-				launch_comp(child, delta)
-
-	if character.extraction_recently_completed:
-		launching_component = true
-		
-		f_comp = character.fresh_component
-		f_comp.reparent(assembly_object_container)
-		assembly_object_array.append(f_comp)
-		var forward = -character.camera.global_transform.basis.z.normalized()
-		f_comp.apply_impulse(forward * 30.0)
-
-		f_comp.set_script(COMPONENT_SCRIPT)
-		
-		f_comp.shader = Shader.new()
-		f_comp.shader.code = f_comp.GLOW_SHADER.code
-		f_comp.shader_material = ShaderMaterial.new()
-		
-		f_comp.grab_particles_shader = Shader.new()
-		f_comp.grab_particles_shader.code = preload("res://Shaders/particle_glow.gdshader").code
-		f_comp.particles_material = ShaderMaterial.new()
-		
-		f_comp.manipulation_material.shader = f_comp.MANIPULATION_SHADER
-		f_comp.extraction_material.shader = f_comp.EXTRACTION_SHADER
-		
-		f_comp.contact_monitor = true
-		f_comp.continuous_cd = true
-		f_comp.max_contacts_reported = 1000
-		f_comp.gravity_scale = 1.5
-		
-		f_comp.collision_layer = 3
-		f_comp.collision_mask = 3
-		
-		f_comp.mass = 50.0
-		
-		for child in f_comp.get_children():
-			if child is MeshInstance3D:
-				#f_comp.base_mesh = child
-				f_comp.object_body = child
-				f_comp.current_scale = f_comp.object_body.scale
-		
-		f_comp.physics_mat.friction = 1.0
-		f_comp.physics_mat.bounce = 0.0
-		f_comp.physics_material_override = f_comp.physics_mat
-		f_comp.shader_material.shader = f_comp.GLOW_SHADER
-		f_comp.standard_material = f_comp.GLOW_MATERIAL
-
-		f_comp.resting_position = f_comp.global_position.y
-
-		if f_comp.name == "Stepladder":
-			f_comp.is_stepladder = true
-		
-		f_comp.set_physics_process(true)
-		f_comp.set_process(true)
-		
-		character.extraction_recently_completed = false
 
 	if grabbed_object:
 		# --- Force Movement Toward Target ---
@@ -158,8 +95,6 @@ func _physics_process(delta: float) -> void:
 		var target_pos
 		var smooth_speed
 		
-		#var extract_base_basis := Basis()
-		#var target_object_rot := grabbed_object.global_transform.basis
 		
 				## --- Smooth LookAt Rotation ---
 		var object_pos = grabbed_object.global_transform.origin
@@ -229,9 +164,8 @@ func _physics_process(delta: float) -> void:
 		var direction = target_pos - obj_pos
 		var vel = grabbed_object.linear_velocity
 
-		
 		var force = (direction * GRAB_STIFFNESS) - (vel * GRAB_DAMPING)
-		
+
 		grabbed_object.apply_central_force(force)
 
 
@@ -241,15 +175,166 @@ func _physics_process(delta: float) -> void:
 		var smoothed_basis = lerp(current_basis, desired_basis, delta * smooth_speed)
 
 		var transform = grabbed_object.global_transform
+		transform.origin = obj_pos
 		transform.basis = smoothed_basis
 		if not character.extracting_object_active:
 			grabbed_object.global_transform = transform
 
+#
+###### JUST IN CASE :) ######
+	#if grabbed_object:
+		#obj_pos = grabbed_object.global_transform.origin
+		## --- Force Movement Toward Target ---
+		#var cam_transform = character.camera.global_transform
+#
+		#var forward = -cam_transform.basis.z
+		#var left = -cam_transform.basis.x
+		#var up = cam_transform.basis.y
+#
+		## Modify these to taste
+		#var distance_forward
+		#var offset_left
+		#var offset_up
+#
+		#var target_pos
+		#var smooth_speed
+		#
+		##var extract_base_basis := Basis()
+		##var target_object_rot := grabbed_object.global_transform.basis
+		#
+				### --- Smooth LookAt Rotation ---
+				#
+		#
+		#var test = grabbed_object.global_transform.origin
+		#
+		##if test.x > 100.0 or test.x < -100.0:
+			##return
+		##if test.y > 100.0 or test.y < -100.0:
+			##return
+		##if test.z > 100.0 or test.z < -100.0:
+			##return
+		#var object_pos = grabbed_object.global_transform.origin
+		#var look_dir
+		#if obj_pos:
+			#look_dir = -(character.global_position - obj_pos).normalized()
+		#else:
+			#look_dir = -(character.global_position - object_pos).normalized()
+#
+		#
+#
+		#look_dir.y += 0.15  # tweak this until it feels right
+		#look_dir = look_dir.normalized()
+		#
+		#print('LOOK DIR: ', look_dir)
+#
+		#if not character.extracting_object_active:
+			#if grabbed_object.object_body.scale.y < 0.99:
+				#grabbed_object.object_body.scale = lerp(grabbed_object.object_body.scale, grabbed_object.current_scale, delta * 5.0)
+				#grabbed_object.extract_body.scale = lerp(grabbed_object.extract_body.scale, Vector3.ZERO, delta * 20.0)
+				#grabbed_object.extract_body.position.y = lerp(grabbed_object.extract_body.position.y, -0.25, delta * 20.0)
+				#character.PREM_7.machine_info.scale = lerp(character.PREM_7.machine_info.scale, Vector3.ZERO, delta * 10.0)
+				#if grabbed_object.object_body.scale.y > 0.01:
+					#grabbed_object.object_body.visible = true
+				#if character.PREM_7.machine_info.scale.y <= 0.5:
+					#character.PREM_7.machine_info.visible = false
+				#if grabbed_object.extract_body.scale.y <= 0.01:
+					#grabbed_object.extract_body.visible = false
+			#distance_forward = 6.0
+			#offset_left = 0.0
+			#offset_up = 0.0
+			#smooth_speed = 6.0
+			#current_spin_timer = 0.0
+			#extraction_spin_initialized = false
+#
+		#else:
+			#character.PREM_7.machine_info.visible = true
+			#grabbed_object.extract_body.visible = true
+			#distance_forward = 6.0
+			#offset_left = 0.0
+			#offset_up = 0.0
+			#smooth_speed = 1.0
+			#if grabbed_object.object_body.scale.y >= 0.01:
+				#grabbed_object.object_body.scale = lerp(grabbed_object.object_body.scale, Vector3.ZERO, delta * 20.0)
+				#if grabbed_object.object_body.scale.y < 0.02:
+					#grabbed_object.object_body.visible = false
+			#if not extraction_spin_initialized:
+				#grabbed_object.extract_body.rotation_degrees.x = lerp(grabbed_object.extract_body.rotation_degrees.x, 0.0, delta * 5.0)
+				#grabbed_object.extract_body.rotation_degrees.y = lerp(grabbed_object.extract_body.rotation_degrees.y, 0.0, delta * 5.0)
+				#grabbed_object.extract_body.rotation_degrees.z = lerp(grabbed_object.extract_body.rotation_degrees.z, 0.0, delta * 5.0)
+				#current_spin_timer += delta * 0.5
+				#var scale_norm = character.extraction_scale / 5
+				#grabbed_object.extract_body.scale = lerp(grabbed_object.extract_body.scale, Vector3(scale_norm, scale_norm, scale_norm), delta * 5.0)
+				#grabbed_object.extract_body.position.y = lerp(grabbed_object.extract_body.position.y, 0.1, delta * 5.0)
+				#character.PREM_7.machine_info.scale = lerp(character.PREM_7.machine_info.scale, Vector3.ONE, delta * 5.0)
+				#if current_spin_timer > 0.25:
+					#extraction_spin_initialized = true
+			#if extraction_spin_initialized:
+				#var x_spd = character.current_mouse_speed_x / 1000.0
+				#var y_spd = character.current_mouse_speed_y / 1000.0
+				#if character.extraction_started:
+					#x_spd = 0.0
+					#y_spd = 0.0
+				#grabbed_object.extract_body.rotate_y(character.extract_speed + x_spd)
+				#grabbed_object.extract_body.rotate_x(y_spd)
+				#if y_spd < 0.01:
+					#grabbed_object.extract_body.rotation_degrees.x = lerp(grabbed_object.extract_body.rotation_degrees.x, 0.0, delta)
+				#grabbed_object.extract_body.rotation_degrees.z = lerp(grabbed_object.extract_body.rotation_degrees.z, 0.0, delta * 5.0)
+#
+#
+#
+		#target_pos = cam_transform.origin + forward * distance_forward + left * offset_left + up * offset_up
+	#
+		#
+		#
+		#print('BEFORE: ', obj_pos)
+		#print('TARGET: ', target_pos)
+		#
+		#if not obj_pos:
+			#return
+		#
+		#if obj_pos.x < -100 or obj_pos.x > 100:
+			#obj_pos = keep_pos
+			#print('TRIGGERED X!!!')
+		#
+		#if obj_pos.z < -100 or obj_pos.z > 100:
+			#obj_pos = keep_pos
+			#print('TRIGGERED Z!!!')
+		#var direction
+		#if keep_pos:
+			#print('1')
+			#direction = target_pos - keep_pos
+		#else:
+			#print('2')
+			#direction = target_pos - obj_pos
+		#var vel = grabbed_object.linear_velocity
+		#
+		#var force = (direction * GRAB_STIFFNESS) - (vel * GRAB_DAMPING)
+		##print('POSITION before force: ', obj_pos)
+		#print('Direction: ', direction)
+		#print('Velocity: ', vel)
+		#print('FORCE: ', force)
+		#
+		#grabbed_object.apply_central_force(force)
+#
+		#print('AFTER: ', obj_pos)
+#
+		##print('POSITION after force: ', obj_pos)
+		#
+		#keep_pos = obj_pos
+#
+		#print('KEEP POS: ', keep_pos)
+#
+		#var desired_basis = Basis().looking_at(look_dir, Vector3.UP)
+		#var current_basis = grabbed_object.global_transform.basis
+		#var smoothed_basis = lerp(current_basis, desired_basis, delta * smooth_speed)
+#
+		#var transform = grabbed_object.global_transform
+		#transform.origin = keep_pos
+		#transform.basis = smoothed_basis
+		#if not character.extracting_object_active:
+			#grabbed_object.global_transform = transform
+#
 
-	for child in $Extracted_Object.get_children():
-		if child.extraction_complete:
-			if not child.is_full_size:
-				add_component_to_grid(child)
 
 
 	# When an object is grabbed:
@@ -362,14 +447,13 @@ func grab_object():
 	character.PREM_7.cast_beam()
 	#await get_tree().create_timer(0.4).timeout
 	grabbed_object = grabbable_object
+	grabbable_object = null
 	character.grabbed_object = grabbed_object
 	grabbed_object.collision_layer = 1
 	grabbed_object.collision_mask = 1
 	flicker_obj_a = grabbed_object.object_body
 	flicker_obj_b = character.PREM_7.back_panel
 	flicker_obj_c = character.PREM_7.photon_tip
-	#grabbed_object.enable_object_glow(grabbed_object.outline)
-	grabbed_object.is_grabbed = true
 	grabbed_object.is_touchable = false
 	grabbed_object.freeze = false
 	grabbed_object.physics_mat.friction = 0.0
@@ -393,7 +477,6 @@ func release_object():
 	flicker_obj_a = null
 	flicker_obj_b = null
 	flicker_obj_c = null
-	grabbed_object.is_grabbed = false
 	grabbed_object.is_touchable = true
 	grabbed_object.physics_mat.friction = 1.0
 	grabbed_object.axis_lock_angular_x = false

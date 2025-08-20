@@ -1,6 +1,7 @@
 extends RigidBody3D
 class_name assembly_objects
 
+var object_set: bool = false
 
 var object_body: MeshInstance3D
 var machine_name: StringName
@@ -135,8 +136,7 @@ var extraction_scale: float
 
 func _ready() -> void:
 	
-	connect("body_shape_entered", Callable(self, "_on_body_shape_entered"))
-	connect("body_shape_exited",  Callable(self, "_on_body_shape_exited"))
+
 	
 	shader = Shader.new()
 	shader.code = GLOW_SHADER.code
@@ -179,6 +179,11 @@ func _ready() -> void:
 		is_stepladder = true
 
 func _physics_process(delta: float) -> void:
+	
+	if not object_set:
+		connect("body_shape_entered", Callable(self, "_on_body_shape_entered"))
+		connect("body_shape_exited",  Callable(self, "_on_body_shape_exited"))
+		object_set = true
 
 	if not is_grabbed and is_touching_ground and recently_grabbed:
 		if linear_velocity == Vector3.ZERO and angular_velocity == Vector3.ZERO:
@@ -195,9 +200,6 @@ func _physics_process(delta: float) -> void:
 	if is_assembly_component:
 		if not extraction_complete:
 			complete_extraction()
-	
-	var up_vector = global_transform.basis.y
-	var alignment = up_vector.dot(Vector3.UP)
 
 	if extract_in_motion:
 		angular_velocity = Vector3(0.0, 1.0, 0.0)
@@ -207,7 +209,7 @@ func _physics_process(delta: float) -> void:
 			position_tween.kill()
 		if glow_tween:
 			glow_tween.kill()
-		object_body.top_level = false
+		#object_body.top_level = false
 
 		base_spawn_pos = global_position
 		linear_damp = 0
@@ -251,15 +253,6 @@ func _process(delta: float) -> void:
 			if standard_material.emission_energy_multiplier == 2.0:
 				is_grabbed = false
 				brightness_increasing = true
-	if is_extracting:
-		pass
-		#shake_timer -= delta
-		#if not extract_in_motion:
-			##extract_pos_x = position.x - 2.5
-			##extract_pos_y = position.y + 0.5
-			##extract_pos_z = position.z + 1.0
-			#extract_object_motion()
-
 
 
 func enable_object_glow(object: Node) -> void:
@@ -282,50 +275,16 @@ func dampen_assembly_object(time):
 var add_to_x: float
 
 func _on_body_shape_entered(body_rid: RID, body: Node, body_shape_index: int, local_shape_index: int) -> void:
-	
-	
 	if body.name == 'Floor':
 		is_touching_ground = true
 	
-	#if body.name == "Left_Wall" and not touching_left_wall:
-		#touching_wall_count += 1
-		#touching_left_wall = true
-#
-	#elif body.name == "Right_Wall" and not touching_right_wall:
-		#touching_wall_count += 1
-		#touching_right_wall = true
-#
-	#elif body.name == "Back_Wall" and not touching_back_wall:
-		#touching_wall_count += 1
-		#touching_back_wall = true
-#
-	#elif body.name == "Front_Wall" and not touching_front_wall:
-		#touching_wall_count += 1
-		#touching_front_wall = true
-
 	if body is character:
 		body.is_on_floor()
-		#if not is_stepladder and not is_rocketship:
-			#character_force = character_body.current_velocity
-			#print(character_force)
+
 
 func _on_body_shape_exited(body_rid: RID, body: Node, body_shape_index: int, local_shape_index: int) -> void:
 	pass
-	#if body.name == "Left_Wall" and touching_left_wall:
-		#touching_wall_count -= 1
-		#touching_left_wall = false
-#
-	#elif body.name == "Right_Wall" and touching_right_wall:
-		#touching_wall_count -= 1
-		#touching_right_wall = false
-#
-	#elif body.name == "Back_Wall" and touching_back_wall:
-		#touching_wall_count -= 1
-		#touching_back_wall = false
-#
-	#elif body.name == "Front_Wall" and touching_front_wall:
-		#touching_wall_count -= 1
-		#touching_front_wall = false
+
 
 func set_outline(status: String, color: Color, opacity: float) -> void:
 	if not is_instance_valid(glow_body):
@@ -620,7 +579,6 @@ func manipulation_mode(type):
 					child.set_surface_override_material(i, manipulation_material)
 
 	elif type == "Inactive":
-
 		for child in extract_body.get_children():
 			if child is MeshInstance3D:
 				child.set_material_overlay(standard_material)
