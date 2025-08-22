@@ -81,7 +81,6 @@ func _physics_process(delta: float) -> void:
 	if character.new_component:
 		if character.new_component.ready_to_move:
 			character.new_component.reparent(assembly_object_container)
-			print_tree_pretty()
 			character.new_component.ready_to_move = false
 
 	if grabbed_object:
