@@ -328,7 +328,7 @@ blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_wnl2d")
 
 [node name="DryingMachine" type="RigidBody3D"]
-mass = 75.0
+mass = 125.0
 script = ExtResource("1_yvv8m")
 
 [node name="DryerPanel_Shape" type="CollisionShape3D" parent="."]

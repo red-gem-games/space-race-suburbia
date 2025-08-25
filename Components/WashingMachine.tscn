@@ -328,7 +328,7 @@ blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_pdel4")
 
 [node name="WashingMachine" type="RigidBody3D"]
-mass = 75.0
+mass = 125.0
 script = ExtResource("1_hnuj6")
 
 [node name="WasherPanel_Shape" type="CollisionShape3D" parent="."]

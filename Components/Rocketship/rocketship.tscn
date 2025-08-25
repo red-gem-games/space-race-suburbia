@@ -20,7 +20,7 @@ size = Vector3(1.79, 6.76, 0.25)
 height = 17.3
 radius = 2.368
 
-[node name="Rocketship" type="RigidBody3D"]
+[node name="Rocketship" type="RigidBody3D" groups=["NonTouchable"]]
 mass = 100000.0
 freeze = true
 continuous_cd = true

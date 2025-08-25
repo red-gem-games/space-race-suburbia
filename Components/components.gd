@@ -81,6 +81,7 @@ var grab_particles: GPUParticles3D
 var grab_particles_shader: Shader
 var particles_material: ShaderMaterial
 
+var is_component: bool = false
 var extracted_object_container: Node3D
 
 var is_stepladder: bool = false
@@ -153,12 +154,11 @@ func _ready() -> void:
 	continuous_cd = true
 	max_contacts_reported = 1000
 	gravity_scale = 1.5
-	#freeze = true
 	
 	collision_layer = 1
 	collision_mask = 1
 	
-	mass = 50.0
+	mass = mass * 2
 	
 	physics_mat.friction = 1.0
 	physics_mat.bounce = 0.0
@@ -178,6 +178,9 @@ func _ready() -> void:
 	if name == "Stepladder":
 		is_stepladder = true
 
+var prev_y_vel
+var curr_y_vel
+
 func _physics_process(delta: float) -> void:
 	
 	if not object_set:
@@ -188,9 +191,21 @@ func _physics_process(delta: float) -> void:
 	if not is_grabbed and is_touching_ground and recently_grabbed:
 		if linear_velocity == Vector3.ZERO and angular_velocity == Vector3.ZERO:
 			#freeze = true
+			
 			resting_position = global_position.y
 			recently_grabbed = false
-			print('-------- ', name, ' is frozen! --------')
+	
+	#if not is_grabbed:
+		#if abs(linear_velocity.y) > 0.001:
+			#if curr_y_vel:
+				#prev_y_vel = curr_y_vel
+				#print('P: ', prev_y_vel)
+			#curr_y_vel = linear_velocity.y
+			#print('C: ', curr_y_vel)
+			#
+			#if curr_y_vel and prev_y_vel and is_touching_ground:
+				#if abs(curr_y_vel - prev_y_vel) < 0.001:
+					#linear_damp = 10
 	
 	if is_suspended:
 		linear_velocity = lerp(linear_velocity, Vector3(0.0, 0.0, 0.0), delta * 1.5)
@@ -220,6 +235,7 @@ func _physics_process(delta: float) -> void:
 var brightness_increasing: bool = true
 
 func _process(delta: float) -> void:
+	
 	if not is_grabbed:
 		if glow_tween:
 			glow_tween.kill()
@@ -229,15 +245,10 @@ func _process(delta: float) -> void:
 					child.set_material_overlay(standard_material)
 					standard_material.emission = Color(0.6, 0.9, 0.6)
 					standard_material.emission_energy_multiplier = 2.0
-				#if not outline.visible:
-					#outline.visible = true
 				
 			if not is_touched:
 				for child in object_body.get_children():
 					child.set_material_overlay(null)
-				#standard_material.emission = Color(0.63, 0.8, 0.62)
-				#standard_material.emission_energy_multiplier = 1.0
-				#outline.visible = false
 
 
 	if is_grabbed:
@@ -595,6 +606,7 @@ func set_glitch(status):
 	manipulation_material.set_shader_parameter("enable_glitch", status)
 
 func set_extract_glow(component, selection):
+	print('how many times you playing?')
 	var surface_count = component.mesh.get_surface_count()
 	if selection == 'Selected':
 		component.set_material_overlay(EXTRACT_MATERIAL)

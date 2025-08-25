@@ -109,14 +109,14 @@
             "lift": 4
         },
         {
-            "name": "Drip Pan",
-            "stars": 2,
-            "scale": 1.25,
+            "name": "Thermocoupler",
+            "stars": 3,
+            "scale": 1.5,
             "glow": 10.0,
-            "module": "Payload",
-            "power": 60,
+            "module": "Propulsion",
+            "power": 85,
             "mass": 8,
-            "lift": 6
+            "lift": 8
         },
         {
             "name": "Supply Pipes",
@@ -127,6 +127,16 @@
             "power": 55,
             "mass": 21,
             "lift": 4
+        },
+        {
+            "name": "Drip Pan",
+            "stars": 2,
+            "scale": 1.25,
+            "glow": 10.0,
+            "module": "Payload",
+            "power": 60,
+            "mass": 8,
+            "lift": 6
         }
     ]
 

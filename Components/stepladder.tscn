@@ -12,7 +12,7 @@ size = Vector3(4.06, 0.3, 1)
 [sub_resource type="BoxShape3D" id="BoxShape3D_w47uh"]
 size = Vector3(3.988, 5.713, 0.028)
 
-[node name="Stepladder" type="RigidBody3D" groups=["Stepladder"]]
+[node name="Stepladder" type="RigidBody3D" groups=["NonTouchable"]]
 collision_layer = 0
 mass = 150.0
 script = ExtResource("1_ibwmm")

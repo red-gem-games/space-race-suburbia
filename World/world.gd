@@ -16,8 +16,8 @@ var GRAB_STIFFNESS := BASE_GRAB_STIFFNESS
 var GRAB_DAMPING := BASE_GRAB_DAMPING
 var ROTATE_SPEED := BASE_ROTATE_SPEED  # Increase this for snappier rotation
 
-const BASE_GRAB_STIFFNESS := 18000.0
-const BASE_GRAB_DAMPING := 1800.0
+const BASE_GRAB_STIFFNESS := 360.0
+const BASE_GRAB_DAMPING := 36.0
 const BASE_ROTATE_SPEED := 4.0  # Increase this for snappier rotation
 const MIN_FORCE := -200000.0 
 const MAX_FORCE := 200000.0    
@@ -78,6 +78,10 @@ var previous_position_value: Vector3
 
 func _physics_process(delta: float) -> void:
 	
+		
+	#print('See if auto switching to next component fixes duplicate extract shader issue')
+	#print('Else...find a way to delete it from that component since it will not need it to be added again...')
+	#
 	if character.new_component:
 		if character.new_component.ready_to_move:
 			character.new_component.reparent(assembly_object_container)
@@ -127,6 +131,21 @@ func _physics_process(delta: float) -> void:
 			extraction_spin_initialized = false
 
 		else:
+			if character.current_extraction_data.is_empty():
+				character._on_extract_key()
+				if grabbed_object:
+					for child in grabbed_object.get_children():
+						if child is CollisionShape3D:
+							child.disabled = true
+					await get_tree().create_timer(1.0).timeout
+				if grabbed_object:
+					for child in grabbed_object.get_children():
+						if child is CollisionShape3D:
+							child.disabled = false
+					release_object()
+					print("'CHARACTER.OBJECT_EMPTY()' -- FIGURE OUT ANIMATION")
+					print("NO CLICKS UNTIL THEN :)")
+					return
 			character.PREM_7.machine_info.visible = true
 			grabbed_object.extract_body.visible = true
 			distance_forward = 6.0
@@ -467,6 +486,8 @@ func grab_object():
 	grabbed_object.is_grabbed = true
 	grabbed_object.brightness_increasing = true
 	grabbed_object.glow_timer = 0.25
+	GRAB_STIFFNESS = BASE_GRAB_STIFFNESS * grabbed_object.mass
+	GRAB_DAMPING = BASE_GRAB_DAMPING * grabbed_object.mass
 	character.grab_object()
 
 
@@ -496,6 +517,9 @@ func _input(event: InputEvent) -> void:
 	
 	# Process Mouse Button events.
 	if event is InputEventMouseButton:
+
+		if not character.is_clickable:
+			return
 
 		if event.button_index == MOUSE_BUTTON_LEFT and not (character.extracting_object_active or character.fusing_object_active):
 			target = character.touched_object
@@ -535,7 +559,6 @@ func _input(event: InputEvent) -> void:
 				return
 			if not character.extracting_object_active and not character.fusing_object_active:
 				print('Resetting Rotation here, genius...')
-				#grabbed_object.reparent(assembly_object_container)
 				reset_rotation = true
 				character.distance_from_character = base_distance_in_front
 				flicker_obj_a = grabbed_object.object_body

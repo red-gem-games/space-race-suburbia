@@ -4,6 +4,8 @@ class_name character
 const is_character: bool = true
 var start_day: bool = false
 
+var is_clickable: bool = true
+
 var object_data = {}
 var component_data_file = "res://components/component_data.json"
 var current_component_index := 0
@@ -254,8 +256,10 @@ var selected_component_col: CollisionShape3D
 var selected_component_pos: Vector3
 var selected_component_scale: float
 var selected_component_glow: float
+var selected_component_mass: float
 var selected_component_rot: Vector3
 var fresh_component: RigidBody3D
+var fresh_component_scale: Vector3
 var f_comp: RigidBody3D
 var new_component: RigidBody3D
 var launching_component: bool = false
@@ -264,6 +268,8 @@ var extraction_finalized: bool = false
 
 
 func _ready() -> void:
+	push_warning('FRAME TICK PER SECOND IS NOW SET TO 120 - WILL THIS WORK ON LOWER POWERED MACHINES?')
+	push_warning('The reason for this ^^^ is due to flat objects landing on the ground and jittering...')
 	push_warning('General To Do List:')
 	push_warning('------ ALWAYS MAKE SURE THINGS WORK ON BOTH SCREENS ------')
 	push_warning('SUSPEND Changes')
@@ -360,14 +366,28 @@ func _physics_process(delta: float) -> void:
 	# Handle grounded/airborne vertical velocity
 	update_vertical_velocity()
 
+var reform: bool
+
 func _process(delta: float) -> void:
 	
+	#print(control_timer.time_left)
 	
+	#if fresh_component:
+		#print(fresh_component.name)
 
 	if launching_component:
+		reform = true
+		extraction_recently_completed = false
+		launching_component = false
+		complete_extraction(fresh_component, selected_component_mesh, selected_component_col)
+
+	if reform:
 		for child in fresh_component.get_children():
 			if child is MeshInstance3D:
-				launch_component(child, delta)
+				var s = selected_component_scale
+				reform_component(child, delta, fresh_component, selected_component_col)
+				fresh_component.scale_object(child, comp_scale_x, comp_scale_y, comp_scale_z, 0.0, 1.0)
+		
 
 	if grabbed_object:
 		if extracting_object_active:
@@ -403,8 +423,8 @@ func _process(delta: float) -> void:
 					child.outline_modulate.a = lerp(child.outline_modulate.a, 0.0, delta * 3.5)
 				if control_timer.is_stopped() == false:
 					var t_left_ratio = control_timer.time_left / control_timer.wait_time
-					var progress = 1.1 - t_left_ratio
-					var high_extract_speed = 1.1
+					var progress = 1.0 - t_left_ratio
+					var high_extract_speed = 0.9
 					extract_speed = lerp(extract_speed, high_extract_speed, progress * delta)
 				if control_timer.time_left < 2.0 and control_timer.time_left > 1.0:
 					alpha_x = lerp(alpha_x, 0.0, delta * 2.5)
@@ -417,10 +437,16 @@ func _process(delta: float) -> void:
 					selected_component_mesh.position = lerp(selected_component_mesh.position, Vector3(0.0, -5.0, 0.0), delta * 1.5)
 					selected_component_mesh.scale = lerp(selected_component_mesh.scale, Vector3(0.0, 0.0, 0.0), delta * 5.0)
 				if control_timer.time_left == 0.0:
-					extract_component(selected_component_mesh, selected_component_col)
-					add_script_to_component()
-					launching_component = true
-					extraction_started = false
+					if control_timer.is_stopped():
+						#print(control_timer.is_stopped())
+						extract_component(selected_component_mesh, selected_component_col)
+						setup_component()
+						launching_component = true
+						scroll_extraction_data('DOWN')
+						extraction_started = false
+					control_timer.start(10.0)
+				
+
 
 
 			else:
@@ -436,10 +462,10 @@ func _process(delta: float) -> void:
 				for child in screen_labels:
 					child.modulate.a = lerp(child.modulate.a, 1.0, delta * 7.5)
 					child.outline_modulate.a = lerp(child.outline_modulate.a, 1.0, delta * 7.5)
-				grabbed_object.EXTRACT_MATERIAL.emission = lerp(grabbed_object.EXTRACT_MATERIAL.emission, Color.BLUE_VIOLET, delta * 7.5)
-				grabbed_object.EXTRACT_MATERIAL.albedo_color = lerp(grabbed_object.EXTRACT_MATERIAL.albedo_color, Color.PURPLE, delta * 7.5)
-				grabbed_object.EXTRACT_MATERIAL.albedo_color.a = 0.25
-				grabbed_object.EXTRACT_MATERIAL.emission_energy_multiplier = lerp(grabbed_object.EXTRACT_MATERIAL.emission_energy_multiplier, 5.0, delta * 7.5)
+				grabbed_object.EXTRACT_MATERIAL.emission = lerp(grabbed_object.EXTRACT_MATERIAL.emission, Color.PURPLE, delta * 7.5)
+				grabbed_object.EXTRACT_MATERIAL.albedo_color = lerp(grabbed_object.EXTRACT_MATERIAL.albedo_color, Color.HOT_PINK, delta * 7.5)
+				grabbed_object.EXTRACT_MATERIAL.albedo_color.a = 0.5
+				grabbed_object.EXTRACT_MATERIAL.emission_energy_multiplier = lerp(grabbed_object.EXTRACT_MATERIAL.emission_energy_multiplier, selected_component_glow * 2.5, delta * 7.5)
 				selected_component_mesh.position = lerp(selected_component_mesh.position, selected_component_pos, delta * 7.5)
 				selected_component_mesh.scale = lerp(selected_component_mesh.scale, Vector3(x, y, z), delta * 7.5)
 				extract_alpha = lerp(extract_alpha, 0.25, delta * 7.5)
@@ -475,7 +501,6 @@ func _process(delta: float) -> void:
 					#HUD.set_highlight_color(manipulate_BLUE, 0.7)
 					grabbed_object.fuse_active = true
 				#HUD.control_color.visible = true
-				print('***   Make sure to lerp these shaders / standard materials   ***')
 		else:
 			camera.fov = lerp(camera.fov, 75.0, delta * 10)
 			if PREM_7.handling_object:
@@ -535,22 +560,27 @@ func _on_action_key(status: String):
 		return
 	if status == "down":
 		if extracting_object_active:
-			extraction_started = true
 			control_timer.start(extract_time)
 			PREM_7.ctrl_anim.play("activate")
+			extraction_started = true
 	if status == "up":
 		if extraction_started:
 			PREM_7.ctrl_anim.play_backwards("activate")
 			PREM_7.holo_anim.play_backwards("retract_hologram")
-			extraction_started = false
 			control_timer.stop()
+			extraction_started = false
+			
 
 func _on_extract_key() -> void:
 	if fusing_object_active:
 		return
 	if grabbed_object.is_stepladder or grabbed_object.is_rocketship:
 		return
-		
+	if grabbed_object.is_component:
+		print('Add warning here:')
+		print("Ah, Ah, Ah. Can't extract a component any further!")
+		return
+
 	action_wait_timer.start(0.5)
 	desired_pitch = 0.02
 	
@@ -618,6 +648,9 @@ func _input(event: InputEvent) -> void:
 		if left_mouse_down and event.button_index == MOUSE_BUTTON_RIGHT:
 			return
 		if right_mouse_down and event.button_index == MOUSE_BUTTON_LEFT:
+			return
+		
+		if not is_clickable:
 			return
 
 		if event.button_index == MOUSE_BUTTON_LEFT:
@@ -717,18 +750,6 @@ func _input(event: InputEvent) -> void:
 				_on_action_key('down')
 			if not pressed:
 				_on_action_key('up')
-			#if released or q_timer == 0.0:
-				#print("releasing q...reset timer")
-			#if event.pressed:
-				#suspending_object_active = true
-				#print('add SUSPEND visuals')
-				#print('Change the shift movement (left, right, forward, backward) to match what the character is seeing vs. actual position')
-			#if not event.pressed:
-				#beam_lock = false
-				#grabbed_object.is_suspended =! grabbed_object.is_suspended
-				#grabbed_object.object_rotation = grabbed_object.rotation_degrees
-				#grab_object()
-				
 
 		if event.keycode == KEY_F:
 			if not grabbed_object or extracting_object_active:
@@ -903,6 +924,7 @@ func grab_object():
 	mouse_speed = base_mouse_speed / 100.0 * 15.0
 	pitch_max = grab_pitch_max
 	object_is_grabbed = true
+	grabbed_object.linear_damp = 0
 	grabbed_initial_rotation = rotation_degrees
 	await get_tree().create_timer(0.5).timeout
 	for child in get_children():
@@ -917,7 +939,7 @@ func release_object():
 	for child in get_children():
 		if child is CollisionShape3D:
 			child.disabled = false
-	grabbed_object.object_body.scale = Vector3.ONE
+	grabbed_object.object_body.scale = grabbed_object.current_scale
 	PREM_7.machine_info.scale = Vector3.ZERO
 	PREM_7.machine_info.visible = false
 	PREM_7.control_position.remove_child(grabbed_object.extract_body)
@@ -969,7 +991,20 @@ func control_object():
 		grab_object()
 
 func fuse_mode_active():
-	print("add some logic here...release object but keep it as 'fused object' until the object player is fusing to is selected...or something like that?")
+	if grabbed_object.is_component:
+		print('  ')
+		print("***************")
+		print(" ")
+		print("Disable the component's collision layer, turn object into manipulation mode but remain in front of player. This is how we will be able to fuse inside of the rocket as it pulls apart (and as the component turns GREEN to signify it can be attached in that spot).")
+		print(" ")
+		print("***************")
+		print('  ')
+	else:
+		print('  ')
+		print("Message Example: ")
+		print('  ')
+		print("***THIS ITEM CANNOT BE FUSED***")
+		print("'Are you trying to wash your clothes in space?'")
 
 func handle_pitch_and_yaw(time):
 	if grabbed_object:
@@ -1308,9 +1343,6 @@ func scroll_extraction_data(dir):
 	if extraction_recently_completed:
 		return
 
-	if current_extraction_data.is_empty():
-		return
-
 	selected_component_mesh.position = selected_component_pos
 	selected_component_mesh.scale = Vector3(comp_scale_x, comp_scale_y, comp_scale_z)
 	_on_action_key('up')
@@ -1324,9 +1356,12 @@ func scroll_extraction_data(dir):
 		current_component_index += 1
 
 	var count = current_extraction_data.size()
-	current_component_index = (current_component_index + count) % count
-
-	update_component_display()
+	
+	if current_extraction_data.is_empty():
+		return
+	else:
+		current_component_index = (current_component_index + count) % count
+		update_component_display()
 
 func update_component_display():
 	if current_extraction_data.is_empty():
@@ -1345,6 +1380,7 @@ func update_component_display():
 	PREM_7.component_stars.text = "★".repeat(int(comp.get("stars", 0)))
 	selected_component_scale = comp.get("scale", 0.0)
 	selected_component_glow  = comp.get("glow",  0.0)
+	selected_component_mass  = comp.get("mass",  0.0)
 	PREM_7.component_module.text = str(comp.get("module", comp.get("fit", "")))
 	PREM_7.component_power.text  = str(comp.get("power",  comp.get("life", 0)))
 	PREM_7.component_mass.text   = str(comp.get("mass",   comp.get("weight", 0)))
@@ -1444,15 +1480,17 @@ func extract_component(mesh, col):
 	
 	#PREM_7.holo_anim.play("spin_hologram")
 	
+	print('how many times')
+	
 	extraction_recently_completed = true
 	
-	complete_extraction(fresh_component, fresh_mesh, fresh_col)
+	
 	
 	print('Rigid Pos: ', fresh_component.position)
 	print('Mesh Pos: ', fresh_mesh.position)
 	print('Col Pos: ', fresh_col.position)
 
-func add_script_to_component():
+func setup_component():
 	f_comp = fresh_component
 	f_comp.set_script(COMPONENT_SCRIPT)
 	f_comp.shader = Shader.new()
@@ -1469,14 +1507,15 @@ func add_script_to_component():
 	f_comp.gravity_scale = 0.0
 	f_comp.collision_layer = 3
 	f_comp.collision_mask = 3
-	f_comp.mass = 50.0
+	f_comp.mass = selected_component_mass * 2
+	f_comp.is_component = true
 	
 	for child in f_comp.get_children():
 		if child is MeshInstance3D:
-			#f_comp.base_mesh = child
 			f_comp.object_body = child
-			f_comp.current_scale = f_comp.object_body.scale
-	
+
+	f_comp.current_scale = Vector3(comp_scale_x, comp_scale_y, comp_scale_z)
+	print(f_comp.current_scale)
 	f_comp.physics_mat.friction = 1.0
 	f_comp.physics_mat.bounce = 0.0
 	f_comp.physics_material_override = f_comp.physics_mat
@@ -1487,28 +1526,40 @@ func add_script_to_component():
 
 	f_comp.set_physics_process(true)
 	f_comp.set_process(true)
+
+	launch_component(f_comp)
+
+func launch_component(obj):
 	var forward = -camera.global_transform.basis.z.normalized()
 	var upward = camera.global_transform.basis.y.normalized()
 	var sideways = camera.global_transform.basis.y.normalized()
 
-	f_comp.apply_impulse(forward * 175.0)
-	f_comp.apply_impulse(upward * 10)
-	f_comp.apply_torque_impulse(sideways * 650.0)
-	f_comp.EXTRACT_MATERIAL.emission_energy_multiplier *= 3.0
+	obj.apply_impulse(forward * 5 * obj.mass)
+	obj.apply_impulse(upward * 5)
+	obj.apply_torque_impulse(sideways * 15 * obj.mass)
+	#obj.EXTRACT_MATERIAL.emission_energy_multiplier *= 3.0
 
-func launch_component(obj, time):
-	
-	obj.scale = lerp(obj.scale, true_scale, time)
+func reform_component(obj, time, parent, col):
+	if current_extraction_data.is_empty():
+		print('This is the function with the issues me thinks...')
+		return
+		
+	print('is this running?')
+	#obj.scale = lerp(obj.scale, true_scale, time)
 	for child in fresh_component.get_children():
 		if child is CollisionShape3D:
 			child.disabled = false
-	await get_tree().create_timer(0.5).timeout
-	fresh_component.EXTRACT_MATERIAL.emission = lerp(fresh_component.EXTRACT_MATERIAL.emission, Color.TRANSPARENT, time * 2.0)
-	fresh_component.EXTRACT_MATERIAL.albedo_color = lerp(fresh_component.EXTRACT_MATERIAL.albedo_color, Color.TRANSPARENT, time * 2.0)
-	fresh_component.EXTRACT_MATERIAL.emission_energy_multiplier = lerp(fresh_component.EXTRACT_MATERIAL.emission_energy_multiplier, 0.0, time * 3.5)
-	await get_tree().create_timer(2.5).timeout
-	extraction_recently_completed = false
-	launching_component = false
+	parent.EXTRACT_MATERIAL.emission = lerp(parent.EXTRACT_MATERIAL.emission, Color.TRANSPARENT, time * 2.0)
+	parent.EXTRACT_MATERIAL.albedo_color = lerp(parent.EXTRACT_MATERIAL.albedo_color, Color.TRANSPARENT, time * 2.0)
+	parent.EXTRACT_MATERIAL.emission_energy_multiplier = lerp(parent.EXTRACT_MATERIAL.emission_energy_multiplier, 0.0, time)
+	parent.set_extract_glow(obj, 'Complete')
+	
+	print('  ')
+	print('Need to slowly remove the shader, after a white hot object cooldown occurs.')
+	print('  ')
+	
+	#parent.EXTRACT_MATERIAL = null
+	reform = false
 
 func complete_extraction(body: RigidBody3D, mesh: MeshInstance3D, shape: CollisionShape3D):
 	await get_tree().create_timer(0.25).timeout
@@ -1516,7 +1567,6 @@ func complete_extraction(body: RigidBody3D, mesh: MeshInstance3D, shape: Collisi
 	new_component = body
 	body = null
 	new_component.ready_to_move = true
-	#extracting_object_active = false
 
 	# Remove only the extracted entry from the data list
 	var mesh_id := _normalize_id(mesh.name)
@@ -1527,13 +1577,14 @@ func complete_extraction(body: RigidBody3D, mesh: MeshInstance3D, shape: Collisi
 			current_extraction_data.remove_at(i)
 			break
 	
+	scroll_extraction_data('DOWN')
+	
+	if current_extraction_data.is_empty():
+		object_empty()
+		return
+	
 	grabbed_object.manipulation_mode('Active')
-	
-	#var count = current_extraction_data.size()
-	#for i in range(count):
-		#scroll_extraction_data('DOWN')
-	#right_mouse_down = false
-	#handle_object('pressed')
-	#_on_extract_key()  # rebuilds UI for the remaining components
 
-	
+func object_empty():
+	print('figure out what needs to happen with this animation...')
+	is_clickable = false

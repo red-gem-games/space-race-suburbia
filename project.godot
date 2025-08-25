@@ -28,6 +28,7 @@ window/stretch/aspect="expand"
 
 Stepladder=""
 Ground=""
+Untouchable=""
 
 [input]
 
@@ -39,6 +40,7 @@ toggle_window={
 
 [physics]
 
+common/physics_ticks_per_second=120
 3d/physics_engine="Jolt Physics"
 3d/default_gravity=19.6
 3d/default_linear_damp=0.25
