@@ -8,9 +8,9 @@
 [sub_resource type="SphereShape3D" id="SphereShape3D_twwou"]
 radius = 1.78806
 
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_twwou"]
-height = 4.51953
-radius = 1.7959
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_twwou"]
+radius = 1.45397
+height = 4.4653
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_a23tb"]
 
@@ -43,7 +43,7 @@ script = ExtResource("1_pjt0s")
 [node name="PREM-7" parent="Camera3D" instance=ExtResource("1_glpr6")]
 transform = Transform3D(0.995636, -0.0106614, 0.0927052, 0.0131577, 0.999565, -0.0263581, -0.0923839, 0.0274629, 0.995346, 0.650454, -0.342057, -0.520243)
 
-[node name="Object_Position" type="Node3D" parent="Camera3D"]
+[node name="Grabbed_Container" type="Node3D" parent="Camera3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -6)
 
 [node name="HUD" parent="." instance=ExtResource("3_wa5vi")]
@@ -55,11 +55,11 @@ debug_color = Color(0.766667, 1, 0, 1)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.388315, 0)
-shape = SubResource("CylinderShape3D_twwou")
+shape = SubResource("CapsuleShape3D_twwou")
 debug_color = Color(1, 0.264211, 0.231967, 1)
 
 [node name="Collision_Bottom" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.707107, -0.707107, 0, 0.707107, 0.707107, -0.0314026, -2.30869, 0)
+transform = Transform3D(1, 0, 0, 0, 0.707107, -0.707107, 0, 0.707107, 0.707107, -0.0314026, -1.97787, 0)
 shape = SubResource("SphereShape3D_a23tb")
 debug_color = Color(0.766667, 1, 0, 1)
 

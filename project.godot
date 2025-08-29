@@ -13,7 +13,6 @@ config_version=5
 config/name="Space_Race_Suburbia"
 run/main_scene="uid://dw2grejb4tc3k"
 config/features=PackedStringArray("4.4", "Forward Plus")
-run/max_fps=240
 config/icon="res://Assets/icon.svg"
 
 [display]
@@ -40,9 +39,10 @@ toggle_window={
 
 [physics]
 
-common/physics_ticks_per_second=120
+common/physics_jitter_fix=0.0
 3d/physics_engine="Jolt Physics"
 3d/default_gravity=19.6
 3d/default_linear_damp=0.25
 3d/default_angular_damp=0.25
+3d/solver/contact_max_allowed_penetration=0.001
 common/physics_interpolation=true

@@ -1,4 +1,4 @@
-[gd_scene load_steps=41 format=3 uid="uid://dw2grejb4tc3k"]
+[gd_scene load_steps=35 format=3 uid="uid://dw2grejb4tc3k"]
 
 [ext_resource type="PackedScene" uid="uid://f722yn8gdiyj" path="res://Character/character.tscn" id="1_f3sb7"]
 [ext_resource type="Script" uid="uid://cpdnlycwlet2q" path="res://World/world.gd" id="1_tlwt5"]
@@ -7,9 +7,6 @@
 [ext_resource type="Script" uid="uid://bj11plcft5xkg" path="res://World/fence.gd" id="3_h2aik"]
 [ext_resource type="PackedScene" uid="uid://cvtdsd7mu2wv" path="res://Components/WashingMachine.tscn" id="4_036b0"]
 [ext_resource type="PackedScene" uid="uid://diw15u24g3w3h" path="res://Components/DryingMachine.tscn" id="6_dwbse"]
-[ext_resource type="Shader" uid="uid://cgn0qf8wluwxh" path="res://Shaders/garage_floor.gdshader" id="6_eidgh"]
-[ext_resource type="Texture2D" uid="uid://dpi43v27xa8kb" path="res://Assets/Textures/cracked_concrete_disp_1k.png" id="7_oe8m4"]
-[ext_resource type="Texture2D" uid="uid://cmgbtrrh42i2v" path="res://Assets/Textures/concrete_floor_worn_001_disp_4k.png" id="8_w47uh"]
 [ext_resource type="PackedScene" uid="uid://8y8q1bb5ncvv" path="res://Components/Rocketship/rocketship.tscn" id="9_oe8m4"]
 [ext_resource type="PackedScene" uid="uid://cf60vyvie043n" path="res://Components/stepladder.tscn" id="9_w47uh"]
 [ext_resource type="PackedScene" uid="uid://50e0ko7nsyll" path="res://Components/Mix-O-Matic/mix_o_matic.tscn" id="10_lo5ox"]
@@ -52,22 +49,6 @@ shader_parameter/color5 = Vector4(0.274, 0.45, 0.12, 1)
 [sub_resource type="PlaneMesh" id="PlaneMesh_fj7yv"]
 material = SubResource("ShaderMaterial_tlwt5")
 size = Vector2(100, 100)
-
-[sub_resource type="PlaneMesh" id="PlaneMesh_aqk2v"]
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_lo5ox"]
-render_priority = 0
-shader = ExtResource("6_eidgh")
-shader_parameter/base_color = Vector4(0.1, 0.1, 0.1, 1)
-shader_parameter/noise_texture = ExtResource("8_w47uh")
-shader_parameter/noise_scale = 26.118
-shader_parameter/crack_texture = ExtResource("7_oe8m4")
-shader_parameter/crack_scale = 1.612
-shader_parameter/crack_threshold = 0.495
-shader_parameter/chip_strength = 0.488
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_dwbse"]
-size = Vector3(15.8889, 1, 20.1041)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_awrha"]
 render_priority = 0
@@ -204,20 +185,6 @@ debug_color = Color(0, 0.6, 0.701961, 1)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.858479, 0)
 mesh = SubResource("PlaneMesh_fj7yv")
 
-[node name="Garage_Floor" type="StaticBody3D" parent="Floor" groups=["Ground"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.7833, 0.360101, 47.7116)
-collision_layer = 3
-collision_mask = 3
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Floor/Garage_Floor"]
-transform = Transform3D(13.843, 0, 0, 0, 2.659, 0, 0, 0, 10.151, 5.71963, -1.05, -9.3864)
-mesh = SubResource("PlaneMesh_aqk2v")
-surface_material_override/0 = SubResource("ShaderMaterial_lo5ox")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor/Garage_Floor"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.013279, -1.50434, -9.27784)
-shape = SubResource("BoxShape3D_dwbse")
-
 [node name="Fence" type="Node3D" parent="."]
 
 [node name="Fence" type="MultiMeshInstance3D" parent="Fence"]
@@ -264,7 +231,7 @@ shape = SubResource("BoxShape3D_0wqet")
 environment = SubResource("Environment_tlwt5")
 
 [node name="Character" parent="." instance=ExtResource("1_f3sb7")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.383, 1.10852, 46.7)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -29.9455, 1.211, 18.8698)
 
 [node name="Extracted_Object" type="Node3D" parent="."]
 
@@ -272,22 +239,22 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.383, 1.10852, 46.7)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.7833, 0, 39.6017)
 
 [node name="WashingMachine" parent="Assembly_Objects" instance=ExtResource("4_036b0")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -6.83924, -0.326294, 1.91882)
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -22.4018, -0.216754, -25.9113)
 
 [node name="DryingMachine" parent="Assembly_Objects" instance=ExtResource("6_dwbse")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -6.8241, -0.280966, -0.230286)
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -22.3866, -0.171426, -28.0604)
 
 [node name="WaterHeater" parent="Assembly_Objects" instance=ExtResource("15_f23eu")]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 4.95186, 0.190946, 7.39701)
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -10.6107, 0.300486, -20.4331)
 
 [node name="Garage" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.7833, -0.639899, 47.7116)
 
 [node name="Stepladder" parent="Garage" instance=ExtResource("9_w47uh")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.1505, -0.867294, -21.8427)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -29.3595, -0.824313, -43.5662)
 
 [node name="Tune_O_Matic" parent="Garage" instance=ExtResource("10_lo5ox")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -6.36691, -1.08074, -0.963196)
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -21.9294, -0.890934, -28.7933)
 
 [node name="Platform" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.31278, 0)
@@ -295,7 +262,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.31278, 0)
 [node name="StaticBody3D" type="StaticBody3D" parent="Platform"]
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Platform/StaticBody3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.380505, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.380505, -29.9571)
 mesh = SubResource("CylinderMesh_k8do8")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Platform/StaticBody3D"]
@@ -303,11 +270,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0829815, 0)
 shape = SubResource("CylinderShape3D_eidgh")
 
 [node name="Rocketship" parent="Platform" instance=ExtResource("9_oe8m4")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8.00903, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8.00903, -29.9571)
 sleeping = true
 
 [node name="Label3D" type="Label3D" parent="."]
-transform = Transform3D(-0.00556757, 0, 0.999985, 0, 1, 0, -0.999985, 0, -0.00556757, -21.8919, 1.24566, 40.3619)
+transform = Transform3D(-0.00556757, 0, 0.999985, 0, 1, 0, -0.999985, 0, -0.00556757, -37.4544, 1.73147, 12.5318)
 modulate = Color(0.0166667, 1, 0, 1)
 text = "CLICK TO GRAB AN OBJECT"
 font_size = 52

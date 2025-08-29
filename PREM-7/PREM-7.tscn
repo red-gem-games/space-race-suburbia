@@ -1,8 +1,7 @@
-[gd_scene load_steps=99 format=4 uid="uid://bpvm0l41dywjs"]
+[gd_scene load_steps=88 format=4 uid="uid://bpvm0l41dywjs"]
 
 [ext_resource type="Script" uid="uid://so25svauxmkt" path="res://PREM-7/prem_7.gd" id="1_iarxa"]
 [ext_resource type="Shader" uid="uid://cgr7dnph387rx" path="res://PREM-7/prem_7_holo_glow.gdshader" id="2_t05xm"]
-[ext_resource type="ArrayMesh" uid="uid://dxs73vc1sll8t" path="res://PREM-7/new_array_mesh.tres" id="5_t05xm"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_t05xm"]
 
@@ -1862,28 +1861,6 @@ size = Vector3(1.52, 26.63, 1.57)
 material = SubResource("StandardMaterial3D_l5ika")
 size = Vector3(7.53, 26.41, 1.57)
 
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_8m00m"]
-direction = Vector3(0, 1, 0)
-spread = 20.0
-initial_velocity_min = -4.53
-initial_velocity_max = 7.67
-gravity = Vector3(0, 0, 0)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8d6ws"]
-transparency = 3
-alpha_hash_scale = 2.0
-alpha_antialiasing_mode = 0
-blend_mode = 3
-albedo_color = Color(0.8, 0, 1, 0.0862745)
-emission_enabled = true
-emission = Color(0.7, 0, 1, 1)
-emission_energy_multiplier = 500.0
-
-[sub_resource type="SphereMesh" id="SphereMesh_dpu46"]
-material = SubResource("StandardMaterial3D_8d6ws")
-radius = 0.003
-height = 0.005
-
 [sub_resource type="Shader" id="Shader_8m00m"]
 code = "shader_type spatial;
 render_mode blend_mix;
@@ -2073,40 +2050,6 @@ height = 0.56
 rings = 16
 cap_top = false
 cap_bottom = false
-
-[sub_resource type="Gradient" id="Gradient_6dr8p"]
-colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1)
-
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_61m6q"]
-gradient = SubResource("Gradient_6dr8p")
-
-[sub_resource type="Curve" id="Curve_3nktn"]
-_limits = [0.0, 5.0, 0.0, 1.0]
-_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 5), 0.0, 0.0, 0, 0]
-point_count = 2
-
-[sub_resource type="Curve" id="Curve_61m6q"]
-_limits = [0.0, 0.11, 0.0, 1.0]
-_data = [Vector2(0, 0.11), 0.0, 0.0, 0, 0, Vector2(1, 0.11), 0.0, 0.0, 0, 0]
-point_count = 2
-
-[sub_resource type="Curve" id="Curve_5hhbi"]
-_limits = [0.0, 0.11, 0.0, 1.0]
-_data = [Vector2(0, 0.11), 0.0, 0.0, 0, 0, Vector2(1, 0.11), 0.0, 0.0, 0, 0]
-point_count = 2
-metadata/_snap_count = 92
-
-[sub_resource type="CurveXYZTexture" id="CurveXYZTexture_vuyi1"]
-curve_x = SubResource("Curve_3nktn")
-curve_y = SubResource("Curve_61m6q")
-curve_z = SubResource("Curve_5hhbi")
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_s7cmo"]
-gravity = Vector3(0, 0, 0)
-scale_curve = SubResource("CurveXYZTexture_vuyi1")
-color = Color(1.26103e-05, 0.840319, 1.15514e-06, 1)
-color_ramp = SubResource("GradientTexture1D_61m6q")
-turbulence_noise_strength = 10.89
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_t05xm"]
 size = Vector2(1.79, 0.27)
@@ -2392,18 +2335,8 @@ cast_shadow = 0
 mesh = SubResource("BoxMesh_t05xm")
 skeleton = NodePath("../../Object_Inventory")
 
-[node name="GPUParticles3D" type="GPUParticles3D" parent="Multitool"]
-transform = Transform3D(0.999999, -3.72529e-09, 2.98023e-08, 1.11759e-08, 1, -3.72529e-09, -4.47035e-08, 4.47035e-08, 1, -0.122589, 0.716615, 1.07609)
-visible = false
-amount = 1000
-lifetime = 0.24
-speed_scale = 0.09
-randomness = 1.0
-process_material = SubResource("ParticleProcessMaterial_8m00m")
-draw_pass_1 = SubResource("SphereMesh_dpu46")
-
 [node name="Square_Glow" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.246126, -0.00631741, 0.0433853, 0.00862614, 0.249533, -0.0126013, -0.0429858, 0.013903, 0.245884, -0.003, 0, -0.533)
+transform = Transform3D(0.246126, -0.00631739, 0.0433849, 0.0086261, 0.249533, -0.0126013, -0.0429854, 0.013903, 0.245884, -0.003, 0, -0.533)
 cast_shadow = 0
 mesh = SubResource("BoxMesh_njh5b")
 skeleton = NodePath("../Holo_Glow")
@@ -2422,17 +2355,6 @@ shadow_enabled = true
 transform = Transform3D(-0.212614, 0.105105, -0.971467, -0.0715637, 0.989853, 0.122757, 0.974512, 0.0956216, -0.202935, -0.197883, -0.25074, -0.489429)
 light_specular = 1.0
 shadow_enabled = true
-
-[node name="GPUParticles3D" type="GPUParticles3D" parent="."]
-transform = Transform3D(0.0173955, -0.586107, 0.810032, 0.0240309, -0.809676, -0.586365, 0.999559, 0.029666, -3.54076e-08, 0, 0, -0.849373)
-visible = false
-cast_shadow = 0
-emitting = false
-amount = 1
-lifetime = 5.58
-speed_scale = 1.65
-process_material = SubResource("ParticleProcessMaterial_s7cmo")
-draw_pass_1 = ExtResource("5_t05xm")
 
 [node name="Hologram" type="Node3D" parent="."]
 transform = Transform3D(0.0837087, 0, -0.0147601, 0, 0.085, 0, 0.0147601, 0, 0.0837087, 0, 0.364234, -0.515807)

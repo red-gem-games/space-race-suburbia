@@ -136,6 +136,8 @@ var current_scale: Vector3
 var extract_body: MeshInstance3D
 var extraction_scale: float
 
+var is_colliding: bool
+
 
 func _ready() -> void:
 	
@@ -152,7 +154,7 @@ func _ready() -> void:
 	
 	contact_monitor = true
 	continuous_cd = true
-	max_contacts_reported = 1000
+	max_contacts_reported = 100
 	gravity_scale = 1.5
 	
 	collision_layer = 1
@@ -180,33 +182,33 @@ func _ready() -> void:
 
 var prev_y_vel
 var curr_y_vel
+var object_falling: bool = false
+
+var prev_y_pos
+var curr_y_pos
+
+var set_it_up
 
 func _physics_process(delta: float) -> void:
-	
+
 	if not object_set:
 		connect("body_shape_entered", Callable(self, "_on_body_shape_entered"))
 		connect("body_shape_exited",  Callable(self, "_on_body_shape_exited"))
 		object_set = true
 
-	if not is_grabbed and is_touching_ground and recently_grabbed:
-		if linear_velocity == Vector3.ZERO and angular_velocity == Vector3.ZERO:
-			#freeze = true
-			
-			resting_position = global_position.y
-			recently_grabbed = false
+	if is_grabbed and is_component:
+		print('Make this color highlight as purple to signify component')
+
 	
-	#if not is_grabbed:
-		#if abs(linear_velocity.y) > 0.001:
-			#if curr_y_vel:
-				#prev_y_vel = curr_y_vel
-				#print('P: ', prev_y_vel)
-			#curr_y_vel = linear_velocity.y
-			#print('C: ', curr_y_vel)
-			#
-			#if curr_y_vel and prev_y_vel and is_touching_ground:
-				#if abs(curr_y_vel - prev_y_vel) < 0.001:
-					#linear_damp = 10
-	
+	if not is_grabbed and recently_grabbed and not is_suspended:
+		
+		if linear_velocity.y < 0.01 and not object_falling:
+			return
+		if linear_velocity.y > 0.01:
+			object_falling = true
+		stop_object_shake(delta)
+		print('huh')
+
 	if is_suspended:
 		linear_velocity = lerp(linear_velocity, Vector3(0.0, 0.0, 0.0), delta * 1.5)
 		angular_velocity = lerp(angular_velocity, Vector3(0.0, 0.0, 0.0), delta * 0.5)
@@ -274,7 +276,17 @@ func enable_object_glow(object: Node) -> void:
 	var t := create_tween()
 	t.tween_property(object, "transparency", 0.875, 0.25)
 
-
+func stop_object_shake(time):
+		if curr_y_vel:
+			prev_y_vel = curr_y_vel
+		curr_y_vel = linear_velocity.y
+		if curr_y_vel and prev_y_vel and is_touching_ground:
+			if abs(curr_y_vel - prev_y_vel) < 0.01:
+				if gravity_scale == 1.5:
+					gravity_scale = 0.0
+				gravity_scale = lerp(gravity_scale, 0.975, time * 15.0)
+				if gravity_scale > 0.974:
+					recently_grabbed = false
 
 func dampen_assembly_object(time):
 	damp_elapsed_time += time
@@ -285,10 +297,8 @@ func dampen_assembly_object(time):
 	linear_damp = 40
 	damp_set = true
 
-
-var add_to_x: float
-
 func _on_body_shape_entered(body_rid: RID, body: Node, body_shape_index: int, local_shape_index: int) -> void:
+	
 	if body.name == 'Floor':
 		is_touching_ground = true
 	

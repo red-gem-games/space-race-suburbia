@@ -20,7 +20,7 @@ var COMPONENT_SCRIPT: Script = preload("res://Components/components.gd")
 @onready var HUD: Control = $HUD
 @onready var char_obj_shape: CollisionShape3D
 
-@onready var obj_pos_node: Node3D = $Camera3D/Object_Position
+@onready var grabbed_container: Node3D = $Camera3D/Grabbed_Container
 var object_position: Vector3
 
 var manipulate_ORANGE: Color = Color(1, 0.33, 0)
@@ -132,7 +132,7 @@ var pitch_min: float = base_pitch_min
 var pitch_max: float = base_pitch_max
 var base_mouse_speed: float = 0.002
 var mouse_speed: float = base_mouse_speed
-var smoothing: float = 0.15  # Smoothing factor (0-1)
+var smoothing: float = 0.15
 var current_mouse_speed_x: float
 var current_mouse_speed_y: float
 
@@ -244,6 +244,7 @@ var extraction_started: bool = false
 var comp_scale_x
 var comp_scale_y
 var comp_scale_z
+var reform: bool
 var alpha_x = 1.0
 var extract_alpha = 0.25
 var extract_edge = 1.5
@@ -290,6 +291,8 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
+	
+	print(distance_to_ground)
 
 	# Update ground distance
 	distance_to_ground = raycast_to_ground()
@@ -366,8 +369,6 @@ func _physics_process(delta: float) -> void:
 	# Handle grounded/airborne vertical velocity
 	update_vertical_velocity()
 
-var reform: bool
-
 func _process(delta: float) -> void:
 	
 	#print(control_timer.time_left)
@@ -412,20 +413,20 @@ func _process(delta: float) -> void:
 					extract_time -= delta
 				grabbed_object.EXTRACT_MATERIAL.albedo_color = lerp(grabbed_object.EXTRACT_MATERIAL.albedo_color, Color.PURPLE, delta)
 				grabbed_object.EXTRACT_MATERIAL.emission = lerp(grabbed_object.EXTRACT_MATERIAL.emission, Color.WHITE, delta)
-				grabbed_object.EXTRACT_MATERIAL.emission_energy_multiplier = lerp(grabbed_object.EXTRACT_MATERIAL.emission_energy_multiplier, selected_component_glow, delta * 5.0)
-				PREM_7.module_screen.scale = lerp(PREM_7.module_screen.scale, Vector3.ZERO, delta * 3.5)
-				PREM_7.power_screen.scale = lerp(PREM_7.power_screen.scale, Vector3.ZERO, delta * 3.5)
-				PREM_7.mass_screen.scale = lerp(PREM_7.mass_screen.scale, Vector3.ZERO, delta * 3.5)
-				PREM_7.lift_screen.scale = lerp(PREM_7.lift_screen.scale, Vector3.ZERO, delta * 3.5)
-				screen_mat.albedo_color.a = lerp(screen_mat.albedo_color.a, 0.0, delta * 3.5)
+				grabbed_object.EXTRACT_MATERIAL.emission_energy_multiplier = lerp(grabbed_object.EXTRACT_MATERIAL.emission_energy_multiplier, selected_component_glow, delta * 7.5)
+				PREM_7.module_screen.scale = lerp(PREM_7.module_screen.scale, Vector3.ZERO, delta * 7.5)
+				PREM_7.power_screen.scale = lerp(PREM_7.power_screen.scale, Vector3.ZERO, delta * 7.5)
+				PREM_7.mass_screen.scale = lerp(PREM_7.mass_screen.scale, Vector3.ZERO, delta * 7.5)
+				PREM_7.lift_screen.scale = lerp(PREM_7.lift_screen.scale, Vector3.ZERO, delta * 7.5)
+				screen_mat.albedo_color.a = lerp(screen_mat.albedo_color.a, 0.0, delta * 7.5)
 				for child in screen_labels:
-					child.modulate.a = lerp(child.modulate.a, 0.0, delta * 3.5)
-					child.outline_modulate.a = lerp(child.outline_modulate.a, 0.0, delta * 3.5)
+					child.modulate.a = lerp(child.modulate.a, 0.0, delta * 7.5)
+					child.outline_modulate.a = lerp(child.outline_modulate.a, 0.0, delta * 7.5)
 				if control_timer.is_stopped() == false:
 					var t_left_ratio = control_timer.time_left / control_timer.wait_time
 					var progress = 1.0 - t_left_ratio
-					var high_extract_speed = 0.9
-					extract_speed = lerp(extract_speed, high_extract_speed, progress * delta)
+					var high_extract_speed = 1.25
+					extract_speed = lerp(extract_speed, high_extract_speed, progress * delta *1.25)
 				if control_timer.time_left < 2.0 and control_timer.time_left > 1.0:
 					alpha_x = lerp(alpha_x, 0.0, delta * 2.5)
 					selected_component_mesh.position = lerp(selected_component_mesh.position, Vector3.ZERO, delta * 2.5)
@@ -480,14 +481,14 @@ func _process(delta: float) -> void:
 		screen_res_sway_multiplier = 55.0 * delta
 		previous_delta = delta
 		screen_resolution_set = true
-	
 
+	PREM_7.rotation = PREM_7.rotation.lerp(prem7_original_rotation, prem7_decay_speed * delta)
+	update_reticle_targeting()
 	
 	if scroll_cooldown > 0.0:
 		scroll_cooldown -= delta
 
-	PREM_7.rotation = PREM_7.rotation.lerp(prem7_original_rotation, prem7_decay_speed * delta)
-	update_reticle_targeting()
+
 
 	if grabbed_object:
 		if shifting_object_active or extracting_object_active or fusing_object_active:
@@ -587,6 +588,7 @@ func _on_extract_key() -> void:
 	extracting_object_active =! extracting_object_active
 		
 	if extracting_object_active:
+		HUD.message_status('Extract', 'ON')
 		#grabbed_object.object_body.scale = Vector3(0.25, 0.25, 0.25)
 		for child in grabbed_object.get_children():
 			if child is CollisionShape3D:
@@ -610,6 +612,7 @@ func _on_extract_key() -> void:
 		handle_object('pressed')
 		#grabbed_target_position.x -= 10
 	else:
+		HUD.message_status('Extract', 'OFF')
 		for child in grabbed_object.get_children():
 			if child is CollisionShape3D:
 				child.disabled = false
@@ -906,7 +909,7 @@ func _input(event: InputEvent) -> void:
 
 
 func grab_object():
-	if distance_to_ground > 3.0:
+	if distance_to_ground > 2.622:
 		print('why would this work?')
 		for child in get_children():
 			if child is CollisionShape3D:
