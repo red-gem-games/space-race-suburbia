@@ -238,6 +238,8 @@ var input_direction_x: float = 0.0
 var input_direction_z: float = 0.0
 var grabbed_pos_set: bool = false
 
+
+
 var true_scale: Vector3
 var extraction_scale: float
 var extraction_started: bool = false
@@ -291,8 +293,6 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
-	
-	print(distance_to_ground)
 
 	# Update ground distance
 	distance_to_ground = raycast_to_ground()
@@ -458,13 +458,12 @@ func _process(delta: float) -> void:
 				PREM_7.power_screen.scale = lerp(PREM_7.power_screen.scale, Vector3.ONE, delta * 7.5)
 				PREM_7.mass_screen.scale = lerp(PREM_7.mass_screen.scale, Vector3.ONE, delta * 7.5)
 				PREM_7.lift_screen.scale = lerp(PREM_7.lift_screen.scale, Vector3.ONE, delta * 7.5)
-				#PREM_7.holo_anim.play_backwards("retract_hologram")
 				screen_mat.albedo_color.a = lerp(screen_mat.albedo_color.a, 0.5, delta * 7.5)
 				for child in screen_labels:
 					child.modulate.a = lerp(child.modulate.a, 1.0, delta * 7.5)
 					child.outline_modulate.a = lerp(child.outline_modulate.a, 1.0, delta * 7.5)
-				grabbed_object.EXTRACT_MATERIAL.emission = lerp(grabbed_object.EXTRACT_MATERIAL.emission, Color.PURPLE, delta * 7.5)
-				grabbed_object.EXTRACT_MATERIAL.albedo_color = lerp(grabbed_object.EXTRACT_MATERIAL.albedo_color, Color.HOT_PINK, delta * 7.5)
+				grabbed_object.EXTRACT_MATERIAL.emission = lerp(grabbed_object.EXTRACT_MATERIAL.emission, Color.RED, delta * 7.5)
+				grabbed_object.EXTRACT_MATERIAL.albedo_color = lerp(grabbed_object.EXTRACT_MATERIAL.albedo_color, Color.GREEN, delta * 7.5)
 				grabbed_object.EXTRACT_MATERIAL.albedo_color.a = 0.5
 				grabbed_object.EXTRACT_MATERIAL.emission_energy_multiplier = lerp(grabbed_object.EXTRACT_MATERIAL.emission_energy_multiplier, selected_component_glow * 2.5, delta * 7.5)
 				selected_component_mesh.position = lerp(selected_component_mesh.position, selected_component_pos, delta * 7.5)
@@ -473,6 +472,8 @@ func _process(delta: float) -> void:
 				extract_edge = lerp(extract_edge, 1.25, delta * 7.5)
 				extract_time = lerp(extract_time, base_extract_time, delta * 7.5)
 				alpha_x = lerp(alpha_x, 1.0, delta * 7.5)
+				if alpha_x < 0.75:
+					PREM_7.holo_anim.play_backwards("retract_hologram")
 
 
 	handle_prem7_decay(delta)
@@ -588,6 +589,8 @@ func _on_extract_key() -> void:
 	extracting_object_active =! extracting_object_active
 		
 	if extracting_object_active:
+		if PREM_7.extract_message.visible:
+			PREM_7.extract_message.visible = false
 		HUD.message_status('Extract', 'ON')
 		#grabbed_object.object_body.scale = Vector3(0.25, 0.25, 0.25)
 		for child in grabbed_object.get_children():
@@ -908,8 +911,8 @@ func _input(event: InputEvent) -> void:
 ##---------------------------------------##
 
 
-func grab_object():
-	if distance_to_ground > 2.622:
+func grab_object():	
+	if distance_to_ground > 2.97:
 		print('why would this work?')
 		for child in get_children():
 			if child is CollisionShape3D:
@@ -1499,14 +1502,11 @@ func setup_component():
 	f_comp.shader = Shader.new()
 	f_comp.shader.code = f_comp.GLOW_SHADER.code
 	f_comp.shader_material = ShaderMaterial.new()
-	f_comp.grab_particles_shader = Shader.new()
-	f_comp.grab_particles_shader.code = preload("res://Shaders/particle_glow.gdshader").code
-	f_comp.particles_material = ShaderMaterial.new()
 	f_comp.manipulation_material.shader = f_comp.MANIPULATION_SHADER
 	f_comp.extraction_material.shader = f_comp.EXTRACTION_SHADER
 	f_comp.contact_monitor = true
-	f_comp.continuous_cd = true
-	f_comp.max_contacts_reported = 1000
+	f_comp.continuous_cd = false
+	f_comp.max_contacts_reported = 100
 	f_comp.gravity_scale = 0.0
 	f_comp.collision_layer = 3
 	f_comp.collision_mask = 3
@@ -1519,7 +1519,7 @@ func setup_component():
 
 	f_comp.current_scale = Vector3(comp_scale_x, comp_scale_y, comp_scale_z)
 	print(f_comp.current_scale)
-	f_comp.physics_mat.friction = 1.0
+	f_comp.physics_mat.friction = 0.0
 	f_comp.physics_mat.bounce = 0.0
 	f_comp.physics_material_override = f_comp.physics_mat
 	f_comp.shader_material.shader = f_comp.GLOW_SHADER

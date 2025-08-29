@@ -65,7 +65,8 @@ var extraction_spin_initialized: bool = false
 
 var grab_initiated: bool = false
 
-#@onready var grabbed_container = $Grabbed_Container
+var first_grabbed_object: bool = true
+@onready var grab_message: Label3D = $ClickToGrab
 
 
 func _ready() -> void:
@@ -206,6 +207,10 @@ func _physics_process(delta: float) -> void:
 		
 
 func grab_object():
+	if first_grabbed_object:
+		character.PREM_7.extract_message.visible = true
+		grab_message.visible = false
+		first_grabbed_object = false
 	grab_initiated = true
 	character.PREM_7.cast_beam()
 	#await get_tree().create_timer(0.4).timeout
@@ -235,7 +240,8 @@ func grab_object():
 
 
 func release_object():
-	#static_glow_active = false
+	if character.PREM_7.extract_message.visible:
+		character.PREM_7.extract_message.visible = false
 	grabbed_object.linear_velocity /= 2
 	grabbed_object.collision_layer = 3
 	grabbed_object.collision_mask = 3
@@ -253,7 +259,7 @@ func release_object():
 	grabbed_object.is_grabbed = false
 	grabbed_object.brightness_increasing = false
 	grabbed_object.standard_material.emission_energy_multiplier = 3.0
-	grabbed_object.continuous_cd = true
+	#grabbed_object.continuous_cd = true
 	character.release_object()
 	grabbed_object = null
 

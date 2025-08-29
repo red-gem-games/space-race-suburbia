@@ -52,6 +52,7 @@ var controlled_objects: Array[StringName] = []
 var control_hologram_active: bool = false
 var control_hologram_timer: Timer = Timer.new()
 
+@onready var extract_message: Label3D = $Extract_Message
 
 var scale_tween: Tween
 var position_tween: Tween
@@ -63,6 +64,9 @@ var c3: float
 var grab_object_complete: bool = false
 
 func _ready() -> void:
+	
+	extract_message.visible = false
+	
 	machine_info.visible = false
 	machine_info.scale = Vector3(0.6, 0.6, 0.6)
 	add_child(control_hologram_timer)

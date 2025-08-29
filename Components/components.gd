@@ -137,6 +137,7 @@ var extract_body: MeshInstance3D
 var extraction_scale: float
 
 var is_colliding: bool
+var is_on_floor: bool
 
 
 func _ready() -> void:
@@ -145,15 +146,11 @@ func _ready() -> void:
 	shader.code = GLOW_SHADER.code
 	shader_material = ShaderMaterial.new()
 	
-	grab_particles_shader = Shader.new()
-	grab_particles_shader.code = preload("res://Shaders/particle_glow.gdshader").code
-	particles_material = ShaderMaterial.new()
-	
 	manipulation_material.shader = MANIPULATION_SHADER
 	extraction_material.shader = EXTRACTION_SHADER
 	
 	contact_monitor = true
-	continuous_cd = true
+	continuous_cd = false
 	max_contacts_reported = 100
 	gravity_scale = 1.5
 	
@@ -198,16 +195,6 @@ func _physics_process(delta: float) -> void:
 
 	if is_grabbed and is_component:
 		print('Make this color highlight as purple to signify component')
-
-	
-	if not is_grabbed and recently_grabbed and not is_suspended:
-		
-		if linear_velocity.y < 0.01 and not object_falling:
-			return
-		if linear_velocity.y > 0.01:
-			object_falling = true
-		stop_object_shake(delta)
-		print('huh')
 
 	if is_suspended:
 		linear_velocity = lerp(linear_velocity, Vector3(0.0, 0.0, 0.0), delta * 1.5)
@@ -276,18 +263,6 @@ func enable_object_glow(object: Node) -> void:
 	var t := create_tween()
 	t.tween_property(object, "transparency", 0.875, 0.25)
 
-func stop_object_shake(time):
-		if curr_y_vel:
-			prev_y_vel = curr_y_vel
-		curr_y_vel = linear_velocity.y
-		if curr_y_vel and prev_y_vel and is_touching_ground:
-			if abs(curr_y_vel - prev_y_vel) < 0.01:
-				if gravity_scale == 1.5:
-					gravity_scale = 0.0
-				gravity_scale = lerp(gravity_scale, 0.975, time * 15.0)
-				if gravity_scale > 0.974:
-					recently_grabbed = false
-
 func dampen_assembly_object(time):
 	damp_elapsed_time += time
 	var t = clamp(damp_elapsed_time / damp_ramp_time, 0.0, 1.0)
@@ -299,7 +274,7 @@ func dampen_assembly_object(time):
 
 func _on_body_shape_entered(body_rid: RID, body: Node, body_shape_index: int, local_shape_index: int) -> void:
 	
-	if body.name == 'Floor':
+	if body.name == 'Floor' or body.name == "Workshop":
 		is_touching_ground = true
 	
 	if body is character:
@@ -524,22 +499,6 @@ func cancel_extraction():
 		scale_tween.stop()
 	#move_object(self, base_x_pos, base_y_pos, base_y_pos, 0.0, 0.5)
 	is_extracting = false
-
-func shake():
-	var shake_force = Vector3(randf_range(-1, 1), randf_range(-1, 1), randf_range(-1, 1)) * shake_intensity
-	apply_central_impulse(shake_force)
-
-func assign_next_grid_position():
-	if grid_assigned:
-		return  # already done
-	
-	for key in grid_positions.keys():
-		assigned_grid_position = grid_positions[key]
-		grid_positions.erase(key)  # remove from pool
-		grid_assigned = true
-		break
-
-
 
 
 ##### TWEENS #####
