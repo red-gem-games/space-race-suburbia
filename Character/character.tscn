@@ -44,7 +44,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -6)
 [node name="HUD" parent="." instance=ExtResource("3_wa5vi")]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.736161, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.736161, -0.295141)
 shape = SubResource("CapsuleShape3D_twwou")
 debug_color = Color(1, 0.264211, 0.231967, 1)
 

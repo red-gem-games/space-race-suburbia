@@ -15,6 +15,7 @@ var GLASS_MATERIAL: = preload("res://Shaders/Glass_Material.tres")
 var GLOW_MATERIAL := preload("res://Shaders/Component_Glow.tres")
 var EXTRACTION_SHADER := preload("res://Shaders/extract_selection.gdshader")
 var extraction_material: ShaderMaterial = ShaderMaterial.new()
+var extracted_object_mat
 var EXTRACT_MATERIAL := preload("res://Shaders/Highlight_Glow.tres")
 
 var grid_positions: Dictionary = {}
@@ -139,6 +140,8 @@ var extraction_scale: float
 var is_colliding: bool
 var is_on_floor: bool
 
+var fade_extract_glow: bool = false
+
 
 func _ready() -> void:
 	
@@ -148,6 +151,8 @@ func _ready() -> void:
 	
 	manipulation_material.shader = MANIPULATION_SHADER
 	extraction_material.shader = EXTRACTION_SHADER
+	extracted_object_mat = EXTRACT_MATERIAL.duplicate()
+	
 	
 	contact_monitor = true
 	continuous_cd = false
@@ -159,7 +164,7 @@ func _ready() -> void:
 	
 	mass = mass * 2
 	
-	physics_mat.friction = 1.0
+	physics_mat.friction = 0.9
 	physics_mat.bounce = 0.0
 	self.physics_material_override = physics_mat
 	shader_material.shader = GLOW_SHADER
@@ -225,6 +230,17 @@ var brightness_increasing: bool = true
 
 func _process(delta: float) -> void:
 	
+	if fade_extract_glow:
+		extracted_object_mat.emission_energy_multiplier = lerp(extracted_object_mat.emission_energy_multiplier, 0.0, delta / 4.0)
+		extracted_object_mat.emission.a = lerp(extracted_object_mat.emission.a, 0.0, delta / 2.0)
+		if extracted_object_mat.emission.a < 0.6:
+			extracted_object_mat.albedo_color.a = lerp(extracted_object_mat.albedo_color.a, -0.1, delta * 5.0)
+			if extracted_object_mat.albedo_color.a < 0.0:
+				for child in get_children():
+					if child is MeshInstance3D:
+						child.set_material_overlay(null)
+				fade_extract_glow = false
+	
 	if not is_grabbed:
 		if glow_tween:
 			glow_tween.kill()
@@ -268,7 +284,7 @@ func dampen_assembly_object(time):
 	var t = clamp(damp_elapsed_time / damp_ramp_time, 0.0, 1.0)
 	linear_damp = lerp(starting_damp, target_damp, t)
 	angular_damp = lerp(starting_damp, target_damp, t)
-	gravity_scale = 1.0
+	gravity_scale = 1.5
 	linear_damp = 40
 	damp_set = true
 
@@ -575,8 +591,9 @@ func set_glitch(status):
 	manipulation_material.set_shader_parameter("enable_glitch", status)
 
 func set_extract_glow(component, selection):
-	print('how many times you playing?')
 	var surface_count = component.mesh.get_surface_count()
+	
+	var r_parent = component.get_parent()
 	if selection == 'Selected':
 		component.set_material_overlay(EXTRACT_MATERIAL)
 		for i in range(surface_count):
@@ -586,6 +603,6 @@ func set_extract_glow(component, selection):
 		for i in range(surface_count):
 			component.set_surface_override_material(i, manipulation_material)
 	elif selection == 'Complete':
-		component.set_material_overlay(null)
+		component.set_material_overlay(extracted_object_mat)
 		for i in range(surface_count):
 			component.set_surface_override_material(i, null)

@@ -291,7 +291,6 @@ func _ready() -> void:
 	prem7_original_rotation = PREM_7.rotation
 	object_data = load_json_file(component_data_file)
 
-
 func _physics_process(delta: float) -> void:
 
 	# Update ground distance
@@ -305,11 +304,11 @@ func _physics_process(delta: float) -> void:
 		if move_input["up"] and not move_input["down"]:
 			if not shifting_object_active:
 				vertical = lerp(vertical, 1, delta)
-				#prem7_rotation_offset.x -= 0.0025
+				prem7_rotation_offset.x -= 0.0025
 		elif move_input["down"] and not move_input["up"]:
 			if not shifting_object_active:
 				vertical = lerp(vertical, -1, delta)
-				#prem7_rotation_offset.x += 0.0025
+				prem7_rotation_offset.x += 0.0025
 		if move_input["right"] and not move_input["left"]:
 			if not shifting_object_active:
 				horizontal = lerp(horizontal, 1, delta)
@@ -359,10 +358,21 @@ func _physics_process(delta: float) -> void:
 
 	move_and_slide()
 	
+	#print(velocity)
+	#
+	#for i in range(get_slide_collision_count()):
+		#var collision = get_slide_collision(i)
+		#var collider = collision.get_collider()
+		#
+		#if collider is RigidBody3D and not collider.is_grabbed:
+			#var push_force = 1000 - collider.mass
+			#var direction = collision.get_normal()
+			#var impulse = direction * push_force
+			#print(impulse)
+			#collider.apply_force(impulse, collision.get_position())
+	
 	handle_pitch_and_yaw(delta)
 	
-	
-
 	# Update jetpack thrust, hover, ceiling logic
 	handle_jetpack_logic(delta)
 
@@ -370,6 +380,10 @@ func _physics_process(delta: float) -> void:
 	update_vertical_velocity()
 
 func _process(delta: float) -> void:
+	
+	if reform and not extraction_finalized:
+		var t =+ 1
+		print(t)
 	
 	#print(control_timer.time_left)
 	
@@ -406,6 +420,8 @@ func _process(delta: float) -> void:
 			var lift_labels = PREM_7.lift_screen.get_children()
 			var screen_labels = module_labels + power_labels + mass_labels + lift_labels
 			
+			var photon_mat = PREM_7.photon_tip.mesh.material
+			
 			if extraction_started:
 				if extract_time >= 0.002:
 					extract_alpha -= delta / 1.1
@@ -414,6 +430,8 @@ func _process(delta: float) -> void:
 				grabbed_object.EXTRACT_MATERIAL.albedo_color = lerp(grabbed_object.EXTRACT_MATERIAL.albedo_color, Color.PURPLE, delta)
 				grabbed_object.EXTRACT_MATERIAL.emission = lerp(grabbed_object.EXTRACT_MATERIAL.emission, Color.WHITE, delta)
 				grabbed_object.EXTRACT_MATERIAL.emission_energy_multiplier = lerp(grabbed_object.EXTRACT_MATERIAL.emission_energy_multiplier, selected_component_glow, delta * 7.5)
+				photon_mat.emission_energy_multiplier = lerp(photon_mat.emission_energy_multiplier, 200.0, delta)
+				photon_mat.albedo_color.a = lerp(photon_mat.albedo_color.a, 0.85, delta)
 				PREM_7.module_screen.scale = lerp(PREM_7.module_screen.scale, Vector3.ZERO, delta * 7.5)
 				PREM_7.power_screen.scale = lerp(PREM_7.power_screen.scale, Vector3.ZERO, delta * 7.5)
 				PREM_7.mass_screen.scale = lerp(PREM_7.mass_screen.scale, Vector3.ZERO, delta * 7.5)
@@ -426,26 +444,27 @@ func _process(delta: float) -> void:
 					var t_left_ratio = control_timer.time_left / control_timer.wait_time
 					var progress = 1.0 - t_left_ratio
 					var high_extract_speed = 1.25
-					extract_speed = lerp(extract_speed, high_extract_speed, progress * delta *1.25)
+					extract_speed = lerp(extract_speed, high_extract_speed, progress * delta * 1.25)
 				if control_timer.time_left < 2.0 and control_timer.time_left > 1.0:
 					alpha_x = lerp(alpha_x, 0.0, delta * 2.5)
 					selected_component_mesh.position = lerp(selected_component_mesh.position, Vector3.ZERO, delta * 2.5)
 					selected_component_mesh.scale = lerp(selected_component_mesh.scale, Vector3(x*s, y*s, z*s), delta * 2.5)
 					extraction_scale = x * s
 					if control_timer.time_left < 1.95 and control_timer.time_left > 1.85:
+						PREM_7.holo_anim.speed_scale = 0.25
 						PREM_7.holo_anim.play("retract_hologram")
 				if control_timer.time_left < 1.0:
+					photon_mat.grow_amount = lerp(photon_mat.grow_amount, 0.4, delta * 1.5)
 					selected_component_mesh.position = lerp(selected_component_mesh.position, Vector3(0.0, -5.0, 0.0), delta * 1.5)
 					selected_component_mesh.scale = lerp(selected_component_mesh.scale, Vector3(0.0, 0.0, 0.0), delta * 5.0)
 				if control_timer.time_left == 0.0:
 					if control_timer.is_stopped():
-						#print(control_timer.is_stopped())
 						extract_component(selected_component_mesh, selected_component_col)
 						setup_component()
 						launching_component = true
 						scroll_extraction_data('DOWN')
 						extraction_started = false
-					control_timer.start(10.0)
+					control_timer.start(1.0)
 				
 
 
@@ -458,7 +477,10 @@ func _process(delta: float) -> void:
 				PREM_7.power_screen.scale = lerp(PREM_7.power_screen.scale, Vector3.ONE, delta * 7.5)
 				PREM_7.mass_screen.scale = lerp(PREM_7.mass_screen.scale, Vector3.ONE, delta * 7.5)
 				PREM_7.lift_screen.scale = lerp(PREM_7.lift_screen.scale, Vector3.ONE, delta * 7.5)
-				screen_mat.albedo_color.a = lerp(screen_mat.albedo_color.a, 0.5, delta * 7.5)
+				screen_mat.albedo_color.a = lerp(screen_mat.albedo_color.a, 1.0, delta * 7.5)
+				photon_mat.emission_energy_multiplier = lerp(photon_mat.emission_energy_multiplier, 40.0, delta * 7.5)
+				photon_mat.grow_amount = lerp(photon_mat.grow_amount, 0.0, delta * 9.0)
+				photon_mat.albedo_color.a = lerp(photon_mat.albedo_color.a, 1.0, delta)
 				for child in screen_labels:
 					child.modulate.a = lerp(child.modulate.a, 1.0, delta * 7.5)
 					child.outline_modulate.a = lerp(child.outline_modulate.a, 1.0, delta * 7.5)
@@ -473,6 +495,7 @@ func _process(delta: float) -> void:
 				extract_time = lerp(extract_time, base_extract_time, delta * 7.5)
 				alpha_x = lerp(alpha_x, 1.0, delta * 7.5)
 				if alpha_x < 0.75:
+					PREM_7.holo_anim.speed_scale = 1.0
 					PREM_7.holo_anim.play_backwards("retract_hologram")
 
 
@@ -787,34 +810,13 @@ func _input(event: InputEvent) -> void:
 		# Update movement key states.
 		if event.keycode == KEY_W or event.keycode == KEY_UP:
 			move_input["up"] = pressed
-			if shifting_object_active and pressed:
-				if grabbed_object and grabbed_object.is_suspended:
-					grabbed_target_position.z -= 0.25
-					print('This should move forward based on direction of object face')
 		elif event.keycode == KEY_S or event.keycode == KEY_DOWN:
 			move_input["down"] = pressed
-			if shifting_object_active and pressed:
-				if grabbed_object and grabbed_object.is_suspended:
-					grabbed_target_position.z += 0.25
-					print('This should move backward based on direction of object face')
 		elif event.keycode == KEY_A or event.keycode == KEY_LEFT:
 			move_input["left"] = pressed
-			if shifting_object_active and pressed:
-				if grabbed_object and grabbed_object.is_suspended:
-					grabbed_target_position.x -= 0.25
-					print('***Move Camera with this*** -- Maybe use look_at?')
-					print('This should move left based on direction of object face')
 		elif event.keycode == KEY_D or event.keycode == KEY_RIGHT:
 			move_input["right"] = pressed
-			if shifting_object_active and pressed:
-				if grabbed_object and grabbed_object.is_suspended:
-					grabbed_target_position.x += 0.25
-					print('***Move Camera with this*** -- Maybe use look_at?')
-					print('This should move right based on direction of object face')
 
-			#print("Current Player Position: ", position)
-
-		# Process number keys (1-4) to directly change modes, if desired.
 		if event.keycode in [KEY_1, KEY_2, KEY_3, KEY_4]:
 			print('Need to use these to bring up components in specific slots, returning for now')
 			return
@@ -1504,6 +1506,7 @@ func setup_component():
 	f_comp.shader_material = ShaderMaterial.new()
 	f_comp.manipulation_material.shader = f_comp.MANIPULATION_SHADER
 	f_comp.extraction_material.shader = f_comp.EXTRACTION_SHADER
+	f_comp.extracted_object_mat = f_comp.EXTRACT_MATERIAL.duplicate()
 	f_comp.contact_monitor = true
 	f_comp.continuous_cd = false
 	f_comp.max_contacts_reported = 100
@@ -1512,6 +1515,7 @@ func setup_component():
 	f_comp.collision_mask = 3
 	f_comp.mass = selected_component_mass * 2
 	f_comp.is_component = true
+	f_comp.fade_extract_glow = false
 	
 	for child in f_comp.get_children():
 		if child is MeshInstance3D:
@@ -1519,7 +1523,7 @@ func setup_component():
 
 	f_comp.current_scale = Vector3(comp_scale_x, comp_scale_y, comp_scale_z)
 	print(f_comp.current_scale)
-	f_comp.physics_mat.friction = 0.0
+	f_comp.physics_mat.friction = 0.9
 	f_comp.physics_mat.bounce = 0.0
 	f_comp.physics_material_override = f_comp.physics_mat
 	f_comp.shader_material.shader = f_comp.GLOW_SHADER
@@ -1560,8 +1564,6 @@ func reform_component(obj, time, parent, col):
 	print('  ')
 	print('Need to slowly remove the shader, after a white hot object cooldown occurs.')
 	print('  ')
-	
-	#parent.EXTRACT_MATERIAL = null
 	reform = false
 
 func complete_extraction(body: RigidBody3D, mesh: MeshInstance3D, shape: CollisionShape3D):
@@ -1570,7 +1572,7 @@ func complete_extraction(body: RigidBody3D, mesh: MeshInstance3D, shape: Collisi
 	new_component = body
 	body = null
 	new_component.ready_to_move = true
-
+	new_component.fade_extract_glow = true
 	# Remove only the extracted entry from the data list
 	var mesh_id := _normalize_id(mesh.name)
 	for i in range(current_extraction_data.size() - 1, -1, -1):

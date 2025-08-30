@@ -1,4 +1,4 @@
-[gd_scene load_steps=87 format=4 uid="uid://bpvm0l41dywjs"]
+[gd_scene load_steps=88 format=4 uid="uid://bpvm0l41dywjs"]
 
 [ext_resource type="Script" uid="uid://so25svauxmkt" path="res://PREM-7/prem_7.gd" id="1_iarxa"]
 [ext_resource type="Shader" uid="uid://cgr7dnph387rx" path="res://PREM-7/prem_7_holo_glow.gdshader" id="2_t05xm"]
@@ -342,7 +342,7 @@ tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {
 "handle_modes": PackedInt32Array(0, 0),
-"points": PackedFloat32Array(1, -0.06, 0, 0.06, 0, 0, -0.06, 0, 0.06, 0),
+"points": PackedFloat32Array(1, -0.06, 0, 0.06, 0, 0.15, -0.06, 0, 0.06, 0),
 "times": PackedFloat32Array(0, 0.12)
 }
 tracks/5/type = "bezier"
@@ -386,7 +386,7 @@ tracks/8/interp = 1
 tracks/8/loop_wrap = true
 tracks/8/keys = {
 "handle_modes": PackedInt32Array(0, 0),
-"points": PackedFloat32Array(1, -0.06, 0, 0.06, 0, 0, -0.06, 0, 0.06, 0),
+"points": PackedFloat32Array(1, -0.06, 0, 0.06, 0, 0.15, -0.06, 0, 0.06, 0),
 "times": PackedFloat32Array(0, 0.12)
 }
 tracks/9/type = "bezier"
@@ -488,11 +488,16 @@ tracks/2/keys = {
 "times": PackedFloat32Array(0, 0.12, 0.25)
 }
 
+[sub_resource type="Animation" id="Animation_mwtjp"]
+resource_name = "extract_component"
+step = 0.01
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_3tjq7"]
 _data = {
 &"RESET": SubResource("Animation_yppce"),
 &"activate": SubResource("Animation_gssec"),
 &"extract": SubResource("Animation_k44yu"),
+&"extract_component": SubResource("Animation_mwtjp"),
 &"inspect": SubResource("Animation_iarxa"),
 &"suspend": SubResource("Animation_8d6ws")
 }
@@ -1339,7 +1344,7 @@ emission_energy_multiplier = 12.0
 transparency = 3
 alpha_hash_scale = 0.01
 alpha_antialiasing_mode = 0
-cull_mode = 2
+cull_mode = 1
 albedo_color = Color(1, 1, 1, 0)
 emission_enabled = true
 emission = Color(0.477333, 1, 0.36, 1)
@@ -1348,8 +1353,8 @@ grow = true
 
 [sub_resource type="SphereMesh" id="SphereMesh_s7cmo"]
 material = SubResource("StandardMaterial3D_5hhbi")
-radius = 0.15
-height = 0.85
+radius = 0.165
+height = 0.33
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_ahiym"]
 _surfaces = [{
@@ -2055,8 +2060,8 @@ cap_bottom = false
 size = Vector2(1.79, 0.27)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_s7cmo"]
-transparency = 1
-albedo_color = Color(1, 1, 1, 0.454902)
+blend_mode = 3
+albedo_color = Color(0, 0, 0, 1)
 metallic = 1.0
 roughness = 0.44
 emission_enabled = true
@@ -2136,7 +2141,7 @@ skeleton = NodePath("")
 surface_material_override/0 = SubResource("StandardMaterial3D_61m6q")
 
 [node name="Photon_Tip" type="MeshInstance3D" parent="Multitool"]
-transform = Transform3D(0.819875, 0.014311, -6.25552e-10, 0, -3.58433e-08, -0.82, -0.014311, 0.819875, -3.58379e-08, -0.12, 0.54, 4)
+transform = Transform3D(-0.0567687, 0.816211, 0.0545548, -0.0126095, 0.0538064, -0.818135, -0.817935, -0.0574786, 0.0088262, -0.129532, 0.536914, 4.10372)
 cast_shadow = 0
 mesh = SubResource("SphereMesh_s7cmo")
 skeleton = NodePath("")
