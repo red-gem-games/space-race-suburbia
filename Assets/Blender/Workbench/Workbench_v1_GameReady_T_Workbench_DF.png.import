@@ -1,0 +1,38 @@
+[remap]
+
+importer="texture"
+type="CompressedTexture2D"
+uid="uid://jg01bby0riwq"
+path.s3tc="res://.godot/imported/Workbench_v1_GameReady_T_Workbench_DF.png-a303f44f373d68a3b5777090d60247c6.s3tc.ctex"
+metadata={
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
+}
+generator_parameters={
+"md5": "191b36cd0ff833beeea254c173cc39c3"
+}
+
+[deps]
+
+source_file="res://Assets/Blender/Workbench/Workbench_v1_GameReady_T_Workbench_DF.png"
+dest_files=["res://.godot/imported/Workbench_v1_GameReady_T_Workbench_DF.png-a303f44f373d68a3b5777090d60247c6.s3tc.ctex"]
+
+[params]
+
+compress/mode=2
+compress/high_quality=false
+compress/lossy_quality=0.7
+compress/hdr_compression=1
+compress/normal_map=0
+compress/channel_pack=0
+mipmaps/generate=true
+mipmaps/limit=-1
+roughness/mode=0
+roughness/src_normal=""
+process/fix_alpha_border=true
+process/premult_alpha=false
+process/normal_map_invert_y=false
+process/hdr_as_srgb=false
+process/hdr_clamp_exposure=false
+process/size_limit=0
+detect_3d/compress_to=0

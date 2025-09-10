@@ -78,8 +78,6 @@ func _ready() -> void:
 	start_static_glow_loop()
 
 
-var previous_position_value: Vector3
-
 func _physics_process(delta: float) -> void:
 	
 		
@@ -147,8 +145,6 @@ func _physics_process(delta: float) -> void:
 						if child is CollisionShape3D:
 							child.disabled = false
 					release_object()
-					print("'CHARACTER.OBJECT_EMPTY()' -- FIGURE OUT ANIMATION")
-					print("NO CLICKS UNTIL THEN :)")
 					return
 			character.PREM_7.machine_info.visible = true
 			grabbed_object.extract_body.visible = true

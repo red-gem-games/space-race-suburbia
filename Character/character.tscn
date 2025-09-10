@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://f722yn8gdiyj"]
+[gd_scene load_steps=9 format=3 uid="uid://f722yn8gdiyj"]
 
 [ext_resource type="PackedScene" uid="uid://bpvm0l41dywjs" path="res://PREM-7/PREM-7.tscn" id="1_glpr6"]
 [ext_resource type="Script" uid="uid://sw8eis2eqpyj" path="res://Character/character.gd" id="1_pjt0s"]
@@ -30,6 +30,9 @@ shader_parameter/emission_strength = 1.0
 shader_parameter/base_alpha = 0.5
 shader_parameter/uv_projection_mode = 0
 
+[sub_resource type="SphereShape3D" id="SphereShape3D_twwou"]
+radius = 1.319
+
 [node name="Character" type="CharacterBody3D"]
 script = ExtResource("1_pjt0s")
 
@@ -53,3 +56,9 @@ transform = Transform3D(0.10524, 0.919412, 0.378954, -0.77564, 0.31437, -0.54731
 visible = false
 mesh = SubResource("SphereMesh_a23tb")
 surface_material_override/0 = SubResource("ShaderMaterial_uerqc")
+
+[node name="CharacterMotionPoint" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterMotionPoint"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.789063, -1.47994)
+shape = SubResource("SphereShape3D_twwou")

@@ -1,6 +1,23 @@
 [gd_scene load_steps=6 format=3 uid="uid://8y8q1bb5ncvv"]
 
-[ext_resource type="Script" uid="uid://cbiinlnk684f" path="res://Components/Rocketship/rocketship.gd" id="1_7m23k"]
+[sub_resource type="GDScript" id="GDScript_sv2pm"]
+script/source = "extends RigidBody3D
+
+var is_rocketship: bool = true
+
+func _ready() -> void:
+	pass
+
+func _physics_process(delta: float) -> void:
+	rotate_y(0.001)
+
+
+func _on_body_shape_entered(body_rid: RID, body: Node, body_shape_index: int, local_shape_index: int) -> void:
+	pass
+
+func _on_body_shape_exited(body_rid: RID, body: Node, body_shape_index: int, local_shape_index: int) -> void:
+	pass
+"
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_2u7x2"]
 top_radius = 1.25
@@ -26,7 +43,7 @@ freeze = true
 continuous_cd = true
 contact_monitor = true
 max_contacts_reported = 1000
-script = ExtResource("1_7m23k")
+script = SubResource("GDScript_sv2pm")
 
 [node name="Body" type="MeshInstance3D" parent="."]
 mesh = SubResource("CylinderMesh_2u7x2")
@@ -50,6 +67,7 @@ mesh = SubResource("PrismMesh_77ywk")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.15, 0)
 shape = SubResource("CylinderShape3D_w4pcp")
+disabled = true
 
 [connection signal="body_shape_entered" from="." to="." method="_on_body_shape_entered"]
 [connection signal="body_shape_exited" from="." to="." method="_on_body_shape_exited"]

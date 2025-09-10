@@ -231,15 +231,15 @@ var brightness_increasing: bool = true
 func _process(delta: float) -> void:
 	
 	if fade_extract_glow:
-		extracted_object_mat.emission_energy_multiplier = lerp(extracted_object_mat.emission_energy_multiplier, 0.0, delta / 4.0)
-		extracted_object_mat.emission.a = lerp(extracted_object_mat.emission.a, 0.0, delta / 2.0)
-		if extracted_object_mat.emission.a < 0.6:
-			extracted_object_mat.albedo_color.a = lerp(extracted_object_mat.albedo_color.a, -0.1, delta * 5.0)
-			if extracted_object_mat.albedo_color.a < 0.0:
-				for child in get_children():
-					if child is MeshInstance3D:
-						child.set_material_overlay(null)
-				fade_extract_glow = false
+		extracted_object_mat.emission_energy_multiplier = lerp(extracted_object_mat.emission_energy_multiplier, 0.0, delta)
+		extracted_object_mat.emission.a = lerp(extracted_object_mat.emission.a, 0.0, delta * 2.5)
+		extracted_object_mat.albedo_color.a = lerp(extracted_object_mat.albedo_color.a, -0.1, delta * 2.5)
+		
+		if extracted_object_mat.albedo_color.a < 0.0:
+			for child in get_children():
+				if child is MeshInstance3D:
+					child.set_material_overlay(null)
+			fade_extract_glow = false
 	
 	if not is_grabbed:
 		if glow_tween:
@@ -592,7 +592,8 @@ func set_glitch(status):
 
 func set_extract_glow(component, selection):
 	var surface_count = component.mesh.get_surface_count()
-	
+	extracted_object_mat.albedo_color = Color.WHITE
+	extracted_object_mat.emission = Color.DARK_ORANGE
 	var r_parent = component.get_parent()
 	if selection == 'Selected':
 		component.set_material_overlay(EXTRACT_MATERIAL)

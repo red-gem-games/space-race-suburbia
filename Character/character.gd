@@ -381,6 +381,8 @@ func _physics_process(delta: float) -> void:
 
 func _process(delta: float) -> void:
 	
+	rocket_wall_check(delta)
+	
 	if reform and not extraction_finalized:
 		var t =+ 1
 		print(t)
@@ -929,7 +931,8 @@ func grab_object():
 	extracting_object_active = false
 	fusing_object_active = false
 	HUD.reticle.visible = false
-	mouse_speed = base_mouse_speed / 100.0 * 15.0
+	var mouse_mass = 5
+	mouse_speed = base_mouse_speed / mouse_mass
 	pitch_max = grab_pitch_max
 	object_is_grabbed = true
 	grabbed_object.linear_damp = 0
@@ -1550,9 +1553,7 @@ func reform_component(obj, time, parent, col):
 	if current_extraction_data.is_empty():
 		print('This is the function with the issues me thinks...')
 		return
-		
-	print('is this running?')
-	#obj.scale = lerp(obj.scale, true_scale, time)
+
 	for child in fresh_component.get_children():
 		if child is CollisionShape3D:
 			child.disabled = false
@@ -1560,10 +1561,7 @@ func reform_component(obj, time, parent, col):
 	parent.EXTRACT_MATERIAL.albedo_color = lerp(parent.EXTRACT_MATERIAL.albedo_color, Color.TRANSPARENT, time * 2.0)
 	parent.EXTRACT_MATERIAL.emission_energy_multiplier = lerp(parent.EXTRACT_MATERIAL.emission_energy_multiplier, 0.0, time)
 	parent.set_extract_glow(obj, 'Complete')
-	
-	print('  ')
-	print('Need to slowly remove the shader, after a white hot object cooldown occurs.')
-	print('  ')
+
 	reform = false
 
 func complete_extraction(body: RigidBody3D, mesh: MeshInstance3D, shape: CollisionShape3D):
@@ -1591,5 +1589,53 @@ func complete_extraction(body: RigidBody3D, mesh: MeshInstance3D, shape: Collisi
 	grabbed_object.manipulation_mode('Active')
 
 func object_empty():
-	print('figure out what needs to happen with this animation...')
+	print('*** Figure out what needs to happen with this animation ***')
+	print("NO CLICKS UNTIL THEN :)")
 	is_clickable = false
+
+
+
+
+
+
+
+
+const LERP_IN  := 3.5    # toward active pos
+const LERP_OUT := 2.25    # back to base
+const OFFSET   := 2.5    # local +X distance when touched
+
+# Active walls (meshes) — acts like a set: { mesh: true }
+var touched_walls := {}
+
+# Registry of every mesh we've ever seen → its BASE local position
+var base_local_pos := {}   # { mesh: Vector3 }
+
+func register_wall(mesh: Node3D) -> void:
+	if mesh == null: return
+	if !is_instance_valid(mesh): return
+	if !base_local_pos.has(mesh):
+		base_local_pos[mesh] = mesh.position  # store base LOCAL pos once
+
+func get_rocket_walls() -> Array:
+	return touched_walls.keys()
+
+func rocket_wall_check(time: float) -> void:
+	# prune dead refs so you don’t chase freed nodes
+	for m in base_local_pos.keys():
+		if !is_instance_valid(m):
+			base_local_pos.erase(m)
+			touched_walls.erase(m)
+
+	# Drive ALL known meshes back/forth based on whether they’re active
+	for m in base_local_pos.keys():
+		var active := touched_walls.has(m)
+		var spd := (LERP_IN if active else LERP_OUT)
+
+		var target_pos = base_local_pos[m] + Vector3(OFFSET, 0.0, 0.0) if active else base_local_pos[m]
+		m.position = m.position.lerp(target_pos, spd * time)
+
+		# fade via modulate alpha (0 = opaque, 1 = invisible)
+		var target_alpha := 1.0 if active else 0.0
+		var t = m.transparency
+		t = lerp(t, target_alpha, spd * time * 1.5)
+		m.transparency = t
