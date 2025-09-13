@@ -2333,7 +2333,7 @@ mesh = SubResource("BoxMesh_t05xm")
 skeleton = NodePath("../../Object_Inventory")
 
 [node name="Square_Glow" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.246126, -0.00631738, 0.0433848, 0.00862609, 0.249533, -0.0126013, -0.0429853, 0.013903, 0.245884, -0.003, 0, -0.533)
+transform = Transform3D(0.246126, -0.00631738, 0.0433847, 0.00862608, 0.249533, -0.0126013, -0.0429852, 0.013903, 0.245884, -0.003, 0, -0.533)
 cast_shadow = 0
 mesh = SubResource("BoxMesh_njh5b")
 skeleton = NodePath("../Holo_Glow")

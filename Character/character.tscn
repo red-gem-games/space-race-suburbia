@@ -31,7 +31,7 @@ shader_parameter/base_alpha = 0.5
 shader_parameter/uv_projection_mode = 0
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_twwou"]
-radius = 1.319
+radius = 0.6
 
 [node name="Character" type="CharacterBody3D"]
 script = ExtResource("1_pjt0s")
@@ -58,7 +58,8 @@ mesh = SubResource("SphereMesh_a23tb")
 surface_material_override/0 = SubResource("ShaderMaterial_uerqc")
 
 [node name="CharacterMotionPoint" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0130955, -0.95485, -1.64883)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterMotionPoint"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.789063, -1.47994)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.192064, -0.126011)
 shape = SubResource("SphereShape3D_twwou")
