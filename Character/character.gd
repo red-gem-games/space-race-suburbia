@@ -1622,40 +1622,46 @@ func get_rocket_walls() -> Array:
 
 func rocket_wall_check(time: float) -> void:
 	# prune dead refs so you don’t chase freed nodes
-	for w in base_local_pos.keys():
-		if !is_instance_valid(w):
-			base_local_pos.erase(w)
-			touched_walls.erase(w)
+	for m in base_local_pos.keys():
+		if !is_instance_valid(m):
+			base_local_pos.erase(m)
+			touched_walls.erase(m)
 
 	# Drive ALL known meshes back/forth based on whether they’re active
-	for w in base_local_pos.keys():
-		var active := touched_walls.has(w)
+	for m in base_local_pos.keys():
+		var active := touched_walls.has(m)
 		var spd := (LERP_IN if active else LERP_OUT)
 		
-		if w.get_parent().name.contains("+X"):
+		var piece = m.get_parent()
+		var wall_dir = piece.get_parent()
+		
+		print(wall_dir)
+		
+		if wall_dir.name.contains("+X"):
 			OFFSET_X = 2.5
 			OFFSET_Z = 0.0
 		
-		if w.get_parent().name.contains("+Z"):
+		if wall_dir.name.contains("+Z"):
 			OFFSET_X = 0.0
 			OFFSET_Z = 2.5
 		
-		if w.get_parent().name.contains("-X"):
+		if wall_dir.name.contains("-X"):
 			OFFSET_X = -2.5
 			OFFSET_Z = 0.0
 		
-		if w.get_parent().name.contains("-Z"):
+		if wall_dir.name.contains("-Z"):
+			print('huh')
 			OFFSET_X = 0.0
 			OFFSET_Z = -2.5
 
-		var target_pos = base_local_pos[w] + Vector3(OFFSET_X, 0.0, OFFSET_Z) if active else base_local_pos[w]
-		w.position = w.position.lerp(target_pos, spd * time)
+		var target_pos = base_local_pos[m] + Vector3(OFFSET_X, 0.0, OFFSET_Z) if active else base_local_pos[m]
+		m.position = m.position.lerp(target_pos, spd * time)
 		
 
 		var target_alpha := 1.0 if active else 0.0
-		var t = w.transparency
+		var t = m.transparency
 		t = lerp(t, target_alpha, spd * time)
-		w.transparency = t
+		m.transparency = t
 		#
 		#if m.transparency >.99:
 			#m.visible = false

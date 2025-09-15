@@ -80,7 +80,7 @@ transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -0.000
 mesh = SubResource("CylinderMesh_4xm2l")
 
 [node name="Label3D" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0143264, 2.6534, 0.764786)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0143264, 2.71598, 0.764786)
 pixel_size = 0.001
 text = "Mix-O-Matic
 "
@@ -88,19 +88,11 @@ font_size = 338
 outline_size = 10
 
 [node name="Label3D2" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0143264, 3.11088, 0.764786)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0143264, 1.02148, 0.764786)
 pixel_size = 0.001
-text = "Loot Box
-Placeholder"
-font_size = 203
-outline_size = 10
-
-[node name="Label3D3" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0143264, 0.958006, 0.764786)
-pixel_size = 0.001
-text = "MODIFY
-POWERUP
-FUSE"
+text = "Loot Box Placeholder
+&
+Fuse Components to System"
 font_size = 203
 outline_size = 10
 

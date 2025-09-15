@@ -2187,22 +2187,23 @@ shape = SubResource("ConvexPolygonShape3D_5df30")
 [node name="CollisionShape3D6" type="CollisionShape3D" parent="."]
 transform = Transform3D(1.75, 0, 0, 0, 1.75, 0, 0, 0, 1.75, 0, -0.25, 0)
 shape = SubResource("ConvexPolygonShape3D_n10ps")
+disabled = true
 
 [node name="CollisionShape3D5" type="CollisionShape3D" parent="."]
 transform = Transform3D(1.75, 0, 0, 0, 1.75, 0, 0, 0, 1.75, 0, -0.25, 0)
 shape = SubResource("ConvexPolygonShape3D_46o7k")
+disabled = true
 
 [node name="CollisionShape3D4" type="CollisionShape3D" parent="."]
 transform = Transform3D(1.75, 0, 0, 0, 1.75, 0, 0, 0, 1.75, 0, -0.25, 0)
 shape = SubResource("ConvexPolygonShape3D_w88fe")
+disabled = true
 
 [node name="CollisionShape3D3" type="CollisionShape3D" parent="."]
 transform = Transform3D(1.75, 0, 0, 0, 1.75, 0, 0, 0, 1.75, 0, -0.25, 0)
 shape = SubResource("ConvexPolygonShape3D_nyvpl")
+disabled = true
 
 [node name="CollisionShape3D7" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.86888, 0)
 shape = SubResource("SphereShape3D_pyrdq")
-
-[node name="TRS-1_v2" type="Node3D" parent="."]
-transform = Transform3D(1.75, 0, 0, 0, 1.75, 0, 0, 0, 1.75, 0, 0, 0)
