@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://f722yn8gdiyj"]
+[gd_scene load_steps=10 format=3 uid="uid://f722yn8gdiyj"]
 
 [ext_resource type="PackedScene" uid="uid://bpvm0l41dywjs" path="res://PREM-7/PREM-7.tscn" id="1_glpr6"]
 [ext_resource type="Script" uid="uid://sw8eis2eqpyj" path="res://Character/character.gd" id="1_pjt0s"]
@@ -31,7 +31,10 @@ shader_parameter/base_alpha = 0.5
 shader_parameter/uv_projection_mode = 0
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_twwou"]
-size = Vector3(1.34241, 1, 1)
+size = Vector3(1.573, 1, 1.715)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_a23tb"]
+size = Vector3(1.337, 1, 1.715)
 
 [node name="Character" type="CharacterBody3D"]
 script = ExtResource("1_pjt0s")
@@ -61,5 +64,16 @@ surface_material_override/0 = SubResource("ShaderMaterial_uerqc")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0130955, -0.95485, -1.64883)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterMotionPoint"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0192261, 0.18283, -0.126011)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.017528059, 0.18283004, 0.75014865)
 shape = SubResource("BoxShape3D_twwou")
+debug_color = Color(0, 1, 1, 1)
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="CharacterMotionPoint"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.2643472, 0.19853652, 0.37283897)
+shape = SubResource("BoxShape3D_a23tb")
+debug_color = Color(0, 1, 1, 1)
+
+[node name="CollisionShape3D3" type="CollisionShape3D" parent="CharacterMotionPoint"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.2371916, 0.19853652, 0.3575765)
+shape = SubResource("BoxShape3D_a23tb")
+debug_color = Color(0, 1, 1, 1)

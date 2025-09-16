@@ -169,10 +169,8 @@ func _ready() -> void:
 	self.physics_material_override = physics_mat
 	shader_material.shader = GLOW_SHADER
 	standard_material = GLOW_MATERIAL
-	var base_mesh : MeshInstance3D = null
 	for child in get_children():
 		if child is MeshInstance3D:
-			base_mesh = child
 			object_body = child
 			current_scale = object_body.scale
 
@@ -264,8 +262,8 @@ func _process(delta: float) -> void:
 			if glow_timer <= 0.0:
 				brightness_increasing = false
 		else:
-			standard_material.emission_energy_multiplier = lerp(standard_material.emission_energy_multiplier, 1.9, delta * 7.0)
-			if standard_material.emission_energy_multiplier == 2.0:
+			standard_material.emission_energy_multiplier = lerp(standard_material.emission_energy_multiplier, 16.0, delta * 7.0)
+			if standard_material.emission_energy_multiplier == 15.9:
 				is_grabbed = false
 				brightness_increasing = true
 
@@ -288,7 +286,7 @@ func dampen_assembly_object(time):
 	linear_damp = 40
 	damp_set = true
 
-func _on_body_shape_entered(body_rid: RID, body: Node, body_shape_index: int, local_shape_index: int) -> void:
+func _on_body_shape_entered(_body_rid: RID, body: Node, _body_shape_index: int, _local_shape_index: int) -> void:
 	
 	if body.name == 'Floor' or body.name == "Workshop":
 		is_touching_ground = true
@@ -300,7 +298,7 @@ func _on_body_shape_entered(body_rid: RID, body: Node, body_shape_index: int, lo
 		if body is CharacterBody3D:
 			body.is_touching_stepladder = true
 
-func _on_body_shape_exited(body_rid: RID, body: Node, body_shape_index: int, local_shape_index: int) -> void:
+func _on_body_shape_exited(_body_rid: RID, body: Node, _body_shape_index: int, _local_shape_index: int) -> void:
 	if name == 'Stepladder':
 		if body is CharacterBody3D:
 			body.is_touching_stepladder = false
@@ -593,8 +591,7 @@ func set_glitch(status):
 func set_extract_glow(component, selection):
 	var surface_count = component.mesh.get_surface_count()
 	extracted_object_mat.albedo_color = Color.WHITE
-	extracted_object_mat.emission = Color.DARK_ORANGE
-	var r_parent = component.get_parent()
+	extracted_object_mat.emission = Color.PURPLE
 	if selection == 'Selected':
 		component.set_material_overlay(EXTRACT_MATERIAL)
 		for i in range(surface_count):

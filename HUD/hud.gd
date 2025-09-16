@@ -1,5 +1,5 @@
 extends Control
-class_name HUD
+class_name _HUD_
 
 @onready var reticle: Control = $CanvasLayer/Reticle
 @onready var control_color: ColorRect = $CanvasLayer/Control_Color

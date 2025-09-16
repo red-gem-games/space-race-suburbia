@@ -7,7 +7,7 @@ var start_day: bool = false
 var is_clickable: bool = true
 
 var object_data = {}
-var component_data_file = "res://components/component_data.json"
+var component_data_file = "res://Components/component_data.json"
 var current_component_index := 0
 var current_extraction_data = []  # Will hold the JSON components array
 var current_object_json: Dictionary = {}
@@ -225,7 +225,6 @@ var beam_lock: bool = false
 var current_yaw
 var current_pitch
 
-var time: float
 var oscillating_1: float
 var oscillating_2: float
 var oscillating_3: float
@@ -271,8 +270,6 @@ var extraction_finalized: bool = false
 
 
 func _ready() -> void:
-	push_warning('FRAME TICK PER SECOND IS NOW SET TO 120 - WILL THIS WORK ON LOWER POWERED MACHINES?')
-	push_warning('The reason for this ^^^ is due to flat objects landing on the ground and jittering...')
 	push_warning('General To Do List:')
 	push_warning('------ ALWAYS MAKE SURE THINGS WORK ON BOTH SCREENS ------')
 	push_warning('SUSPEND Changes')
@@ -331,11 +328,11 @@ func _physics_process(delta: float) -> void:
 				#var camera_right = camera.global_transform.basis.x.normalized()
 				#object_sway_offset.x -= horizontal * 1.75 * screen_res_sway_multiplier
 
-	var desired_direction = Vector3.ZERO
+	desired_direction = Vector3.ZERO
 	if vertical != 0 or horizontal != 0:
 		desired_direction = ((-transform.basis.z) * vertical + (transform.basis.x) * horizontal).normalized()
 
-	var desired_velocity = desired_direction * movement_speed
+	desired_velocity = desired_direction * movement_speed
 	current_velocity = lerp(current_velocity, desired_velocity, smoothing)
 
 	velocity.x = lerp(velocity.x, current_velocity.x, delta * 5)
@@ -371,7 +368,7 @@ func _physics_process(delta: float) -> void:
 			#print(impulse)
 			#collider.apply_force(impulse, collision.get_position())
 	
-	handle_pitch_and_yaw(delta)
+	handle_pitch_and_yaw()
 	
 	# Update jetpack thrust, hover, ceiling logic
 	handle_jetpack_logic(delta)
@@ -396,13 +393,12 @@ func _process(delta: float) -> void:
 		reform = true
 		extraction_recently_completed = false
 		launching_component = false
-		complete_extraction(fresh_component, selected_component_mesh, selected_component_col)
+		complete_extraction(fresh_component, selected_component_mesh)
 
 	if reform:
 		for child in fresh_component.get_children():
 			if child is MeshInstance3D:
-				var s = selected_component_scale
-				reform_component(child, delta, fresh_component, selected_component_col)
+				reform_component(child, delta, fresh_component)
 				fresh_component.scale_object(child, comp_scale_x, comp_scale_y, comp_scale_z, 0.0, 1.0)
 		
 
@@ -486,8 +482,8 @@ func _process(delta: float) -> void:
 				for child in screen_labels:
 					child.modulate.a = lerp(child.modulate.a, 1.0, delta * 7.5)
 					child.outline_modulate.a = lerp(child.outline_modulate.a, 1.0, delta * 7.5)
-				grabbed_object.EXTRACT_MATERIAL.emission = lerp(grabbed_object.EXTRACT_MATERIAL.emission, Color.RED, delta * 7.5)
-				grabbed_object.EXTRACT_MATERIAL.albedo_color = lerp(grabbed_object.EXTRACT_MATERIAL.albedo_color, Color.GREEN, delta * 7.5)
+				grabbed_object.EXTRACT_MATERIAL.emission = lerp(grabbed_object.EXTRACT_MATERIAL.emission, Color.PURPLE, delta * 7.5)
+				grabbed_object.EXTRACT_MATERIAL.albedo_color = lerp(grabbed_object.EXTRACT_MATERIAL.albedo_color, Color.YELLOW, delta * 7.5)
 				grabbed_object.EXTRACT_MATERIAL.albedo_color.a = 0.5
 				grabbed_object.EXTRACT_MATERIAL.emission_energy_multiplier = lerp(grabbed_object.EXTRACT_MATERIAL.emission_energy_multiplier, selected_component_glow * 2.5, delta * 7.5)
 				selected_component_mesh.position = lerp(selected_component_mesh.position, selected_component_pos, delta * 7.5)
@@ -509,6 +505,7 @@ func _process(delta: float) -> void:
 		screen_resolution_set = true
 
 	PREM_7.rotation = PREM_7.rotation.lerp(prem7_original_rotation, prem7_decay_speed * delta)
+	
 	update_reticle_targeting()
 	
 	if scroll_cooldown > 0.0:
@@ -767,8 +764,6 @@ func _input(event: InputEvent) -> void:
 	if event is InputEventKey and not event.is_echo():
 		var pressed = event.is_pressed()
 
-		var down = event.pressed
-
 		if event.keycode == KEY_E and pressed:
 			if grabbed_object:
 				_on_extract_key()
@@ -1017,11 +1012,11 @@ func fuse_mode_active():
 		print("***THIS ITEM CANNOT BE FUSED***")
 		print("'Are you trying to wash your clothes in space?'")
 
-func handle_pitch_and_yaw(time):
+func handle_pitch_and_yaw():
 	if grabbed_object:
 		var y = position.y
 		var min_y = 2.0
-		var max_y = 10.0
+		max_y = 10.0
 
 		# Calculate blend factor (0 near ground, 1 when high in air)
 		var t = clamp((y - min_y) / (max_y - min_y), 0.0, 1.0)
@@ -1439,10 +1434,10 @@ func update_component_display():
 func _normalize_id(s: String) -> String:
 	return s.replace(" ", "").to_lower()
 
-func _base_from_shape(name: String) -> String:
-	if name.ends_with("_Shape"):
-		return name.substr(0, name.length() - "_Shape".length())
-	return name
+func _base_from_shape(name_string: String) -> String:
+	if name_string.ends_with("_Shape"):
+		return name_string.substr(0, name_string.length() - "_Shape".length())
+	return name_string
 
 func extract_component(mesh, col):
 
@@ -1549,7 +1544,7 @@ func launch_component(obj):
 	obj.apply_torque_impulse(sideways * 15 * obj.mass)
 	#obj.EXTRACT_MATERIAL.emission_energy_multiplier *= 3.0
 
-func reform_component(obj, time, parent, col):
+func reform_component(obj, time, parent):
 	if current_extraction_data.is_empty():
 		print('This is the function with the issues me thinks...')
 		return
@@ -1564,7 +1559,7 @@ func reform_component(obj, time, parent, col):
 
 	reform = false
 
-func complete_extraction(body: RigidBody3D, mesh: MeshInstance3D, shape: CollisionShape3D):
+func complete_extraction(body: RigidBody3D, mesh: MeshInstance3D):
 	await get_tree().create_timer(0.25).timeout
 	extraction_finalized = true
 	new_component = body
@@ -1635,8 +1630,6 @@ func rocket_wall_check(time: float) -> void:
 		var piece = m.get_parent()
 		var wall_dir = piece.get_parent()
 		
-		print(wall_dir)
-		
 		if wall_dir.name.contains("+X"):
 			OFFSET_X = 2.5
 			OFFSET_Z = 0.0
@@ -1650,7 +1643,6 @@ func rocket_wall_check(time: float) -> void:
 			OFFSET_Z = 0.0
 		
 		if wall_dir.name.contains("-Z"):
-			print('huh')
 			OFFSET_X = 0.0
 			OFFSET_Z = -2.5
 
@@ -1662,8 +1654,3 @@ func rocket_wall_check(time: float) -> void:
 		var t = m.transparency
 		t = lerp(t, target_alpha, spd * time)
 		m.transparency = t
-		#
-		#if m.transparency >.99:
-			#m.visible = false
-		#else:
-			#m.visible = true

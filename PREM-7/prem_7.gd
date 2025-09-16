@@ -1,5 +1,5 @@
 extends Node3D
-class_name PREM_7
+class_name PREM7
 
 @onready var trig_anim: AnimationPlayer = $Trigger_Animation
 @onready var ctrl_anim: AnimationPlayer = $Control_Animation
@@ -92,7 +92,7 @@ func _ready() -> void:
 	print("4. Add Tool Tips for various modes...first up is a widened split square that rotates when in extract mode")
 
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	
 	if touching_object and not beam_active:
 		touch_anim.play("touching_object")
@@ -138,7 +138,6 @@ func release_handle():
 
 func cast_hologram(type: String):
 	var comp_name
-	var g_comp
 	var c_comp
 	if hol_body:
 		hol_body.queue_free()
@@ -149,7 +148,6 @@ func cast_hologram(type: String):
 		c_comp = _instance_component_by_name(comp_name)
 	elif type == "Grabbed":
 		comp_name = grabbed_object_name
-		g_comp = _instance_component_by_name(comp_name)
 
 	if c_comp:
 		hologram.add_child(c_comp)
@@ -191,9 +189,9 @@ func retract_hologram():
 	holo_anim.play_backwards("cast_hologram")
 	print('Retracting hologram!')
 
-func _instance_component_by_name(name: StringName) -> RigidBody3D:
+func _instance_component_by_name(name_string: StringName) -> RigidBody3D:
 	# Build the exact path: e.g. "res://Components/DryingMachine.tscn"
-	var path = "res://Components/%s.tscn" % name
+	var path = "res://Components/%s.tscn" % name_string
 	if not ResourceLoader.exists(path):
 		push_error("Cannot find component scene at: " + path)
 		return null

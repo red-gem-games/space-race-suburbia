@@ -4,13 +4,11 @@ class_name world
 @onready var assembly_object_container: Node3D = $Assembly_Objects
 var assembly_object_array: Array[RigidBody3D]
 
-@onready var character: CharacterBody3D = $Character
+@onready var player_character: CharacterBody3D = $Character
 var grabbed_object: RigidBody3D = null
 var object_is_grabbed: bool = false
 
 var last_held_object: RigidBody3D = null
-var _last_grabbed_pos := Vector3.ZERO
-var _release_velocity := Vector3.ZERO
 
 var GRAB_STIFFNESS := BASE_GRAB_STIFFNESS
 var GRAB_DAMPING := BASE_GRAB_DAMPING
@@ -73,7 +71,7 @@ func _ready() -> void:
 	add_child(object_position_timer)
 	var somn = assembly_object_container.get_children()
 	for child in somn:
-		child.character_body = character
+		child.character_body = player_character
 
 	start_static_glow_loop()
 
@@ -84,14 +82,14 @@ func _physics_process(delta: float) -> void:
 	#print('See if auto switching to next component fixes duplicate extract shader issue')
 	#print('Else...find a way to delete it from that component since it will not need it to be added again...')
 	#
-	if character.new_component:
-		if character.new_component.ready_to_move:
-			character.new_component.reparent(assembly_object_container)
-			character.new_component.ready_to_move = false
+	if player_character.new_component:
+		if player_character.new_component.ready_to_move:
+			player_character.new_component.reparent(assembly_object_container)
+			player_character.new_component.ready_to_move = false
 
 	if grabbed_object:
 		 #--- Force Movement Toward Target ---
-		var cam_transform = character.camera.global_transform
+		var cam_transform = player_character.camera.global_transform
 
 		var forward = -cam_transform.basis.z
 		var left = -cam_transform.basis.x
@@ -101,28 +99,25 @@ func _physics_process(delta: float) -> void:
 		var distance_forward
 		var offset_left
 		var offset_up
-
-		var target_pos
 		var smooth_speed
-		
 		
 				## --- Smooth LookAt Rotation ---
 		var object_pos = grabbed_object.global_transform.origin
-		var look_dir = -(character.global_position - object_pos).normalized()
+		var look_dir = -(player_character.global_position - object_pos).normalized()
 
 		look_dir.y += 0.15  # tweak this until it feels right
 		look_dir = look_dir.normalized()
 
-		if not character.extracting_object_active:
+		if not player_character.extracting_object_active:
 			if grabbed_object.object_body.scale.y < 0.99:
 				grabbed_object.object_body.scale = lerp(grabbed_object.object_body.scale, grabbed_object.current_scale, delta * 5.0)
 				grabbed_object.extract_body.scale = lerp(grabbed_object.extract_body.scale, Vector3.ZERO, delta * 20.0)
 				grabbed_object.extract_body.position.y = lerp(grabbed_object.extract_body.position.y, -0.25, delta * 20.0)
-				character.PREM_7.machine_info.scale = lerp(character.PREM_7.machine_info.scale, Vector3.ZERO, delta * 10.0)
+				player_character.PREM_7.machine_info.scale = lerp(player_character.PREM_7.machine_info.scale, Vector3.ZERO, delta * 10.0)
 				if grabbed_object.object_body.scale.y > 0.01:
 					grabbed_object.object_body.visible = true
-				if character.PREM_7.machine_info.scale.y <= 0.5:
-					character.PREM_7.machine_info.visible = false
+				if player_character.PREM_7.machine_info.scale.y <= 0.5:
+					player_character.PREM_7.machine_info.visible = false
 				if grabbed_object.extract_body.scale.y <= 0.01:
 					grabbed_object.extract_body.visible = false
 			distance_forward = 6.0
@@ -133,8 +128,8 @@ func _physics_process(delta: float) -> void:
 			extraction_spin_initialized = false
 
 		else:
-			if character.current_extraction_data.is_empty():
-				character._on_extract_key()
+			if player_character.current_extraction_data.is_empty():
+				player_character._on_extract_key()
 				if grabbed_object:
 					for child in grabbed_object.get_children():
 						if child is CollisionShape3D:
@@ -146,7 +141,7 @@ func _physics_process(delta: float) -> void:
 							child.disabled = false
 					release_object()
 					return
-			character.PREM_7.machine_info.visible = true
+			player_character.PREM_7.machine_info.visible = true
 			grabbed_object.extract_body.visible = true
 			distance_forward = 6.0 
 			offset_left = 0.0
@@ -161,19 +156,19 @@ func _physics_process(delta: float) -> void:
 				grabbed_object.extract_body.rotation_degrees.y = lerp(grabbed_object.extract_body.rotation_degrees.y, 0.0, delta * 5.0)
 				grabbed_object.extract_body.rotation_degrees.z = lerp(grabbed_object.extract_body.rotation_degrees.z, 0.0, delta * 5.0)
 				current_spin_timer += delta * 0.5
-				var scale_norm = character.extraction_scale / 5
+				var scale_norm = player_character.extraction_scale / 5
 				grabbed_object.extract_body.scale = lerp(grabbed_object.extract_body.scale, Vector3(scale_norm, scale_norm, scale_norm), delta * 5.0)
 				grabbed_object.extract_body.position.y = lerp(grabbed_object.extract_body.position.y, 0.1, delta * 5.0)
-				character.PREM_7.machine_info.scale = lerp(character.PREM_7.machine_info.scale, Vector3.ONE, delta * 5.0)
+				player_character.PREM_7.machine_info.scale = lerp(player_character.PREM_7.machine_info.scale, Vector3.ONE, delta * 5.0)
 				if current_spin_timer > 0.25:
 					extraction_spin_initialized = true
 			if extraction_spin_initialized:
-				var x_spd = character.current_mouse_speed_x / 1000.0
-				var y_spd = character.current_mouse_speed_y / 1000.0
-				if character.extraction_started:
+				var x_spd = player_character.current_mouse_speed_x / 1000.0
+				var y_spd = player_character.current_mouse_speed_y / 1000.0
+				if player_character.extraction_started:
 					x_spd = 0.0
 					y_spd = 0.0
-				grabbed_object.extract_body.rotate_y(character.extract_speed + x_spd)
+				grabbed_object.extract_body.rotate_y(player_character.extract_speed + x_spd)
 				grabbed_object.extract_body.rotate_x(y_spd)
 				if y_spd < 0.01:
 					grabbed_object.extract_body.rotation_degrees.x = lerp(grabbed_object.extract_body.rotation_degrees.x, 0.0, delta)
@@ -189,36 +184,36 @@ func _physics_process(delta: float) -> void:
 			GRAB_STIFFNESS = lerp(GRAB_STIFFNESS, BASE_GRAB_STIFFNESS * grabbed_object.mass, delta * 5.0)
 		var force = (direction * GRAB_STIFFNESS) - (vel * GRAB_DAMPING)
 			
-		var desired_basis = Basis().looking_at(look_dir, Vector3.UP.normalized())
+		var desired_basis = Basis.looking_at(look_dir, Vector3.UP.normalized())
 		var current_basis = grabbed_object.global_transform.basis.orthonormalized()
 		var smoothed_basis = lerp(current_basis, desired_basis, delta * smooth_speed)
 
-		var transform = grabbed_object.global_transform.orthonormalized()
-		transform.origin = obj_pos
-		transform.basis = smoothed_basis
-		if not character.extracting_object_active:
-			grabbed_object.global_transform = transform
+		var trans = grabbed_object.global_transform.orthonormalized()
+		trans.origin = obj_pos
+		trans.basis = smoothed_basis
+		if not player_character.extracting_object_active:
+			grabbed_object.global_transform = trans
 
 		grabbed_object.apply_force(force)
 		
 
 func grab_object():
 	if first_grabbed_object:
-		character.PREM_7.extract_message.visible = true
+		player_character.PREM_7.extract_message.visible = true
 		grab_message.visible = false
 		first_grabbed_object = false
 	grab_initiated = true
-	character.PREM_7.cast_beam()
+	player_character.PREM_7.cast_beam()
 	#await get_tree().create_timer(0.4).timeout
 	grabbed_object = grabbable_object
 	grabbable_object = null
 	grabbed_object.continuous_cd = false
-	character.grabbed_object = grabbed_object
+	player_character.grabbed_object = grabbed_object
 	grabbed_object.collision_layer = 1
 	grabbed_object.collision_mask = 1
 	flicker_obj_a = grabbed_object.object_body
-	flicker_obj_b = character.PREM_7.back_panel
-	flicker_obj_c = character.PREM_7.photon_tip
+	flicker_obj_b = player_character.PREM_7.back_panel
+	flicker_obj_c = player_character.PREM_7.photon_tip
 	grabbed_object.object_falling = false
 	grabbed_object.is_touchable = false
 	grabbed_object.freeze = false
@@ -231,13 +226,13 @@ func grab_object():
 	grabbed_object.glow_timer = 0.25
 	GRAB_STIFFNESS = 0.0
 	GRAB_DAMPING = BASE_GRAB_DAMPING * grabbed_object.mass
-	character.grab_object()
+	player_character.grab_object()
 
 
 
 func release_object():
-	if character.PREM_7.extract_message.visible:
-		character.PREM_7.extract_message.visible = false
+	if player_character.PREM_7.extract_message.visible:
+		player_character.PREM_7.extract_message.visible = false
 	grabbed_object.linear_velocity /= 2
 	grabbed_object.collision_layer = 3
 	grabbed_object.collision_mask = 3
@@ -256,7 +251,7 @@ func release_object():
 	grabbed_object.brightness_increasing = false
 	grabbed_object.standard_material.emission_energy_multiplier = 3.0
 	#grabbed_object.continuous_cd = true
-	character.release_object()
+	player_character.release_object()
 	grabbed_object = null
 
 func _input(event: InputEvent) -> void:
@@ -264,11 +259,11 @@ func _input(event: InputEvent) -> void:
 	# Process Mouse Button events.
 	if event is InputEventMouseButton:
 
-		if not character.is_clickable:
+		if not player_character.is_clickable:
 			return
 
-		if event.button_index == MOUSE_BUTTON_LEFT and not (character.extracting_object_active or character.fusing_object_active):
-			target = character.touched_object
+		if event.button_index == MOUSE_BUTTON_LEFT and not (player_character.extracting_object_active or player_character.fusing_object_active):
+			target = player_character.touched_object
 			if target is RigidBody3D:
 				if target.is_rocketship:
 					return
@@ -284,36 +279,36 @@ func _input(event: InputEvent) -> void:
 				if grabbable_object:
 					grab_object()
 					return
-		elif event.button_index == MOUSE_BUTTON_RIGHT and not (character.extracting_object_active or character.fusing_object_active):
+		elif event.button_index == MOUSE_BUTTON_RIGHT and not (player_character.extracting_object_active or player_character.fusing_object_active):
 			if event.is_pressed():
 				if grabbed_object:
-					character.PREM_7.ctrl_anim.play("suspend")
+					player_character.PREM_7.ctrl_anim.play("suspend")
 					grabbed_object.gravity_scale = 0.0
 					grabbed_object.freeze = false
 					grabbed_object.is_suspended = true
-					character.PREM_7.suspend_object = true
+					player_character.PREM_7.suspend_object = true
 					release_object()
 
 	if event is InputEventKey:
 		if event.keycode == KEY_R:
 			print('Resetting Rotation here, genius...')
 			reset_rotation = true
-			character.distance_from_character = base_distance_in_front
+			player_character.distance_from_character = base_distance_in_front
 	
 		if event.keycode == KEY_E or event.keycode == KEY_F:
 			if not grabbed_object:
 				return
-			if not character.extracting_object_active and not character.fusing_object_active:
+			if not player_character.extracting_object_active and not player_character.fusing_object_active:
 				print('Resetting Rotation here, genius...')
 				reset_rotation = true
-				character.distance_from_character = base_distance_in_front
+				player_character.distance_from_character = base_distance_in_front
 				flicker_obj_a = grabbed_object.object_body
 				for child in grabbed_object.object_body.get_children():
 					child.set_material_overlay(grabbed_object.standard_material)
 				grabbed_object.set_glitch(false)
 			else:
-				if character.extracting_object_active:
-					flicker_obj_a = character.PREM_7.machine_info
+				if player_character.extracting_object_active:
+					flicker_obj_a = player_character.PREM_7.machine_info
 					grabbed_object.set_glitch(false)
 
 
@@ -340,10 +335,9 @@ func spawn_grid():
 	assembly_components_global_position = grabbed_object.global_position
 
 	var spacing = 3.0
-	var cube_size = 1.5
 	var curve_strength = 2.0
 
-	var camera_pos = character.camera.global_transform.origin
+	var camera_pos = player_character.camera.global_transform.origin
 
 	if not is_instance_valid(grabbed_object):
 		return
@@ -404,8 +398,8 @@ func spawn_grid():
 
 func add_component_to_grid(obj):
 	obj.scale = Vector3(0.01, 0.01, 0.01)
-	character.assembly_component_selection = true
-	character.extraction_recently_completed = true
+	player_character.assembly_component_selection = true
+	player_character.extraction_recently_completed = true
 	await get_tree().create_timer(0.025).timeout
 	obj.visible = true
 	obj.scale = Vector3(1.0, 1.0, 1.0)
@@ -430,7 +424,7 @@ func stop_static_glow_loop() -> void:
 
 
 func _static_glow_loop() -> void:
-	var rng = RandomNumberGenerator.new()
+	rng = RandomNumberGenerator.new()
 	rng.randomize()
 
 	while static_glow_active:
@@ -444,14 +438,14 @@ func _static_glow_loop() -> void:
 
 
 
-func _static_glow_blink(rng: RandomNumberGenerator) -> void:
-	var blink_pairs = rng.randi_range(8, 16)
+func _static_glow_blink(rand: RandomNumberGenerator) -> void:
+	var blink_pairs = rand.randi_range(8, 16)
 
 	for i in blink_pairs:
 		if not static_glow_active:
 			break
 
-		var duration = rng.randf_range(0.005, 0.02)
+		var duration = rand.randf_range(0.005, 0.02)
 		if flicker_obj_a and flicker_obj_b and flicker_obj_c:
 			if grabbed_object.is_extracting:
 				grabbed_object.set_glitch(false)

@@ -26,4 +26,4 @@ func _ready() -> void:
 						if part.get_script() == null:
 							part.set_script(MOTIONPOINT_SCRIPT)
 							part.call_deferred("init_motionpoint")
-							print(part.name)
+							#print(part.name)

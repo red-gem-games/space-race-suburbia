@@ -4,7 +4,7 @@ class_name MotionPoint
 var touched_walls: Array = []
 
 
-func _physics_process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	pass
 
 func _on_area_entered(area: Area3D) -> void:
