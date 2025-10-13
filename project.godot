@@ -23,6 +23,11 @@ window/size/always_on_top=true
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 
+[editor]
+
+movie_writer/video_quality=1.0
+movie_writer/movie_file="/Users/richardgibbs/Desktop/SRS - Media & Documents/VIDEOS/SRSvideo.avi"
+
 [global_group]
 
 Stepladder=""
@@ -46,3 +51,7 @@ common/physics_jitter_fix=0.0
 3d/default_angular_damp=0.25
 3d/solver/contact_max_allowed_penetration=0.001
 common/physics_interpolation=true
+
+[rendering]
+
+textures/vram_compression/import_etc2_astc=true

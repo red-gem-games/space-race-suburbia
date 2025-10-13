@@ -1,4 +1,4 @@
-[gd_scene load_steps=127 format=4 uid="uid://b7k8hwtw0q3hh"]
+[gd_scene load_steps=149 format=4 uid="uid://b7k8hwtw0q3hh"]
 
 [ext_resource type="Script" uid="uid://cyowba4m2trio" path="res://World/trs_1.gd" id="1_5df30"]
 [ext_resource type="Texture2D" uid="uid://cp05pkk5u6w64" path="res://Assets/Blender/TRS-1/TRS-1_v2_T_RO_Engine_DF.png" id="2_1grnu"]
@@ -18,6 +18,8 @@
 [ext_resource type="Texture2D" uid="uid://bvaxill4sm8ka" path="res://Assets/Blender/TRS-1/TRS-1_v2_T_RO_Fus_Mid_NR.png" id="16_8hu60"]
 [ext_resource type="Texture2D" uid="uid://divy8vtvmxa8g" path="res://Assets/Blender/TRS-1/TRS-1_v2_T_RO_Fus_Bottom_DF.png" id="17_pwxt6"]
 [ext_resource type="Texture2D" uid="uid://v6edgkd5qqla" path="res://Assets/Blender/TRS-1/TRS-1_v2_T_RO_Fus_Bottom_MT-T_RO_Fus_Bottom_RG.png" id="18_actlo"]
+[ext_resource type="AudioStream" uid="uid://y6vi0rc0fx1b" path="res://Assets/Sounds/Countdown_1.wav" id="19_7tn76"]
+[ext_resource type="AudioStream" uid="uid://cp05jmrdulk1a" path="res://Assets/Sounds/Rocket_Launch_1.wav" id="19_fjpea"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_e5i3a"]
 resource_name = "M_RO_Engine_Bake"
@@ -1167,6 +1169,9 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_qbivn")
 
+[sub_resource type="SphereShape3D" id="SphereShape3D_kedqo"]
+radius = 0.4
+
 [sub_resource type="ArrayMesh" id="ArrayMesh_gctxe"]
 _surfaces = [{
 "aabb": AABB(0.17155, 0.383979, -0.308706, 0.249069, 1.08704, 0.281838),
@@ -1200,6 +1205,9 @@ _surfaces = [{
 }]
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_gctxe")
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_gtui1"]
+radius = 0.4
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_ukqwf"]
 _surfaces = [{
@@ -1235,8 +1243,8 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_ukqwf")
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_kedqo"]
-radius = 0.4
+[sub_resource type="SphereShape3D" id="SphereShape3D_l17p5"]
+radius = 0.41
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_xixws"]
 _surfaces = [{
@@ -1304,6 +1312,9 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_wwfqv")
 
+[sub_resource type="SphereShape3D" id="SphereShape3D_4txbp"]
+radius = 0.4
+
 [sub_resource type="ArrayMesh" id="ArrayMesh_8nu55"]
 _surfaces = [{
 "aabb": AABB(0.0613567, 0.383979, 0.17155, 0.24735, 1.08704, 0.249069),
@@ -1338,6 +1349,9 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_8nu55")
 
+[sub_resource type="SphereShape3D" id="SphereShape3D_io613"]
+radius = 0.4
+
 [sub_resource type="ArrayMesh" id="ArrayMesh_s8f0l"]
 _surfaces = [{
 "aabb": AABB(-0.42142, 0.383979, -0.30732, 0.250076, 1.08704, 0.245662),
@@ -1371,6 +1385,9 @@ _surfaces = [{
 }]
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_s8f0l")
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_i3o01"]
+radius = 0.4
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_106yp"]
 _surfaces = [{
@@ -1438,6 +1455,9 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_ytpxq")
 
+[sub_resource type="SphereShape3D" id="SphereShape3D_rfkn5"]
+radius = 0.4
+
 [sub_resource type="ArrayMesh" id="ArrayMesh_hovjh"]
 _surfaces = [{
 "aabb": AABB(-0.420619, 0.383979, 0.0613566, 0.249069, 1.08704, 0.24735),
@@ -1472,6 +1492,9 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_hovjh")
 
+[sub_resource type="SphereShape3D" id="SphereShape3D_edjlo"]
+radius = 0.4
+
 [sub_resource type="ArrayMesh" id="ArrayMesh_nrnp6"]
 _surfaces = [{
 "aabb": AABB(0.061658, 0.383979, -0.42142, 0.245662, 1.08704, 0.250076),
@@ -1505,6 +1528,9 @@ _surfaces = [{
 }]
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_nrnp6")
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_dxmc7"]
+radius = 0.4
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_xuhrv"]
 _surfaces = [{
@@ -1572,6 +1598,9 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_yv2nt")
 
+[sub_resource type="SphereShape3D" id="SphereShape3D_8hu60"]
+radius = 0.4
+
 [sub_resource type="ArrayMesh" id="ArrayMesh_jjncw"]
 _surfaces = [{
 "aabb": AABB(-0.308706, 0.383979, -0.420619, 0.24735, 1.08704, 0.249069),
@@ -1606,6 +1635,9 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_jjncw")
 
+[sub_resource type="SphereShape3D" id="SphereShape3D_pwxt6"]
+radius = 0.4
+
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_s6qft"]
 height = 5.12653
 radius = 1.02344
@@ -1628,28 +1660,87 @@ points = PackedVector3Array(-0.407723, 1.37366, -0.380569, -0.815264, 0.205211, 
 [sub_resource type="SphereShape3D" id="SphereShape3D_pyrdq"]
 radius = 0.917702
 
+[sub_resource type="Curve" id="Curve_fjpea"]
+_limits = [0.0, 5.0, 0.0, 1.0]
+_data = [Vector2(0, 1.6777778), 0.0, 0.0, 0, 0, Vector2(0.96842104, 1.1857061), -1.5597867, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_7tn76"]
+curve = SubResource("Curve_fjpea")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_fjpea"]
+velocity_pivot = Vector3(0, 2.89, 0)
+scale_curve = SubResource("CurveTexture_7tn76")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7tn76"]
+transparency = 1
+blend_mode = 3
+cull_mode = 2
+depth_draw_mode = 1
+albedo_color = Color(1, 0, 0, 0.16100001)
+emission_enabled = true
+emission = Color(1.5426961, 0.1890101, 0, 1)
+emission_energy_multiplier = 66.6
+grow_amount = 0.25
+stencil_flags = 2
+
+[sub_resource type="SphereMesh" id="SphereMesh_kedqo"]
+lightmap_size_hint = Vector2i(17, 17)
+material = SubResource("StandardMaterial3D_7tn76")
+radius = 0.25
+is_hemisphere = true
+
+[sub_resource type="Curve" id="Curve_kedqo"]
+_limits = [0.0, 21.62, 0.0, 5.0]
+_data = [Vector2(0, 1.5502338), 0.0, 0.0, 0, 0, Vector2(2.4298246, 0), 0.0, 0.0, 0, 0, Vector2(5, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_c2odc"]
+curve = SubResource("Curve_kedqo")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_1grnu"]
+emission_shape_scale = Vector3(0.5, 0.5, 0.5)
+emission_shape = 1
+emission_sphere_radius = 0.5
+scale_curve = SubResource("CurveTexture_c2odc")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fjpea"]
+transparency = 1
+albedo_color = Color(0.78818816, 0.78818816, 0.78818816, 0.120000005)
+emission = Color(1, 1, 1, 1)
+emission_energy_multiplier = 0.3
+grow = true
+grow_amount = 0.15
+proximity_fade_distance = 4096.0
+
+[sub_resource type="SphereMesh" id="SphereMesh_7tn76"]
+material = SubResource("StandardMaterial3D_fjpea")
+radius = 0.05
+height = 5.825
+
 [node name="TRS-1" type="RigidBody3D"]
 mass = 3250.0
+gravity_scale = 0.0
 freeze = true
 script = ExtResource("1_5df30")
 
 [node name="R1_Engine_Bake2" type="MeshInstance3D" parent="."]
-transform = Transform3D(1.75, 0, 0, 0, 1.75, 0, 0, 0, 1.75, 0, 0, 0)
+transform = Transform3D(1.75, 0, 0, 0, 1.75, 0, 0, 0, 1.75, 0, 0.3464911, 0)
 mesh = SubResource("ArrayMesh_d1u7c")
 skeleton = NodePath("")
 
 [node name="R1_TransparentCilinder2" type="MeshInstance3D" parent="."]
-transform = Transform3D(1.75, 0, 0, 0, 1.75, 0, 0, 0, 1.75, 0, 0, 0)
+transform = Transform3D(1.75, 0, 0, 0, 1.75, 0, 0, 0, 1.75, 0, 0.46093893, 0)
 mesh = SubResource("ArrayMesh_w8vdp")
 skeleton = NodePath("")
 
 [node name="R1_Vent_Bake2" type="MeshInstance3D" parent="."]
-transform = Transform3D(1.99584, 0.468119, 0, -0.468119, 1.99584, 0, 0, 0, 2.05, -1.01, -0.27, 0.6)
+transform = Transform3D(1.99584, 0.468119, 0, -0.468119, 1.99584, 0, 0, 0, 2.05, -1.01, 0.19093892, 0.6)
 mesh = SubResource("ArrayMesh_pjt0s")
 skeleton = NodePath("")
 
 [node name="R1_Tank_Bake2" type="MeshInstance3D" parent="."]
-transform = Transform3D(1.75, 0, 0, 0, 1.75, 0, 0, 0, 1.75, 0, 0, 0)
+transform = Transform3D(1.75, 0, 0, 0, 1.75, 0, 0, 0, 1.75, 0, 0.46093893, 0)
 mesh = SubResource("ArrayMesh_s6kj0")
 skeleton = NodePath("")
 
@@ -1997,7 +2088,7 @@ debug_color = Color(0, 1, 0, 1)
 [node name="Center" type="Area3D" parent="Base/+X_Bottom_Wall"]
 
 [node name="R1_Fins_Bake1" type="MeshInstance3D" parent="Base/+X_Bottom_Wall/Center"]
-transform = Transform3D(1.2374369, 0, 1.2374369, 0, 1.75, 0, -1.2374369, 0, 1.2374369, 0, -0.25, 0)
+transform = Transform3D(1.2374369, 0, 1.2374369, 0, 1.75, 0, -1.2374369, 0, 1.2374369, 0, -0.0111967325, 0)
 mesh = SubResource("ArrayMesh_du40w")
 skeleton = NodePath("")
 
@@ -2008,7 +2099,7 @@ skeleton = NodePath("")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Base/+X_Bottom_Wall/Center"]
 transform = Transform3D(1.0000002, 0, 0, 0, 1, 0, 0, 0, 1.0000002, 2, 1.689, 0.013)
-shape = SubResource("SphereShape3D_7tn76")
+shape = SubResource("SphereShape3D_kedqo")
 debug_color = Color(0, 1, 0, 1)
 
 [node name="Right" type="Area3D" parent="Base/+X_Bottom_Wall"]
@@ -2021,7 +2112,7 @@ skeleton = NodePath("")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Base/+X_Bottom_Wall/Right"]
 transform = Transform3D(1.0000002, 0, 0, 0, 1, 0, 0, 0, 1.0000002, 2, 1.689, 0.013)
-shape = SubResource("SphereShape3D_7tn76")
+shape = SubResource("SphereShape3D_gtui1")
 debug_color = Color(0, 1, 0, 1)
 
 [node name="+Z_Bottom_Wall" type="Node3D" parent="Base"]
@@ -2035,14 +2126,14 @@ mesh = SubResource("ArrayMesh_uy6bs")
 skeleton = NodePath("")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Base/+Z_Bottom_Wall/Left"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.632, 2)
-shape = SubResource("SphereShape3D_kedqo")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.689, 2)
+shape = SubResource("SphereShape3D_l17p5")
 debug_color = Color(0, 1, 0, 1)
 
 [node name="Center" type="Area3D" parent="Base/+Z_Bottom_Wall"]
 
 [node name="R1_Fins_Bake2" type="MeshInstance3D" parent="Base/+Z_Bottom_Wall/Center"]
-transform = Transform3D(1.2374369, 0, 1.2374369, 0, 1.75, 0, -1.2374369, 0, 1.2374369, 0, -0.25, 0)
+transform = Transform3D(1.2374369, 0, 1.2374369, 0, 1.75, 0, -1.2374369, 0, 1.2374369, 0, -0.0111967325, 0)
 mesh = SubResource("ArrayMesh_thpqe")
 skeleton = NodePath("")
 
@@ -2052,8 +2143,8 @@ mesh = SubResource("ArrayMesh_ecb88")
 skeleton = NodePath("")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Base/+Z_Bottom_Wall/Center"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.632, 2)
-shape = SubResource("SphereShape3D_kedqo")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.689, 2)
+shape = SubResource("SphereShape3D_4txbp")
 debug_color = Color(0, 1, 0, 1)
 
 [node name="Right" type="Area3D" parent="Base/+Z_Bottom_Wall"]
@@ -2065,8 +2156,8 @@ mesh = SubResource("ArrayMesh_nx2y6")
 skeleton = NodePath("")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Base/+Z_Bottom_Wall/Right"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.632, 2)
-shape = SubResource("SphereShape3D_kedqo")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.689, 2)
+shape = SubResource("SphereShape3D_io613")
 debug_color = Color(0, 1, 0, 1)
 
 [node name="-X_Bottom_Wall" type="Node3D" parent="Base"]
@@ -2081,13 +2172,13 @@ skeleton = NodePath("")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Base/-X_Bottom_Wall/Left"]
 transform = Transform3D(1.0000002, 0, 0, 0, 1, 0, 0, 0, 1.0000002, -1.9994446, 1.6892235, 0.013336241)
-shape = SubResource("SphereShape3D_7tn76")
+shape = SubResource("SphereShape3D_i3o01")
 debug_color = Color(0, 1, 0, 1)
 
 [node name="Center" type="Area3D" parent="Base/-X_Bottom_Wall"]
 
 [node name="R1_Fins_Bake4" type="MeshInstance3D" parent="Base/-X_Bottom_Wall/Center"]
-transform = Transform3D(1.2374369, 0, 1.2374369, 0, 1.75, 0, -1.2374369, 0, 1.2374369, 0, -0.25, 0)
+transform = Transform3D(1.2374369, 0, 1.2374369, 0, 1.75, 0, -1.2374369, 0, 1.2374369, 0, -0.0111967325, 0)
 mesh = SubResource("ArrayMesh_rx3l8")
 skeleton = NodePath("")
 
@@ -2098,7 +2189,7 @@ skeleton = NodePath("")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Base/-X_Bottom_Wall/Center"]
 transform = Transform3D(1.0000002, 0, 0, 0, 1, 0, 0, 0, 1.0000002, -1.9994446, 1.6892235, 0.013336241)
-shape = SubResource("SphereShape3D_7tn76")
+shape = SubResource("SphereShape3D_rfkn5")
 debug_color = Color(0, 1, 0, 1)
 
 [node name="Right" type="Area3D" parent="Base/-X_Bottom_Wall"]
@@ -2111,7 +2202,7 @@ skeleton = NodePath("")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Base/-X_Bottom_Wall/Right"]
 transform = Transform3D(1.0000002, 0, 0, 0, 1, 0, 0, 0, 1.0000002, -1.9994446, 1.6892235, 0.013336241)
-shape = SubResource("SphereShape3D_7tn76")
+shape = SubResource("SphereShape3D_edjlo")
 debug_color = Color(0, 1, 0, 1)
 
 [node name="-Z_Bottom_Wall" type="Node3D" parent="Base"]
@@ -2125,14 +2216,14 @@ mesh = SubResource("ArrayMesh_j8wgy")
 skeleton = NodePath("")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Base/-Z_Bottom_Wall/Left"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.632, -2)
-shape = SubResource("SphereShape3D_kedqo")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.689, -2)
+shape = SubResource("SphereShape3D_dxmc7")
 debug_color = Color(0, 1, 0, 1)
 
 [node name="Center" type="Area3D" parent="Base/-Z_Bottom_Wall"]
 
 [node name="R1_Fins_Bake3" type="MeshInstance3D" parent="Base/-Z_Bottom_Wall/Center"]
-transform = Transform3D(1.2374369, 0, 1.2374369, 0, 1.75, 0, -1.2374369, 0, 1.2374369, 0, -0.25, 0)
+transform = Transform3D(1.2374369, 0, 1.2374369, 0, 1.75, 0, -1.2374369, 0, 1.2374369, 0, -0.0111967325, 0)
 mesh = SubResource("ArrayMesh_6n2og")
 skeleton = NodePath("")
 
@@ -2142,8 +2233,8 @@ mesh = SubResource("ArrayMesh_0rbjk")
 skeleton = NodePath("")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Base/-Z_Bottom_Wall/Center"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.632, -2)
-shape = SubResource("SphereShape3D_kedqo")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.689, -2)
+shape = SubResource("SphereShape3D_8hu60")
 debug_color = Color(0, 1, 0, 1)
 
 [node name="Right" type="Area3D" parent="Base/-Z_Bottom_Wall"]
@@ -2155,38 +2246,72 @@ mesh = SubResource("ArrayMesh_vfk0t")
 skeleton = NodePath("")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Base/-Z_Bottom_Wall/Right"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.632, -2)
-shape = SubResource("SphereShape3D_kedqo")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.689, -2)
+shape = SubResource("SphereShape3D_pwxt6")
 debug_color = Color(0, 1, 0, 1)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.57392, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.003, 0)
 shape = SubResource("CylinderShape3D_s6qft")
 
 [node name="CollisionShape3D2" type="CollisionShape3D" parent="."]
 transform = Transform3D(1.75, 0, 0, 0, 1.75, 0, 0, 0, 1.75, 0, 0, 0)
 shape = SubResource("ConvexPolygonShape3D_5df30")
+disabled = true
 
 [node name="CollisionShape3D6" type="CollisionShape3D" parent="."]
-transform = Transform3D(1.2374369, 0, 1.2374369, 0, 1.75, 0, -1.2374369, 0, 1.2374369, 0, -0.25, 0)
+transform = Transform3D(1.2374369, 0, 1.2374369, 0, 1.75, 0, -1.2374369, 0, 1.2374369, 0, 0.013743043, 0)
 shape = SubResource("ConvexPolygonShape3D_n10ps")
 disabled = true
 
 [node name="CollisionShape3D5" type="CollisionShape3D" parent="."]
-transform = Transform3D(1.2374369, 0, 1.2374369, 0, 1.75, 0, -1.2374369, 0, 1.2374369, 0, -0.25, 0)
+transform = Transform3D(1.2374369, 0, 1.2374369, 0, 1.75, 0, -1.2374369, 0, 1.2374369, 0, 0.013743043, 0)
 shape = SubResource("ConvexPolygonShape3D_46o7k")
 disabled = true
 
 [node name="CollisionShape3D4" type="CollisionShape3D" parent="."]
-transform = Transform3D(1.2374369, 0, 1.2374369, 0, 1.75, 0, -1.2374369, 0, 1.2374369, 0, -0.25, 0)
+transform = Transform3D(1.2374369, 0, 1.2374369, 0, 1.75, 0, -1.2374369, 0, 1.2374369, 0, 0.013743043, 0)
 shape = SubResource("ConvexPolygonShape3D_w88fe")
 disabled = true
 
 [node name="CollisionShape3D3" type="CollisionShape3D" parent="."]
-transform = Transform3D(1.2374369, 0, 1.2374369, 0, 1.75, 0, -1.2374369, 0, 1.2374369, 0, -0.25, 0)
+transform = Transform3D(1.2374369, 0, 1.2374369, 0, 1.75, 0, -1.2374369, 0, 1.2374369, 0, 0.013743043, 0)
 shape = SubResource("ConvexPolygonShape3D_nyvpl")
 disabled = true
 
 [node name="CollisionShape3D7" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.86888, 0)
 shape = SubResource("SphereShape3D_pyrdq")
+
+[node name="Fire" type="GPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.764091, 0)
+amount = 125
+lifetime = 1.1
+preprocess = 10.0
+speed_scale = 6.49
+randomness = 1.0
+transform_align = 2
+process_material = SubResource("ParticleProcessMaterial_fjpea")
+draw_pass_1 = SubResource("SphereMesh_kedqo")
+
+[node name="Smoke" type="GPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -3.9317164, 0)
+amount = 100
+speed_scale = 7.25
+trail_lifetime = 10.0
+process_material = SubResource("ParticleProcessMaterial_1grnu")
+draw_pass_1 = SubResource("SphereMesh_7tn76")
+
+[node name="SoundFX" type="Node3D" parent="."]
+
+[node name="countdown" type="AudioStreamPlayer3D" parent="SoundFX"]
+stream = ExtResource("19_7tn76")
+
+[node name="rocket_launch" type="AudioStreamPlayer3D" parent="SoundFX"]
+stream = ExtResource("19_fjpea")
+
+[node name="Countdown" type="Label3D" parent="."]
+transform = Transform3D(0.66131186, 0, -0.7501111, 0, 1, 0, 0.7501111, 0, 0.66131186, -1.821341, 2.5944026, 2.0587358)
+pixel_size = 0.01
+font_size = 500
+outline_size = 35

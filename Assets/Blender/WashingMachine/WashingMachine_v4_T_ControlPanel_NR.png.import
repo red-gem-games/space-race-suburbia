@@ -4,8 +4,9 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://2ffeacx7gvat"
 path.s3tc="res://.godot/imported/WashingMachine_v4_T_ControlPanel_NR.png-cdee30a901f33fb5c4ce4c55d6e65f35.s3tc.ctex"
+path.etc2="res://.godot/imported/WashingMachine_v4_T_ControlPanel_NR.png-cdee30a901f33fb5c4ce4c55d6e65f35.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -15,13 +16,15 @@ generator_parameters={
 [deps]
 
 source_file="res://Assets/Blender/WashingMachine/WashingMachine_v4_T_ControlPanel_NR.png"
-dest_files=["res://.godot/imported/WashingMachine_v4_T_ControlPanel_NR.png-cdee30a901f33fb5c4ce4c55d6e65f35.s3tc.ctex"]
+dest_files=["res://.godot/imported/WashingMachine_v4_T_ControlPanel_NR.png-cdee30a901f33fb5c4ce4c55d6e65f35.s3tc.ctex", "res://.godot/imported/WashingMachine_v4_T_ControlPanel_NR.png-cdee30a901f33fb5c4ce4c55d6e65f35.etc2.ctex"]
 
 [params]
 
 compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
+compress/uastc_level=0
+compress/rdo_quality_loss=0.0
 compress/hdr_compression=1
 compress/normal_map=1
 compress/channel_pack=0
@@ -29,6 +32,10 @@ mipmaps/generate=false
 mipmaps/limit=-1
 roughness/mode=1
 roughness/src_normal="res://Assets/Blender/WashingMachine_v4_T_ControlPanel_NR.png"
+process/channel_remap/red=0
+process/channel_remap/green=1
+process/channel_remap/blue=2
+process/channel_remap/alpha=3
 process/fix_alpha_border=true
 process/premult_alpha=false
 process/normal_map_invert_y=false

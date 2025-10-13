@@ -66,17 +66,33 @@ var grab_initiated: bool = false
 var first_grabbed_object: bool = true
 @onready var grab_message: Label3D = $ClickToGrab
 
+@onready var TRS: RigidBody3D = $"Launch_Platform/TRS-1"
+
+var touching_launch_button = false
+@onready var launch_instructions: Label3D = $Launch_Sequence/Instructions
+
 
 func _ready() -> void:
+	launch_instructions.visible = false
 	add_child(object_position_timer)
 	var somn = assembly_object_container.get_children()
 	for child in somn:
 		child.character_body = player_character
 
 	start_static_glow_loop()
+	
+	$Launch_Sequence/Launch_Box_Anim.play("button_glow")
 
 
 func _physics_process(delta: float) -> void:
+	
+	if TRS.all_systems_go:
+		$Launch_Platform/Smoke_Cloud.emitting = true
+		$Launch_Platform/Smoke_Cloud2.emitting = true
+		
+		if $Launch_Platform/Smoke_Cloud.emitting:
+			$Launch_Platform/Smoke_Cloud.transparency += 0.00175
+			$Launch_Platform/Smoke_Cloud2.transparency += 0.00175
 	
 		
 	#print('See if auto switching to next component fixes duplicate extract shader issue')
@@ -295,6 +311,10 @@ func _input(event: InputEvent) -> void:
 			reset_rotation = true
 			player_character.distance_from_character = base_distance_in_front
 	
+		if event.keycode == KEY_Q:
+			if touching_launch_button and not TRS.launch_sequence_started:
+				TRS.launch_rocket(11)
+		
 		if event.keycode == KEY_E or event.keycode == KEY_F:
 			if not grabbed_object:
 				return
@@ -481,3 +501,17 @@ func _static_glow_blink(rand: RandomNumberGenerator) -> void:
 		flicker_obj_b.visible = true
 		flicker_obj_c.visible = true
 			
+
+
+
+
+func _on_area_3d_body_entered(body: Node3D) -> void:
+	if body is CharacterBody3D:
+		$Launch_Sequence/Instructions.visible = true
+		touching_launch_button = true
+
+
+func _on_area_3d_body_exited(body: Node3D) -> void:
+	if body is CharacterBody3D:
+		$Launch_Sequence/Instructions.visible = false
+		touching_launch_button = false

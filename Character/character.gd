@@ -267,6 +267,7 @@ var new_component: RigidBody3D
 var launching_component: bool = false
 var extraction_finalized: bool = false
 
+@onready var extracted_component_sound = $SoundFX/extracted_component
 
 
 func _ready() -> void:
@@ -1535,6 +1536,9 @@ func setup_component():
 	launch_component(f_comp)
 
 func launch_component(obj):
+	
+	extracted_component_sound.play()
+	
 	var forward = -camera.global_transform.basis.z.normalized()
 	var upward = camera.global_transform.basis.y.normalized()
 	var sideways = camera.global_transform.basis.y.normalized()
