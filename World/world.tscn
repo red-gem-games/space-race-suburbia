@@ -1,4 +1,4 @@
-[gd_scene load_steps=129 format=4 uid="uid://dw2grejb4tc3k"]
+[gd_scene load_steps=130 format=4 uid="uid://dw2grejb4tc3k"]
 
 [ext_resource type="PackedScene" uid="uid://f722yn8gdiyj" path="res://Character/character.tscn" id="1_f3sb7"]
 [ext_resource type="Script" uid="uid://cpdnlycwlet2q" path="res://World/world.gd" id="1_tlwt5"]
@@ -9,7 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://diw15u24g3w3h" path="res://Components/DryingMachine.tscn" id="6_dwbse"]
 [ext_resource type="PackedScene" uid="uid://cf60vyvie043n" path="res://Components/stepladder.tscn" id="9_w47uh"]
 [ext_resource type="Texture2D" uid="uid://dekp1ex2c5jib" path="res://World/Workshop/House_Isolate_GameReady_marble floor_BaseColor.jpg" id="10_it66m"]
-[ext_resource type="PackedScene" uid="uid://50e0ko7nsyll" path="res://Components/Mix-O-Matic/mix_o_matic.tscn" id="10_lo5ox"]
+[ext_resource type="PackedScene" uid="uid://50e0ko7nsyll" path="res://Jukebox/harmonizer.tscn" id="10_lo5ox"]
 [ext_resource type="Texture2D" uid="uid://d3u64dsod3var" path="res://World/Workshop/House_Isolate_GameReady_marble floor_Roughness.png" id="11_wm6hh"]
 [ext_resource type="Texture2D" uid="uid://2vsu37ynem43" path="res://World/Workshop/House_Isolate_GameReady_marble floor_Normal.jpg" id="12_8kjm2"]
 [ext_resource type="Shader" uid="uid://c8yt2eubijwap" path="res://Shaders/teleport.gdshader" id="13_0wqet"]
@@ -46,9 +46,10 @@
 [ext_resource type="PackedScene" uid="uid://ciuvjv1vvl1u6" path="res://World/Workshop/computer.tscn" id="39_i363k"]
 [ext_resource type="Texture2D" uid="uid://dcfqkivc5kfgn" path="res://World/Workshop/House_Isolate_GameReady_SP_2K_Roughness_31.png" id="39_o8btu"]
 [ext_resource type="Texture2D" uid="uid://c7e5t86h25xde" path="res://World/Workshop/House_Isolate_GameReady_garage_floor_nor_gl_4k.jpg" id="40_2j1j3"]
+[ext_resource type="PackedScene" uid="uid://b6ks5av61q1r" path="res://Components/MusicConsole.tscn" id="47_xu702"]
 [ext_resource type="Texture2D" uid="uid://d28cyjkmx6tmv" path="res://Assets/Textures/Snow003_1K-PNG/Snow003_1K-PNG_Color.png" id="48_h4hkh"]
 [ext_resource type="Texture2D" uid="uid://cj3efyj54bf1u" path="res://Assets/Textures/Snow003_1K-PNG/Snow003_1K-PNG_Displacement.png" id="49_xu702"]
-[ext_resource type="PackedScene" uid="uid://b7k8hwtw0q3hh" path="res://World/TRS_1.tscn" id="50_h4hkh"]
+[ext_resource type="PackedScene" uid="uid://b7k8hwtw0q3hh" path="res://Rocket/TRS_1.tscn" id="50_h4hkh"]
 [ext_resource type="Texture2D" uid="uid://crru6s0y3t7em" path="res://Assets/Textures/Snow003_1K-PNG/Snow003_1K-PNG_Roughness.png" id="50_i363k"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_0wqet"]
@@ -892,6 +893,21 @@ size = Vector3(0.02, 1.96, 0.08)
 material = SubResource("StandardMaterial3D_dlis5")
 size = Vector3(0.02, 5.16, 0.08)
 
+[sub_resource type="Animation" id="Animation_xu702"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Button:mesh:material:emission_energy_multiplier")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
 [sub_resource type="Animation" id="Animation_h4hkh"]
 resource_name = "button_glow"
 length = 2.0
@@ -907,21 +923,6 @@ tracks/0/keys = {
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [5.0, 15.0]
-}
-
-[sub_resource type="Animation" id="Animation_xu702"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Button:mesh:material:emission_energy_multiplier")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [0.0]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_i363k"]
@@ -945,26 +946,26 @@ mesh = SubResource("CapsuleMesh_f23eu")
 [node name="Workshop" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.7833, -0.639899, 47.7116)
 
-[node name="Workshop" type="StaticBody3D" parent="Workshop"]
+[node name="House" type="StaticBody3D" parent="Workshop"]
 
-[node name="Building" type="MeshInstance3D" parent="Workshop/Workshop"]
+[node name="Building" type="MeshInstance3D" parent="Workshop/House"]
 transform = Transform3D(2.52, 0, 0, 0, 2.52, 0, 0, 0, 2.52, 38.626, 0.346935, -28.145)
 mesh = SubResource("ArrayMesh_hpkk2")
 skeleton = NodePath("")
 
-[node name="FrostedGlass" type="MeshInstance3D" parent="Workshop/Workshop/Building"]
+[node name="FrostedGlass" type="MeshInstance3D" parent="Workshop/House/Building"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.90735e-06, 0, 5)
 mesh = SubResource("ArrayMesh_0jbp1")
 skeleton = NodePath("")
 surface_material_override/0 = SubResource("StandardMaterial3D_12w7i")
 
-[node name="Glass" type="MeshInstance3D" parent="Workshop/Workshop/Building"]
+[node name="Glass" type="MeshInstance3D" parent="Workshop/House/Building"]
 transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, -12.1207, -0.5, -4.9)
 mesh = SubResource("ArrayMesh_p1nw3")
 skeleton = NodePath("")
 surface_material_override/0 = SubResource("StandardMaterial3D_xmbla")
 
-[node name="OmniLight3D" type="OmniLight3D" parent="Workshop/Workshop/Building"]
+[node name="OmniLight3D" type="OmniLight3D" parent="Workshop/House/Building"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19.4271, 2.74564, -5.47733)
 light_color = Color(1, 0.801667, 0.65, 1)
 light_energy = 4.794
@@ -976,15 +977,15 @@ distance_fade_length = 1636.7
 omni_range = 18.123
 omni_attenuation = 1.129
 
-[node name="CollisionShape3D2" type="CollisionShape3D" parent="Workshop/Workshop"]
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="Workshop/House"]
 transform = Transform3D(2.52, 0, 0, 0, 2.52, 0, 0, 0, 2.52, 38.984047, 0.4130418, -28.442827)
 shape = SubResource("ConcavePolygonShape3D_ngrok")
 
 [node name="Stepladder" parent="Workshop" instance=ExtResource("9_w47uh")]
 transform = Transform3D(0.443462, 0, -0.896293, 0, 1, 0, 0.896293, 0, 0.443462, 6.43669, -0.966892, -73.8728)
 
-[node name="Tune_O_Matic" parent="Workshop" instance=ExtResource("10_lo5ox")]
-transform = Transform3D(-0.750238, 0, 0.661168, 0, 1, 0, -0.661168, 0, -0.750238, -22.407, -1.00976, -29.5301)
+[node name="Harmonizer" parent="Workshop" instance=ExtResource("10_lo5ox")]
+transform = Transform3D(-0.750238, 0, 0.66116786, 0, 1, 0, -0.66116786, 0, -0.750238, -22.407, -1.00976, -29.5301)
 
 [node name="Workbench" type="StaticBody3D" parent="Workshop"]
 
@@ -1019,7 +1020,7 @@ transform = Transform3D(-1.31134e-07, 0, 3, 0, 3, 0, -3, 0, -1.31134e-07, -16.81
 shape = SubResource("ConcavePolygonShape3D_dlis5")
 
 [node name="Computer" parent="Workshop/Workbench" instance=ExtResource("39_i363k")]
-transform = Transform3D(-0.106697746, 0, 0.9942915, 0, 1, 0, -0.9942915, 0, -0.106697746, -17.503237, 0.88253176, -29.41958)
+transform = Transform3D(0.14777514, 0, 0.9890211, 0, 1, 0, -0.9890211, 0, 0.14777514, -17.503237, 0.88253176, -29.240845)
 
 [node name="Lights" type="Node3D" parent="."]
 
@@ -1114,6 +1115,9 @@ transform = Transform3D(0.116670795, 0, -0.9931706, 0, 1, 0, 0.9931706, 0, 0.116
 
 [node name="WaterHeater" parent="Assembly_Objects" instance=ExtResource("15_f23eu")]
 transform = Transform3D(-0.733445, 0, -0.679749, 0, 1, 0, 0.679749, 0, -0.733445, -0.87454, 0.300486, -21.2556)
+
+[node name="MusicConsole" parent="Assembly_Objects" instance=ExtResource("47_xu702")]
+transform = Transform3D(-0.96118, 0, -0.27592254, 0, 1, 0, 0.27592254, 0, -0.96118, -14.046646, 0.3472597, -21.20165)
 
 [node name="Launch_Platform" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.3217355, -29.587654)

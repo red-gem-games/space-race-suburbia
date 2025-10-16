@@ -267,6 +267,9 @@ var new_component: RigidBody3D
 var launching_component: bool = false
 var extraction_finalized: bool = false
 
+var active_rocket: RigidBody3D
+var under_the_hood: bool = false
+
 @onready var extracted_component_sound = $SoundFX/extracted_component
 
 
@@ -379,7 +382,12 @@ func _physics_process(delta: float) -> void:
 
 func _process(delta: float) -> void:
 	
-	rocket_wall_check(delta)
+	if walls_are_moving:
+		rocket_wall_check(delta)
+	
+	if under_the_hood and touched_walls.is_empty():
+		under_the_hood = false
+
 	
 	if reform and not extraction_finalized:
 		var t =+ 1
@@ -1216,7 +1224,17 @@ func update_reticle_targeting() -> void:
 
 	if result and not grabbed_object:
 		
-		if result.collider is RigidBody3D and not result.collider.is_rocketship:
+		if result.collider is RigidBody3D:
+			if result.collider.is_rocket_system:
+				if result.collider.is_engine:
+					print("Touching Engine System")
+					return
+				elif result.collider.is_propellent:
+					print("Touching Propellent System")
+					return
+			elif result.collider.is_rocketship:
+				print("Touching Structure")
+				return
 			if touched_object:
 				touched_object.is_touched = false
 				touched_object = null
@@ -1599,62 +1617,89 @@ func object_empty():
 
 
 
-const LERP_IN  := 2.5    # toward active pos
-const LERP_OUT := 3.5    # back to base
+const LERP_IN  := 2.5
+const LERP_OUT := 3.5
+const POSITION_THRESHOLD := 0.01  # How close is "close enough" to base position
 var OFFSET_X
 var OFFSET_Z
 
-# Active walls (meshes) — acts like a set: { mesh: true }
 var touched_walls := {}
-
-# Registry of every mesh we've ever seen → its BASE local position
-var base_local_pos := {}   # { mesh: Vector3 }
+var base_local_pos := {}
+var walls_are_moving := false  # NEW: track if any wall is moving
 
 func register_wall(mesh: Node3D) -> void:
 	if mesh == null: return
 	if !is_instance_valid(mesh): return
 	if !base_local_pos.has(mesh):
-		base_local_pos[mesh] = mesh.position  # store base LOCAL pos once
+		base_local_pos[mesh] = mesh.position
 
 func get_rocket_walls() -> Array:
 	return touched_walls.keys()
 
+# Call this when a wall is touched
+func touch_wall(mesh: Node3D) -> void:
+	touched_walls[mesh] = true
+	walls_are_moving = true  # Start checking again
+
+# Call this when a wall should return
+func release_wall(mesh: Node3D) -> void:
+	touched_walls.erase(mesh)
 func rocket_wall_check(time: float) -> void:
-	# prune dead refs so you don’t chase freed nodes
+	# Prune dead refs
 	for m in base_local_pos.keys():
 		if !is_instance_valid(m):
 			base_local_pos.erase(m)
 			touched_walls.erase(m)
-
-	# Drive ALL known meshes back/forth based on whether they’re active
+	
+	var any_wall_moving := false  # Track if ANY wall is still moving
+	
+	# Drive ALL known meshes
 	for m in base_local_pos.keys():
 		var active := touched_walls.has(m)
 		var spd := (LERP_IN if active else LERP_OUT)
+		var piece = m.get_parent()  # e.g., "Left_Piece"
+		var wall_dir = piece.get_parent()  # e.g., "+Z"
 		
-		var piece = m.get_parent()
-		var wall_dir = piece.get_parent()
-		
+		# Determine offset
 		if wall_dir.name.contains("+X"):
 			OFFSET_X = 2.5
 			OFFSET_Z = 0.0
-		
-		if wall_dir.name.contains("+Z"):
+		elif wall_dir.name.contains("+Z"):
 			OFFSET_X = 0.0
 			OFFSET_Z = 2.5
-		
-		if wall_dir.name.contains("-X"):
+		elif wall_dir.name.contains("-X"):
 			OFFSET_X = -2.5
 			OFFSET_Z = 0.0
-		
-		if wall_dir.name.contains("-Z"):
+		elif wall_dir.name.contains("-Z"):
 			OFFSET_X = 0.0
 			OFFSET_Z = -2.5
-
+		
 		var target_pos = base_local_pos[m] + Vector3(OFFSET_X, 0.0, OFFSET_Z) if active else base_local_pos[m]
 		m.position = m.position.lerp(target_pos, spd * time)
 		
-
+		# Check if this wall is still moving
+		var is_moving = m.position.distance_to(target_pos) > POSITION_THRESHOLD
+		if is_moving:
+			any_wall_moving = true
+		
+		# Build collision name: "+Z_Propellent_Left_Collision"
+		# Extract position from piece name (e.g., "Left_Piece" -> "Left")
+		var pos = piece.name.replace("_Piece", "")
+		var collision_name = wall_dir.name + "_" + pos + "_Collision"
+		
+		toggle_collision_shape(collision_name, active, is_moving)
+		
+		# Transparency
 		var target_alpha := 1.0 if active else 0.0
 		var t = m.transparency
 		t = lerp(t, target_alpha, spd * time)
 		m.transparency = t
+	
+	# Update the flag
+	walls_are_moving = any_wall_moving or under_the_hood
+
+func toggle_collision_shape(collision_name: String, is_active: bool, is_moving: bool) -> void:
+	for shape in active_rocket.collision_shapes:
+		if shape.name == collision_name:
+			shape.disabled = is_active or is_moving
+			return

@@ -87,6 +87,7 @@ var extracted_object_container: Node3D
 
 var is_stepladder: bool = false
 var is_rocketship: bool = false
+var is_rocket_system: bool = false
 var is_touching_rocket: bool = false
 var is_resetting: bool = false
 

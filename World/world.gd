@@ -66,18 +66,21 @@ var grab_initiated: bool = false
 var first_grabbed_object: bool = true
 @onready var grab_message: Label3D = $ClickToGrab
 
-@onready var TRS: RigidBody3D = $"Launch_Platform/TRS-1"
+@onready var active_rocket: RigidBody3D = $"Launch_Platform/TRS-1"
 
 var touching_launch_button = false
 @onready var launch_instructions: Label3D = $Launch_Sequence/Instructions
 
+func _activate_rocket():
+	active_rocket = $"Launch_Platform/TRS-1"
+	player_character.active_rocket = active_rocket
 
 func _ready() -> void:
+	
+	_activate_rocket()
+	
 	launch_instructions.visible = false
 	add_child(object_position_timer)
-	var somn = assembly_object_container.get_children()
-	for child in somn:
-		child.character_body = player_character
 
 	start_static_glow_loop()
 	
@@ -86,7 +89,7 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	
-	if TRS.all_systems_go:
+	if active_rocket.all_systems_go:
 		$Launch_Platform/Smoke_Cloud.emitting = true
 		$Launch_Platform/Smoke_Cloud2.emitting = true
 		
@@ -312,8 +315,8 @@ func _input(event: InputEvent) -> void:
 			player_character.distance_from_character = base_distance_in_front
 	
 		if event.keycode == KEY_Q:
-			if touching_launch_button and not TRS.launch_sequence_started:
-				TRS.launch_rocket(11)
+			if touching_launch_button and not active_rocket.launch_sequence_started:
+				active_rocket.launch_rocket(11)
 		
 		if event.keycode == KEY_E or event.keycode == KEY_F:
 			if not grabbed_object:
@@ -467,12 +470,12 @@ func _static_glow_blink(rand: RandomNumberGenerator) -> void:
 
 		var duration = rand.randf_range(0.005, 0.02)
 		if flicker_obj_a and flicker_obj_b and flicker_obj_c:
-			if grabbed_object.is_extracting:
-				grabbed_object.set_glitch(false)
-			else:
-				for child in grabbed_object.object_body.get_children():
-					child.set_material_overlay(grabbed_object.standard_material)
-			flicker_obj_a.visible = true
+			#if grabbed_object.is_extracting:
+				#grabbed_object.set_glitch(false)
+			#else:
+				#for child in grabbed_object.object_body.get_children():
+					#child.set_material_overlay(grabbed_object.standard_material)
+			#flicker_obj_a.visible = true
 			flicker_obj_b.visible = true
 			flicker_obj_c.visible = true
 		await get_tree().create_timer(duration).timeout
@@ -480,24 +483,24 @@ func _static_glow_blink(rand: RandomNumberGenerator) -> void:
 		if not static_glow_active:
 			break
 		if flicker_obj_a and flicker_obj_b and flicker_obj_c:
-			if grabbed_object.is_extracting:
-				
-				grabbed_object.set_glitch(true)
-			else:
-				for child in grabbed_object.object_body.get_children():
-					child.set_material_overlay(null)
-			flicker_obj_a.visible = false
+			#if grabbed_object.is_extracting:
+				#
+				#grabbed_object.set_glitch(true)
+			#else:
+				#for child in grabbed_object.object_body.get_children():
+					#child.set_material_overlay(null)
+			#flicker_obj_a.visible = false
 			flicker_obj_b.visible = false
 			flicker_obj_c.visible = false
 		await get_tree().create_timer(duration).timeout
 
 	if flicker_obj_a and flicker_obj_b and flicker_obj_c:
-		if grabbed_object.is_extracting:
-			grabbed_object.set_glitch(false)
-		else:
-			for child in grabbed_object.object_body.get_children():
-				child.set_material_overlay(grabbed_object.standard_material)
-		flicker_obj_a.visible = true
+		#if grabbed_object.is_extracting:
+			#grabbed_object.set_glitch(false)
+		#else:
+			#for child in grabbed_object.object_body.get_children():
+				#child.set_material_overlay(grabbed_object.standard_material)
+		#flicker_obj_a.visible = true
 		flicker_obj_b.visible = true
 		flicker_obj_c.visible = true
 			
