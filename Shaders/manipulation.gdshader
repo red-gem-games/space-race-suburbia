@@ -8,11 +8,11 @@ uniform float albedo_alpha : hint_range(0.0, 1.0) = 0.25;
 
 // Grupo: Tinte y Borde
 group_uniforms tint_edge;
-uniform vec4 tint_color : source_color = vec4(0.75, 0.5, 1.0, 1.0);
-uniform vec4 edge_color : source_color = vec4(0.5, 0.0, 0.8, 1.0);
+uniform vec4 tint_color : source_color = vec4(1.75, 1.0, 0.5, 1.0);
+uniform vec4 edge_color : source_color = vec4(1.0, 0.75, 0.0, 1.0);
 uniform float edge_power : hint_range(0.0, 1.0) = 1.0;
 uniform float edge_size : hint_range(0.1, 5.0) = 5.0;
-uniform float edge_intensity : hint_range(0.0, 5.0) = 1.0;
+uniform float edge_intensity : hint_range(0.0, 5.0) = 2.5;
 
 // Grupo: Scanlines
 group_uniforms scanlines;
@@ -28,10 +28,10 @@ uniform float scanline_speed = 2.5;
 // Grupo: Glitch
 group_uniforms glitch;
 uniform bool enable_glitch = false;
-uniform float glitch_intensity : hint_range(0.0, 1.0) = 0.0;
-uniform float shake_power : hint_range(0.0, 1.0) = 0.075;
+uniform float glitch_intensity : hint_range(0.0, 1.0) = 0.5;
+uniform float shake_power : hint_range(0.0, 1.0) = 0.25;
 uniform float shake_rate : hint_range(0.0, 1.0) = 1.0;
-uniform float shake_speed : hint_range(0.0, 10.0) = 2.0;
+uniform float shake_speed : hint_range(0.0, 10.0) = 3.0;
 uniform float shake_block_size : hint_range(1.0, 100.0) = 100.0;
 uniform float shake_color_rate : hint_range(0.0, 1.0) = 0.5;
 

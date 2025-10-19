@@ -436,9 +436,9 @@ func _process(delta: float) -> void:
 					extract_alpha -= delta / 1.1
 					extract_edge -= delta * 2.25
 					extract_time -= delta
-				grabbed_object.EXTRACT_MATERIAL.albedo_color = lerp(grabbed_object.EXTRACT_MATERIAL.albedo_color, Color.PURPLE, delta)
+				grabbed_object.EXTRACT_MATERIAL.albedo_color = lerp(grabbed_object.EXTRACT_MATERIAL.albedo_color, Color.DARK_ORANGE, delta)
 				grabbed_object.EXTRACT_MATERIAL.emission = lerp(grabbed_object.EXTRACT_MATERIAL.emission, Color.WHITE, delta)
-				grabbed_object.EXTRACT_MATERIAL.emission_energy_multiplier = lerp(grabbed_object.EXTRACT_MATERIAL.emission_energy_multiplier, selected_component_glow, delta * 7.5)
+				grabbed_object.EXTRACT_MATERIAL.emission_energy_multiplier = lerp(grabbed_object.EXTRACT_MATERIAL.emission_energy_multiplier, 16.0, delta * 7.5)
 				photon_mat.emission_energy_multiplier = lerp(photon_mat.emission_energy_multiplier, 200.0, delta)
 				photon_mat.albedo_color.a = lerp(photon_mat.albedo_color.a, 0.85, delta)
 				PREM_7.module_screen.scale = lerp(PREM_7.module_screen.scale, Vector3.ZERO, delta * 7.5)
@@ -461,7 +461,6 @@ func _process(delta: float) -> void:
 					alpha_x = lerp(alpha_x, 0.0, delta * 2.5)
 					selected_component_mesh.position = lerp(selected_component_mesh.position, Vector3.ZERO, delta * 2.5)
 					selected_component_mesh.scale = lerp(selected_component_mesh.scale, Vector3(x*s, y*s, z*s), delta * 2.5)
-					extraction_scale = x * s
 				if control_timer.time_left < 1.0:
 					photon_mat.grow_amount = lerp(photon_mat.grow_amount, 0.4, delta * 1.5)
 					selected_component_mesh.position = lerp(selected_component_mesh.position, Vector3(0.0, -5.0, 0.0), delta * 1.5)
@@ -493,9 +492,9 @@ func _process(delta: float) -> void:
 				for child in screen_labels:
 					child.modulate.a = lerp(child.modulate.a, 1.0, delta * 7.5)
 					child.outline_modulate.a = lerp(child.outline_modulate.a, 1.0, delta * 7.5)
-				grabbed_object.EXTRACT_MATERIAL.emission = lerp(grabbed_object.EXTRACT_MATERIAL.emission, Color.PURPLE, delta * 7.5)
-				grabbed_object.EXTRACT_MATERIAL.albedo_color = lerp(grabbed_object.EXTRACT_MATERIAL.albedo_color, Color.YELLOW, delta * 7.5)
-				grabbed_object.EXTRACT_MATERIAL.albedo_color.a = 0.5
+				grabbed_object.EXTRACT_MATERIAL.emission = lerp(grabbed_object.EXTRACT_MATERIAL.emission, Color.ORANGE_RED, delta * 7.5)
+				grabbed_object.EXTRACT_MATERIAL.albedo_color = lerp(grabbed_object.EXTRACT_MATERIAL.albedo_color, Color.RED, delta * 7.5)
+				grabbed_object.EXTRACT_MATERIAL.albedo_color.a = 0.9
 				grabbed_object.EXTRACT_MATERIAL.emission_energy_multiplier = lerp(grabbed_object.EXTRACT_MATERIAL.emission_energy_multiplier, selected_component_glow * 2.5, delta * 7.5)
 				selected_component_mesh.position = lerp(selected_component_mesh.position, selected_component_pos, delta * 7.5)
 				selected_component_mesh.scale = lerp(selected_component_mesh.scale, Vector3(x, y, z), delta * 7.5)
@@ -505,7 +504,6 @@ func _process(delta: float) -> void:
 				alpha_x = lerp(alpha_x, 1.0, delta * 7.5)
 				if alpha_x < 0.75:
 					PREM_7.holo_anim.speed_scale = 1.0
-					PREM_7.holo_anim.play_backwards("retract_hologram")
 
 
 	handle_prem7_decay(delta)
@@ -607,6 +605,8 @@ func _on_action_key(status: String):
 			
 
 func _on_extract_key() -> void:
+	if extract_time < 1.9:
+		return
 	if fusing_object_active:
 		return
 	if grabbed_object.is_stepladder or grabbed_object.is_rocketship:
@@ -617,7 +617,7 @@ func _on_extract_key() -> void:
 		return
 
 	action_wait_timer.start(0.5)
-	desired_pitch = 0.02
+	desired_pitch = 0.0
 	
 	extracting_object_active =! extracting_object_active
 		
@@ -659,6 +659,7 @@ func _on_extract_key() -> void:
 			selected_component_mesh.scale.z = comp_scale_z
 			selected_component_mesh.position = selected_component_pos
 		PREM_7.ctrl_anim.play_backwards("extract")
+		#PREM_7.holo_anim.speed_scale = 1.0
 		PREM_7.holo_anim.play_backwards("cast_hologram")
 		gravity_strength = 10.0
 		grabbed_object.visible = true

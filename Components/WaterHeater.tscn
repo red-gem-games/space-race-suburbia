@@ -117,7 +117,6 @@ blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_6dxgj")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_78n6r"]
-cull_mode = 2
 metallic = 1.0
 roughness = 0.25
 

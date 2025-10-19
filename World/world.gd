@@ -95,6 +95,11 @@ var computer_active: bool = false
 
 func _physics_process(delta: float) -> void:
 	
+	
+	#if grabbed_object:
+		#if grabbed_object.extract_body:
+			#print(grabbed_object.extract_body.scale)
+	
 	if player_character.is_using_computer:
 		computer_active = true
 		camera_tween(player_character.camera, 10, 0.65)
@@ -230,7 +235,6 @@ func _physics_process(delta: float) -> void:
 		
 
 func grab_object():
-	exposure_tween(player_character.camera, 0.5, 0.25)
 	if first_grabbed_object:
 		player_character.PREM_7.extract_message.visible = true
 		grab_message.visible = false
@@ -244,7 +248,6 @@ func grab_object():
 	player_character.grabbed_object = grabbed_object
 	grabbed_object.collision_layer = 1
 	grabbed_object.collision_mask = 1
-	flicker_obj_a = grabbed_object.object_body
 	flicker_obj_b = player_character.PREM_7.back_panel
 	flicker_obj_c = player_character.PREM_7.photon_tip
 	grabbed_object.object_falling = false
@@ -265,13 +268,12 @@ func grab_object():
 
 
 func release_object():
-	exposure_tween(player_character.camera, 0.9, 0.25)
+	#exposure_tween(player_character.camera, 0.9, 0.25)
 	if player_character.PREM_7.extract_message.visible:
 		player_character.PREM_7.extract_message.visible = false
 	grabbed_object.linear_velocity /= 2
 	grabbed_object.collision_layer = 3
 	grabbed_object.collision_mask = 3
-	flicker_obj_a.visible = true
 	flicker_obj_b.visible = true
 	flicker_obj_c.visible = true
 	flicker_obj_a = null
@@ -341,14 +343,13 @@ func _input(event: InputEvent) -> void:
 				print('Resetting Rotation here, genius...')
 				reset_rotation = true
 				player_character.distance_from_character = base_distance_in_front
-				flicker_obj_a = grabbed_object.object_body
 				for child in grabbed_object.object_body.get_children():
 					child.set_material_overlay(grabbed_object.standard_material)
-				grabbed_object.set_glitch(false)
+				exposure_tween(player_character.camera, 0.9, 0.1)
+				flicker_obj_a = null
 			else:
 				if player_character.extracting_object_active:
-					flicker_obj_a = player_character.PREM_7.machine_info
-					grabbed_object.set_glitch(false)
+					exposure_tween(player_character.camera, 0.5, 0.1)
 
 		if event.keycode == KEY_ESCAPE and not event.is_echo():
 			get_tree().quit()
@@ -434,38 +435,31 @@ func _static_glow_blink(rand: RandomNumberGenerator) -> void:
 			break
 
 		var duration = rand.randf_range(0.005, 0.02)
-		if flicker_obj_a and flicker_obj_b and flicker_obj_c:
-			#if grabbed_object.is_extracting:
-				#grabbed_object.set_glitch(false)
-			#else:
-				#for child in grabbed_object.object_body.get_children():
-					#child.set_material_overlay(grabbed_object.standard_material)
-			#flicker_obj_a.visible = true
+		if flicker_obj_b and flicker_obj_c:
+			if grabbed_object.is_extracting:
+				grabbed_object.set_glitch(false)
+			if flicker_obj_a:
+				flicker_obj_a.visible = true
 			flicker_obj_b.visible = true
 			flicker_obj_c.visible = true
 		await get_tree().create_timer(duration).timeout
 
 		if not static_glow_active:
 			break
-		if flicker_obj_a and flicker_obj_b and flicker_obj_c:
-			#if grabbed_object.is_extracting:
-				#
-				#grabbed_object.set_glitch(true)
-			#else:
-				#for child in grabbed_object.object_body.get_children():
-					#child.set_material_overlay(null)
-			#flicker_obj_a.visible = false
+		if flicker_obj_b and flicker_obj_c:
+			if grabbed_object.is_extracting:
+				grabbed_object.set_glitch(true)
+			if flicker_obj_a:
+				flicker_obj_a.visible = false
 			flicker_obj_b.visible = false
 			flicker_obj_c.visible = false
 		await get_tree().create_timer(duration).timeout
 
-	if flicker_obj_a and flicker_obj_b and flicker_obj_c:
-		#if grabbed_object.is_extracting:
-			#grabbed_object.set_glitch(false)
-		#else:
-			#for child in grabbed_object.object_body.get_children():
-				#child.set_material_overlay(grabbed_object.standard_material)
-		#flicker_obj_a.visible = true
+	if flicker_obj_b and flicker_obj_c:
+		if grabbed_object.is_extracting:
+			grabbed_object.set_glitch(false)
+		if flicker_obj_a:
+			flicker_obj_a.visible = true
 		flicker_obj_b.visible = true
 		flicker_obj_c.visible = true
 			

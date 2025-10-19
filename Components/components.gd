@@ -259,12 +259,12 @@ func _process(delta: float) -> void:
 		if brightness_increasing:
 			glow_timer -= delta
 			standard_material.emission = lerp(standard_material.emission, Color.GREEN, delta * 3.0)
-			standard_material.emission_energy_multiplier = lerp(standard_material.emission_energy_multiplier, 100.0, delta)
+			standard_material.emission_energy_multiplier = lerp(standard_material.emission_energy_multiplier, 200.0, delta)
 			if glow_timer <= 0.0:
 				brightness_increasing = false
 		else:
-			standard_material.emission_energy_multiplier = lerp(standard_material.emission_energy_multiplier, 16.0, delta * 7.0)
-			if standard_material.emission_energy_multiplier == 15.9:
+			standard_material.emission_energy_multiplier = lerp(standard_material.emission_energy_multiplier, 12.0, delta * 7.0)
+			if standard_material.emission_energy_multiplier == 11.9:
 				is_grabbed = false
 				brightness_increasing = true
 
@@ -592,8 +592,9 @@ func set_glitch(status):
 
 func set_extract_glow(component, selection):
 	var surface_count = component.mesh.get_surface_count()
-	extracted_object_mat.albedo_color = Color.WHITE
-	extracted_object_mat.emission = Color.PURPLE
+	extracted_object_mat.albedo_color = Color.DARK_ORANGE
+	extracted_object_mat.albedo_color.a = 6.0
+	extracted_object_mat.emission = Color.CORAL
 	if selection == 'Selected':
 		component.set_material_overlay(EXTRACT_MATERIAL)
 		for i in range(surface_count):

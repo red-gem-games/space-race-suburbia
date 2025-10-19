@@ -730,14 +730,16 @@ absorbent = true
 [sub_resource type="BoxShape3D" id="BoxShape3D_0wqet"]
 size = Vector3(10, 50, 100)
 
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_dlis5"]
-sky_top_color = Color(0.8714004, 1, 0.79655224, 1)
-sky_horizon_color = Color(0.6460767, 0.80480283, 1, 1)
-ground_bottom_color = Color(0.38109186, 0.368734, 0.44422638, 1)
-ground_horizon_color = Color(0.62782896, 0.8123662, 1, 1)
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_xu702"]
+sky_top_color = Color(0.98982096, 1, 0.91330606, 1)
+sky_horizon_color = Color(0.9999998, 0.7629281, 0.38623828, 1)
+sky_curve = 0.17230472
+ground_bottom_color = Color(0, 0, 0, 1)
+ground_horizon_color = Color(1, 0.76339865, 0.37829375, 1)
+ground_curve = 0.039999977
 
 [sub_resource type="Sky" id="Sky_fj7yv"]
-sky_material = SubResource("ProceduralSkyMaterial_dlis5")
+sky_material = SubResource("ProceduralSkyMaterial_xu702")
 
 [sub_resource type="Environment" id="Environment_tlwt5"]
 background_mode = 2
