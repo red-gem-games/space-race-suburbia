@@ -580,6 +580,7 @@ func manipulation_mode(type):
 				var surface_count = child.mesh.get_surface_count()
 				for i in range(surface_count):
 					child.set_surface_override_material(i, manipulation_material)
+					child.cast_shadow = false
 
 	elif type == "Inactive":
 		for child in extract_body.get_children():

@@ -272,6 +272,8 @@ var under_the_hood: bool = false
 
 @onready var extracted_component_sound = $SoundFX/extracted_component
 
+var is_using_computer: bool = false
+
 
 func _ready() -> void:
 	push_warning('General To Do List:')
@@ -452,24 +454,24 @@ func _process(delta: float) -> void:
 					var progress = 1.0 - t_left_ratio
 					var high_extract_speed = 1.25
 					extract_speed = lerp(extract_speed, high_extract_speed, progress * delta * 1.25)
+				if control_timer.time_left < 2.0:
+					PREM_7.holo_anim.speed_scale = 0.1
+					PREM_7.holo_anim.play("retract_hologram")
 				if control_timer.time_left < 2.0 and control_timer.time_left > 1.0:
 					alpha_x = lerp(alpha_x, 0.0, delta * 2.5)
 					selected_component_mesh.position = lerp(selected_component_mesh.position, Vector3.ZERO, delta * 2.5)
 					selected_component_mesh.scale = lerp(selected_component_mesh.scale, Vector3(x*s, y*s, z*s), delta * 2.5)
 					extraction_scale = x * s
-					if control_timer.time_left < 1.95 and control_timer.time_left > 1.85:
-						PREM_7.holo_anim.speed_scale = 0.25
-						PREM_7.holo_anim.play("retract_hologram")
 				if control_timer.time_left < 1.0:
 					photon_mat.grow_amount = lerp(photon_mat.grow_amount, 0.4, delta * 1.5)
 					selected_component_mesh.position = lerp(selected_component_mesh.position, Vector3(0.0, -5.0, 0.0), delta * 1.5)
-					selected_component_mesh.scale = lerp(selected_component_mesh.scale, Vector3(0.0, 0.0, 0.0), delta * 5.0)
+					selected_component_mesh.scale = lerp(selected_component_mesh.scale, Vector3(0.0, 0.0, 0.0), delta * 6.0)
 				if control_timer.time_left == 0.0:
 					if control_timer.is_stopped():
 						extract_component(selected_component_mesh, selected_component_col)
 						setup_component()
 						launching_component = true
-						scroll_extraction_data('DOWN')
+						scroll_component_data('DOWN')
 						extraction_started = false
 					control_timer.start(1.0)
 				
@@ -620,6 +622,7 @@ func _on_extract_key() -> void:
 	extracting_object_active =! extracting_object_active
 		
 	if extracting_object_active:
+		camera.attributes.dof_blur_near_enabled = true
 		if PREM_7.extract_message.visible:
 			PREM_7.extract_message.visible = false
 		HUD.message_status('Extract', 'ON')
@@ -633,7 +636,6 @@ func _on_extract_key() -> void:
 		#PREM_7.machine_info.scale = Vector3(1.0, 1.0, 1.0)
 		PREM_7.machine_info.visible = true
 		grabbed_object.extract_active = true
-		activate_extraction_data()
 		#module = PREM_7.component_module.get_parent()
 		#power = PREM_7.component_power.get_parent()
 		#mass = PREM_7.component_mass.get_parent()
@@ -641,11 +643,12 @@ func _on_extract_key() -> void:
 		grabbed_object.manipulation_mode('Active')
 		var count = current_extraction_data.size()
 		for i in range(count):
-			scroll_extraction_data('DOWN')
+			scroll_component_data('DOWN')
 		right_mouse_down = false
 		handle_object('pressed')
 		#grabbed_target_position.x -= 10
 	else:
+		camera.attributes.dof_blur_near_enabled = false
 		HUD.message_status('Extract', 'OFF')
 		for child in grabbed_object.get_children():
 			if child is CollisionShape3D:
@@ -675,10 +678,11 @@ func _on_reset_key() -> void:
 	else:
 		pitch_min = base_pitch_min
 		pitch_max = base_pitch_max
-		distance_factor = 0
 
 
 func _input(event: InputEvent) -> void:
+	if is_using_computer:
+		return
 	# Process Mouse Button events.
 	if event is InputEventMouseButton:
 		# Ignore events from opposite buttons if one is held.
@@ -686,7 +690,6 @@ func _input(event: InputEvent) -> void:
 			return
 		if right_mouse_down and event.button_index == MOUSE_BUTTON_LEFT:
 			return
-		
 		if not is_clickable:
 			return
 
@@ -712,7 +715,7 @@ func _input(event: InputEvent) -> void:
 		elif event.button_index == MOUSE_BUTTON_WHEEL_UP and event.pressed:
 			if not middle_mouse_down and not right_mouse_down and not left_mouse_down:
 				if extracting_object_active:
-					scroll_extraction_data('UP')
+					scroll_component_data('UP')
 					return
 				print('Still need to figure out INSPECT, Cycling Stored Components, etc.')
 				#PREM_7.switch_hologram('Up')
@@ -727,7 +730,7 @@ func _input(event: InputEvent) -> void:
 		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN and event.pressed:
 			if not middle_mouse_down and not right_mouse_down and not left_mouse_down:
 				if extracting_object_active:
-					scroll_extraction_data('DOWN')
+					scroll_component_data('DOWN')
 					return
 				print('Still need to figure out INSPECT, Cycling Stored Components, etc.')
 				scroll_cooldown = scroll_cooldown_duration
@@ -757,6 +760,7 @@ func _input(event: InputEvent) -> void:
 
 	# Process Mouse Motion events.
 	if event is InputEventMouseMotion and Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
+		
 		current_mouse_speed_x = event.relative.x
 		current_mouse_speed_y = event.relative.y
 
@@ -810,8 +814,6 @@ func _input(event: InputEvent) -> void:
 				Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 			else:
 				Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-		if event.keycode == KEY_ESCAPE and pressed and not event.is_echo():
-			get_tree().quit()
 
 		# Update movement key states.
 		if event.keycode == KEY_W or event.keycode == KEY_UP:
@@ -1320,7 +1322,6 @@ func scale_object(object, x_scale: float, y_scale: float, z_scale: float, wait_t
 	scale_tween.set_trans(Tween.TRANS_LINEAR)
 	scale_tween.set_ease(Tween.EASE_IN_OUT)
 
-
 func reset_object_position():
 	var current_rot = grabbed_object.rotation_degrees
 	grabbed_rotation.x = shortest_angle_diff_value(-current_rot.x, 0)
@@ -1329,7 +1330,6 @@ func reset_object_position():
 
 	pitch_min = grab_pitch_min
 	pitch_max = grab_pitch_max
-	distance_factor = 0
 
 
 func load_json_file(filePath: String):
@@ -1345,7 +1345,7 @@ func load_json_file(filePath: String):
 	else:
 		print("File Doesn't Exist")
 
-func activate_extraction_data():
+func activate_component_data():
 	var obj_name = grabbed_object.name
 	if not object_data.has(obj_name):
 		print("No component data found for", obj_name)
@@ -1360,11 +1360,12 @@ func activate_extraction_data():
 	PREM_7.machine_name.text = current_object_json.get("name", "Unknown Object")
 	PREM_7.machine_desc.text = current_object_json.get("description", "")
 	extraction_scale = current_object_json.get("scale", 0.0)
+	distance_factor = current_object_json.get("distance", 0.0)
 
 	update_component_display()
 
 
-func scroll_extraction_data(dir):
+func scroll_component_data(dir):
 	if extraction_recently_completed:
 		return
 
@@ -1597,7 +1598,7 @@ func complete_extraction(body: RigidBody3D, mesh: MeshInstance3D):
 			current_extraction_data.remove_at(i)
 			break
 	
-	scroll_extraction_data('DOWN')
+	scroll_component_data('DOWN')
 	
 	if current_extraction_data.is_empty():
 		object_empty()

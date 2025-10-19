@@ -109,13 +109,13 @@ func _process(_delta: float) -> void:
 	#shader_material.set_shader_parameter("emission_strength", 10.0)
 	#shader_material.set_shader_parameter("base_alpha", 2.0)
 
-	if controlled_object:
-		controlled_objects.insert(0, controlled_object.name)
-		cast_hologram('Controlled')
-		controlled_object = null
-
-	if control_hologram_timer.time_left == 0.0 and control_hologram_active:
-		retract_hologram()
+	#if controlled_object:
+		#controlled_objects.insert(0, controlled_object.name)
+		#cast_hologram('Controlled')
+		#controlled_object = null
+#
+	#if control_hologram_timer.time_left == 0.0 and control_hologram_active:
+		#retract_hologram()
 
 func cast_beam():
 	grab_object_complete = false
@@ -135,59 +135,59 @@ func release_handle():
 	#beam_mesh.visible = true
 	handling_object = false
 
+#
+#func cast_hologram(type: String):
+	#var comp_name
+	#var c_comp
+	#if hol_body:
+		#hol_body.queue_free()
+	#if type == "Controlled":
+		#comp_name = controlled_objects[0]
+		#control_hologram_timer.start(5.0)
+		#control_hologram_active = true
+		#c_comp = _instance_component_by_name(comp_name)
+	#elif type == "Grabbed":
+		#comp_name = grabbed_object_name
+#
+	#if c_comp:
+		#hologram.add_child(c_comp)
+		#hol_body = c_comp.object_body.duplicate()
+		#hologram.add_child(hol_body)
+		## ── Create a ShaderMaterial from your .gdshader ──
+		#var holo_mat = ShaderMaterial.new()
+		#holo_mat.shader = hologram_shader
+#
+		## ── Assign that ShaderMaterial to every MeshInstance3D inside hol_body ──
+		#for child in hol_body.get_children():
+			#if child is MeshInstance3D:
+				#child.set_surface_override_material(0, holo_mat)
+				#for extra_child in child.get_children():
+					#if extra_child is MeshInstance3D:
+						#extra_child.set_surface_override_material(0, holo_mat)
+					#
+		#c_comp.visible = false
+		#c_comp.collision_shape.disabled = true
+		#c_comp.object_body.scale = Vector3(0.1, 0.1, 0.1)
+		#holo_anim.play("cast_hologram")
+		#print('Cast hologram of ', comp_name,'!')
+#
+#func switch_hologram(dir):
+	#if not control_hologram_active:
+		#retract_hologram()
+		#await get_tree().create_timer(0.5).timeout
+		#holo_anim.play("cast_details")
+		#return
+	#control_hologram_timer.start(5.0)
+	#if dir == 'Up':
+		#print('Switching hologram Up!')
+	#if dir == 'Down':
+		#print('Switching hologram Down!')
 
-func cast_hologram(type: String):
-	var comp_name
-	var c_comp
-	if hol_body:
-		hol_body.queue_free()
-	if type == "Controlled":
-		comp_name = controlled_objects[0]
-		control_hologram_timer.start(5.0)
-		control_hologram_active = true
-		c_comp = _instance_component_by_name(comp_name)
-	elif type == "Grabbed":
-		comp_name = grabbed_object_name
-
-	if c_comp:
-		hologram.add_child(c_comp)
-		hol_body = c_comp.object_body.duplicate()
-		hologram.add_child(hol_body)
-		# ── Create a ShaderMaterial from your .gdshader ──
-		var holo_mat = ShaderMaterial.new()
-		holo_mat.shader = hologram_shader
-
-		# ── Assign that ShaderMaterial to every MeshInstance3D inside hol_body ──
-		for child in hol_body.get_children():
-			if child is MeshInstance3D:
-				child.set_surface_override_material(0, holo_mat)
-				for extra_child in child.get_children():
-					if extra_child is MeshInstance3D:
-						extra_child.set_surface_override_material(0, holo_mat)
-					
-		c_comp.visible = false
-		c_comp.collision_shape.disabled = true
-		c_comp.object_body.scale = Vector3(0.1, 0.1, 0.1)
-		holo_anim.play("cast_hologram")
-		print('Cast hologram of ', comp_name,'!')
-
-func switch_hologram(dir):
-	if not control_hologram_active:
-		retract_hologram()
-		await get_tree().create_timer(0.5).timeout
-		holo_anim.play("cast_details")
-		return
-	control_hologram_timer.start(5.0)
-	if dir == 'Up':
-		print('Switching hologram Up!')
-	if dir == 'Down':
-		print('Switching hologram Down!')
-
-func retract_hologram():
-	control_hologram_timer.stop()
-	control_hologram_active = false
-	holo_anim.play_backwards("cast_hologram")
-	print('Retracting hologram!')
+#func retract_hologram():
+	#control_hologram_timer.stop()
+	#control_hologram_active = false
+	#holo_anim.play_backwards("cast_hologram")
+	#print('Retracting hologram!')
 
 func _instance_component_by_name(name_string: StringName) -> RigidBody3D:
 	# Build the exact path: e.g. "res://Components/DryingMachine.tscn"

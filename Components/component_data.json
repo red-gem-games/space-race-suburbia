@@ -3,6 +3,7 @@
         "name": "Washing Machine",
         "description": "Clean Clothes, Clean Launch.",
         "scale": 0.6,
+        "distance": 6.0,
         "components": [
             {
                 "name": "Washer Door",
@@ -50,6 +51,7 @@
         "name": "Drying Machine",
         "description": "Fairly Resistant to Heat.",
         "scale": 0.6,
+        "distance": 6.0,
         "components": [
             {
                 "name": "Dryer Door",
@@ -97,6 +99,7 @@
     "name": "Water Heater",
     "description": "Pressure is Important.",
     "scale": 0.5,
+    "distance": 6.5,
     "components": [
         {
             "name": "Heating Coil",
@@ -163,6 +166,14 @@
         "scale": 1.0,
         "components": []
 
-    }
+    },
     
+    "MusicConsole": {
+        "name": "Music Console",
+        "description": "TBD.",
+        "scale": 1.0,
+        "distance": 4.0,
+        "components": []
+
+    }
 }

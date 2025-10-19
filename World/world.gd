@@ -71,6 +71,8 @@ var first_grabbed_object: bool = true
 var touching_launch_button = false
 @onready var launch_instructions: Label3D = $Launch_Sequence/Instructions
 
+@onready var computer_camera: Camera3D = $Workshop/Workbench/Computer_Camera
+
 func _activate_rocket():
 	active_rocket = $"Launch_Platform/TRS-1"
 	player_character.active_rocket = active_rocket
@@ -78,6 +80,8 @@ func _activate_rocket():
 func _ready() -> void:
 	
 	_activate_rocket()
+	
+	player_character.camera.make_current()
 	
 	launch_instructions.visible = false
 	add_child(object_position_timer)
@@ -87,7 +91,15 @@ func _ready() -> void:
 	$Launch_Sequence/Launch_Box_Anim.play("button_glow")
 
 
+var computer_active: bool = false
+
 func _physics_process(delta: float) -> void:
+	
+	if player_character.is_using_computer:
+		computer_active = true
+		camera_tween(player_character.camera, 10, 0.65)
+		
+		#computer_camera.make_current()
 	
 	if active_rocket.all_systems_go:
 		$Launch_Platform/Smoke_Cloud.emitting = true
@@ -97,10 +109,7 @@ func _physics_process(delta: float) -> void:
 			$Launch_Platform/Smoke_Cloud.transparency += 0.00175
 			$Launch_Platform/Smoke_Cloud2.transparency += 0.00175
 	
-		
-	#print('See if auto switching to next component fixes duplicate extract shader issue')
-	#print('Else...find a way to delete it from that component since it will not need it to be added again...')
-	#
+
 	if player_character.new_component:
 		if player_character.new_component.ready_to_move:
 			player_character.new_component.reparent(assembly_object_container)
@@ -130,8 +139,10 @@ func _physics_process(delta: float) -> void:
 		if not player_character.extracting_object_active:
 			if grabbed_object.object_body.scale.y < 0.99:
 				grabbed_object.object_body.scale = lerp(grabbed_object.object_body.scale, grabbed_object.current_scale, delta * 5.0)
-				grabbed_object.extract_body.scale = lerp(grabbed_object.extract_body.scale, Vector3.ZERO, delta * 20.0)
-				grabbed_object.extract_body.position.y = lerp(grabbed_object.extract_body.position.y, -0.25, delta * 20.0)
+				grabbed_object.extract_body.scale = lerp(grabbed_object.extract_body.scale, Vector3.ZERO, delta * 7.0)
+				grabbed_object.extract_body.position.x = lerp(grabbed_object.extract_body.position.x, 0.01, delta * 7.0)
+				grabbed_object.extract_body.position.y = lerp(grabbed_object.extract_body.position.y, -0.35, delta * 7.0)
+				grabbed_object.extract_body.position.z = lerp(grabbed_object.extract_body.position.z, 0.1, delta * 7.0)
 				player_character.PREM_7.machine_info.scale = lerp(player_character.PREM_7.machine_info.scale, Vector3.ZERO, delta * 10.0)
 				if grabbed_object.object_body.scale.y > 0.01:
 					grabbed_object.object_body.visible = true
@@ -139,7 +150,7 @@ func _physics_process(delta: float) -> void:
 					player_character.PREM_7.machine_info.visible = false
 				if grabbed_object.extract_body.scale.y <= 0.01:
 					grabbed_object.extract_body.visible = false
-			distance_forward = 6.0
+			distance_forward = player_character.distance_factor
 			offset_left = 0.0
 			offset_up = 0.0
 			smooth_speed = 6.0
@@ -175,9 +186,11 @@ func _physics_process(delta: float) -> void:
 				grabbed_object.extract_body.rotation_degrees.y = lerp(grabbed_object.extract_body.rotation_degrees.y, 0.0, delta * 5.0)
 				grabbed_object.extract_body.rotation_degrees.z = lerp(grabbed_object.extract_body.rotation_degrees.z, 0.0, delta * 5.0)
 				current_spin_timer += delta * 0.5
-				var scale_norm = player_character.extraction_scale / 5
+				var scale_norm = player_character.extraction_scale / 3
 				grabbed_object.extract_body.scale = lerp(grabbed_object.extract_body.scale, Vector3(scale_norm, scale_norm, scale_norm), delta * 5.0)
+				grabbed_object.extract_body.position.x = lerp(grabbed_object.extract_body.position.x, 0.0, delta * 7.0)
 				grabbed_object.extract_body.position.y = lerp(grabbed_object.extract_body.position.y, 0.1, delta * 5.0)
+				grabbed_object.extract_body.position.z = lerp(grabbed_object.extract_body.position.z, -1.0, delta * 5.0)
 				player_character.PREM_7.machine_info.scale = lerp(player_character.PREM_7.machine_info.scale, Vector3.ONE, delta * 5.0)
 				if current_spin_timer > 0.25:
 					extraction_spin_initialized = true
@@ -191,7 +204,7 @@ func _physics_process(delta: float) -> void:
 				grabbed_object.extract_body.rotate_x(y_spd)
 				if y_spd < 0.01:
 					grabbed_object.extract_body.rotation_degrees.x = lerp(grabbed_object.extract_body.rotation_degrees.x, 0.0, delta)
-				grabbed_object.extract_body.rotation_degrees.z = lerp(grabbed_object.extract_body.rotation_degrees.z, 0.0, delta * 5.0)
+				grabbed_object.extract_body.rotation_degrees.z = lerp(grabbed_object.extract_body.rotation_degrees.z, 0.0, delta * 10.0)
 
 		target_pos = cam_transform.origin + forward * distance_forward + left * offset_left + up * offset_up
 	
@@ -217,6 +230,7 @@ func _physics_process(delta: float) -> void:
 		
 
 func grab_object():
+	exposure_tween(player_character.camera, 0.5, 0.25)
 	if first_grabbed_object:
 		player_character.PREM_7.extract_message.visible = true
 		grab_message.visible = false
@@ -246,10 +260,12 @@ func grab_object():
 	GRAB_STIFFNESS = 0.0
 	GRAB_DAMPING = BASE_GRAB_DAMPING * grabbed_object.mass
 	player_character.grab_object()
+	player_character.activate_component_data()
 
 
 
 func release_object():
+	exposure_tween(player_character.camera, 0.9, 0.25)
 	if player_character.PREM_7.extract_message.visible:
 		player_character.PREM_7.extract_message.visible = false
 	grabbed_object.linear_velocity /= 2
@@ -334,6 +350,8 @@ func _input(event: InputEvent) -> void:
 					flicker_obj_a = player_character.PREM_7.machine_info
 					grabbed_object.set_glitch(false)
 
+		if event.keycode == KEY_ESCAPE and not event.is_echo():
+			get_tree().quit()
 
 		if event.keycode == KEY_SHIFT:
 			if event.is_pressed():
@@ -341,93 +359,40 @@ func _input(event: InputEvent) -> void:
 			else:
 				movement_speed = 1
 
+		if event.keycode == KEY_C:
+			if not event.pressed:
+				if player_character.camera.is_current():
+					player_character.is_using_computer = true
+					#player_character.camera.projection = Camera3D.PROJECTION_ORTHOGONAL
+					#player_character.camera.make_current()
+					
 
+				else:
+					player_character.is_using_computer = false
+					player_character.camera.make_current()
 
+var cam_tween: Tween
 
-
-func spawn_grid():
-	if is_instance_valid(grid_parent):
-		grid_parent.queue_free()
-
-	grid_parent = Node3D.new()
-	grid_parent.name = "ExtractionGrid"
-	add_child(grid_parent)
+func camera_tween(cam: Camera3D, fov: float, dur: float):
 	
-	previous_grid_positions.clear()
+	cam_tween = create_tween()
 	
-	assembly_components_global_position = grabbed_object.global_position
+	cam_tween.tween_property(cam, "fov", fov, dur)
+	#cam_tween.tween_property(cam, "rotation_degrees", new_rot, duration)
+	#cam_tween.tween_property(cam, "projection", new_proj, duration)
+	
+	cam_tween.set_trans(Tween.TRANS_LINEAR)
+	cam_tween.set_ease(Tween.EASE_IN_OUT)
 
-	var spacing = 3.0
-	var curve_strength = 2.0
+var exp_tween: Tween
 
-	var camera_pos = player_character.camera.global_transform.origin
-
-	if not is_instance_valid(grabbed_object):
-		return
-
-	var component_count = grabbed_object.assembly_components.size()
-	if component_count == 0:
-		return
-
-	var columns = min(5, component_count)
-	var rows = 2
-
-	# Corrected logic: top row gets the extra item if odd
-	var top_row_count = int(ceil(component_count / 2.0))
-	var bottom_row_count = component_count - top_row_count
-	var row_counts = [bottom_row_count, top_row_count]  # Y = 0 (bottom), Y = 1 (top)
-
-	for y in range(rows):
-		var items_in_this_row = row_counts[y]
-		var row_width = (items_in_this_row - 1) * spacing
-		var row_start_x = -row_width / 2.0
-
-		for x in range(items_in_this_row):
-			var cube = MeshInstance3D.new()
-			#cube.mesh = BoxMesh.new()
-			#cube.material_override = StandardMaterial3D.new()
-			#cube.scale = Vector3(cube_size, cube_size, cube_size)
-
-			var x_offset = x * spacing
-			var x_pos = row_start_x + x_offset
-
-			# Curved placement
-			var curve_center = (items_in_this_row - 1) / 2.0
-			var z_curve = -pow((x - curve_center) / max(columns - 1, 1), 2) * curve_strength
-
-			var local_pos = Vector3(x_pos, y * spacing, z_curve) + Vector3(0, 0, 3.0)
-			cube.position = local_pos
-			grid_parent.add_child(cube)
-
-			await get_tree().process_frame
-
-			var global_cube_pos = cube.global_transform.origin
-			var to_camera = (camera_pos - global_cube_pos).normalized()
-			to_camera.y = 0
-			cube.look_at(global_cube_pos + to_camera, Vector3.UP)
-
-			var column_letter = char(65 + x)
-			var row_number = str(y + 1)
-			var cube_name = "ExtractionGrid_%s%s" % [column_letter, row_number]
-			cube.name = cube_name
-			
-			await get_tree().process_frame
-			
-			previous_grid_positions[cube_name] = cube.global_position
-			grabbed_object.grid_positions = previous_grid_positions
-			#print('Previous Grid Positions: ', previous_grid_positions)
-
-	grabbed_object.extracted_object_container.global_position = grid_parent.global_position
-
-func add_component_to_grid(obj):
-	obj.scale = Vector3(0.01, 0.01, 0.01)
-	player_character.assembly_component_selection = true
-	player_character.extraction_recently_completed = true
-	await get_tree().create_timer(0.025).timeout
-	obj.visible = true
-	obj.scale = Vector3(1.0, 1.0, 1.0)
-	obj.reparent(assembly_object_container)
-	obj.is_full_size = true
+func exposure_tween(cam: Camera3D, exp: float, dur: float):
+	
+	exp_tween = create_tween()
+	
+	exp_tween.tween_property(cam, "attributes:exposure_multiplier", exp, dur)
+	exp_tween.set_trans(Tween.TRANS_LINEAR)
+	exp_tween.set_ease(Tween.EASE_IN_OUT)
 
 
 

@@ -1,5 +1,5 @@
 shader_type spatial;
-render_mode unshaded;
+render_mode depth_draw_always;
 
 // How many squares you see across your UV space.
 // Increase this to get more (smaller) squares.
