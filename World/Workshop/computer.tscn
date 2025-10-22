@@ -1,4 +1,4 @@
-[gd_scene load_steps=33 format=4 uid="uid://ciuvjv1vvl1u6"]
+[gd_scene load_steps=34 format=4 uid="uid://ciuvjv1vvl1u6"]
 
 [ext_resource type="Script" uid="uid://8fg0tgjrcrc6" path="res://World/Workshop/computer.gd" id="1_4jent"]
 [ext_resource type="Texture2D" uid="uid://8qytt6td65ke" path="res://Assets/Blender/Computer/Computer_GameReady_T_Computer_DF.png" id="1_ym1lg"]
@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://5l14b30d41y" path="res://Assets/Blender/Computer/ComputerScreens_T_Computer_DF.png" id="6_0jrhj"]
 [ext_resource type="Texture2D" uid="uid://banry8bjiwdho" path="res://Assets/Blender/Computer/ComputerScreens_T_Computer_MT-T_Computer_RG.png" id="7_miv7u"]
 [ext_resource type="Texture2D" uid="uid://cga2b8chybais" path="res://Assets/Blender/Computer/ComputerScreens_T_Computer_NR.png" id="8_jqasv"]
+[ext_resource type="Texture2D" uid="uid://db5jvn4uorn4c" path="res://Assets/Placeholder/2008439171-ad496188c9df29e8bf094614df32aa32a38231c59121ad1ae598ed783d657eea-d.webp" id="9_miv7u"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3sy87"]
 resource_name = "Computer_bake"
@@ -388,3 +389,7 @@ pixel_size = 0.001
 text = "Directional
 Stickers"
 font_size = 82
+
+[node name="TEMPLATE_UI" type="Sprite3D" parent="."]
+transform = Transform3D(-0.0005379248, -0.007899019, 0.028936421, -0.00014681689, 0.028941413, 0.007897655, -0.029994821, -3.4527722e-10, -0.0005576005, -0.14807951, 0.47360072, -0.9138357)
+texture = ExtResource("9_miv7u")

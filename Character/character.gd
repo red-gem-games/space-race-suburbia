@@ -537,7 +537,6 @@ func _process(delta: float) -> void:
 		else:
 			camera.fov = lerp(camera.fov, 75.0, delta * 10)
 			if PREM_7.handling_object:
-				HUD.control_color.visible = false
 				grabbed_object.extract_active = false
 				grabbed_object.fuse_active = false
 				PREM_7.release_handle()
@@ -577,7 +576,6 @@ func _process(delta: float) -> void:
 			#desired_yaw = extracting_yaw
 	if not grabbed_object and (extracting_object_active or fusing_object_active):
 		camera.fov = lerp(camera.fov, 75.0, delta * 10)
-		HUD.control_color.visible = false
 		PREM_7.release_handle()
 		if camera.fov >= 74.9:
 			extracting_object_active = false
@@ -607,6 +605,8 @@ func _on_action_key(status: String):
 func _on_extract_key() -> void:
 	if extract_time < 1.9:
 		return
+	else:
+		PREM_7.holo_anim.speed_scale = 1.0
 	if fusing_object_active:
 		return
 	if grabbed_object.is_stepladder or grabbed_object.is_rocketship:
@@ -659,7 +659,7 @@ func _on_extract_key() -> void:
 			selected_component_mesh.scale.z = comp_scale_z
 			selected_component_mesh.position = selected_component_pos
 		PREM_7.ctrl_anim.play_backwards("extract")
-		#PREM_7.holo_anim.speed_scale = 1.0
+		
 		PREM_7.holo_anim.play_backwards("cast_hologram")
 		gravity_strength = 10.0
 		grabbed_object.visible = true
@@ -1359,6 +1359,7 @@ func activate_component_data():
 
 	# machine-level labels
 	PREM_7.machine_name.text = current_object_json.get("name", "Unknown Object")
+	PREM_7.machine_name_back.text = current_object_json.get("name", "Unknown Object")
 	PREM_7.machine_desc.text = current_object_json.get("description", "")
 	extraction_scale = current_object_json.get("scale", 0.0)
 	distance_factor = current_object_json.get("distance", 0.0)
@@ -1584,6 +1585,8 @@ func reform_component(obj, time, parent):
 	reform = false
 
 func complete_extraction(body: RigidBody3D, mesh: MeshInstance3D):
+	PREM_7.holo_anim.speed_scale = 1.0
+	PREM_7.holo_anim.play_backwards("retract_hologram")
 	await get_tree().create_timer(0.25).timeout
 	extraction_finalized = true
 	new_component = body

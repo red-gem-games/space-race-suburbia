@@ -263,8 +263,8 @@ func _process(delta: float) -> void:
 			if glow_timer <= 0.0:
 				brightness_increasing = false
 		else:
-			standard_material.emission_energy_multiplier = lerp(standard_material.emission_energy_multiplier, 12.0, delta * 7.0)
-			if standard_material.emission_energy_multiplier == 11.9:
+			standard_material.emission_energy_multiplier = lerp(standard_material.emission_energy_multiplier, 6.0, delta * 7.0)
+			if standard_material.emission_energy_multiplier == 5.9:
 				is_grabbed = false
 				brightness_increasing = true
 

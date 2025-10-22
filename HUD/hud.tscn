@@ -1,14 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://baomcogkgkbvv"]
+[gd_scene load_steps=5 format=3 uid="uid://baomcogkgkbvv"]
 
 [ext_resource type="Texture2D" uid="uid://dj7bpyq468f67" path="res://Assets/UI/Reticle.png" id="1_37p78"]
 [ext_resource type="Script" uid="uid://bi78c7lvurqh7" path="res://HUD/hud.gd" id="1_64ctp"]
-[ext_resource type="Shader" uid="uid://dh6juv5sqkcvo" path="res://Shaders/control_object.gdshader" id="3_yu8mg"]
 [ext_resource type="Texture2D" uid="uid://cv0xlti56yuxi" path="res://Assets/UI/KEY.png" id="4_jvmdh"]
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_jvmdh"]
-shader = ExtResource("3_yu8mg")
-shader_parameter/highlight_color = Vector4(0, 0, 0, 1)
-shader_parameter/falloff = 0.7
 
 [sub_resource type="LabelSettings" id="LabelSettings_yu8mg"]
 font_size = 100
@@ -23,35 +17,6 @@ grow_vertical = 2
 script = ExtResource("1_64ctp")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
-
-[node name="60s_Color_Scheme" type="Control" parent="CanvasLayer"]
-layout_mode = 3
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -20.0
-offset_right = 20.0
-offset_bottom = 20.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="ColorRect" type="ColorRect" parent="CanvasLayer/60s_Color_Scheme"]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -1771.0
-offset_top = -1138.0
-offset_right = 1799.0
-offset_bottom = 1164.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0.97, 0.5335, 0, 0.223529)
 
 [node name="Reticle" type="Control" parent="CanvasLayer"]
 layout_mode = 3
@@ -78,21 +43,6 @@ offset_bottom = 50.0
 grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("1_37p78")
-
-[node name="Control_Color" type="ColorRect" parent="CanvasLayer"]
-material = SubResource("ShaderMaterial_jvmdh")
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -1685.0
-offset_top = -1043.0
-offset_right = 1701.0
-offset_bottom = 1073.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(1, 0, 0, 0.133333)
 
 [node name="Message" type="Control" parent="CanvasLayer"]
 layout_mode = 3

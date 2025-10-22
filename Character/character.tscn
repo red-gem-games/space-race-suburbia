@@ -7,7 +7,7 @@
 [ext_resource type="AudioStream" uid="uid://cm44pm0vyfqpb" path="res://Assets/Sounds/plasma_cannon_short.wav" id="5_a23tb"]
 
 [sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_a23tb"]
-exposure_multiplier = 0.85
+exposure_multiplier = 0.9
 auto_exposure_speed = 2.0
 dof_blur_far_distance = 15.0
 dof_blur_far_transition = 50.0

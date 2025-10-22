@@ -18,6 +18,7 @@ var shader_material: ShaderMaterial
 
 @onready var machine_info: Node3D = $Machine_Info
 @onready var machine_name: Label3D = $Machine_Info/All_Data/Main/Main_Name
+@onready var machine_name_back: Label3D = $Machine_Info/All_Data/Main/Main_Name_Back
 @onready var machine_desc: Label3D = $Machine_Info/All_Data/Main/Main_Desc
 @onready var component_name: Label3D = $Machine_Info/All_Data/Component/Screen/Comp_Name
 @onready var component_stars: Label3D = $Machine_Info/All_Data/Component/Screen/Comp_Stars

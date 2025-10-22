@@ -1,7 +1,7 @@
 {
     "WashingMachine": {
         "name": "Washing Machine",
-        "description": "Clean Clothes, Clean Launch.",
+        "description": "''Clean Clothes, Clean Launch''",
         "scale": 0.6,
         "distance": 6.0,
         "components": [
@@ -49,7 +49,7 @@
     },
     "DryingMachine": {
         "name": "Drying Machine",
-        "description": "Fairly Resistant to Heat.",
+        "description": "''Fairly Resistant to Heat''",
         "scale": 0.6,
         "distance": 6.0,
         "components": [
