@@ -1,10 +1,9 @@
-[gd_scene load_steps=34 format=4 uid="uid://ciuvjv1vvl1u6"]
+[gd_scene load_steps=33 format=4 uid="uid://ciuvjv1vvl1u6"]
 
 [ext_resource type="Script" uid="uid://8fg0tgjrcrc6" path="res://World/Workshop/computer.gd" id="1_4jent"]
 [ext_resource type="Texture2D" uid="uid://8qytt6td65ke" path="res://Assets/Blender/Computer/Computer_GameReady_T_Computer_DF.png" id="1_ym1lg"]
 [ext_resource type="Texture2D" uid="uid://d3vhhbyuwcesg" path="res://Assets/Blender/Computer/Computer_GameReady_T_Computer_MT-T_Computer_RG.png" id="2_4jent"]
 [ext_resource type="Texture2D" uid="uid://xuukcc6psq4e" path="res://Assets/Blender/Computer/Computer_GameReady_T_Computer_NR.png" id="3_j6doi"]
-[ext_resource type="AudioStream" uid="uid://dc1wc213sirm1" path="res://Assets/Music/APM_APMA_0029_00101_Baby_Stay_APM.mp3" id="5_j6doi"]
 [ext_resource type="Texture2D" uid="uid://5l14b30d41y" path="res://Assets/Blender/Computer/ComputerScreens_T_Computer_DF.png" id="6_0jrhj"]
 [ext_resource type="Texture2D" uid="uid://banry8bjiwdho" path="res://Assets/Blender/Computer/ComputerScreens_T_Computer_MT-T_Computer_RG.png" id="7_miv7u"]
 [ext_resource type="Texture2D" uid="uid://cga2b8chybais" path="res://Assets/Blender/Computer/ComputerScreens_T_Computer_NR.png" id="8_jqasv"]
@@ -352,11 +351,6 @@ speed_scale = 2.0
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(0.95568, 1.09317e-08, 0.294407, 0.294407, -2.89051e-08, -0.95568, -1.93729e-09, 1, -3.08424e-08, -0.399259, 0.402737, -0.910175)
-
-[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
-stream = ExtResource("5_j6doi")
-unit_size = 2.74
-autoplay = true
 
 [node name="Main_Screen" type="MeshInstance3D" parent="."]
 transform = Transform3D(1.1000001, 0, -7.1054274e-15, 0, 1.1000001, 0, 7.1054274e-15, 0, 1.1000001, 0.425, -0.39, 0.755)

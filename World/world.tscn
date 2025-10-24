@@ -1121,10 +1121,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25.7223, 1.42447, 18.245)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.7833, 0, 39.6017)
 
 [node name="WashingMachine" parent="Assembly_Objects" instance=ExtResource("4_036b0")]
-transform = Transform3D(0.0030193739, 0, -0.99999547, 0, 1, 0, 0.99999547, 0, 0.0030193739, -0.35534954, -0.216754, -29.4378)
+transform = Transform3D(0.0030193739, 0, -0.99999547, 0, 1, 0, 0.99999547, 0, 0.0030193739, -0.35534954, -0.216754, -33.15181)
 
 [node name="DryingMachine" parent="Assembly_Objects" instance=ExtResource("6_dwbse")]
-transform = Transform3D(0.116670795, 0, -0.9931706, 0, 1, 0, 0.9931706, 0, 0.116670795, -0.41561794, -0.171426, -31.748747)
+transform = Transform3D(0.021675348, 0, -0.999765, 0, 1, 0, 0.999765, 0, 0.021675348, -0.30371666, -0.171426, -30.904842)
 
 [node name="WaterHeater" parent="Assembly_Objects" instance=ExtResource("15_f23eu")]
 transform = Transform3D(-0.733445, 0, -0.679749, 0, 1, 0, 0.679749, 0, -0.733445, -0.87454, 0.300486, -21.2556)

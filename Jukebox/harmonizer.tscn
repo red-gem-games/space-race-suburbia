@@ -1,4 +1,6 @@
-[gd_scene load_steps=15 format=3 uid="uid://50e0ko7nsyll"]
+[gd_scene load_steps=16 format=3 uid="uid://50e0ko7nsyll"]
+
+[ext_resource type="AudioStream" uid="uid://dc1wc213sirm1" path="res://Assets/Music/APM_APMA_0029_00101_Baby_Stay_APM.mp3" id="1_mmw2b"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8pryq"]
 albedo_color = Color(0.61, 0, 0.345667, 1)
@@ -70,6 +72,12 @@ material = SubResource("StandardMaterial3D_72jdu")
 size = Vector3(0.27, 0.25, 0.28)
 
 [node name="Harmonizer" type="StaticBody3D"]
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("1_mmw2b")
+volume_db = -10.0
+unit_size = 2.74
+autoplay = true
 
 [node name="Bottom" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25524, 0)

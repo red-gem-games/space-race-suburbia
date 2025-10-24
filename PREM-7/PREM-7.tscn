@@ -1,4 +1,4 @@
-[gd_scene load_steps=93 format=4 uid="uid://bpvm0l41dywjs"]
+[gd_scene load_steps=98 format=4 uid="uid://bpvm0l41dywjs"]
 
 [ext_resource type="Script" uid="uid://so25svauxmkt" path="res://PREM-7/prem_7.gd" id="1_iarxa"]
 [ext_resource type="Shader" uid="uid://cgr7dnph387rx" path="res://PREM-7/prem_7_holo_glow.gdshader" id="2_t05xm"]
@@ -2056,8 +2056,8 @@ rings = 16
 cap_top = false
 cap_bottom = false
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_t05xm"]
-size = Vector2(1.79, 0.27)
+[sub_resource type="PlaneMesh" id="PlaneMesh_4qq6n"]
+size = Vector2(0.88, 0.5)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_s7cmo"]
 transparency = 1
@@ -2068,9 +2068,6 @@ roughness = 0.44
 emission_enabled = true
 emission = Color(1, 0.3372549, 0, 1)
 emission_energy_multiplier = 21.4
-
-[sub_resource type="PlaneMesh" id="PlaneMesh_4qq6n"]
-size = Vector2(0.88, 0.5)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_4qq6n"]
 render_priority = 0
@@ -2110,7 +2107,7 @@ shader_parameter/tint_color = Color(0.34117648, 0.14901961, 0, 1)
 shader_parameter/edge_color = Color(3.872178, 1.31756, 0, 1)
 shader_parameter/edge_power = 1.0
 shader_parameter/edge_size = 5.0
-shader_parameter/edge_intensity = 2.5
+shader_parameter/edge_intensity = 4.00000019
 shader_parameter/scanline_tint = Color(1, 0, 0, 1)
 shader_parameter/scanline_intensity = 0.410000019475
 shader_parameter/scanline_density = 10.0
@@ -2127,8 +2124,42 @@ shader_parameter/shake_block_size = 71.7200033592
 shader_parameter/shake_color_rate = 0.182000008645
 
 [sub_resource type="BoxMesh" id="BoxMesh_3nktn"]
+lightmap_size_hint = Vector2i(9, 13)
 material = SubResource("ShaderMaterial_l5ika")
+add_uv2 = true
 size = Vector3(1.04, 0.18, -0.02)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4qq6n"]
+no_depth_test = true
+emission_enabled = true
+emission = Color(1, 0.31764707, 0, 1)
+emission_energy_multiplier = 16.0
+stencil_flags = 2
+stencil_reference = 6
+
+[sub_resource type="BoxMesh" id="BoxMesh_5hhbi"]
+material = SubResource("StandardMaterial3D_4qq6n")
+size = Vector3(0.17, 0.01, 0.04)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_t05xm"]
+no_depth_test = true
+emission_enabled = true
+emission = Color(0, 1, 0, 1)
+emission_energy_multiplier = 16.0
+
+[sub_resource type="SphereMesh" id="SphereMesh_l5ika"]
+material = SubResource("StandardMaterial3D_t05xm")
+radius = 0.15
+height = 0.15
+is_hemisphere = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8d6ws"]
+no_depth_test = true
+albedo_color = Color(0, 0, 0, 1)
+
+[sub_resource type="PrismMesh" id="PrismMesh_dpu46"]
+material = SubResource("StandardMaterial3D_8d6ws")
+size = Vector3(0.05, 0.05, 0.05)
 
 [node name="PREM-7" type="Node3D"]
 script = ExtResource("1_iarxa")
@@ -2417,39 +2448,39 @@ font_size = 80
 outline_size = 5
 
 [node name="Machine_Info" type="Node3D" parent="."]
-transform = Transform3D(0.582882, 0, 0.142296, 0, 0.6, 0, -0.142296, 0, 0.582882, -0.502882, 0.162705, 0.13641)
+transform = Transform3D(0.58288205, 0, 0.142296, 0, 0.6, 0, -0.142296, 0, 0.58288205, -0.4003819, 0.162705, 0.13641)
 
 [node name="All_Data" type="Node3D" parent="Machine_Info"]
 transform = Transform3D(0.25, 0, 3.72529e-09, 0, 0.25, 0, -3.72529e-09, 0, 0.25, -0.539668, 0.328448, -0.107834)
 
 [node name="Main" type="Node3D" parent="Machine_Info/All_Data"]
-transform = Transform3D(0.9905181, 0.0029432955, -0.13735378, -0.002758246, 0.9999947, 0.0015373679, 0.1373575, -0.0011440022, 0.9905207, 1.7857435, 2.4252486, -7.7561045)
+transform = Transform3D(0.9991274, -0.009412922, 0.040693343, 0.016512455, 0.983922, -0.17782876, -0.038365364, 0.17834541, 0.9832198, 1.450675, 2.2031598, -6.962329)
 
 [node name="Main_Name" type="Label3D" parent="Machine_Info/All_Data/Main"]
 transform = Transform3D(0.009978679, -0.000105527535, -0.0006443247, 6.975915e-05, 0.009984338, -0.00055487716, 0.0006491728, 0.00054919976, 0.009963745, -0.06342363, -0.21795273, -0.0068655014)
 transparency = 0.78
-pixel_size = 0.05
+pixel_size = 0.0475
 no_depth_test = true
 alpha_antialiasing_mode = 2
 render_priority = 10
 outline_render_priority = 10
 modulate = Color(0, 1, 0, 1)
 outline_modulate = Color(0, 1, 0, 1)
-text = "Machine Name"
+text = "MACHINE NAME"
 font_size = 1370
 outline_size = 105
 uppercase = true
 
 [node name="Main_Name_Back" type="Label3D" parent="Machine_Info/All_Data/Main"]
 transform = Transform3D(0.009978679, -0.000105527535, -0.00064432505, 6.975913e-05, 0.009984338, -0.00055487716, 0.0006491718, 0.00054919976, 0.009963745, -0.08875799, -0.21798372, -0.030281544)
-pixel_size = 0.05
+pixel_size = 0.0475
 no_depth_test = true
 alpha_antialiasing_mode = 2
 render_priority = 10
 outline_render_priority = 10
 modulate = Color(1, 0.19607843, 0, 1)
 outline_modulate = Color(1, 0.19607843, 0, 1)
-text = "machine name"
+text = "MACHINE NAME"
 font_size = 1375
 outline_size = 106
 uppercase = true
@@ -2469,15 +2500,12 @@ outline_size = 105
 uppercase = true
 
 [node name="Component" type="Node3D" parent="Machine_Info/All_Data"]
-transform = Transform3D(1, 0, 1.49012e-08, 0, 1, 0, -1.49012e-08, 0, 1, 1.27345, -0.339721, -1.02188)
-visible = false
+transform = Transform3D(1, 0, 2.9802322e-08, 0, 0.99999976, 0, -2.9802322e-08, 0, 1, 1.8674817, -0.33972096, -7.0363007)
 
 [node name="Screen" type="MeshInstance3D" parent="Machine_Info/All_Data/Component"]
 transform = Transform3D(1, 0, 0, 0, -0.139173, -0.990268, -2.98023e-08, 0.990268, -0.139173, -0.0965228, 0.23568, -0.0104811)
 cast_shadow = 0
-mesh = SubResource("PlaneMesh_t05xm")
 skeleton = NodePath("../../../..")
-surface_material_override/0 = SubResource("StandardMaterial3D_s7cmo")
 
 [node name="Comp_Name" type="Label3D" parent="Machine_Info/All_Data/Component/Screen"]
 transform = Transform3D(0.00999999, 5.82077e-11, -2.32831e-10, 0, 0.000348995, 0.0099939, -2.91038e-11, -0.0099939, 0.000348995, -0.0034771, 0.00251353, -0.0574241)
@@ -2701,14 +2729,26 @@ visible = false
 texture = ExtResource("3_8m00m")
 
 [node name="BOTTOM_MESH" type="MeshInstance3D" parent="Machine_Info"]
-transform = Transform3D(1.6286423, -0.0005013704, -0.35400614, 0.0019998732, 1.6666603, 0.006840262, 0.35400036, -0.00710862, 1.6286296, -0.11845362, 0.16587803, -2.0514383)
+transform = Transform3D(1.6654974, -0.023393366, -0.058086365, 0.020333854, 1.6642703, -0.0872271, 0.05922669, 0.08645695, 1.6633782, -0.18624234, 0.10620868, -1.8953713)
 mesh = SubResource("BoxMesh_61m6q")
 skeleton = NodePath("../..")
 
 [node name="TOP_MESH" type="MeshInstance3D" parent="Machine_Info"]
-transform = Transform3D(1.6286423, -0.00050137134, -0.35400617, 0.0019998732, 1.6666608, 0.006840265, 0.35400036, -0.00710862, 1.62863, -0.11845362, 0.8503126, -2.0514383)
+transform = Transform3D(1.6654975, -0.023393381, -0.058086455, 0.020333856, 1.6642711, -0.08722712, 0.05922669, 0.086457014, 1.6633787, -0.19647598, 0.7913737, -1.85837)
 mesh = SubResource("BoxMesh_3nktn")
 skeleton = NodePath("../..")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Machine_Info"]
+transform = Transform3D(0.99934936, -0.023737032, -0.027217492, 0.022211585, 0.9982387, -0.055039562, 0.02847594, 0.05439907, 0.99811447, -0.77251726, 0.469, -1.6164767)
+mesh = SubResource("BoxMesh_5hhbi")
+
+[node name="Mass" type="MeshInstance3D" parent="Machine_Info"]
+transform = Transform3D(0.9992665, -0.038183015, 0.0030056834, 0.03818301, 0.9869545, -0.15640771, 0.0030056983, 0.15640774, 0.98768795, 0.22555733, 0.28818607, -1.5667089)
+mesh = SubResource("SphereMesh_l5ika")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Machine_Info/Mass"]
+transform = Transform3D(0.98101646, -0.029636526, -0.1916449, 0.03106938, 0.99950695, 0.004475206, 0.19141781, -0.010344565, 0.98145384, -0.041570187, 0.09008953, 0.17028248)
+mesh = SubResource("PrismMesh_dpu46")
 
 [node name="Control_Position" type="Node3D" parent="."]
 transform = Transform3D(0.816545, -0.0553647, -0.57462, -0.034534, 0.988922, -0.144356, 0.576248, 0.137717, 0.805588, -0.0550965, 0.418735, -0.460591)
