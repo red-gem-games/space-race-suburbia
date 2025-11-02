@@ -425,9 +425,9 @@ func _process(delta: float) -> void:
 			var screen_mat = PREM_7.module_screen.get_surface_override_material(0)
 			var module_labels = PREM_7.module_screen.get_children()
 			var power_labels = PREM_7.power_screen.get_children()
-			var mass_labels = PREM_7.mass_screen.get_children()
+			#var mass_labels = PREM_7.mass_screen.get_children()
 			var lift_labels = PREM_7.lift_screen.get_children()
-			var screen_labels = module_labels + power_labels + mass_labels + lift_labels
+			var screen_labels = module_labels + power_labels + lift_labels
 			
 			var photon_mat = PREM_7.photon_tip.mesh.material
 			
@@ -443,7 +443,7 @@ func _process(delta: float) -> void:
 				photon_mat.albedo_color.a = lerp(photon_mat.albedo_color.a, 0.85, delta)
 				PREM_7.module_screen.scale = lerp(PREM_7.module_screen.scale, Vector3.ZERO, delta * 7.5)
 				PREM_7.power_screen.scale = lerp(PREM_7.power_screen.scale, Vector3.ZERO, delta * 7.5)
-				PREM_7.mass_screen.scale = lerp(PREM_7.mass_screen.scale, Vector3.ZERO, delta * 7.5)
+				#PREM_7.mass_screen.scale = lerp(PREM_7.mass_screen.scale, Vector3.ZERO, delta * 7.5)
 				PREM_7.lift_screen.scale = lerp(PREM_7.lift_screen.scale, Vector3.ZERO, delta * 7.5)
 				screen_mat.albedo_color.a = lerp(screen_mat.albedo_color.a, 0.0, delta * 7.5)
 				for child in screen_labels:
@@ -483,7 +483,7 @@ func _process(delta: float) -> void:
 				extract_speed = lerp(extract_speed, base_extract_speed, delta * 7.5)
 				PREM_7.module_screen.scale = lerp(PREM_7.module_screen.scale, Vector3.ONE, delta * 7.5)
 				PREM_7.power_screen.scale = lerp(PREM_7.power_screen.scale, Vector3.ONE, delta * 7.5)
-				PREM_7.mass_screen.scale = lerp(PREM_7.mass_screen.scale, Vector3.ONE, delta * 7.5)
+				#PREM_7.mass_screen.scale = lerp(PREM_7.mass_screen.scale, Vector3.ONE, delta * 7.5)
 				PREM_7.lift_screen.scale = lerp(PREM_7.lift_screen.scale, Vector3.ONE, delta * 7.5)
 				screen_mat.albedo_color.a = lerp(screen_mat.albedo_color.a, 1.0, delta * 7.5)
 				photon_mat.emission_energy_multiplier = lerp(photon_mat.emission_energy_multiplier, 40.0, delta * 7.5)
@@ -1405,13 +1405,15 @@ func update_component_display():
 
 	# UI
 	PREM_7.component_name.text  = comp.get("name", "??")
+	PREM_7.component_name_front.text  = comp.get("name", "??")
+	PREM_7.component_name_back.text  = comp.get("name", "??")
 	PREM_7.component_stars.text = "★".repeat(int(comp.get("stars", 0)))
 	selected_component_scale = comp.get("scale", 0.0)
 	selected_component_glow  = comp.get("glow",  0.0)
-	selected_component_mass  = comp.get("mass",  0.0)
+	selected_component_mass  = comp.get("mass",  0)
 	PREM_7.component_module.text = str(comp.get("module", comp.get("fit", "")))
 	PREM_7.component_power.text  = str(comp.get("power",  comp.get("life", 0)))
-	PREM_7.component_mass.text   = str(comp.get("mass",   comp.get("weight", 0)))
+	PREM_7.component_mass.text   = str(int(comp.get("mass",   comp.get("weight", 0))))
 	PREM_7.component_lift.text   = str(comp.get("lift",   comp.get("durability", 0)))
 
 	# Find matching shape base name

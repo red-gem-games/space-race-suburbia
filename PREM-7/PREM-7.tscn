@@ -1,8 +1,8 @@
-[gd_scene load_steps=98 format=4 uid="uid://bpvm0l41dywjs"]
+[gd_scene load_steps=188 format=4 uid="uid://bpvm0l41dywjs"]
 
 [ext_resource type="Script" uid="uid://so25svauxmkt" path="res://PREM-7/prem_7.gd" id="1_iarxa"]
 [ext_resource type="Shader" uid="uid://cgr7dnph387rx" path="res://PREM-7/prem_7_holo_glow.gdshader" id="2_t05xm"]
-[ext_resource type="Texture2D" uid="uid://db5jvn4uorn4c" path="res://Assets/Placeholder/2008439171-ad496188c9df29e8bf094614df32aa32a38231c59121ad1ae598ed783d657eea-d.webp" id="3_8m00m"]
+[ext_resource type="Shader" uid="uid://kl25hjo2s4fs" path="res://Shaders/CRT_3D.gdshader" id="5_l5ika"]
 [ext_resource type="Shader" uid="uid://d2pelneqc3oj" path="res://Shaders/manipulation_depth_disabled.gdshader" id="5_t05xm"]
 
 [sub_resource type="Animation" id="Animation_caqm6"]
@@ -1237,6 +1237,164 @@ _data = {
 &"spin_hologram": SubResource("Animation_l5ika")
 }
 
+[sub_resource type="Animation" id="Animation_bj344"]
+resource_name = "spin"
+length = 10.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Machine_Info/Spin_Box:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 10),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, -6.2831855, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Machine_Info/Spin_Box/Addtl/Text1:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 3, 8),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [true, false, true]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Machine_Info/Spin_Box/Addtl/Text2:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 3, 8),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Machine_Info/Spin_Box/Addtl/Color:mesh:material:emission")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 2.9333334, 3, 7.9333334, 8),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [Color(0, 0.20459503, 0.0021566427, 1), Color(0, 0.20459503, 0.0021566427, 1), Color(0.2385096, 5.655363e-07, 0.006008998, 1), Color(0.23921569, 0, 0.007843138, 1), Color(0, 0.20459503, 0.0021566427, 1)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Machine_Info/Spin_Box/Thrust:visible")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 3, 8),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [true, false, true]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Machine_Info/Spin_Box/Failure:visible")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0, 3, 8),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
+
+[sub_resource type="Animation" id="Animation_ja6ch"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Machine_Info/Spin_Box:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Machine_Info/Spin_Box/Addtl/Text1:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Machine_Info/Spin_Box/Addtl/Text2:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Machine_Info/Spin_Box/Addtl/Color:mesh:material:emission")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(0, 0.20459503, 0.0021566427, 1)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Machine_Info/Spin_Box/Thrust:visible")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Machine_Info/Spin_Box/Failure:visible")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_1amol"]
+_data = {
+&"RESET": SubResource("Animation_ja6ch"),
+&"spin": SubResource("Animation_bj344")
+}
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_a4na6"]
 resource_name = "Material.003"
 cull_mode = 2
@@ -2056,18 +2214,2103 @@ rings = 16
 cap_top = false
 cap_bottom = false
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_4qq6n"]
-size = Vector2(0.88, 0.5)
+[sub_resource type="FontFile" id="FontFile_t05xm"]
+cache/0/50/0/ascent = 0.0
+cache/0/50/0/descent = 0.0
+cache/0/50/0/underline_position = 0.0
+cache/0/50/0/underline_thickness = 0.0
+cache/0/50/0/scale = 1.0
+cache/0/16/0/ascent = 0.0
+cache/0/16/0/descent = 0.0
+cache/0/16/0/underline_position = 0.0
+cache/0/16/0/underline_thickness = 0.0
+cache/0/16/0/scale = 1.0
+cache/0/120/0/ascent = 0.0
+cache/0/120/0/descent = 0.0
+cache/0/120/0/underline_position = 0.0
+cache/0/120/0/underline_thickness = 0.0
+cache/0/120/0/scale = 1.0
+cache/0/150/0/ascent = 0.0
+cache/0/150/0/descent = 0.0
+cache/0/150/0/underline_position = 0.0
+cache/0/150/0/underline_thickness = 0.0
+cache/0/150/0/scale = 1.0
+cache/0/200/0/ascent = 0.0
+cache/0/200/0/descent = 0.0
+cache/0/200/0/underline_position = 0.0
+cache/0/200/0/underline_thickness = 0.0
+cache/0/200/0/scale = 1.0
+cache/0/250/0/ascent = 0.0
+cache/0/250/0/descent = 0.0
+cache/0/250/0/underline_position = 0.0
+cache/0/250/0/underline_thickness = 0.0
+cache/0/250/0/scale = 1.0
+cache/0/290/0/ascent = 0.0
+cache/0/290/0/descent = 0.0
+cache/0/290/0/underline_position = 0.0
+cache/0/290/0/underline_thickness = 0.0
+cache/0/290/0/scale = 1.0
+cache/0/340/0/ascent = 0.0
+cache/0/340/0/descent = 0.0
+cache/0/340/0/underline_position = 0.0
+cache/0/340/0/underline_thickness = 0.0
+cache/0/340/0/scale = 1.0
+cache/0/400/0/ascent = 0.0
+cache/0/400/0/descent = 0.0
+cache/0/400/0/underline_position = 0.0
+cache/0/400/0/underline_thickness = 0.0
+cache/0/400/0/scale = 1.0
+cache/0/450/0/ascent = 0.0
+cache/0/450/0/descent = 0.0
+cache/0/450/0/underline_position = 0.0
+cache/0/450/0/underline_thickness = 0.0
+cache/0/450/0/scale = 1.0
+cache/0/500/0/ascent = 0.0
+cache/0/500/0/descent = 0.0
+cache/0/500/0/underline_position = 0.0
+cache/0/500/0/underline_thickness = 0.0
+cache/0/500/0/scale = 1.0
+cache/0/540/0/ascent = 0.0
+cache/0/540/0/descent = 0.0
+cache/0/540/0/underline_position = 0.0
+cache/0/540/0/underline_thickness = 0.0
+cache/0/540/0/scale = 1.0
+cache/0/590/0/ascent = 0.0
+cache/0/590/0/descent = 0.0
+cache/0/590/0/underline_position = 0.0
+cache/0/590/0/underline_thickness = 0.0
+cache/0/590/0/scale = 1.0
+cache/0/630/0/ascent = 0.0
+cache/0/630/0/descent = 0.0
+cache/0/630/0/underline_position = 0.0
+cache/0/630/0/underline_thickness = 0.0
+cache/0/630/0/scale = 1.0
+cache/0/670/0/ascent = 0.0
+cache/0/670/0/descent = 0.0
+cache/0/670/0/underline_position = 0.0
+cache/0/670/0/underline_thickness = 0.0
+cache/0/670/0/scale = 1.0
+cache/0/710/0/ascent = 0.0
+cache/0/710/0/descent = 0.0
+cache/0/710/0/underline_position = 0.0
+cache/0/710/0/underline_thickness = 0.0
+cache/0/710/0/scale = 1.0
+cache/0/750/0/ascent = 0.0
+cache/0/750/0/descent = 0.0
+cache/0/750/0/underline_position = 0.0
+cache/0/750/0/underline_thickness = 0.0
+cache/0/750/0/scale = 1.0
+cache/0/790/0/ascent = 0.0
+cache/0/790/0/descent = 0.0
+cache/0/790/0/underline_position = 0.0
+cache/0/790/0/underline_thickness = 0.0
+cache/0/790/0/scale = 1.0
+cache/0/840/0/ascent = 0.0
+cache/0/840/0/descent = 0.0
+cache/0/840/0/underline_position = 0.0
+cache/0/840/0/underline_thickness = 0.0
+cache/0/840/0/scale = 1.0
+cache/0/890/0/ascent = 0.0
+cache/0/890/0/descent = 0.0
+cache/0/890/0/underline_position = 0.0
+cache/0/890/0/underline_thickness = 0.0
+cache/0/890/0/scale = 1.0
+cache/0/1000/0/ascent = 0.0
+cache/0/1000/0/descent = 0.0
+cache/0/1000/0/underline_position = 0.0
+cache/0/1000/0/underline_thickness = 0.0
+cache/0/1000/0/scale = 1.0
+cache/0/1050/0/ascent = 0.0
+cache/0/1050/0/descent = 0.0
+cache/0/1050/0/underline_position = 0.0
+cache/0/1050/0/underline_thickness = 0.0
+cache/0/1050/0/scale = 1.0
+cache/0/1100/0/ascent = 0.0
+cache/0/1100/0/descent = 0.0
+cache/0/1100/0/underline_position = 0.0
+cache/0/1100/0/underline_thickness = 0.0
+cache/0/1100/0/scale = 1.0
+cache/0/1160/0/ascent = 0.0
+cache/0/1160/0/descent = 0.0
+cache/0/1160/0/underline_position = 0.0
+cache/0/1160/0/underline_thickness = 0.0
+cache/0/1160/0/scale = 1.0
+cache/0/1250/0/ascent = 0.0
+cache/0/1250/0/descent = 0.0
+cache/0/1250/0/underline_position = 0.0
+cache/0/1250/0/underline_thickness = 0.0
+cache/0/1250/0/scale = 1.0
+cache/0/1360/0/ascent = 0.0
+cache/0/1360/0/descent = 0.0
+cache/0/1360/0/underline_position = 0.0
+cache/0/1360/0/underline_thickness = 0.0
+cache/0/1360/0/scale = 1.0
+cache/0/1410/0/ascent = 0.0
+cache/0/1410/0/descent = 0.0
+cache/0/1410/0/underline_position = 0.0
+cache/0/1410/0/underline_thickness = 0.0
+cache/0/1410/0/scale = 1.0
+cache/0/1510/0/ascent = 0.0
+cache/0/1510/0/descent = 0.0
+cache/0/1510/0/underline_position = 0.0
+cache/0/1510/0/underline_thickness = 0.0
+cache/0/1510/0/scale = 1.0
+cache/0/1600/0/ascent = 0.0
+cache/0/1600/0/descent = 0.0
+cache/0/1600/0/underline_position = 0.0
+cache/0/1600/0/underline_thickness = 0.0
+cache/0/1600/0/scale = 1.0
+cache/0/1630/0/ascent = 0.0
+cache/0/1630/0/descent = 0.0
+cache/0/1630/0/underline_position = 0.0
+cache/0/1630/0/underline_thickness = 0.0
+cache/0/1630/0/scale = 1.0
+cache/0/1760/0/ascent = 0.0
+cache/0/1760/0/descent = 0.0
+cache/0/1760/0/underline_position = 0.0
+cache/0/1760/0/underline_thickness = 0.0
+cache/0/1760/0/scale = 1.0
+cache/0/1750/0/ascent = 0.0
+cache/0/1750/0/descent = 0.0
+cache/0/1750/0/underline_position = 0.0
+cache/0/1750/0/underline_thickness = 0.0
+cache/0/1750/0/scale = 1.0
+cache/0/1610/0/ascent = 0.0
+cache/0/1610/0/descent = 0.0
+cache/0/1610/0/underline_position = 0.0
+cache/0/1610/0/underline_thickness = 0.0
+cache/0/1610/0/scale = 1.0
+cache/0/1490/0/ascent = 0.0
+cache/0/1490/0/descent = 0.0
+cache/0/1490/0/underline_position = 0.0
+cache/0/1490/0/underline_thickness = 0.0
+cache/0/1490/0/scale = 1.0
+cache/0/1420/0/ascent = 0.0
+cache/0/1420/0/descent = 0.0
+cache/0/1420/0/underline_position = 0.0
+cache/0/1420/0/underline_thickness = 0.0
+cache/0/1420/0/scale = 1.0
+cache/0/1340/0/ascent = 0.0
+cache/0/1340/0/descent = 0.0
+cache/0/1340/0/underline_position = 0.0
+cache/0/1340/0/underline_thickness = 0.0
+cache/0/1340/0/scale = 1.0
+cache/0/1330/0/ascent = 0.0
+cache/0/1330/0/descent = 0.0
+cache/0/1330/0/underline_position = 0.0
+cache/0/1330/0/underline_thickness = 0.0
+cache/0/1330/0/scale = 1.0
+cache/0/1300/0/ascent = 0.0
+cache/0/1300/0/descent = 0.0
+cache/0/1300/0/underline_position = 0.0
+cache/0/1300/0/underline_thickness = 0.0
+cache/0/1300/0/scale = 1.0
+cache/0/1270/0/ascent = 0.0
+cache/0/1270/0/descent = 0.0
+cache/0/1270/0/underline_position = 0.0
+cache/0/1270/0/underline_thickness = 0.0
+cache/0/1270/0/scale = 1.0
+cache/0/1230/0/ascent = 0.0
+cache/0/1230/0/descent = 0.0
+cache/0/1230/0/underline_position = 0.0
+cache/0/1230/0/underline_thickness = 0.0
+cache/0/1230/0/scale = 1.0
+cache/0/1220/0/ascent = 0.0
+cache/0/1220/0/descent = 0.0
+cache/0/1220/0/underline_position = 0.0
+cache/0/1220/0/underline_thickness = 0.0
+cache/0/1220/0/scale = 1.0
+cache/0/1200/0/ascent = 0.0
+cache/0/1200/0/descent = 0.0
+cache/0/1200/0/underline_position = 0.0
+cache/0/1200/0/underline_thickness = 0.0
+cache/0/1200/0/scale = 1.0
+cache/0/1110/0/ascent = 0.0
+cache/0/1110/0/descent = 0.0
+cache/0/1110/0/underline_position = 0.0
+cache/0/1110/0/underline_thickness = 0.0
+cache/0/1110/0/scale = 1.0
+cache/0/1090/0/ascent = 0.0
+cache/0/1090/0/descent = 0.0
+cache/0/1090/0/underline_position = 0.0
+cache/0/1090/0/underline_thickness = 0.0
+cache/0/1090/0/scale = 1.0
+cache/0/1030/0/ascent = 0.0
+cache/0/1030/0/descent = 0.0
+cache/0/1030/0/underline_position = 0.0
+cache/0/1030/0/underline_thickness = 0.0
+cache/0/1030/0/scale = 1.0
+cache/0/910/0/ascent = 0.0
+cache/0/910/0/descent = 0.0
+cache/0/910/0/underline_position = 0.0
+cache/0/910/0/underline_thickness = 0.0
+cache/0/910/0/scale = 1.0
+cache/0/870/0/ascent = 0.0
+cache/0/870/0/descent = 0.0
+cache/0/870/0/underline_position = 0.0
+cache/0/870/0/underline_thickness = 0.0
+cache/0/870/0/scale = 1.0
+cache/0/810/0/ascent = 0.0
+cache/0/810/0/descent = 0.0
+cache/0/810/0/underline_position = 0.0
+cache/0/810/0/underline_thickness = 0.0
+cache/0/810/0/scale = 1.0
+cache/0/690/0/ascent = 0.0
+cache/0/690/0/descent = 0.0
+cache/0/690/0/underline_position = 0.0
+cache/0/690/0/underline_thickness = 0.0
+cache/0/690/0/scale = 1.0
+cache/0/680/0/ascent = 0.0
+cache/0/680/0/descent = 0.0
+cache/0/680/0/underline_position = 0.0
+cache/0/680/0/underline_thickness = 0.0
+cache/0/680/0/scale = 1.0
+cache/0/660/0/ascent = 0.0
+cache/0/660/0/descent = 0.0
+cache/0/660/0/underline_position = 0.0
+cache/0/660/0/underline_thickness = 0.0
+cache/0/660/0/scale = 1.0
+cache/0/650/0/ascent = 0.0
+cache/0/650/0/descent = 0.0
+cache/0/650/0/underline_position = 0.0
+cache/0/650/0/underline_thickness = 0.0
+cache/0/650/0/scale = 1.0
+cache/0/620/0/ascent = 0.0
+cache/0/620/0/descent = 0.0
+cache/0/620/0/underline_position = 0.0
+cache/0/620/0/underline_thickness = 0.0
+cache/0/620/0/scale = 1.0
+cache/0/610/0/ascent = 0.0
+cache/0/610/0/descent = 0.0
+cache/0/610/0/underline_position = 0.0
+cache/0/610/0/underline_thickness = 0.0
+cache/0/610/0/scale = 1.0
+cache/0/600/0/ascent = 0.0
+cache/0/600/0/descent = 0.0
+cache/0/600/0/underline_position = 0.0
+cache/0/600/0/underline_thickness = 0.0
+cache/0/600/0/scale = 1.0
+cache/0/570/0/ascent = 0.0
+cache/0/570/0/descent = 0.0
+cache/0/570/0/underline_position = 0.0
+cache/0/570/0/underline_thickness = 0.0
+cache/0/570/0/scale = 1.0
+cache/0/530/0/ascent = 0.0
+cache/0/530/0/descent = 0.0
+cache/0/530/0/underline_position = 0.0
+cache/0/530/0/underline_thickness = 0.0
+cache/0/530/0/scale = 1.0
+cache/0/520/0/ascent = 0.0
+cache/0/520/0/descent = 0.0
+cache/0/520/0/underline_position = 0.0
+cache/0/520/0/underline_thickness = 0.0
+cache/0/520/0/scale = 1.0
+cache/0/510/0/ascent = 0.0
+cache/0/510/0/descent = 0.0
+cache/0/510/0/underline_position = 0.0
+cache/0/510/0/underline_thickness = 0.0
+cache/0/510/0/scale = 1.0
+cache/0/480/0/ascent = 0.0
+cache/0/480/0/descent = 0.0
+cache/0/480/0/underline_position = 0.0
+cache/0/480/0/underline_thickness = 0.0
+cache/0/480/0/scale = 1.0
+cache/0/460/0/ascent = 0.0
+cache/0/460/0/descent = 0.0
+cache/0/460/0/underline_position = 0.0
+cache/0/460/0/underline_thickness = 0.0
+cache/0/460/0/scale = 1.0
+cache/0/440/0/ascent = 0.0
+cache/0/440/0/descent = 0.0
+cache/0/440/0/underline_position = 0.0
+cache/0/440/0/underline_thickness = 0.0
+cache/0/440/0/scale = 1.0
+cache/0/420/0/ascent = 0.0
+cache/0/420/0/descent = 0.0
+cache/0/420/0/underline_position = 0.0
+cache/0/420/0/underline_thickness = 0.0
+cache/0/420/0/scale = 1.0
+cache/0/410/0/ascent = 0.0
+cache/0/410/0/descent = 0.0
+cache/0/410/0/underline_position = 0.0
+cache/0/410/0/underline_thickness = 0.0
+cache/0/410/0/scale = 1.0
+cache/0/390/0/ascent = 0.0
+cache/0/390/0/descent = 0.0
+cache/0/390/0/underline_position = 0.0
+cache/0/390/0/underline_thickness = 0.0
+cache/0/390/0/scale = 1.0
+cache/0/380/0/ascent = 0.0
+cache/0/380/0/descent = 0.0
+cache/0/380/0/underline_position = 0.0
+cache/0/380/0/underline_thickness = 0.0
+cache/0/380/0/scale = 1.0
+cache/0/370/0/ascent = 0.0
+cache/0/370/0/descent = 0.0
+cache/0/370/0/underline_position = 0.0
+cache/0/370/0/underline_thickness = 0.0
+cache/0/370/0/scale = 1.0
+cache/0/360/0/ascent = 0.0
+cache/0/360/0/descent = 0.0
+cache/0/360/0/underline_position = 0.0
+cache/0/360/0/underline_thickness = 0.0
+cache/0/360/0/scale = 1.0
+cache/0/350/0/ascent = 0.0
+cache/0/350/0/descent = 0.0
+cache/0/350/0/underline_position = 0.0
+cache/0/350/0/underline_thickness = 0.0
+cache/0/350/0/scale = 1.0
+cache/0/330/0/ascent = 0.0
+cache/0/330/0/descent = 0.0
+cache/0/330/0/underline_position = 0.0
+cache/0/330/0/underline_thickness = 0.0
+cache/0/330/0/scale = 1.0
+cache/0/320/0/ascent = 0.0
+cache/0/320/0/descent = 0.0
+cache/0/320/0/underline_position = 0.0
+cache/0/320/0/underline_thickness = 0.0
+cache/0/320/0/scale = 1.0
+cache/0/310/0/ascent = 0.0
+cache/0/310/0/descent = 0.0
+cache/0/310/0/underline_position = 0.0
+cache/0/310/0/underline_thickness = 0.0
+cache/0/310/0/scale = 1.0
+cache/0/300/0/ascent = 0.0
+cache/0/300/0/descent = 0.0
+cache/0/300/0/underline_position = 0.0
+cache/0/300/0/underline_thickness = 0.0
+cache/0/300/0/scale = 1.0
+cache/0/270/0/ascent = 0.0
+cache/0/270/0/descent = 0.0
+cache/0/270/0/underline_position = 0.0
+cache/0/270/0/underline_thickness = 0.0
+cache/0/270/0/scale = 1.0
+cache/0/260/0/ascent = 0.0
+cache/0/260/0/descent = 0.0
+cache/0/260/0/underline_position = 0.0
+cache/0/260/0/underline_thickness = 0.0
+cache/0/260/0/scale = 1.0
+cache/0/280/0/ascent = 0.0
+cache/0/280/0/descent = 0.0
+cache/0/280/0/underline_position = 0.0
+cache/0/280/0/underline_thickness = 0.0
+cache/0/280/0/scale = 1.0
+cache/0/100/0/ascent = 0.0
+cache/0/100/0/descent = 0.0
+cache/0/100/0/underline_position = 0.0
+cache/0/100/0/underline_thickness = 0.0
+cache/0/100/0/scale = 1.0
+cache/0/110/0/ascent = 0.0
+cache/0/110/0/descent = 0.0
+cache/0/110/0/underline_position = 0.0
+cache/0/110/0/underline_thickness = 0.0
+cache/0/110/0/scale = 1.0
+cache/0/130/0/ascent = 0.0
+cache/0/130/0/descent = 0.0
+cache/0/130/0/underline_position = 0.0
+cache/0/130/0/underline_thickness = 0.0
+cache/0/130/0/scale = 1.0
+cache/0/140/0/ascent = 0.0
+cache/0/140/0/descent = 0.0
+cache/0/140/0/underline_position = 0.0
+cache/0/140/0/underline_thickness = 0.0
+cache/0/140/0/scale = 1.0
+cache/0/160/0/ascent = 0.0
+cache/0/160/0/descent = 0.0
+cache/0/160/0/underline_position = 0.0
+cache/0/160/0/underline_thickness = 0.0
+cache/0/160/0/scale = 1.0
+cache/0/170/0/ascent = 0.0
+cache/0/170/0/descent = 0.0
+cache/0/170/0/underline_position = 0.0
+cache/0/170/0/underline_thickness = 0.0
+cache/0/170/0/scale = 1.0
+cache/0/180/0/ascent = 0.0
+cache/0/180/0/descent = 0.0
+cache/0/180/0/underline_position = 0.0
+cache/0/180/0/underline_thickness = 0.0
+cache/0/180/0/scale = 1.0
+cache/0/210/0/ascent = 0.0
+cache/0/210/0/descent = 0.0
+cache/0/210/0/underline_position = 0.0
+cache/0/210/0/underline_thickness = 0.0
+cache/0/210/0/scale = 1.0
+cache/0/220/0/ascent = 0.0
+cache/0/220/0/descent = 0.0
+cache/0/220/0/underline_position = 0.0
+cache/0/220/0/underline_thickness = 0.0
+cache/0/220/0/scale = 1.0
+cache/0/240/0/ascent = 0.0
+cache/0/240/0/descent = 0.0
+cache/0/240/0/underline_position = 0.0
+cache/0/240/0/underline_thickness = 0.0
+cache/0/240/0/scale = 1.0
+cache/0/430/0/ascent = 0.0
+cache/0/430/0/descent = 0.0
+cache/0/430/0/underline_position = 0.0
+cache/0/430/0/underline_thickness = 0.0
+cache/0/430/0/scale = 1.0
+cache/0/470/0/ascent = 0.0
+cache/0/470/0/descent = 0.0
+cache/0/470/0/underline_position = 0.0
+cache/0/470/0/underline_thickness = 0.0
+cache/0/470/0/scale = 1.0
+cache/0/550/0/ascent = 0.0
+cache/0/550/0/descent = 0.0
+cache/0/550/0/underline_position = 0.0
+cache/0/550/0/underline_thickness = 0.0
+cache/0/550/0/scale = 1.0
+cache/0/560/0/ascent = 0.0
+cache/0/560/0/descent = 0.0
+cache/0/560/0/underline_position = 0.0
+cache/0/560/0/underline_thickness = 0.0
+cache/0/560/0/scale = 1.0
+cache/0/580/0/ascent = 0.0
+cache/0/580/0/descent = 0.0
+cache/0/580/0/underline_position = 0.0
+cache/0/580/0/underline_thickness = 0.0
+cache/0/580/0/scale = 1.0
+cache/0/640/0/ascent = 0.0
+cache/0/640/0/descent = 0.0
+cache/0/640/0/underline_position = 0.0
+cache/0/640/0/underline_thickness = 0.0
+cache/0/640/0/scale = 1.0
+cache/0/700/0/ascent = 0.0
+cache/0/700/0/descent = 0.0
+cache/0/700/0/underline_position = 0.0
+cache/0/700/0/underline_thickness = 0.0
+cache/0/700/0/scale = 1.0
+cache/0/720/0/ascent = 0.0
+cache/0/720/0/descent = 0.0
+cache/0/720/0/underline_position = 0.0
+cache/0/720/0/underline_thickness = 0.0
+cache/0/720/0/scale = 1.0
+cache/0/740/0/ascent = 0.0
+cache/0/740/0/descent = 0.0
+cache/0/740/0/underline_position = 0.0
+cache/0/740/0/underline_thickness = 0.0
+cache/0/740/0/scale = 1.0
+cache/0/760/0/ascent = 0.0
+cache/0/760/0/descent = 0.0
+cache/0/760/0/underline_position = 0.0
+cache/0/760/0/underline_thickness = 0.0
+cache/0/760/0/scale = 1.0
+cache/0/780/0/ascent = 0.0
+cache/0/780/0/descent = 0.0
+cache/0/780/0/underline_position = 0.0
+cache/0/780/0/underline_thickness = 0.0
+cache/0/780/0/scale = 1.0
+cache/0/800/0/ascent = 0.0
+cache/0/800/0/descent = 0.0
+cache/0/800/0/underline_position = 0.0
+cache/0/800/0/underline_thickness = 0.0
+cache/0/800/0/scale = 1.0
+cache/0/820/0/ascent = 0.0
+cache/0/820/0/descent = 0.0
+cache/0/820/0/underline_position = 0.0
+cache/0/820/0/underline_thickness = 0.0
+cache/0/820/0/scale = 1.0
+cache/0/830/0/ascent = 0.0
+cache/0/830/0/descent = 0.0
+cache/0/830/0/underline_position = 0.0
+cache/0/830/0/underline_thickness = 0.0
+cache/0/830/0/scale = 1.0
+cache/0/850/0/ascent = 0.0
+cache/0/850/0/descent = 0.0
+cache/0/850/0/underline_position = 0.0
+cache/0/850/0/underline_thickness = 0.0
+cache/0/850/0/scale = 1.0
+cache/0/860/0/ascent = 0.0
+cache/0/860/0/descent = 0.0
+cache/0/860/0/underline_position = 0.0
+cache/0/860/0/underline_thickness = 0.0
+cache/0/860/0/scale = 1.0
+cache/0/880/0/ascent = 0.0
+cache/0/880/0/descent = 0.0
+cache/0/880/0/underline_position = 0.0
+cache/0/880/0/underline_thickness = 0.0
+cache/0/880/0/scale = 1.0
+cache/0/900/0/ascent = 0.0
+cache/0/900/0/descent = 0.0
+cache/0/900/0/underline_position = 0.0
+cache/0/900/0/underline_thickness = 0.0
+cache/0/900/0/scale = 1.0
+cache/0/920/0/ascent = 0.0
+cache/0/920/0/descent = 0.0
+cache/0/920/0/underline_position = 0.0
+cache/0/920/0/underline_thickness = 0.0
+cache/0/920/0/scale = 1.0
+cache/0/930/0/ascent = 0.0
+cache/0/930/0/descent = 0.0
+cache/0/930/0/underline_position = 0.0
+cache/0/930/0/underline_thickness = 0.0
+cache/0/930/0/scale = 1.0
+cache/0/940/0/ascent = 0.0
+cache/0/940/0/descent = 0.0
+cache/0/940/0/underline_position = 0.0
+cache/0/940/0/underline_thickness = 0.0
+cache/0/940/0/scale = 1.0
+cache/0/950/0/ascent = 0.0
+cache/0/950/0/descent = 0.0
+cache/0/950/0/underline_position = 0.0
+cache/0/950/0/underline_thickness = 0.0
+cache/0/950/0/scale = 1.0
+cache/0/960/0/ascent = 0.0
+cache/0/960/0/descent = 0.0
+cache/0/960/0/underline_position = 0.0
+cache/0/960/0/underline_thickness = 0.0
+cache/0/960/0/scale = 1.0
+cache/0/970/0/ascent = 0.0
+cache/0/970/0/descent = 0.0
+cache/0/970/0/underline_position = 0.0
+cache/0/970/0/underline_thickness = 0.0
+cache/0/970/0/scale = 1.0
+cache/0/980/0/ascent = 0.0
+cache/0/980/0/descent = 0.0
+cache/0/980/0/underline_position = 0.0
+cache/0/980/0/underline_thickness = 0.0
+cache/0/980/0/scale = 1.0
+cache/0/1040/0/ascent = 0.0
+cache/0/1040/0/descent = 0.0
+cache/0/1040/0/underline_position = 0.0
+cache/0/1040/0/underline_thickness = 0.0
+cache/0/1040/0/scale = 1.0
+cache/0/1060/0/ascent = 0.0
+cache/0/1060/0/descent = 0.0
+cache/0/1060/0/underline_position = 0.0
+cache/0/1060/0/underline_thickness = 0.0
+cache/0/1060/0/scale = 1.0
+cache/0/1080/0/ascent = 0.0
+cache/0/1080/0/descent = 0.0
+cache/0/1080/0/underline_position = 0.0
+cache/0/1080/0/underline_thickness = 0.0
+cache/0/1080/0/scale = 1.0
+cache/0/1120/0/ascent = 0.0
+cache/0/1120/0/descent = 0.0
+cache/0/1120/0/underline_position = 0.0
+cache/0/1120/0/underline_thickness = 0.0
+cache/0/1120/0/scale = 1.0
+cache/0/1130/0/ascent = 0.0
+cache/0/1130/0/descent = 0.0
+cache/0/1130/0/underline_position = 0.0
+cache/0/1130/0/underline_thickness = 0.0
+cache/0/1130/0/scale = 1.0
+cache/0/1140/0/ascent = 0.0
+cache/0/1140/0/descent = 0.0
+cache/0/1140/0/underline_position = 0.0
+cache/0/1140/0/underline_thickness = 0.0
+cache/0/1140/0/scale = 1.0
+cache/0/1150/0/ascent = 0.0
+cache/0/1150/0/descent = 0.0
+cache/0/1150/0/underline_position = 0.0
+cache/0/1150/0/underline_thickness = 0.0
+cache/0/1150/0/scale = 1.0
+cache/0/1170/0/ascent = 0.0
+cache/0/1170/0/descent = 0.0
+cache/0/1170/0/underline_position = 0.0
+cache/0/1170/0/underline_thickness = 0.0
+cache/0/1170/0/scale = 1.0
+cache/0/1180/0/ascent = 0.0
+cache/0/1180/0/descent = 0.0
+cache/0/1180/0/underline_position = 0.0
+cache/0/1180/0/underline_thickness = 0.0
+cache/0/1180/0/scale = 1.0
+cache/0/1190/0/ascent = 0.0
+cache/0/1190/0/descent = 0.0
+cache/0/1190/0/underline_position = 0.0
+cache/0/1190/0/underline_thickness = 0.0
+cache/0/1190/0/scale = 1.0
+cache/0/1210/0/ascent = 0.0
+cache/0/1210/0/descent = 0.0
+cache/0/1210/0/underline_position = 0.0
+cache/0/1210/0/underline_thickness = 0.0
+cache/0/1210/0/scale = 1.0
+cache/0/1240/0/ascent = 0.0
+cache/0/1240/0/descent = 0.0
+cache/0/1240/0/underline_position = 0.0
+cache/0/1240/0/underline_thickness = 0.0
+cache/0/1240/0/scale = 1.0
+cache/0/1260/0/ascent = 0.0
+cache/0/1260/0/descent = 0.0
+cache/0/1260/0/underline_position = 0.0
+cache/0/1260/0/underline_thickness = 0.0
+cache/0/1260/0/scale = 1.0
+cache/0/1280/0/ascent = 0.0
+cache/0/1280/0/descent = 0.0
+cache/0/1280/0/underline_position = 0.0
+cache/0/1280/0/underline_thickness = 0.0
+cache/0/1280/0/scale = 1.0
+cache/0/1310/0/ascent = 0.0
+cache/0/1310/0/descent = 0.0
+cache/0/1310/0/underline_position = 0.0
+cache/0/1310/0/underline_thickness = 0.0
+cache/0/1310/0/scale = 1.0
+cache/0/1320/0/ascent = 0.0
+cache/0/1320/0/descent = 0.0
+cache/0/1320/0/underline_position = 0.0
+cache/0/1320/0/underline_thickness = 0.0
+cache/0/1320/0/scale = 1.0
+cache/0/490/0/ascent = 0.0
+cache/0/490/0/descent = 0.0
+cache/0/490/0/underline_position = 0.0
+cache/0/490/0/underline_thickness = 0.0
+cache/0/490/0/scale = 1.0
+cache/0/353/0/ascent = 0.0
+cache/0/353/0/descent = 0.0
+cache/0/353/0/underline_position = 0.0
+cache/0/353/0/underline_thickness = 0.0
+cache/0/353/0/scale = 1.0
+cache/0/351/0/ascent = 0.0
+cache/0/351/0/descent = 0.0
+cache/0/351/0/underline_position = 0.0
+cache/0/351/0/underline_thickness = 0.0
+cache/0/351/0/scale = 1.0
+cache/0/230/0/ascent = 0.0
+cache/0/230/0/descent = 0.0
+cache/0/230/0/underline_position = 0.0
+cache/0/230/0/underline_thickness = 0.0
+cache/0/230/0/scale = 1.0
+cache/0/190/0/ascent = 0.0
+cache/0/190/0/descent = 0.0
+cache/0/190/0/underline_position = 0.0
+cache/0/190/0/underline_thickness = 0.0
+cache/0/190/0/scale = 1.0
+cache/0/90/0/ascent = 0.0
+cache/0/90/0/descent = 0.0
+cache/0/90/0/underline_position = 0.0
+cache/0/90/0/underline_thickness = 0.0
+cache/0/90/0/scale = 1.0
+cache/0/80/0/ascent = 0.0
+cache/0/80/0/descent = 0.0
+cache/0/80/0/underline_position = 0.0
+cache/0/80/0/underline_thickness = 0.0
+cache/0/80/0/scale = 1.0
+cache/0/70/0/ascent = 0.0
+cache/0/70/0/descent = 0.0
+cache/0/70/0/underline_position = 0.0
+cache/0/70/0/underline_thickness = 0.0
+cache/0/70/0/scale = 1.0
+cache/0/60/0/ascent = 0.0
+cache/0/60/0/descent = 0.0
+cache/0/60/0/underline_position = 0.0
+cache/0/60/0/underline_thickness = 0.0
+cache/0/60/0/scale = 1.0
+cache/0/145/0/ascent = 0.0
+cache/0/145/0/descent = 0.0
+cache/0/145/0/underline_position = 0.0
+cache/0/145/0/underline_thickness = 0.0
+cache/0/145/0/scale = 1.0
+cache/0/95/0/ascent = 0.0
+cache/0/95/0/descent = 0.0
+cache/0/95/0/underline_position = 0.0
+cache/0/95/0/underline_thickness = 0.0
+cache/0/95/0/scale = 1.0
+cache/0/85/0/ascent = 0.0
+cache/0/85/0/descent = 0.0
+cache/0/85/0/underline_position = 0.0
+cache/0/85/0/underline_thickness = 0.0
+cache/0/85/0/scale = 1.0
+cache/0/75/0/ascent = 0.0
+cache/0/75/0/descent = 0.0
+cache/0/75/0/underline_position = 0.0
+cache/0/75/0/underline_thickness = 0.0
+cache/0/75/0/scale = 1.0
+cache/0/65/0/ascent = 0.0
+cache/0/65/0/descent = 0.0
+cache/0/65/0/underline_position = 0.0
+cache/0/65/0/underline_thickness = 0.0
+cache/0/65/0/scale = 1.0
+cache/0/55/0/ascent = 0.0
+cache/0/55/0/descent = 0.0
+cache/0/55/0/underline_position = 0.0
+cache/0/55/0/underline_thickness = 0.0
+cache/0/55/0/scale = 1.0
+cache/0/45/0/ascent = 0.0
+cache/0/45/0/descent = 0.0
+cache/0/45/0/underline_position = 0.0
+cache/0/45/0/underline_thickness = 0.0
+cache/0/45/0/scale = 1.0
+cache/0/35/0/ascent = 0.0
+cache/0/35/0/descent = 0.0
+cache/0/35/0/underline_position = 0.0
+cache/0/35/0/underline_thickness = 0.0
+cache/0/35/0/scale = 1.0
+cache/0/25/0/ascent = 0.0
+cache/0/25/0/descent = 0.0
+cache/0/25/0/underline_position = 0.0
+cache/0/25/0/underline_thickness = 0.0
+cache/0/25/0/scale = 1.0
+cache/0/225/0/ascent = 0.0
+cache/0/225/0/descent = 0.0
+cache/0/225/0/underline_position = 0.0
+cache/0/225/0/underline_thickness = 0.0
+cache/0/225/0/scale = 1.0
+cache/0/255/0/ascent = 0.0
+cache/0/255/0/descent = 0.0
+cache/0/255/0/underline_position = 0.0
+cache/0/255/0/underline_thickness = 0.0
+cache/0/255/0/scale = 1.0
+cache/0/335/0/ascent = 0.0
+cache/0/335/0/descent = 0.0
+cache/0/335/0/underline_position = 0.0
+cache/0/335/0/underline_thickness = 0.0
+cache/0/335/0/scale = 1.0
+cache/0/465/0/ascent = 0.0
+cache/0/465/0/descent = 0.0
+cache/0/465/0/underline_position = 0.0
+cache/0/465/0/underline_thickness = 0.0
+cache/0/465/0/scale = 1.0
+cache/0/485/0/ascent = 0.0
+cache/0/485/0/descent = 0.0
+cache/0/485/0/underline_position = 0.0
+cache/0/485/0/underline_thickness = 0.0
+cache/0/485/0/scale = 1.0
+cache/0/535/0/ascent = 0.0
+cache/0/535/0/descent = 0.0
+cache/0/535/0/underline_position = 0.0
+cache/0/535/0/underline_thickness = 0.0
+cache/0/535/0/scale = 1.0
+cache/0/585/0/ascent = 0.0
+cache/0/585/0/descent = 0.0
+cache/0/585/0/underline_position = 0.0
+cache/0/585/0/underline_thickness = 0.0
+cache/0/585/0/scale = 1.0
+cache/0/635/0/ascent = 0.0
+cache/0/635/0/descent = 0.0
+cache/0/635/0/underline_position = 0.0
+cache/0/635/0/underline_thickness = 0.0
+cache/0/635/0/scale = 1.0
+cache/0/685/0/ascent = 0.0
+cache/0/685/0/descent = 0.0
+cache/0/685/0/underline_position = 0.0
+cache/0/685/0/underline_thickness = 0.0
+cache/0/685/0/scale = 1.0
+cache/0/695/0/ascent = 0.0
+cache/0/695/0/descent = 0.0
+cache/0/695/0/underline_position = 0.0
+cache/0/695/0/underline_thickness = 0.0
+cache/0/695/0/scale = 1.0
+cache/0/745/0/ascent = 0.0
+cache/0/745/0/descent = 0.0
+cache/0/745/0/underline_position = 0.0
+cache/0/745/0/underline_thickness = 0.0
+cache/0/745/0/scale = 1.0
+cache/0/755/0/ascent = 0.0
+cache/0/755/0/descent = 0.0
+cache/0/755/0/underline_position = 0.0
+cache/0/755/0/underline_thickness = 0.0
+cache/0/755/0/scale = 1.0
+cache/0/795/0/ascent = 0.0
+cache/0/795/0/descent = 0.0
+cache/0/795/0/underline_position = 0.0
+cache/0/795/0/underline_thickness = 0.0
+cache/0/795/0/scale = 1.0
+cache/0/805/0/ascent = 0.0
+cache/0/805/0/descent = 0.0
+cache/0/805/0/underline_position = 0.0
+cache/0/805/0/underline_thickness = 0.0
+cache/0/805/0/scale = 1.0
+cache/0/845/0/ascent = 0.0
+cache/0/845/0/descent = 0.0
+cache/0/845/0/underline_position = 0.0
+cache/0/845/0/underline_thickness = 0.0
+cache/0/845/0/scale = 1.0
+cache/0/885/0/ascent = 0.0
+cache/0/885/0/descent = 0.0
+cache/0/885/0/underline_position = 0.0
+cache/0/885/0/underline_thickness = 0.0
+cache/0/885/0/scale = 1.0
+cache/0/895/0/ascent = 0.0
+cache/0/895/0/descent = 0.0
+cache/0/895/0/underline_position = 0.0
+cache/0/895/0/underline_thickness = 0.0
+cache/0/895/0/scale = 1.0
+cache/0/935/0/ascent = 0.0
+cache/0/935/0/descent = 0.0
+cache/0/935/0/underline_position = 0.0
+cache/0/935/0/underline_thickness = 0.0
+cache/0/935/0/scale = 1.0
+cache/0/945/0/ascent = 0.0
+cache/0/945/0/descent = 0.0
+cache/0/945/0/underline_position = 0.0
+cache/0/945/0/underline_thickness = 0.0
+cache/0/945/0/scale = 1.0
+cache/0/965/0/ascent = 0.0
+cache/0/965/0/descent = 0.0
+cache/0/965/0/underline_position = 0.0
+cache/0/965/0/underline_thickness = 0.0
+cache/0/965/0/scale = 1.0
+cache/0/975/0/ascent = 0.0
+cache/0/975/0/descent = 0.0
+cache/0/975/0/underline_position = 0.0
+cache/0/975/0/underline_thickness = 0.0
+cache/0/975/0/scale = 1.0
+cache/0/985/0/ascent = 0.0
+cache/0/985/0/descent = 0.0
+cache/0/985/0/underline_position = 0.0
+cache/0/985/0/underline_thickness = 0.0
+cache/0/985/0/scale = 1.0
+cache/0/995/0/ascent = 0.0
+cache/0/995/0/descent = 0.0
+cache/0/995/0/underline_position = 0.0
+cache/0/995/0/underline_thickness = 0.0
+cache/0/995/0/scale = 1.0
+cache/0/955/0/ascent = 0.0
+cache/0/955/0/descent = 0.0
+cache/0/955/0/underline_position = 0.0
+cache/0/955/0/underline_thickness = 0.0
+cache/0/955/0/scale = 1.0
+cache/0/925/0/ascent = 0.0
+cache/0/925/0/descent = 0.0
+cache/0/925/0/underline_position = 0.0
+cache/0/925/0/underline_thickness = 0.0
+cache/0/925/0/scale = 1.0
+cache/0/875/0/ascent = 0.0
+cache/0/875/0/descent = 0.0
+cache/0/875/0/underline_position = 0.0
+cache/0/875/0/underline_thickness = 0.0
+cache/0/875/0/scale = 1.0
+cache/0/855/0/ascent = 0.0
+cache/0/855/0/descent = 0.0
+cache/0/855/0/underline_position = 0.0
+cache/0/855/0/underline_thickness = 0.0
+cache/0/855/0/scale = 1.0
+cache/0/815/0/ascent = 0.0
+cache/0/815/0/descent = 0.0
+cache/0/815/0/underline_position = 0.0
+cache/0/815/0/underline_thickness = 0.0
+cache/0/815/0/scale = 1.0
+cache/0/785/0/ascent = 0.0
+cache/0/785/0/descent = 0.0
+cache/0/785/0/underline_position = 0.0
+cache/0/785/0/underline_thickness = 0.0
+cache/0/785/0/scale = 1.0
+cache/0/775/0/ascent = 0.0
+cache/0/775/0/descent = 0.0
+cache/0/775/0/underline_position = 0.0
+cache/0/775/0/underline_thickness = 0.0
+cache/0/775/0/scale = 1.0
+cache/0/725/0/ascent = 0.0
+cache/0/725/0/descent = 0.0
+cache/0/725/0/underline_position = 0.0
+cache/0/725/0/underline_thickness = 0.0
+cache/0/725/0/scale = 1.0
+cache/0/715/0/ascent = 0.0
+cache/0/715/0/descent = 0.0
+cache/0/715/0/underline_position = 0.0
+cache/0/715/0/underline_thickness = 0.0
+cache/0/715/0/scale = 1.0
+cache/0/645/0/ascent = 0.0
+cache/0/645/0/descent = 0.0
+cache/0/645/0/underline_position = 0.0
+cache/0/645/0/underline_thickness = 0.0
+cache/0/645/0/scale = 1.0
+cache/0/625/0/ascent = 0.0
+cache/0/625/0/descent = 0.0
+cache/0/625/0/underline_position = 0.0
+cache/0/625/0/underline_thickness = 0.0
+cache/0/625/0/scale = 1.0
+cache/0/615/0/ascent = 0.0
+cache/0/615/0/descent = 0.0
+cache/0/615/0/underline_position = 0.0
+cache/0/615/0/underline_thickness = 0.0
+cache/0/615/0/scale = 1.0
+cache/0/605/0/ascent = 0.0
+cache/0/605/0/descent = 0.0
+cache/0/605/0/underline_position = 0.0
+cache/0/605/0/underline_thickness = 0.0
+cache/0/605/0/scale = 1.0
+cache/0/555/0/ascent = 0.0
+cache/0/555/0/descent = 0.0
+cache/0/555/0/underline_position = 0.0
+cache/0/555/0/underline_thickness = 0.0
+cache/0/555/0/scale = 1.0
+cache/0/545/0/ascent = 0.0
+cache/0/545/0/descent = 0.0
+cache/0/545/0/underline_position = 0.0
+cache/0/545/0/underline_thickness = 0.0
+cache/0/545/0/scale = 1.0
+cache/0/525/0/ascent = 0.0
+cache/0/525/0/descent = 0.0
+cache/0/525/0/underline_position = 0.0
+cache/0/525/0/underline_thickness = 0.0
+cache/0/525/0/scale = 1.0
+cache/0/515/0/ascent = 0.0
+cache/0/515/0/descent = 0.0
+cache/0/515/0/underline_position = 0.0
+cache/0/515/0/underline_thickness = 0.0
+cache/0/515/0/scale = 1.0
+cache/0/505/0/ascent = 0.0
+cache/0/505/0/descent = 0.0
+cache/0/505/0/underline_position = 0.0
+cache/0/505/0/underline_thickness = 0.0
+cache/0/505/0/scale = 1.0
+cache/0/495/0/ascent = 0.0
+cache/0/495/0/descent = 0.0
+cache/0/495/0/underline_position = 0.0
+cache/0/495/0/underline_thickness = 0.0
+cache/0/495/0/scale = 1.0
+cache/0/445/0/ascent = 0.0
+cache/0/445/0/descent = 0.0
+cache/0/445/0/underline_position = 0.0
+cache/0/445/0/underline_thickness = 0.0
+cache/0/445/0/scale = 1.0
+cache/0/425/0/ascent = 0.0
+cache/0/425/0/descent = 0.0
+cache/0/425/0/underline_position = 0.0
+cache/0/425/0/underline_thickness = 0.0
+cache/0/425/0/scale = 1.0
+cache/0/405/0/ascent = 0.0
+cache/0/405/0/descent = 0.0
+cache/0/405/0/underline_position = 0.0
+cache/0/405/0/underline_thickness = 0.0
+cache/0/405/0/scale = 1.0
+cache/0/305/0/ascent = 0.0
+cache/0/305/0/descent = 0.0
+cache/0/305/0/underline_position = 0.0
+cache/0/305/0/underline_thickness = 0.0
+cache/0/305/0/scale = 1.0
+cache/0/275/0/ascent = 0.0
+cache/0/275/0/descent = 0.0
+cache/0/275/0/underline_position = 0.0
+cache/0/275/0/underline_thickness = 0.0
+cache/0/275/0/scale = 1.0
+cache/0/215/0/ascent = 0.0
+cache/0/215/0/descent = 0.0
+cache/0/215/0/underline_position = 0.0
+cache/0/215/0/underline_thickness = 0.0
+cache/0/215/0/scale = 1.0
+cache/0/205/0/ascent = 0.0
+cache/0/205/0/descent = 0.0
+cache/0/205/0/underline_position = 0.0
+cache/0/205/0/underline_thickness = 0.0
+cache/0/205/0/scale = 1.0
+cache/0/195/0/ascent = 0.0
+cache/0/195/0/descent = 0.0
+cache/0/195/0/underline_position = 0.0
+cache/0/195/0/underline_thickness = 0.0
+cache/0/195/0/scale = 1.0
+cache/0/235/0/ascent = 0.0
+cache/0/235/0/descent = 0.0
+cache/0/235/0/underline_position = 0.0
+cache/0/235/0/underline_thickness = 0.0
+cache/0/235/0/scale = 1.0
+cache/0/245/0/ascent = 0.0
+cache/0/245/0/descent = 0.0
+cache/0/245/0/underline_position = 0.0
+cache/0/245/0/underline_thickness = 0.0
+cache/0/245/0/scale = 1.0
+cache/0/265/0/ascent = 0.0
+cache/0/265/0/descent = 0.0
+cache/0/265/0/underline_position = 0.0
+cache/0/265/0/underline_thickness = 0.0
+cache/0/265/0/scale = 1.0
+cache/0/285/0/ascent = 0.0
+cache/0/285/0/descent = 0.0
+cache/0/285/0/underline_position = 0.0
+cache/0/285/0/underline_thickness = 0.0
+cache/0/285/0/scale = 1.0
+cache/0/295/0/ascent = 0.0
+cache/0/295/0/descent = 0.0
+cache/0/295/0/underline_position = 0.0
+cache/0/295/0/underline_thickness = 0.0
+cache/0/295/0/scale = 1.0
+cache/0/315/0/ascent = 0.0
+cache/0/315/0/descent = 0.0
+cache/0/315/0/underline_position = 0.0
+cache/0/315/0/underline_thickness = 0.0
+cache/0/315/0/scale = 1.0
+cache/0/325/0/ascent = 0.0
+cache/0/325/0/descent = 0.0
+cache/0/325/0/underline_position = 0.0
+cache/0/325/0/underline_thickness = 0.0
+cache/0/325/0/scale = 1.0
+cache/0/345/0/ascent = 0.0
+cache/0/345/0/descent = 0.0
+cache/0/345/0/underline_position = 0.0
+cache/0/345/0/underline_thickness = 0.0
+cache/0/345/0/scale = 1.0
+cache/0/355/0/ascent = 0.0
+cache/0/355/0/descent = 0.0
+cache/0/355/0/underline_position = 0.0
+cache/0/355/0/underline_thickness = 0.0
+cache/0/355/0/scale = 1.0
+cache/0/365/0/ascent = 0.0
+cache/0/365/0/descent = 0.0
+cache/0/365/0/underline_position = 0.0
+cache/0/365/0/underline_thickness = 0.0
+cache/0/365/0/scale = 1.0
+cache/0/375/0/ascent = 0.0
+cache/0/375/0/descent = 0.0
+cache/0/375/0/underline_position = 0.0
+cache/0/375/0/underline_thickness = 0.0
+cache/0/375/0/scale = 1.0
+cache/0/385/0/ascent = 0.0
+cache/0/385/0/descent = 0.0
+cache/0/385/0/underline_position = 0.0
+cache/0/385/0/underline_thickness = 0.0
+cache/0/385/0/scale = 1.0
+cache/0/395/0/ascent = 0.0
+cache/0/395/0/descent = 0.0
+cache/0/395/0/underline_position = 0.0
+cache/0/395/0/underline_thickness = 0.0
+cache/0/395/0/scale = 1.0
+cache/0/52/0/ascent = 0.0
+cache/0/52/0/descent = 0.0
+cache/0/52/0/underline_position = 0.0
+cache/0/52/0/underline_thickness = 0.0
+cache/0/52/0/scale = 1.0
+cache/0/5/0/ascent = 0.0
+cache/0/5/0/descent = 0.0
+cache/0/5/0/underline_position = 0.0
+cache/0/5/0/underline_thickness = 0.0
+cache/0/5/0/scale = 1.0
+cache/0/15/0/ascent = 0.0
+cache/0/15/0/descent = 0.0
+cache/0/15/0/underline_position = 0.0
+cache/0/15/0/underline_thickness = 0.0
+cache/0/15/0/scale = 1.0
+cache/0/48/0/ascent = 0.0
+cache/0/48/0/descent = 0.0
+cache/0/48/0/underline_position = 0.0
+cache/0/48/0/underline_thickness = 0.0
+cache/0/48/0/scale = 1.0
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_s7cmo"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gg8mx"]
+emission_enabled = true
+emission = Color(1, 1, 1, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_b058i"]
+material = SubResource("StandardMaterial3D_gg8mx")
+size = Vector3(3.75, 1, 0.07)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_njh5b"]
 transparency = 1
-blend_mode = 1
+blend_mode = 3
+no_depth_test = true
+albedo_color = Color(0, 0, 0, 0.654902)
+emission_enabled = true
+emission = Color(1, 0.3372549, 0, 1)
+emission_energy_multiplier = 12.0
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_k44yu"]
+material = SubResource("StandardMaterial3D_njh5b")
+size = Vector2(1.4, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gssec"]
+transparency = 1
+blend_mode = 4
+no_depth_test = true
 albedo_color = Color(0, 0, 0, 0.654902)
 metallic = 1.0
 roughness = 0.44
 emission_enabled = true
 emission = Color(1, 0.3372549, 0, 1)
-emission_energy_multiplier = 21.4
+emission_energy_multiplier = 12.0
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_bj344"]
+material = SubResource("StandardMaterial3D_gssec")
+size = Vector2(1.4, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ja6ch"]
+transparency = 1
+blend_mode = 3
+no_depth_test = true
+albedo_color = Color(0, 0, 0, 0.654902)
+metallic = 1.0
+roughness = 0.44
+emission_enabled = true
+emission = Color(1, 0.3372549, 0, 1)
+emission_energy_multiplier = 12.0
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_1amol"]
+material = SubResource("StandardMaterial3D_ja6ch")
+size = Vector2(1.4, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_f14fn"]
+transparency = 1
+blend_mode = 3
+no_depth_test = true
+albedo_color = Color(0, 0, 0, 0.654902)
+metallic = 1.0
+roughness = 0.44
+emission_enabled = true
+emission = Color(1, 0.3372549, 0, 1)
+emission_energy_multiplier = 12.0
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_rlhfq"]
+material = SubResource("StandardMaterial3D_f14fn")
+size = Vector2(1.4, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dpu46"]
+no_depth_test = true
+emission_enabled = true
+emission = Color(1, 1, 1, 1)
+emission_energy_multiplier = 10.0
+stencil_flags = 2
+stencil_reference = 6
+
+[sub_resource type="BoxMesh" id="BoxMesh_sv71j"]
+material = SubResource("StandardMaterial3D_dpu46")
+size = Vector3(0.435, 0.05, 0.01)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yciqh"]
+transparency = 1
+blend_mode = 4
+no_depth_test = true
+albedo_color = Color(0, 0, 0, 0.654902)
+metallic = 1.0
+roughness = 0.44
+emission_enabled = true
+emission = Color(1, 0.3372549, 0, 1)
+emission_energy_multiplier = 12.0
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_sv71j"]
+material = SubResource("StandardMaterial3D_yciqh")
+size = Vector2(1.25, 0.4)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_12cn7"]
+transparency = 1
+blend_mode = 3
+no_depth_test = true
+albedo_color = Color(0, 0, 0, 0.654902)
+metallic = 1.0
+roughness = 0.44
+emission_enabled = true
+emission = Color(1, 0.3372549, 0, 1)
+emission_energy_multiplier = 12.0
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_x00vi"]
+material = SubResource("StandardMaterial3D_12cn7")
+size = Vector2(1.25, 0.4)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_42ejm"]
+transparency = 1
+blend_mode = 3
+no_depth_test = true
+albedo_color = Color(0, 0, 0, 0.654902)
+metallic = 1.0
+roughness = 0.44
+emission_enabled = true
+emission = Color(1, 0.3372549, 0, 1)
+emission_energy_multiplier = 12.0
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_a081e"]
+material = SubResource("StandardMaterial3D_42ejm")
+size = Vector2(1.25, 0.4)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_g31vf"]
+transparency = 1
+blend_mode = 3
+no_depth_test = true
+albedo_color = Color(0, 0, 0, 0.654902)
+metallic = 1.0
+roughness = 0.44
+emission_enabled = true
+emission = Color(1, 0.3372549, 0, 1)
+emission_energy_multiplier = 12.0
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_gg8mx"]
+material = SubResource("StandardMaterial3D_g31vf")
+size = Vector2(1.25, 0.4)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_n01wu"]
+transparency = 1
+blend_mode = 3
+no_depth_test = true
+albedo_color = Color(0, 0, 0, 0.654902)
+metallic = 1.0
+roughness = 0.44
+emission_enabled = true
+emission = Color(1, 0.3372549, 0, 1)
+emission_energy_multiplier = 12.0
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_sb1ko"]
+material = SubResource("StandardMaterial3D_n01wu")
+size = Vector2(1.25, 0.4)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_t05xm"]
+material = SubResource("StandardMaterial3D_yciqh")
+size = Vector2(1.25, 0.6)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_l5ika"]
+material = SubResource("StandardMaterial3D_12cn7")
+size = Vector2(1.25, 0.6)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_6dr8p"]
+material = SubResource("StandardMaterial3D_42ejm")
+size = Vector2(1.25, 0.6)
+
+[sub_resource type="BoxMesh" id="BoxMesh_vjm6r"]
+material = SubResource("StandardMaterial3D_dpu46")
+size = Vector3(0.44, 0.075, 0.01)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_v515h"]
+transparency = 1
+blend_mode = 4
+no_depth_test = true
+albedo_color = Color(0, 0, 0, 0.654902)
+metallic = 1.0
+roughness = 0.44
+emission_enabled = true
+emission = Color(1, 0.3372549, 0, 1)
+emission_energy_multiplier = 12.0
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_vjm6r"]
+material = SubResource("StandardMaterial3D_v515h")
+size = Vector2(1.1, 1.05)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_4qq6n"]
+size = Vector2(1.4, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_s7cmo"]
+transparency = 1
+blend_mode = 3
+no_depth_test = true
+albedo_color = Color(0, 0, 0, 0.654902)
+metallic = 1.0
+roughness = 0.44
+emission_enabled = true
+emission = Color(1, 0.3372549, 0, 1)
+emission_energy_multiplier = 12.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4qq6n"]
+no_depth_test = true
+emission_enabled = true
+emission = Color(1, 0.31764707, 0, 1)
+emission_energy_multiplier = 50.0
+stencil_flags = 2
+stencil_reference = 6
+
+[sub_resource type="BoxMesh" id="BoxMesh_s7cmo"]
+material = SubResource("StandardMaterial3D_4qq6n")
+size = Vector3(0.35, 0.01, 0.01)
+
+[sub_resource type="BoxMesh" id="BoxMesh_8d6ws"]
+material = SubResource("StandardMaterial3D_4qq6n")
+size = Vector3(0.235, 0.01, 0.01)
+
+[sub_resource type="Shader" id="Shader_t05xm"]
+code = "// CRT with Luminance Preservation (no scanlines) by Harrison Allen
+// Converted to 3D by Claude
+// Public domain
+
+shader_type spatial;
+render_mode blend_mix, depth_draw_opaque, cull_back, unshaded;
+
+/**
+	The input texture that will have the CRT effect applied to it.
+	This should be supplied by a subviewport texture rendered at a lower res.
+	*/
+uniform sampler2D tex: filter_linear;
+
+/**
+	Set the type of mask this CRT will have.
+	Dots: emulates a typical PC CRT monitor.
+	Grille: emulates an aperture grille. Good with higher curve values.
+	Wide Grille: more suitable for 4k monitors.
+	Soft Grille: very close to wide grille, but a little softer.
+	Slot mask: this is the pattern found on most TV sets and arcade cabinets
+	*/
+uniform int mask_type : hint_enum(
+	\"Dots:1\",
+	\"Aperture Grille:2\",
+	\"Wide Grille:3\",
+	\"Wide Soft Grille:4\",
+	\"Slot Mask:5\",
+	\"Null:0\") = 1;
+
+uniform float curve : hint_range(0.0, 0.5) = 0.0;
+
+/**
+	Use to offset color channels from each other.
+	Make sure to increase this at least a little because it's a cool effect
+	*/
+uniform float color_offset : hint_range(-0.5, 0.5) = 0.0;
+
+/**
+	Reduce to preserve phosphor mask details in highlights at the cost of
+	overall brightness. This should usually be kept at or near 1
+	*/
+uniform float mask_brightness : hint_range(0, 1) = 1.0;
+
+/**
+	This should be the input texture's height divided by width.
+	Only important if curve is used.
+	For 16:9, this should be 0.5625.
+	*/
+uniform float aspect : hint_range(0.5, 1.0) = 0.75;
+
+vec2 warp(vec2 uv, float _aspect, float _curve)
+{
+	// Centralize coordinates
+	uv -= 0.5;
+
+	uv.x /= _aspect;
+
+	// Squared distance from the middle
+	float warping = dot(uv, uv) * _curve;
+
+	// Compensate for shrinking
+	warping -= _curve * 0.25;
+
+	// Warp the coordinates
+	uv /= 1.0 - warping;
+
+	uv.x *= _aspect;
+
+	// Decentralize the coordinates
+	uv += 0.5;
+
+	return uv;
+}
+
+vec3 linear_to_srgb(vec3 col)
+{
+	return mix(
+		(pow(col, vec3(1.0 / 2.4)) * 1.055) - 0.055,
+		col * 12.92,
+		lessThan(col, vec3(0.0031318))
+	);
+}
+
+vec3 srgb_to_linear(vec3 col)
+{
+	return mix(
+		pow((col + 0.055) / 1.055, vec3(2.4)),
+		col / 12.92,
+		lessThan(col, vec3(0.04045))
+	);
+}
+
+// Get color from coordinates (returns in linear color)
+vec3 sample(vec2 uv)
+{
+	// Set coordinates to match texture dimensions
+	uv *= vec2(textureSize(tex, 0));
+
+	// Vertical coordinate scanline samples
+	int y = int(uv.y + 0.5) - 1;
+
+	float x = floor(uv.x);
+
+	// Horizontal coordinates for the left and right texture samples
+	float ax = x - 1.0;
+	float dx = x + 1.0;
+
+	// Sample the texture at various points
+	vec3 upper_a = texelFetch(tex, ivec2(int(ax), y), 0).rgb;
+	vec3 upper_b = texelFetch(tex, ivec2(int(x), y), 0).rgb;
+	vec3 upper_c = texelFetch(tex, ivec2(int(dx), y), 0).rgb;
+
+	// Adjust the vertical coordinate for the lower scanline
+	y += 1;
+
+	// Sample the texture at various points
+	vec3 lower_a = texelFetch(tex, ivec2(int(ax), y), 0).rgb;
+	vec3 lower_b = texelFetch(tex, ivec2(int(x), y), 0).rgb;
+	vec3 lower_c = texelFetch(tex, ivec2(int(dx), y), 0).rgb;
+
+	// Convert every sample to linear color
+	upper_a = srgb_to_linear(upper_a);
+	upper_b = srgb_to_linear(upper_b);
+	upper_c = srgb_to_linear(upper_c);
+
+	lower_a = srgb_to_linear(lower_a);
+	lower_b = srgb_to_linear(lower_b);
+	lower_c = srgb_to_linear(lower_c);
+
+	// The x coordinates of electron beam offsets
+	vec3 beam = vec3(uv.x - 0.5);
+	beam.r -= color_offset;
+	beam.b += color_offset;
+
+	// Calculate weights
+	vec3 weight_a = smoothstep(1.0, 0.0, (beam - ax));
+	vec3 weight_b = smoothstep(1.0, 0.0, abs(beam - x));
+	vec3 weight_c = smoothstep(1.0, 0.0, (dx - beam));
+
+	vec3 upper_col = (
+		upper_a * weight_a +
+		upper_b * weight_b +
+		upper_c * weight_c
+	);
+
+	// Mix samples into the lower scanline color
+	vec3 lower_col = (
+		lower_a * weight_a +
+		lower_b * weight_b +
+		lower_c * weight_c
+	);
+
+	// Vertical sawtooth wave used to generate scanlines
+	// Almost the same as fract(uv.y + 0.5), but prevents a rare visual bug
+	float sawtooth = (uv.y + 0.5) - float(y);
+
+	// Smoothstep the sawtooth wave
+	sawtooth = smoothstep(0.0, 1.0, sawtooth);
+
+	vec3 combined = mix(upper_col, lower_col, sawtooth);
+
+	return combined;
+}
+
+// Returns the slotmask pattern in RGB plus a fourth value for avg. brightness
+vec4 generate_mask(vec2 fragcoord)
+{
+	switch (mask_type)
+	{
+		case 1: // Dots
+			const vec3 pattern[] = {vec3(1,0,0), vec3(0,1,0), vec3(0,0,1), vec3(0,0,0)};
+
+			ivec2 icoords = ivec2(fragcoord);
+
+			return vec4(pattern[(icoords.y * 2 + icoords.x) % 4], 0.25);
+
+		case 2: // Grille
+			const vec3 pattern[] = {vec3(0,1,0), vec3(1,0,1)};
+
+			return vec4(pattern[int(fragcoord.x) % 2], 0.5);
+
+		case 3: // Wide grille
+			const vec3 pattern[] = {
+				vec3(1,0,0), vec3(0,1,0), vec3(0,0,1), vec3(0,0,0)};
+
+			return vec4(pattern[int(fragcoord.x) % 4], 0.25);
+
+		case 4: // Grille wide soft
+			const vec3 pattern[] = {
+				vec3(1.0,0.125,0.0),
+				vec3(0.125,1.0,0.125),
+				vec3(0.0,0.125,1.0),
+				vec3(0.125,0.0,0.125)};
+
+			return vec4(pattern[int(fragcoord.x) % 4], 0.3125);
+
+		case 5: // Slotmask
+			const vec3 pattern[] = {
+				vec3(1,0,1), vec3(0,1,0), vec3(1,0,1), vec3(0,1,0),
+				vec3(0,0,1), vec3(0,1,0), vec3(1,0,0), vec3(0,0,0),
+				vec3(1,0,1), vec3(0,1,0), vec3(1,0,1), vec3(0,1,0),
+				vec3(1,0,0), vec3(0,0,0), vec3(0,0,1), vec3(0,1,0)
+			};
+
+			ivec2 icoords = ivec2(fragcoord) % 4;
+
+			return vec4(pattern[icoords.y * 4 + icoords.x], 0.375);
+
+		default:
+			return vec4(0.5);
+	}
+}
+
+// Apply phosphor mask/grill
+vec3 apply_mask(vec3 linear_color, vec2 fragcoord)
+{
+	// Get the pattern for the mask. Mask.w equals avg. brightness of the mask
+	vec4 mask = generate_mask(fragcoord);
+
+	// Dim the color if brightness is reduced to preserve mask details
+	linear_color *= mix(mask.w, 1.0, mask_brightness);
+
+	// How bright the color needs to be to maintain 100% brightness while masked
+	vec3 target_color = linear_color / mask.w;
+
+	// Target color limited to the 0 to 1 range.
+	vec3 primary_col = clamp(target_color, 0.0, 1.0);
+
+	// Calculate how bright the secondary subpixels will need to be
+	vec3 secondary = target_color - primary_col;
+	secondary /= 1.0 / mask.w - 1.0;
+
+	primary_col *= mask.rgb;
+
+	// Add the secondary subpixels
+	primary_col += secondary * (1.0 - mask.rgb);
+
+	return primary_col;
+}
+
+void fragment()
+{
+	// Warp UV coordinates
+	vec2 warped_coords = warp(UV, aspect, curve);
+
+	// Sample color
+	vec3 col = sample(warped_coords);
+
+	// Apply phosphor mask (use FRAGCOORD for pixel-perfect mask positioning)
+	col = apply_mask(col, FRAGCOORD.xy);
+
+	// Convert back to srgb
+	col = linear_to_srgb(col);
+
+	ALBEDO = col;
+	ALPHA = 1.0;
+}"
+
+[sub_resource type="Curve" id="Curve_l5ika"]
+_data = [Vector2(0, 0.7175498), 0.0, 0.0, 0, 0, Vector2(0.27242526, 0), 0.0, 0.0, 0, 0, Vector2(0.8853821, 0.8050182), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="Curve" id="Curve_6dr8p"]
+_data = [Vector2(0.056478404, 0.22189516), 0.0, 0.0, 0, 0, Vector2(0.6129568, 0.6337258), -5.9420776, -5.9420776, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Curve" id="Curve_3nktn"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1e-05, 0.33851975), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveXYZTexture" id="CurveXYZTexture_61m6q"]
+curve_x = SubResource("Curve_l5ika")
+curve_y = SubResource("Curve_6dr8p")
+curve_z = SubResource("Curve_3nktn")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_5hhbi"]
+render_priority = 0
+shader = SubResource("Shader_t05xm")
+shader_parameter/tex = SubResource("CurveXYZTexture_61m6q")
+shader_parameter/mask_type = 4
+shader_parameter/curve = 0.0
+shader_parameter/color_offset = 0.37600004161
+shader_parameter/mask_brightness = 0.214000010165
+shader_parameter/aspect = 0.75
+
+[sub_resource type="SphereMesh" id="SphereMesh_l5ika"]
+material = SubResource("ShaderMaterial_5hhbi")
+radius = 0.06
+height = 0.001
+is_hemisphere = true
+
+[sub_resource type="Curve" id="Curve_t05xm"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveXYZTexture" id="CurveXYZTexture_8d6ws"]
+curve_x = SubResource("Curve_t05xm")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_dpu46"]
+render_priority = 0
+shader = ExtResource("5_l5ika")
+shader_parameter/tex = SubResource("CurveXYZTexture_8d6ws")
+shader_parameter/mask_type = 4
+shader_parameter/curve = 0.0
+shader_parameter/color_offset = 0.37600004161
+shader_parameter/mask_brightness = 0.214000010165
+shader_parameter/aspect = 0.75
+
+[sub_resource type="SphereMesh" id="SphereMesh_njh5b"]
+material = SubResource("ShaderMaterial_dpu46")
+radius = 0.05
+height = 0.001
+is_hemisphere = true
+
+[sub_resource type="Shader" id="Shader_l5ika"]
+code = "// CRT with Luminance Preservation (no scanlines) by Harrison Allen
+// Converted to 3D by Claude
+// Public domain
+
+shader_type spatial;
+render_mode blend_mix, depth_draw_opaque, cull_back, unshaded;
+
+/**
+	The input texture that will have the CRT effect applied to it.
+	This should be supplied by a subviewport texture rendered at a lower res.
+	*/
+uniform sampler2D tex: filter_linear;
+
+/**
+	Set the type of mask this CRT will have.
+	Dots: emulates a typical PC CRT monitor.
+	Grille: emulates an aperture grille. Good with higher curve values.
+	Wide Grille: more suitable for 4k monitors.
+	Soft Grille: very close to wide grille, but a little softer.
+	Slot mask: this is the pattern found on most TV sets and arcade cabinets
+	*/
+uniform int mask_type : hint_enum(
+	\"Dots:1\",
+	\"Aperture Grille:2\",
+	\"Wide Grille:3\",
+	\"Wide Soft Grille:4\",
+	\"Slot Mask:5\",
+	\"Null:0\") = 1;
+
+uniform float curve : hint_range(0.0, 0.5) = 0.0;
+
+/**
+	Use to offset color channels from each other.
+	Make sure to increase this at least a little because it's a cool effect
+	*/
+uniform float color_offset : hint_range(-0.5, 0.5) = 0.0;
+
+/**
+	Reduce to preserve phosphor mask details in highlights at the cost of
+	overall brightness. This should usually be kept at or near 1
+	*/
+uniform float mask_brightness : hint_range(0, 1) = 1.0;
+
+/**
+	This should be the input texture's height divided by width.
+	Only important if curve is used.
+	For 16:9, this should be 0.5625.
+	*/
+uniform float aspect : hint_range(0.5, 1.0) = 0.75;
+
+vec2 warp(vec2 uv, float _aspect, float _curve)
+{
+	// Centralize coordinates
+	uv -= 0.5;
+
+	uv.x /= _aspect;
+
+	// Squared distance from the middle
+	float warping = dot(uv, uv) * _curve;
+
+	// Compensate for shrinking
+	warping -= _curve * 0.25;
+
+	// Warp the coordinates
+	uv /= 1.0 - warping;
+
+	uv.x *= _aspect;
+
+	// Decentralize the coordinates
+	uv += 0.5;
+
+	return uv;
+}
+
+vec3 linear_to_srgb(vec3 col)
+{
+	return mix(
+		(pow(col, vec3(1.0 / 2.4)) * 1.055) - 0.055,
+		col * 12.92,
+		lessThan(col, vec3(0.0031318))
+	);
+}
+
+vec3 srgb_to_linear(vec3 col)
+{
+	return mix(
+		pow((col + 0.055) / 1.055, vec3(2.4)),
+		col / 12.92,
+		lessThan(col, vec3(0.04045))
+	);
+}
+
+// Get color from coordinates (returns in linear color)
+vec3 sample(vec2 uv)
+{
+	// Set coordinates to match texture dimensions
+	uv *= vec2(textureSize(tex, 0));
+
+	// Vertical coordinate scanline samples
+	int y = int(uv.y + 0.5) - 1;
+
+	float x = floor(uv.x);
+
+	// Horizontal coordinates for the left and right texture samples
+	float ax = x - 1.0;
+	float dx = x + 1.0;
+
+	// Sample the texture at various points
+	vec3 upper_a = texelFetch(tex, ivec2(int(ax), y), 0).rgb;
+	vec3 upper_b = texelFetch(tex, ivec2(int(x), y), 0).rgb;
+	vec3 upper_c = texelFetch(tex, ivec2(int(dx), y), 0).rgb;
+
+	// Adjust the vertical coordinate for the lower scanline
+	y += 1;
+
+	// Sample the texture at various points
+	vec3 lower_a = texelFetch(tex, ivec2(int(ax), y), 0).rgb;
+	vec3 lower_b = texelFetch(tex, ivec2(int(x), y), 0).rgb;
+	vec3 lower_c = texelFetch(tex, ivec2(int(dx), y), 0).rgb;
+
+	// Convert every sample to linear color
+	upper_a = srgb_to_linear(upper_a);
+	upper_b = srgb_to_linear(upper_b);
+	upper_c = srgb_to_linear(upper_c);
+
+	lower_a = srgb_to_linear(lower_a);
+	lower_b = srgb_to_linear(lower_b);
+	lower_c = srgb_to_linear(lower_c);
+
+	// The x coordinates of electron beam offsets
+	vec3 beam = vec3(uv.x - 0.5);
+	beam.r -= color_offset;
+	beam.b += color_offset;
+
+	// Calculate weights
+	vec3 weight_a = smoothstep(1.0, 0.0, (beam - ax));
+	vec3 weight_b = smoothstep(1.0, 0.0, abs(beam - x));
+	vec3 weight_c = smoothstep(1.0, 0.0, (dx - beam));
+
+	vec3 upper_col = (
+		upper_a * weight_a +
+		upper_b * weight_b +
+		upper_c * weight_c
+	);
+
+	// Mix samples into the lower scanline color
+	vec3 lower_col = (
+		lower_a * weight_a +
+		lower_b * weight_b +
+		lower_c * weight_c
+	);
+
+	// Vertical sawtooth wave used to generate scanlines
+	// Almost the same as fract(uv.y + 0.5), but prevents a rare visual bug
+	float sawtooth = (uv.y + 0.5) - float(y);
+
+	// Smoothstep the sawtooth wave
+	sawtooth = smoothstep(0.0, 1.0, sawtooth);
+
+	vec3 combined = mix(upper_col, lower_col, sawtooth);
+
+	return combined;
+}
+
+// Returns the slotmask pattern in RGB plus a fourth value for avg. brightness
+vec4 generate_mask(vec2 fragcoord)
+{
+	switch (mask_type)
+	{
+		case 1: // Dots
+			const vec3 pattern[] = {vec3(1,0,0), vec3(0,1,0), vec3(0,0,1), vec3(0,0,0)};
+
+			ivec2 icoords = ivec2(fragcoord);
+
+			return vec4(pattern[(icoords.y * 2 + icoords.x) % 4], 0.25);
+
+		case 2: // Grille
+			const vec3 pattern[] = {vec3(0,1,0), vec3(1,0,1)};
+
+			return vec4(pattern[int(fragcoord.x) % 2], 0.5);
+
+		case 3: // Wide grille
+			const vec3 pattern[] = {
+				vec3(1,0,0), vec3(0,1,0), vec3(0,0,1), vec3(0,0,0)};
+
+			return vec4(pattern[int(fragcoord.x) % 4], 0.25);
+
+		case 4: // Grille wide soft
+			const vec3 pattern[] = {
+				vec3(1.0,0.125,0.0),
+				vec3(0.125,1.0,0.125),
+				vec3(0.0,0.125,1.0),
+				vec3(0.125,0.0,0.125)};
+
+			return vec4(pattern[int(fragcoord.x) % 4], 0.3125);
+
+		case 5: // Slotmask
+			const vec3 pattern[] = {
+				vec3(1,0,1), vec3(0,1,0), vec3(1,0,1), vec3(0,1,0),
+				vec3(0,0,1), vec3(0,1,0), vec3(1,0,0), vec3(0,0,0),
+				vec3(1,0,1), vec3(0,1,0), vec3(1,0,1), vec3(0,1,0),
+				vec3(1,0,0), vec3(0,0,0), vec3(0,0,1), vec3(0,1,0)
+			};
+
+			ivec2 icoords = ivec2(fragcoord) % 4;
+
+			return vec4(pattern[icoords.y * 4 + icoords.x], 0.375);
+
+		default:
+			return vec4(0.5);
+	}
+}
+
+// Apply phosphor mask/grill
+vec3 apply_mask(vec3 linear_color, vec2 fragcoord)
+{
+	// Get the pattern for the mask. Mask.w equals avg. brightness of the mask
+	vec4 mask = generate_mask(fragcoord);
+
+	// Dim the color if brightness is reduced to preserve mask details
+	linear_color *= mix(mask.w, 1.0, mask_brightness);
+
+	// How bright the color needs to be to maintain 100% brightness while masked
+	vec3 target_color = linear_color / mask.w;
+
+	// Target color limited to the 0 to 1 range.
+	vec3 primary_col = clamp(target_color, 0.0, 1.0);
+
+	// Calculate how bright the secondary subpixels will need to be
+	vec3 secondary = target_color - primary_col;
+	secondary /= 1.0 / mask.w - 1.0;
+
+	primary_col *= mask.rgb;
+
+	// Add the secondary subpixels
+	primary_col += secondary * (1.0 - mask.rgb);
+
+	return primary_col;
+}
+
+void fragment()
+{
+	// Warp UV coordinates
+	vec2 warped_coords = warp(UV, aspect, curve);
+
+	// Sample color
+	vec3 col = sample(warped_coords);
+
+	// Apply phosphor mask (use FRAGCOORD for pixel-perfect mask positioning)
+	col = apply_mask(col, FRAGCOORD.xy);
+
+	// Convert back to srgb
+	col = linear_to_srgb(col);
+
+	ALBEDO = col;
+	ALPHA = 1.0;
+}"
+
+[sub_resource type="Curve" id="Curve_61m6q"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.99501663, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveXYZTexture" id="CurveXYZTexture_njh5b"]
+curve_y = SubResource("Curve_61m6q")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_k44yu"]
+render_priority = 0
+shader = SubResource("Shader_l5ika")
+shader_parameter/tex = SubResource("CurveXYZTexture_njh5b")
+shader_parameter/mask_type = 4
+shader_parameter/curve = 0.0
+shader_parameter/color_offset = 0.37600004161
+shader_parameter/mask_brightness = 0.214000010165
+shader_parameter/aspect = 0.75
+
+[sub_resource type="SphereMesh" id="SphereMesh_gssec"]
+material = SubResource("ShaderMaterial_k44yu")
+radius = 0.05
+height = 0.001
+is_hemisphere = true
+
+[sub_resource type="Curve" id="Curve_5hhbi"]
+_data = [Vector2(0, 0.14718252), 0.0, 0.0, 0, 0, Vector2(0.53654486, 0.38954306), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Curve" id="Curve_s7cmo"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.99999, 0.9963555), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveXYZTexture" id="CurveXYZTexture_dpu46"]
+curve_x = SubResource("Curve_5hhbi")
+curve_z = SubResource("Curve_s7cmo")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_njh5b"]
+render_priority = 0
+shader = ExtResource("5_l5ika")
+shader_parameter/tex = SubResource("CurveXYZTexture_dpu46")
+shader_parameter/mask_type = 4
+shader_parameter/curve = 0.0
+shader_parameter/color_offset = 0.37600004161
+shader_parameter/mask_brightness = 0.214000010165
+shader_parameter/aspect = 0.75
+
+[sub_resource type="SphereMesh" id="SphereMesh_k44yu"]
+material = SubResource("ShaderMaterial_njh5b")
+radius = 0.05
+height = 0.001
+is_hemisphere = true
+
+[sub_resource type="Curve" id="Curve_gssec"]
+_data = [Vector2(0, 0.14718252), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Curve" id="Curve_bj344"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1e-05, 0.23465097), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveXYZTexture" id="CurveXYZTexture_ja6ch"]
+curve_x = SubResource("Curve_gssec")
+curve_y = SubResource("Curve_bj344")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1amol"]
+render_priority = 0
+shader = SubResource("Shader_l5ika")
+shader_parameter/tex = SubResource("CurveXYZTexture_ja6ch")
+shader_parameter/mask_type = 4
+shader_parameter/curve = 0.0
+shader_parameter/color_offset = 0.37600004161
+shader_parameter/mask_brightness = 0.214000010165
+shader_parameter/aspect = 0.75
+
+[sub_resource type="SphereMesh" id="SphereMesh_f14fn"]
+material = SubResource("ShaderMaterial_1amol")
+radius = 0.05
+height = 0.001
+is_hemisphere = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_t05xm"]
+transparency = 1
+no_depth_test = true
+albedo_color = Color(1, 1, 0, 0.6)
+emission = Color(1, 0.31764707, 0, 1)
+emission_energy_multiplier = 16.0
+stencil_flags = 2
+stencil_reference = 6
+
+[sub_resource type="BoxMesh" id="BoxMesh_dpu46"]
+material = SubResource("StandardMaterial3D_t05xm")
+size = Vector3(0.28, 0.02, 0.001)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8d6ws"]
+no_depth_test = true
+emission_enabled = true
+emission = Color(1, 0, 0, 1)
+emission_energy_multiplier = 16.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_gssec"]
+material = SubResource("StandardMaterial3D_8d6ws")
+size = Vector3(0.08, 0.01, 0.03)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bj344"]
+no_depth_test = true
+emission_enabled = true
+emission = Color(1, 0, 0, 1)
+emission_energy_multiplier = 16.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_ja6ch"]
+material = SubResource("StandardMaterial3D_bj344")
+size = Vector3(0.08, 0.01, 0.03)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1amol"]
+no_depth_test = true
+emission_enabled = true
+emission = Color(1, 0, 0, 1)
+emission_energy_multiplier = 16.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_f14fn"]
+material = SubResource("StandardMaterial3D_1amol")
+size = Vector3(0.08, 0.01, 0.03)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rlhfq"]
+no_depth_test = true
+emission_enabled = true
+emission = Color(1, 1, 0, 1)
+emission_energy_multiplier = 14.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_yciqh"]
+material = SubResource("StandardMaterial3D_rlhfq")
+size = Vector3(0.08, 0.01, 0.03)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sv71j"]
+no_depth_test = true
+emission_enabled = true
+emission = Color(1, 1, 0, 1)
+emission_energy_multiplier = 14.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_12cn7"]
+material = SubResource("StandardMaterial3D_sv71j")
+size = Vector3(0.08, 0.01, 0.03)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_x00vi"]
+no_depth_test = true
+emission_enabled = true
+emission = Color(1, 1, 0, 1)
+emission_energy_multiplier = 14.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_42ejm"]
+material = SubResource("StandardMaterial3D_x00vi")
+size = Vector3(0.08, 0.01, 0.03)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_a081e"]
+no_depth_test = true
+emission_enabled = true
+emission = Color(0, 1, 0, 1)
+emission_energy_multiplier = 16.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_g31vf"]
+material = SubResource("StandardMaterial3D_a081e")
+size = Vector3(0.08, 0.01, 0.03)
+
+[sub_resource type="BoxMesh" id="BoxMesh_bj344"]
+material = SubResource("StandardMaterial3D_dpu46")
+size = Vector3(0.442, 0.02, 0.01)
+
+[sub_resource type="BoxMesh" id="BoxMesh_5hhbi"]
+material = SubResource("StandardMaterial3D_dpu46")
+size = Vector3(0.106, 0.02, 0.01)
+
+[sub_resource type="BoxMesh" id="BoxMesh_rlhfq"]
+material = SubResource("StandardMaterial3D_dpu46")
+size = Vector3(0.45, 0.02, 0.01)
+
+[sub_resource type="BoxMesh" id="BoxMesh_1amol"]
+material = SubResource("StandardMaterial3D_dpu46")
+size = Vector3(0.11, 0.02, 0.01)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_k44yu"]
+no_depth_test = true
+albedo_color = Color(0, 0, 0, 1)
+emission_enabled = true
+emission = Color(1, 0.1882353, 0, 1)
+emission_energy_multiplier = 12.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_a081e"]
+material = SubResource("StandardMaterial3D_k44yu")
+size = Vector3(0.13, 0.01, 0.01)
+
+[sub_resource type="BoxMesh" id="BoxMesh_gg8mx"]
+material = SubResource("StandardMaterial3D_k44yu")
+size = Vector3(0.18, 0.07, 0.01)
+
+[sub_resource type="BoxMesh" id="BoxMesh_sb1ko"]
+material = SubResource("StandardMaterial3D_k44yu")
+size = Vector3(0.18, 0.07, 0.06)
+
+[sub_resource type="BoxMesh" id="BoxMesh_n01wu"]
+material = SubResource("StandardMaterial3D_k44yu")
+size = Vector3(0.198, 0.02, 0.01)
+
+[sub_resource type="TorusMesh" id="TorusMesh_k44yu"]
+material = SubResource("StandardMaterial3D_k44yu")
+inner_radius = 0.038
+outer_radius = 0.02
+
+[sub_resource type="Curve" id="Curve_8d6ws"]
+_data = [Vector2(1, 0.5845248), 0.0, 0.0, 0, 0]
+point_count = 1
+
+[sub_resource type="Curve" id="Curve_dpu46"]
+_data = [Vector2(1, 0.5389683), 0.0, 0.0, 0, 0]
+point_count = 1
+
+[sub_resource type="CurveXYZTexture" id="CurveXYZTexture_t05xm"]
+curve_x = SubResource("Curve_8d6ws")
+curve_y = SubResource("Curve_dpu46")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_61m6q"]
+render_priority = 0
+shader = ExtResource("5_l5ika")
+shader_parameter/tex = SubResource("CurveXYZTexture_t05xm")
+shader_parameter/mask_type = 1
+shader_parameter/curve = 0.214000010165
+shader_parameter/color_offset = 0.17600003211000004
+shader_parameter/mask_brightness = 1.0
+shader_parameter/aspect = 0.75
+
+[sub_resource type="BoxMesh" id="BoxMesh_k44yu"]
+material = SubResource("ShaderMaterial_61m6q")
+size = Vector3(0.065, 0.01, 0.01)
+
+[sub_resource type="BoxMesh" id="BoxMesh_v515h"]
+material = SubResource("StandardMaterial3D_dpu46")
+size = Vector3(0.005, 0.4, 0.01)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sb1ko"]
+blend_mode = 1
+cull_mode = 2
+albedo_color = Color(0, 0, 0, 1)
+emission_enabled = true
+emission = Color(0, 0.20459503, 0.0021566427, 1)
+emission_energy_multiplier = 3.5
+
+[sub_resource type="BoxMesh" id="BoxMesh_okbm5"]
+material = SubResource("StandardMaterial3D_sb1ko")
+size = Vector3(0.1, 0.1, 0)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_4qq6n"]
 render_priority = 0
@@ -2098,6 +4341,10 @@ shader_parameter/shake_color_rate = 0.182000008645
 material = SubResource("ShaderMaterial_4qq6n")
 size = Vector3(1.04, 0.64, -0.02)
 
+[sub_resource type="BoxMesh" id="BoxMesh_x00vi"]
+material = SubResource("StandardMaterial3D_4qq6n")
+size = Vector3(1.01, 0.01, 0.01)
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_l5ika"]
 render_priority = 0
 shader = ExtResource("5_t05xm")
@@ -2124,42 +4371,10 @@ shader_parameter/shake_block_size = 71.7200033592
 shader_parameter/shake_color_rate = 0.182000008645
 
 [sub_resource type="BoxMesh" id="BoxMesh_3nktn"]
-lightmap_size_hint = Vector2i(9, 13)
+lightmap_size_hint = Vector2i(9, 12)
 material = SubResource("ShaderMaterial_l5ika")
 add_uv2 = true
-size = Vector3(1.04, 0.18, -0.02)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4qq6n"]
-no_depth_test = true
-emission_enabled = true
-emission = Color(1, 0.31764707, 0, 1)
-emission_energy_multiplier = 16.0
-stencil_flags = 2
-stencil_reference = 6
-
-[sub_resource type="BoxMesh" id="BoxMesh_5hhbi"]
-material = SubResource("StandardMaterial3D_4qq6n")
-size = Vector3(0.17, 0.01, 0.04)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_t05xm"]
-no_depth_test = true
-emission_enabled = true
-emission = Color(0, 1, 0, 1)
-emission_energy_multiplier = 16.0
-
-[sub_resource type="SphereMesh" id="SphereMesh_l5ika"]
-material = SubResource("StandardMaterial3D_t05xm")
-radius = 0.15
-height = 0.15
-is_hemisphere = true
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8d6ws"]
-no_depth_test = true
-albedo_color = Color(0, 0, 0, 1)
-
-[sub_resource type="PrismMesh" id="PrismMesh_dpu46"]
-material = SubResource("StandardMaterial3D_8d6ws")
-size = Vector3(0.05, 0.05, 0.05)
+size = Vector3(1.039, 0.18, -0.02)
 
 [node name="PREM-7" type="Node3D"]
 script = ExtResource("1_iarxa")
@@ -2191,6 +4406,11 @@ libraries = {
 &"": SubResource("AnimationLibrary_3nktn")
 }
 movie_quit_on_finish = true
+
+[node name="Spin_Animation" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_1amol")
+}
 
 [node name="Multitool" type="Node3D" parent="."]
 transform = Transform3D(-0.246939, -0.00781692, -0.022926, -0.00958782, 0.249578, 0.00654291, 0.0378046, 0.0122367, -0.148093, 0.00330822, -0.113262, -0.384817)
@@ -2500,46 +4720,559 @@ outline_size = 105
 uppercase = true
 
 [node name="Component" type="Node3D" parent="Machine_Info/All_Data"]
-transform = Transform3D(1, 0, 2.9802322e-08, 0, 0.99999976, 0, -2.9802322e-08, 0, 1, 1.8674817, -0.33972096, -7.0363007)
+transform = Transform3D(0.99979717, -0.020158475, -4.954636e-05, 0.020158479, 0.9997845, 0.004921188, -4.965067e-05, -0.0049211853, 0.9999882, 2.544588, 1.0407498, -6.8710065)
 
 [node name="Screen" type="MeshInstance3D" parent="Machine_Info/All_Data/Component"]
-transform = Transform3D(1, 0, 0, 0, -0.139173, -0.990268, -2.98023e-08, 0.990268, -0.139173, -0.0965228, 0.23568, -0.0104811)
+transform = Transform3D(0.71999985, 6.687641e-05, 0.00047141314, 0.0004761294, -0.1000892, -0.7130092, -6.4074993e-07, 0.7130091, -0.10008923, -0.4303527, -0.7484002, -0.09197903)
 cast_shadow = 0
 skeleton = NodePath("../../../..")
 
-[node name="Comp_Name" type="Label3D" parent="Machine_Info/All_Data/Component/Screen"]
-transform = Transform3D(0.00999999, 5.82077e-11, -2.32831e-10, 0, 0.000348995, 0.0099939, -2.91038e-11, -0.0099939, 0.000348995, -0.0034771, 0.00251353, -0.0574241)
-pixel_size = 0.25
+[node name="Comp_Name_Front" type="Label3D" parent="Machine_Info/All_Data/Component/Screen"]
+transform = Transform3D(0.009999983, -2.3283064e-10, -4.656613e-09, 4.656613e-10, 0.00034899346, 0.00999388, -1.7462298e-10, -0.009993903, 0.00034899474, -3.6109903, -1.0031147, -0.9757097)
+pixel_size = 0.15
+no_depth_test = true
 alpha_antialiasing_mode = 1
 alpha_antialiasing_edge = 1.0
 render_priority = 10
 outline_render_priority = 10
-modulate = Color(1, 0.5526029, 1, 1)
-outline_modulate = Color(0, 0, 1, 1)
+modulate = Color(1, 0, 0, 0)
+outline_modulate = Color(1, 0.73333335, 0, 0.7176471)
+text = "Overhead valve engine"
+font = SubResource("FontFile_t05xm")
+font_size = 350
+outline_size = 30
+horizontal_alignment = 0
+uppercase = true
+
+[node name="Comp_Name" type="Label3D" parent="Machine_Info/All_Data/Component/Screen"]
+transform = Transform3D(0.009999984, 2.910383e-10, 1.3969839e-09, 2.3283064e-10, 0.00034899474, 0.0099938875, 0, -0.009993881, 0.00034899462, -3.6199348, -1.0284443, -0.9679687)
+pixel_size = 0.15
+no_depth_test = true
+alpha_antialiasing_mode = 1
+alpha_antialiasing_edge = 1.0
+render_priority = 10
+outline_render_priority = 10
+outline_modulate = Color(0, 0, 0, 0)
 text = "Component"
-font_size = 50
-outline_size = 0
+font = SubResource("FontFile_t05xm")
+font_size = 350
+outline_size = 30
+horizontal_alignment = 0
+uppercase = true
+
+[node name="Comp_Name_Back" type="Label3D" parent="Machine_Info/All_Data/Component/Screen"]
+transform = Transform3D(0.009999983, -3.2014214e-10, -4.656613e-09, 4.656613e-10, 0.00034899416, 0.009993881, -1.7462298e-10, -0.0099939, 0.00034899416, -3.6416547, -1.0650539, -0.9678366)
+pixel_size = 0.15
+no_depth_test = true
+alpha_antialiasing_mode = 1
+alpha_antialiasing_edge = 1.0
+render_priority = 10
+outline_render_priority = 10
+modulate = Color(1, 0.15686275, 0, 1)
+outline_modulate = Color(1, 0.15686275, 0, 1)
+text = "WASHER DOOR"
+font = SubResource("FontFile_t05xm")
+font_size = 351
+outline_size = 30
+horizontal_alignment = 0
 uppercase = true
 
 [node name="Comp_Stars" type="Label3D" parent="Machine_Info/All_Data/Component/Screen"]
-transform = Transform3D(0.00999999, 0, -2.32831e-10, 0, 0.000348995, 0.0099939, -2.91038e-11, -0.0099939, 0.000348995, -0.0034771, 0.0181282, 0.053679)
+transform = Transform3D(0.99998087, 0.006093897, -0.0010793954, 0.00085677207, 0.03641346, 0.999336, 0.006129157, -0.99931806, 0.03640756, -3.5810554, -0.93543434, -0.3743539)
+pixel_size = 0.0029
+alpha_antialiasing_mode = 1
+alpha_antialiasing_edge = 1.0
+render_priority = 10
+outline_render_priority = 10
+modulate = Color(18.892157, 18.892157, 0, 1)
+outline_modulate = Color(0, 0, 0, 0)
+text = "★★★★★"
+font_size = 260
+outline_size = 127
+horizontal_alignment = 0
+
+[node name="Blocker" type="MeshInstance3D" parent="Machine_Info/All_Data/Component/Screen"]
+transform = Transform3D(0.9999796, 0.006188748, 5.9604645e-06, 0.00085675716, -0.13940093, 0.9902345, 0.0061291493, -0.99021506, -0.13940366, -0.566, -0.692, -0.405)
+cast_shadow = 0
+mesh = SubResource("BoxMesh_b058i")
+skeleton = NodePath("../Comp_Stars")
+
+[node name="System" type="Node3D" parent="Machine_Info/All_Data"]
+transform = Transform3D(1.0000001, 0, 1.4901161e-08, 0, 1, 0, -1.4901161e-08, 0, 1.0000001, 0, 0, 0)
+
+[node name="Engine" type="MeshInstance3D" parent="Machine_Info/All_Data/System"]
+transform = Transform3D(0.99923396, -0.032806084, 0.021494646, 0.020840587, -0.02014905, -0.99958014, 0.033225477, 0.99926245, -0.01944995, -1.0323982, -0.3815124, -6.516076)
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_k44yu")
+skeleton = NodePath("../../../..")
+
+[node name="Data" type="Label3D" parent="Machine_Info/All_Data/System/Engine"]
+transform = Transform3D(0.01, -2.3283064e-10, -2.7939677e-09, 2.561137e-09, 0.00034899206, 0.00999391, -1.7462298e-10, -0.00999391, 0.00034899195, 0.023301125, 0.017380834, -0.015919924)
+pixel_size = 0.1
+alpha_antialiasing_mode = 1
+alpha_antialiasing_edge = 1.0
+render_priority = 10
+outline_render_priority = 10
+modulate = Color(0, 0, 0, 1)
+text = "ENGINE"
+font_size = 230
+outline_size = 20
+
+[node name="Propellent" type="MeshInstance3D" parent="Machine_Info/All_Data/System"]
+transform = Transform3D(0.99923396, -0.032806233, 0.021494653, 0.020840576, -0.020148989, -0.9995809, 0.033225536, 0.99926245, -0.019449934, -1.0214376, -0.9609395, -6.5435967)
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_bj344")
+skeleton = NodePath("../../../..")
+
+[node name="Data" type="Label3D" parent="Machine_Info/All_Data/System/Propellent"]
+transform = Transform3D(0.01, -2.1827873e-10, -2.7939677e-09, 2.7939677e-09, 0.0003489921, 0.00999391, -2.0372681e-10, -0.009993911, 0.00034899203, 0.010910034, 0.014783382, -0.016125917)
+pixel_size = 0.1
+alpha_antialiasing_mode = 1
+alpha_antialiasing_edge = 1.0
+render_priority = 10
+outline_render_priority = 10
+modulate = Color(0, 0, 0, 1)
+text = "PROPELLENT"
+font_size = 210
+outline_size = 20
+
+[node name="Structure" type="MeshInstance3D" parent="Machine_Info/All_Data/System"]
+transform = Transform3D(0.99923396, -0.03280592, 0.02149466, 0.02084058, -0.020148976, -0.99958104, 0.033225402, 0.9992625, -0.019449895, -1.0158157, -1.5421406, -6.5894217)
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_1amol")
+skeleton = NodePath("../../../..")
+
+[node name="Data" type="Label3D" parent="Machine_Info/All_Data/System/Structure"]
+transform = Transform3D(0.01, -2.1827873e-10, -2.7939677e-09, 2.7939677e-09, 0.0003489921, 0.00999391, -2.0372681e-10, -0.009993911, 0.00034899203, 0.010910034, 0.014783382, -0.016125917)
+pixel_size = 0.1
+alpha_antialiasing_mode = 1
+alpha_antialiasing_edge = 1.0
+render_priority = 10
+outline_render_priority = 10
+modulate = Color(0, 0, 0, 1)
+text = "STRUCTURE"
+font_size = 220
+outline_size = 20
+
+[node name="Operation" type="MeshInstance3D" parent="Machine_Info/All_Data/System"]
+transform = Transform3D(0.9992336, -0.032806084, 0.02149465, 0.020840563, -0.020149, -0.99958044, 0.033225536, 0.99926245, -0.019449847, -1.0002251, -2.1272576, -6.6214976)
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_rlhfq")
+skeleton = NodePath("../../../..")
+
+[node name="Data" type="Label3D" parent="Machine_Info/All_Data/System/Operation"]
+transform = Transform3D(0.01, -2.1827873e-10, -2.7939677e-09, 2.7939677e-09, 0.0003489921, 0.00999391, -2.0372681e-10, -0.009993911, 0.00034899203, 0.010910034, 0.014783382, -0.016125917)
+pixel_size = 0.1
+alpha_antialiasing_mode = 1
+alpha_antialiasing_edge = 1.0
+render_priority = 10
+outline_render_priority = 10
+modulate = Color(0, 0, 0, 1)
+text = "OPERATION"
+font_size = 225
+outline_size = 20
+
+[node name="SYSTEM" type="Label3D" parent="Machine_Info/All_Data/System"]
+transform = Transform3D(0.009989472, -0.00020973207, -0.00040934805, 0.00018080212, 0.00997395, -0.000698054, 0.00042292138, 0.00068991416, 0.009967266, -1.0362968, -0.008497715, -6.49361)
+pixel_size = 0.125
+no_depth_test = true
+alpha_antialiasing_mode = 1
+alpha_antialiasing_edge = 1.0
+render_priority = 10
+outline_render_priority = 10
+outline_modulate = Color(1, 1, 1, 1)
+text = "SYSTEM"
+font = SubResource("FontFile_t05xm")
+font_size = 145
+outline_size = 20
+uppercase = true
+
+[node name="left_line" type="MeshInstance3D" parent="Machine_Info/All_Data/System"]
+transform = Transform3D(0.9996932, -0.0059012007, -0.007988468, 0.024070863, 0.2494089, 0.064384885, 0.006450504, -0.016139328, 0.99789727, -0.39797735, 0.015110493, -6.513392)
+mesh = SubResource("BoxMesh_sv71j")
+skeleton = NodePath("../../Module")
+
+[node name="SUBSYSTEM" type="Label3D" parent="Machine_Info/All_Data/System"]
+transform = Transform3D(0.009995834, -9.303048e-05, -0.00027520466, 0.0001273869, 0.009917636, 0.0012743159, 0.00026108557, -0.0012772814, 0.009914714, 0.31439352, 0.017977476, -6.5218654)
+pixel_size = 0.1
+no_depth_test = true
+alpha_antialiasing_mode = 1
+alpha_antialiasing_edge = 1.0
+render_priority = 10
+outline_render_priority = 10
+outline_modulate = Color(1, 1, 1, 1)
+text = "SUBSYSTEM"
+font = SubResource("FontFile_t05xm")
+font_size = 145
+outline_size = 20
+uppercase = true
+
+[node name="Subsystem" type="Node3D" parent="Machine_Info/All_Data/System"]
+transform = Transform3D(0.99999994, 0, -1.4901161e-08, 0, 0.99999994, 0, 1.4901161e-08, 0, 0.99999994, 0, 0, 0)
+
+[node name="Engine" type="Node3D" parent="Machine_Info/All_Data/System/Subsystem"]
+transform = Transform3D(1.0000001, 0, 1.4901161e-08, 0, 1, 0, -1.4901161e-08, 0, 1.0000001, 0, 0, 0)
+visible = false
+
+[node name="Combustion" type="MeshInstance3D" parent="Machine_Info/All_Data/System/Subsystem/Engine"]
+transform = Transform3D(0.9993106, -0.03289111, 0.017375031, 0.016689094, -0.021017462, -0.99963975, 0.033244357, 0.9992429, -0.020453885, 0.3540454, -0.30548334, -6.4772415)
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_sv71j")
+skeleton = NodePath("../../../../../..")
+
+[node name="Name" type="Label3D" parent="Machine_Info/All_Data/System/Subsystem/Engine/Combustion"]
+transform = Transform3D(0.01, -2.3283064e-10, -2.7939677e-09, 2.561137e-09, 0.00034899206, 0.00999391, -1.7462298e-10, -0.00999391, 0.00034899195, 0.023301125, 0.017380834, -0.015919924)
 pixel_size = 0.15
 alpha_antialiasing_mode = 1
 alpha_antialiasing_edge = 1.0
 render_priority = 10
 outline_render_priority = 10
-modulate = Color(1, 0.33361515, 1, 1)
-outline_modulate = Color(0, 0, 1, 1)
-text = "★★★★★"
-font_size = 50
-outline_size = 0
+modulate = Color(0, 0, 0, 1)
+text = "COMBUSTION"
+font_size = 100
+outline_size = 5
+uppercase = true
 
-[node name="Module" type="Node3D" parent="Machine_Info/All_Data"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.27301, -0.722635, -1.12281)
+[node name="Ignition" type="MeshInstance3D" parent="Machine_Info/All_Data/System/Subsystem/Engine"]
+transform = Transform3D(0.9993103, -0.03289117, 0.017376138, 0.01668996, -0.021018717, -0.99964046, 0.033244357, 0.9992427, -0.020455483, 0.3634243, -0.762545, -6.5051494)
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_x00vi")
+skeleton = NodePath("../../../../../..")
+
+[node name="Name" type="Label3D" parent="Machine_Info/All_Data/System/Subsystem/Engine/Ignition"]
+transform = Transform3D(0.01, -2.3283064e-10, -2.7939677e-09, 2.561137e-09, 0.00034899206, 0.00999391, -1.7462298e-10, -0.00999391, 0.00034899195, 0.023301125, 0.017380834, -0.015919924)
+pixel_size = 0.15
+alpha_antialiasing_mode = 1
+alpha_antialiasing_edge = 1.0
+render_priority = 10
+outline_render_priority = 10
+modulate = Color(0, 0, 0, 1)
+text = "IGNITION"
+font_size = 100
+outline_size = 5
+uppercase = true
+
+[node name="Nozzle" type="MeshInstance3D" parent="Machine_Info/All_Data/System/Subsystem/Engine"]
+transform = Transform3D(0.99931, -0.032890767, 0.01737614, 0.016690016, -0.021018699, -0.99964076, 0.033244297, 0.99924284, -0.02045538, 0.37503862, -1.2231913, -6.520105)
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_a081e")
+skeleton = NodePath("../../../../../..")
+
+[node name="Name" type="Label3D" parent="Machine_Info/All_Data/System/Subsystem/Engine/Nozzle"]
+transform = Transform3D(0.01, -2.3283064e-10, -2.7939677e-09, 2.561137e-09, 0.00034899206, 0.00999391, -1.7462298e-10, -0.00999391, 0.00034899195, 0.023301125, 0.017380834, -0.015919924)
+pixel_size = 0.15
+alpha_antialiasing_mode = 1
+alpha_antialiasing_edge = 1.0
+render_priority = 10
+outline_render_priority = 10
+modulate = Color(0, 0, 0, 1)
+text = "NOZZLE"
+font_size = 100
+outline_size = 5
+uppercase = true
+
+[node name="Turbopump" type="MeshInstance3D" parent="Machine_Info/All_Data/System/Subsystem/Engine"]
+transform = Transform3D(0.9993093, -0.032890856, 0.01737615, 0.01668996, -0.021018438, -0.99964017, 0.033244565, 0.9992418, -0.020455386, 0.38415098, -1.6826484, -6.553759)
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_gg8mx")
+skeleton = NodePath("../../../../../..")
+
+[node name="Name" type="Label3D" parent="Machine_Info/All_Data/System/Subsystem/Engine/Turbopump"]
+transform = Transform3D(0.01, -2.3283064e-10, -2.7939677e-09, 2.561137e-09, 0.00034899206, 0.00999391, -1.7462298e-10, -0.00999391, 0.00034899195, 0.023301125, 0.017380834, -0.015919924)
+pixel_size = 0.15
+alpha_antialiasing_mode = 1
+alpha_antialiasing_edge = 1.0
+render_priority = 10
+outline_render_priority = 10
+modulate = Color(0, 0, 0, 1)
+text = "TURBOPUMP"
+font_size = 100
+outline_size = 5
+uppercase = true
+
+[node name="Injection" type="MeshInstance3D" parent="Machine_Info/All_Data/System/Subsystem/Engine"]
+transform = Transform3D(0.9993093, -0.03289111, 0.017376129, 0.016689949, -0.021018261, -0.99963987, 0.033244446, 0.99924254, -0.020455265, 0.40165854, -2.140767, -6.548371)
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_sb1ko")
+skeleton = NodePath("../../../../../..")
+
+[node name="Name" type="Label3D" parent="Machine_Info/All_Data/System/Subsystem/Engine/Injection"]
+transform = Transform3D(0.01, -2.4738256e-10, -3.0267984e-09, 2.7939677e-09, 0.000348992, 0.009993908, -1.5279511e-10, -0.00999391, 0.00034899186, -0.009525299, 0.010499954, -0.016444191)
+pixel_size = 0.15
+alpha_antialiasing_mode = 1
+alpha_antialiasing_edge = 1.0
+render_priority = 10
+outline_render_priority = 10
+modulate = Color(0, 0, 0, 1)
+text = "INJECTION"
+font_size = 100
+outline_size = 5
+uppercase = true
+
+[node name="Propellent" type="Node3D" parent="Machine_Info/All_Data/System/Subsystem"]
+transform = Transform3D(1.0000001, 0, 1.4901161e-08, 0, 1, 0, -1.4901161e-08, 0, 1.0000001, 0, 0, 0)
+
+[node name="Storage" type="MeshInstance3D" parent="Machine_Info/All_Data/System/Subsystem/Propellent"]
+transform = Transform3D(0.9993106, -0.03289111, 0.017375031, 0.016689094, -0.021017462, -0.99963975, 0.033244357, 0.9992429, -0.020453885, 0.3540454, -0.30548334, -6.4772415)
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_sv71j")
+skeleton = NodePath("../../../../../..")
+
+[node name="Name" type="Label3D" parent="Machine_Info/All_Data/System/Subsystem/Propellent/Storage"]
+transform = Transform3D(0.01, -2.3283064e-10, -2.7939677e-09, 2.561137e-09, 0.00034899206, 0.00999391, -1.7462298e-10, -0.00999391, 0.00034899195, 0.023301125, 0.017380834, -0.015919924)
+pixel_size = 0.15
+alpha_antialiasing_mode = 1
+alpha_antialiasing_edge = 1.0
+render_priority = 10
+outline_render_priority = 10
+modulate = Color(0, 0, 0, 1)
+text = "STORAGE"
+font_size = 100
+outline_size = 5
+uppercase = true
+
+[node name="Delivery" type="MeshInstance3D" parent="Machine_Info/All_Data/System/Subsystem/Propellent"]
+transform = Transform3D(0.9993103, -0.03289117, 0.017376138, 0.01668996, -0.021018717, -0.99964046, 0.033244357, 0.9992427, -0.020455483, 0.3634243, -0.762545, -6.5051494)
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_x00vi")
+skeleton = NodePath("../../../../../..")
+
+[node name="Name" type="Label3D" parent="Machine_Info/All_Data/System/Subsystem/Propellent/Delivery"]
+transform = Transform3D(0.01, -2.3283064e-10, -2.7939677e-09, 2.561137e-09, 0.00034899206, 0.00999391, -1.7462298e-10, -0.00999391, 0.00034899195, 0.023301125, 0.017380834, -0.015919924)
+pixel_size = 0.15
+alpha_antialiasing_mode = 1
+alpha_antialiasing_edge = 1.0
+render_priority = 10
+outline_render_priority = 10
+modulate = Color(0, 0, 0, 1)
+text = "DELIVERY"
+font_size = 100
+outline_size = 5
+uppercase = true
+
+[node name="Regulation" type="MeshInstance3D" parent="Machine_Info/All_Data/System/Subsystem/Propellent"]
+transform = Transform3D(0.99931, -0.032890767, 0.01737614, 0.016690016, -0.021018699, -0.99964076, 0.033244297, 0.99924284, -0.02045538, 0.37503862, -1.2231913, -6.520105)
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_a081e")
+skeleton = NodePath("../../../../../..")
+
+[node name="Name" type="Label3D" parent="Machine_Info/All_Data/System/Subsystem/Propellent/Regulation"]
+transform = Transform3D(0.01, -2.3283064e-10, -2.7939677e-09, 2.561137e-09, 0.00034899206, 0.00999391, -1.7462298e-10, -0.00999391, 0.00034899195, 0.023301125, 0.017380834, -0.015919924)
+pixel_size = 0.15
+alpha_antialiasing_mode = 1
+alpha_antialiasing_edge = 1.0
+render_priority = 10
+outline_render_priority = 10
+modulate = Color(0, 0, 0, 1)
+text = "REGULATION"
+font_size = 100
+outline_size = 5
+uppercase = true
+
+[node name="Ventilation" type="MeshInstance3D" parent="Machine_Info/All_Data/System/Subsystem/Propellent"]
+transform = Transform3D(0.9993093, -0.032890856, 0.01737615, 0.01668996, -0.021018438, -0.99964017, 0.033244565, 0.9992418, -0.020455386, 0.38415098, -1.6826484, -6.553759)
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_gg8mx")
+skeleton = NodePath("../../../../../..")
+
+[node name="Name" type="Label3D" parent="Machine_Info/All_Data/System/Subsystem/Propellent/Ventilation"]
+transform = Transform3D(0.01, -2.3283064e-10, -2.7939677e-09, 2.561137e-09, 0.00034899206, 0.00999391, -1.7462298e-10, -0.00999391, 0.00034899195, 0.023301125, 0.017380834, -0.015919924)
+pixel_size = 0.15
+alpha_antialiasing_mode = 1
+alpha_antialiasing_edge = 1.0
+render_priority = 10
+outline_render_priority = 10
+modulate = Color(0, 0, 0, 1)
+text = "VENTILATION"
+font_size = 100
+outline_size = 5
+uppercase = true
+
+[node name="Conditioning" type="MeshInstance3D" parent="Machine_Info/All_Data/System/Subsystem/Propellent"]
+transform = Transform3D(0.9993093, -0.03289111, 0.017376129, 0.016689949, -0.021018261, -0.99963987, 0.033244446, 0.99924254, -0.020455265, 0.40165854, -2.140767, -6.548371)
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_sb1ko")
+skeleton = NodePath("../../../../../..")
+
+[node name="Name" type="Label3D" parent="Machine_Info/All_Data/System/Subsystem/Propellent/Conditioning"]
+transform = Transform3D(0.01, -2.4738256e-10, -3.0267984e-09, 2.7939677e-09, 0.000348992, 0.009993908, -1.5279511e-10, -0.00999391, 0.00034899186, -0.009525299, 0.010499954, -0.016444191)
+pixel_size = 0.15
+alpha_antialiasing_mode = 1
+alpha_antialiasing_edge = 1.0
+render_priority = 10
+outline_render_priority = 10
+modulate = Color(0, 0, 0, 1)
+text = "CONDITIONING"
+font_size = 100
+outline_size = 5
+uppercase = true
+
+[node name="Structure" type="Node3D" parent="Machine_Info/All_Data/System/Subsystem"]
+transform = Transform3D(1.0000001, 0, 1.4901161e-08, 0, 1, 0, -1.4901161e-08, 0, 1.0000001, 0, -0.5, 0)
 visible = false
 
+[node name="Body" type="MeshInstance3D" parent="Machine_Info/All_Data/System/Subsystem/Structure"]
+transform = Transform3D(0.9993105, -0.03289111, 0.017375031, 0.016689094, -0.021017462, -0.99963975, 0.03324434, 0.9992429, -0.020453885, 0.3539996, -0.034933686, -6.477)
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_t05xm")
+skeleton = NodePath("../../../../../..")
+
+[node name="Name" type="Label3D" parent="Machine_Info/All_Data/System/Subsystem/Structure/Body"]
+transform = Transform3D(0.01, -2.3283064e-10, -2.7939677e-09, 2.561137e-09, 0.00034899206, 0.00999391, -1.7462298e-10, -0.00999391, 0.00034899195, 0.023301125, 0.017380834, -0.015919924)
+pixel_size = 0.15
+alpha_antialiasing_mode = 1
+alpha_antialiasing_edge = 1.0
+render_priority = 10
+outline_render_priority = 10
+modulate = Color(0, 0, 0, 1)
+text = "Body"
+font_size = 125
+outline_size = 5
+uppercase = true
+
+[node name="Fins" type="MeshInstance3D" parent="Machine_Info/All_Data/System/Subsystem/Structure"]
+transform = Transform3D(0.9993102, -0.03289114, 0.017376138, 0.01668996, -0.021018717, -0.99964046, 0.03324434, 0.99924266, -0.020455483, 0.3634243, -0.69808567, -6.5051494)
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_l5ika")
+skeleton = NodePath("../../../../../..")
+
+[node name="Name" type="Label3D" parent="Machine_Info/All_Data/System/Subsystem/Structure/Fins"]
+transform = Transform3D(0.01, -2.3283064e-10, -2.7939677e-09, 2.561137e-09, 0.00034899206, 0.00999391, -1.7462298e-10, -0.00999391, 0.00034899195, 0.023301125, 0.017380834, -0.015919924)
+pixel_size = 0.15
+alpha_antialiasing_mode = 1
+alpha_antialiasing_edge = 1.0
+render_priority = 10
+outline_render_priority = 10
+modulate = Color(0, 0, 0, 1)
+text = "FINS"
+font_size = 125
+outline_size = 5
+uppercase = true
+
+[node name="Shield" type="MeshInstance3D" parent="Machine_Info/All_Data/System/Subsystem/Structure"]
+transform = Transform3D(0.99931, -0.032890737, 0.01737614, 0.016690016, -0.021018699, -0.99964076, 0.033244327, 0.99924284, -0.020455383, 0.38499975, -1.3731396, -6.5200005)
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_6dr8p")
+skeleton = NodePath("../../../../../..")
+
+[node name="Name" type="Label3D" parent="Machine_Info/All_Data/System/Subsystem/Structure/Shield"]
+transform = Transform3D(0.01, -2.3283064e-10, -2.7939677e-09, 2.561137e-09, 0.00034899206, 0.00999391, -1.7462298e-10, -0.00999391, 0.00034899195, 0.023301125, 0.017380834, -0.015919924)
+pixel_size = 0.15
+alpha_antialiasing_mode = 1
+alpha_antialiasing_edge = 1.0
+render_priority = 10
+outline_render_priority = 10
+modulate = Color(0, 0, 0, 1)
+text = "SHIELD"
+font_size = 125
+outline_size = 5
+uppercase = true
+
+[node name="Operation" type="Node3D" parent="Machine_Info/All_Data/System/Subsystem"]
+transform = Transform3D(1.0000001, 0, 1.4901161e-08, 0, 1, 0, -1.4901161e-08, 0, 1.0000001, 0, -0.5, 0)
+visible = false
+
+[node name="Power" type="MeshInstance3D" parent="Machine_Info/All_Data/System/Subsystem/Operation"]
+transform = Transform3D(0.9993105, -0.03289111, 0.017375031, 0.016689094, -0.021017462, -0.99963975, 0.03324434, 0.9992429, -0.020453885, 0.3539996, -0.034933686, -6.477)
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_t05xm")
+skeleton = NodePath("../../../../../..")
+
+[node name="Name" type="Label3D" parent="Machine_Info/All_Data/System/Subsystem/Operation/Power"]
+transform = Transform3D(0.01, -2.3283064e-10, -2.7939677e-09, 2.561137e-09, 0.00034899206, 0.00999391, -1.7462298e-10, -0.00999391, 0.00034899195, 0.023301125, 0.017380834, -0.015919924)
+pixel_size = 0.15
+alpha_antialiasing_mode = 1
+alpha_antialiasing_edge = 1.0
+render_priority = 10
+outline_render_priority = 10
+modulate = Color(0, 0, 0, 1)
+text = "POWER"
+font_size = 125
+outline_size = 5
+uppercase = true
+
+[node name="Sensor" type="MeshInstance3D" parent="Machine_Info/All_Data/System/Subsystem/Operation"]
+transform = Transform3D(0.9993102, -0.03289114, 0.017376138, 0.01668996, -0.021018717, -0.99964046, 0.03324434, 0.99924266, -0.020455483, 0.3634243, -0.69808567, -6.5051494)
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_l5ika")
+skeleton = NodePath("../../../../../..")
+
+[node name="Name" type="Label3D" parent="Machine_Info/All_Data/System/Subsystem/Operation/Sensor"]
+transform = Transform3D(0.01, -2.3283064e-10, -2.7939677e-09, 2.561137e-09, 0.00034899206, 0.00999391, -1.7462298e-10, -0.00999391, 0.00034899195, 0.023301125, 0.017380834, -0.015919924)
+pixel_size = 0.15
+alpha_antialiasing_mode = 1
+alpha_antialiasing_edge = 1.0
+render_priority = 10
+outline_render_priority = 10
+modulate = Color(0, 0, 0, 1)
+text = "SENSOR"
+font_size = 125
+outline_size = 5
+uppercase = true
+
+[node name="Console" type="MeshInstance3D" parent="Machine_Info/All_Data/System/Subsystem/Operation"]
+transform = Transform3D(0.99931, -0.032890737, 0.01737614, 0.016690016, -0.021018699, -0.99964076, 0.033244327, 0.99924284, -0.020455383, 0.38499975, -1.3731396, -6.5200005)
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_6dr8p")
+skeleton = NodePath("../../../../../..")
+
+[node name="Name" type="Label3D" parent="Machine_Info/All_Data/System/Subsystem/Operation/Console"]
+transform = Transform3D(0.01, -2.3283064e-10, -2.7939677e-09, 2.561137e-09, 0.00034899206, 0.00999391, -1.7462298e-10, -0.00999391, 0.00034899195, 0.023301125, 0.017380834, -0.015919924)
+pixel_size = 0.15
+alpha_antialiasing_mode = 1
+alpha_antialiasing_edge = 1.0
+render_priority = 10
+outline_render_priority = 10
+modulate = Color(0, 0, 0, 1)
+text = "CONSOLE"
+font_size = 125
+outline_size = 5
+uppercase = true
+
+[node name="right_line" type="MeshInstance3D" parent="Machine_Info/All_Data/System"]
+transform = Transform3D(0.999693, -0.005901198, -0.007988527, 0.02407086, 0.24940889, 0.064384885, 0.006450683, -0.016139317, 0.9978966, 1.0206275, 0.035000086, -6.4901686)
+mesh = SubResource("BoxMesh_vjm6r")
+skeleton = NodePath("../../Module")
+
+[node name="STAGE" type="Label3D" parent="Machine_Info/All_Data/System"]
+transform = Transform3D(0.009989546, -0.00014393496, 0.00043513253, 0.00017409986, 0.0099741025, -0.0006975688, -0.00042396644, 0.00070440583, 0.009966206, 1.5851817, 0.035000086, -6.5078683)
+pixel_size = 0.125
+no_depth_test = true
+alpha_antialiasing_mode = 1
+alpha_antialiasing_edge = 1.0
+render_priority = 10
+outline_render_priority = 10
+outline_modulate = Color(1, 1, 1, 1)
+text = "STAGE"
+font = SubResource("FontFile_t05xm")
+font_size = 145
+outline_size = 20
+uppercase = true
+
+[node name="Stage" type="MeshInstance3D" parent="Machine_Info/All_Data/System"]
+transform = Transform3D(0.9992324, -0.032806188, 0.021494621, 0.020840587, -0.020149045, -0.99958014, 0.033225536, 0.9992613, -0.01944992, 1.6076522, -0.6060488, -6.4437943)
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_vjm6r")
+skeleton = NodePath("../../../..")
+
+[node name="Data" type="Label3D" parent="Machine_Info/All_Data/System/Stage"]
+transform = Transform3D(0.01, -2.3283064e-10, -2.0954758e-09, 2.561137e-09, 0.00034899195, 0.00999391, -6.548362e-11, -0.009993907, 0.00034899166, 0.0050694942, 0.013559341, -0.016222715)
+pixel_size = 0.1
+alpha_antialiasing_mode = 1
+alpha_antialiasing_edge = 1.0
+render_priority = 10
+outline_render_priority = 10
+modulate = Color(0, 0, 0, 1)
+text = "1"
+font_size = 830
+outline_size = 55
+
+[node name="Module" type="Node3D" parent="Machine_Info/All_Data"]
+transform = Transform3D(0.99984056, -0.017880086, 0.0025093704, 0.017452467, 0.9926896, 0.11942856, -0.004626468, -0.11936566, 0.99284357, 0.5954852, -0.710366, -6.250588)
+
 [node name="Screen" type="MeshInstance3D" parent="Machine_Info/All_Data/Module"]
-transform = Transform3D(1, 3.00522e-07, -2.10145e-08, 2.10145e-08, -0.139173, -0.990268, -3.00522e-07, 0.990268, -0.139173, -0.551838, 0.215596, 0.0340638)
+transform = Transform3D(0.9992777, -0.03777522, 0.004135918, -0.001143992, -0.13869196, -0.9903352, 0.03798379, 0.9896149, -0.13863498, -1.620645, 0.3872459, -0.22839737)
+visible = false
 cast_shadow = 0
 mesh = SubResource("PlaneMesh_4qq6n")
 skeleton = NodePath("../../../..")
@@ -2628,54 +5361,6 @@ text = "*Power Bar*"
 font_size = 100
 outline_size = 5
 
-[node name="Mass" type="Node3D" parent="Machine_Info/All_Data"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.27301, -1.243, -1.194)
-visible = false
-
-[node name="Screen" type="MeshInstance3D" parent="Machine_Info/All_Data/Mass"]
-transform = Transform3D(1, 4.47035e-08, -1.11759e-08, 0, -0.139173, -0.990268, -4.47035e-08, 0.990268, -0.139173, -0.551838, 0.215596, 0.0340638)
-cast_shadow = 0
-mesh = SubResource("PlaneMesh_4qq6n")
-skeleton = NodePath("../../../..")
-surface_material_override/0 = SubResource("StandardMaterial3D_s7cmo")
-
-[node name="Title" type="Label3D" parent="Machine_Info/All_Data/Mass/Screen"]
-transform = Transform3D(0.01, -8.73115e-11, -4.65661e-10, 2.32831e-10, 0.00034899, 0.00999391, -2.91038e-11, -0.00999391, 0.00034899, -0.00928831, 0.0116155, -0.183013)
-pixel_size = 0.15
-alpha_antialiasing_mode = 1
-alpha_antialiasing_edge = 1.0
-render_priority = 10
-outline_render_priority = 10
-modulate = Color(0, 0, 0, 1)
-text = "Mass Index"
-font_size = 60
-outline_size = 5
-
-[node name="Type" type="Label3D" parent="Machine_Info/All_Data/Mass/Screen"]
-transform = Transform3D(0.01, -8.73115e-11, -4.65661e-10, 2.32831e-10, 0.00034899, 0.00999391, -2.91038e-11, -0.00999391, 0.00034899, 0.00592852, 0.0148822, 0.147829)
-pixel_size = 0.15
-alpha_antialiasing_mode = 1
-alpha_antialiasing_edge = 1.0
-render_priority = 10
-outline_render_priority = 10
-modulate = Color(0, 0, 0, 1)
-text = "Flat Number 
-(Half Circle w/ Arrow)"
-font_size = 60
-outline_size = 5
-
-[node name="Data" type="Label3D" parent="Machine_Info/All_Data/Mass/Screen"]
-transform = Transform3D(0.01, -2.91038e-11, -2.32831e-10, 0, 0.00034899, 0.00999391, 0, -0.00999391, 0.00034899, 0.0233006, 0.0173808, -0.01592)
-pixel_size = 0.15
-alpha_antialiasing_mode = 1
-alpha_antialiasing_edge = 1.0
-render_priority = 10
-outline_render_priority = 10
-modulate = Color(0, 0, 0, 1)
-text = "*Scale*"
-font_size = 100
-outline_size = 5
-
 [node name="Lift" type="Node3D" parent="Machine_Info/All_Data"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.18845, -1.243, -1.194)
 visible = false
@@ -2723,35 +5408,484 @@ text = "*Multiplier*"
 font_size = 100
 outline_size = 5
 
-[node name="TEMPLATE_UI" type="Sprite3D" parent="Machine_Info"]
-transform = Transform3D(0.029988592, -0.0007696417, -0.0003034589, 0.00059813546, 0.027772564, -0.011328183, 0.0005715508, 0.011317835, 0.02777734, -0.25103974, 0.19988576, -0.33648962)
+[node name="CLASS_TYPE" type="Label3D" parent="Machine_Info/All_Data"]
+transform = Transform3D(0.0099004805, -0.00038851277, 0.0013527586, 0.00037206936, 0.009991973, 0.00014663694, -0.0013573735, -9.484566e-05, 0.009907017, -1.2549558, 0.34409857, -6.958465)
+pixel_size = 0.15
+no_depth_test = true
+alpha_antialiasing_mode = 1
+alpha_antialiasing_edge = 1.0
+render_priority = 10
+outline_render_priority = 10
+modulate = Color(1, 0.5019608, 0, 1)
+outline_modulate = Color(1, 0.5019608, 0, 1)
+text = "UTILITY"
+font = SubResource("FontFile_t05xm")
+font_size = 145
+outline_size = 20
+uppercase = true
+
+[node name="Class_Box" type="Node3D" parent="Machine_Info"]
+transform = Transform3D(0.9999864, -0.005273091, -3.3974648e-06, 0.0052730925, 0.99998534, 0.001287293, -3.3825636e-06, -0.0012872928, 0.99999946, -0.6090271, 0.3681936, -1.9268112)
+
+[node name="Bar_H" type="MeshInstance3D" parent="Machine_Info/Class_Box"]
+transform = Transform3D(0.99934787, -0.0059342375, -0.027217582, 0.022211552, 0.24955928, -0.055039454, 0.028475821, 0.013599759, 0.9981137, -0.22846884, 0.005889386, 0.13996542)
+mesh = SubResource("BoxMesh_s7cmo")
+
+[node name="Bar_V" type="MeshInstance3D" parent="Machine_Info/Class_Box"]
+transform = Transform3D(-0.004831217, 0.24992825, -0.023579404, -0.9858947, -0.0021766326, -0.16714098, -0.1672983, 0.005609799, 0.98565465, -0.055809855, 0.12649563, 0.14250326)
+mesh = SubResource("BoxMesh_8d6ws")
+
+[node name="Radar" type="MeshInstance3D" parent="Machine_Info/Class_Box"]
+transform = Transform3D(-0.01604616, -0.012394831, 0.99979526, 0.996743, 0.07884008, 0.016974607, -0.07903405, 0.99681294, 0.011089504, -0.31167793, 0.16870227, 0.13874161)
+mesh = SubResource("SphereMesh_l5ika")
+
+[node name="Radar2" type="MeshInstance3D" parent="Machine_Info/Class_Box"]
+transform = Transform3D(-0.007220775, -0.0055776536, 0.4499075, 0.44853428, 0.03547795, 0.0076385695, -0.03556534, 0.44856432, 0.0049902797, -0.19840556, 0.20169184, 0.14246976)
+mesh = SubResource("SphereMesh_njh5b")
+
+[node name="Radar3" type="MeshInstance3D" parent="Machine_Info/Class_Box"]
+transform = Transform3D(-0.0072207726, -0.005577661, 0.44990748, 0.44853422, 0.035477947, 0.0076385685, -0.03556534, 0.44856426, 0.004990287, -0.12726057, 0.14162403, 0.14290512)
+mesh = SubResource("SphereMesh_gssec")
+
+[node name="Radar4" type="MeshInstance3D" parent="Machine_Info/Class_Box"]
+transform = Transform3D(-0.007220772, -0.0055776536, 0.4499075, 0.44853428, 0.03547795, 0.007638568, -0.03556534, 0.44856432, 0.0049902797, -0.12904328, 0.20169184, 0.14247)
+mesh = SubResource("SphereMesh_k44yu")
+
+[node name="Radar5" type="MeshInstance3D" parent="Machine_Info/Class_Box"]
+transform = Transform3D(-0.0072207726, -0.005577661, 0.44990748, 0.44853416, 0.035477944, 0.0076385676, -0.03556534, 0.4485642, 0.0049902946, -0.19725835, 0.13812065, 0.1427499)
+mesh = SubResource("SphereMesh_f14fn")
+
+[node name="Bar_H3" type="MeshInstance3D" parent="Machine_Info/Class_Box"]
+transform = Transform3D(0.99934787, -0.0059342375, -0.027217597, 0.022211552, 0.24955928, -0.055039454, 0.028475821, 0.013599759, 0.99811375, -0.23293543, 0.09149298, 0.13953865)
+mesh = SubResource("BoxMesh_dpu46")
+
+[node name="Condition" type="Node3D" parent="Machine_Info"]
+transform = Transform3D(0.99937093, -0.031061307, -0.017198697, 0.031187288, 0.9994884, 0.007107604, 0.016969204, -0.00763951, 0.9998281, 0.3284647, -0.17036569, -1.673657)
+
+[node name="1" type="MeshInstance3D" parent="Machine_Info/Condition"]
+transform = Transform3D(0.014279783, -0.101231545, 0.9947607, 0.9998969, 0.0013090138, -0.014220404, 0.00013738801, 0.99486166, 0.10124034, -0.21883604, -0.004774004, -0.023507357)
+mesh = SubResource("BoxMesh_gssec")
+
+[node name="2" type="MeshInstance3D" parent="Machine_Info/Condition"]
+transform = Transform3D(0.014279783, -0.101231545, 0.9947607, 0.9998969, 0.0013090138, -0.014220404, 0.00013738801, 0.99486166, 0.10124034, -0.17838094, -0.0047721937, -0.019230008)
+mesh = SubResource("BoxMesh_ja6ch")
+
+[node name="3" type="MeshInstance3D" parent="Machine_Info/Condition"]
+transform = Transform3D(0.014279783, -0.101231545, 0.9947607, 0.9998969, 0.0013090138, -0.014220404, 0.00013738801, 0.99486166, 0.10124034, -0.13800058, -0.005171962, -0.014953613)
+mesh = SubResource("BoxMesh_f14fn")
+
+[node name="4" type="MeshInstance3D" parent="Machine_Info/Condition"]
+transform = Transform3D(0.014279783, -0.101231545, 0.9947607, 0.9998969, 0.0013090138, -0.014220404, 0.00013738801, 0.99486166, 0.10124034, -0.09762061, -0.0055717155, -0.010678887)
+mesh = SubResource("BoxMesh_yciqh")
+
+[node name="5" type="MeshInstance3D" parent="Machine_Info/Condition"]
+transform = Transform3D(0.014279783, -0.101231545, 0.9947607, 0.9998969, 0.0013090138, -0.014220404, 0.00013738801, 0.99486166, 0.10124034, -0.05723998, -0.0059715733, -0.006403208)
+mesh = SubResource("BoxMesh_12cn7")
+
+[node name="6" type="MeshInstance3D" parent="Machine_Info/Condition"]
+transform = Transform3D(0.014279783, -0.101231545, 0.9947607, 0.9998969, 0.0013090138, -0.014220404, 0.00013738801, 0.99486166, 0.10124034, -0.016860127, -0.006371379, -0.0021275282)
+mesh = SubResource("BoxMesh_42ejm")
+
+[node name="7" type="MeshInstance3D" parent="Machine_Info/Condition"]
+transform = Transform3D(0.014279783, -0.101231545, 0.9947607, 0.9998969, 0.0013090138, -0.014220404, 0.00013738801, 0.99486166, 0.10124034, 0.023519784, -0.0067711696, 0.0021477938)
+mesh = SubResource("BoxMesh_g31vf")
+
+[node name="8" type="MeshInstance3D" parent="Machine_Info/Condition"]
+transform = Transform3D(0.014279783, -0.101231545, 0.9947607, 0.9998969, 0.0013090138, -0.014220404, 0.00013738801, 0.99486166, 0.10124034, 0.06390053, -0.0071709305, 0.006422758)
+mesh = SubResource("BoxMesh_g31vf")
+
+[node name="9" type="MeshInstance3D" parent="Machine_Info/Condition"]
+transform = Transform3D(0.014279783, -0.101231545, 0.9947607, 0.9998969, 0.0013090138, -0.014220404, 0.00013738801, 0.99486166, 0.10124034, 0.10428122, -0.0075707287, 0.0106983185)
+mesh = SubResource("BoxMesh_g31vf")
+
+[node name="10" type="MeshInstance3D" parent="Machine_Info/Condition"]
+transform = Transform3D(0.014279783, -0.101231545, 0.9947607, 0.9998969, 0.0013090138, -0.014220404, 0.00013738801, 0.99486166, 0.10124034, 0.14466071, -0.007970542, 0.014974117)
+mesh = SubResource("BoxMesh_g31vf")
+
+[node name="Addtl" type="Node3D" parent="Machine_Info/Condition"]
+transform = Transform3D(0.99999845, 0.0017453283, 0, -0.0017453283, 0.99999845, 0, 0, 0, 1, -0.001, 0, 0)
+
+[node name="Bar_H" type="MeshInstance3D" parent="Machine_Info/Condition/Addtl"]
+transform = Transform3D(0.9992658, 0.005936628, -0.030087635, -0.02566245, 0.24938923, -0.064977005, 0.028471202, 0.016425343, 0.99743336, -0.030955851, -0.061550044, -0.0112268925)
+mesh = SubResource("BoxMesh_bj344")
+skeleton = NodePath("../..")
+
+[node name="Bar_V" type="MeshInstance3D" parent="Machine_Info/Condition/Addtl"]
+transform = Transform3D(0.006126955, 0.24987398, -0.031202808, -0.9975783, 0.0009867593, -0.06944907, -0.069290735, 0.007888339, 0.9970987, 0.17227834, -0.0034592599, 0.036803365)
+mesh = SubResource("BoxMesh_5hhbi")
+skeleton = NodePath("../..")
+
+[node name="Bar_H2" type="MeshInstance3D" parent="Machine_Info/Condition/Addtl"]
+transform = Transform3D(0.99926627, 0.005936647, -0.030087635, -0.025662446, 0.24938926, -0.06497702, 0.028471261, 0.016425343, 0.99743336, -0.03058353, 0.046449333, -0.01113832)
+mesh = SubResource("BoxMesh_rlhfq")
+skeleton = NodePath("../..")
+
+[node name="Bar_V2" type="MeshInstance3D" parent="Machine_Info/Condition/Addtl"]
+transform = Transform3D(0.006126943, 0.24987398, -0.031203046, -0.9975783, 0.0009867537, -0.06944903, -0.06929072, 0.007888328, 0.99709797, -0.26405892, 0.00782758, 0.036510468)
+mesh = SubResource("BoxMesh_1amol")
+skeleton = NodePath("../..")
+
+[node name="Title" type="Label3D" parent="Machine_Info/Condition/Addtl"]
+transform = Transform3D(0.009750124, 1.4209581e-06, -0.0022216348, 6.4607535e-05, 0.009995561, 0.0002899477, 0.0022206912, -0.00029705476, 0.009745807, -0.15238139, 0.0752818, -8.392334e-05)
+pixel_size = 0.025
+no_depth_test = true
+alpha_antialiasing_mode = 1
+alpha_antialiasing_edge = 1.0
+render_priority = 10
+outline_render_priority = 10
+outline_modulate = Color(1, 1, 1, 1)
+text = "CONDITION"
+font = SubResource("FontFile_t05xm")
+font_size = 145
+outline_size = 20
+uppercase = true
+
+[node name="Mass" type="Node3D" parent="Machine_Info"]
+transform = Transform3D(1.3197039, -0.012500056, -0.017105922, 0.016567776, 0.9999171, 0.0028942204, 0.022530288, -0.0031082744, 0.9998504, -0.031, -0.199, -1.526)
+
+[node name="Mass" type="Label3D" parent="Machine_Info/Mass"]
+transform = Transform3D(0.008, -6.9775297e-12, -2.3283064e-10, 7.7235995e-11, 0.012, 1.0089707e-11, 9.313226e-10, 2.2737368e-12, 0.008, -0.08963269, 0.07614574, -0.020308614)
+pixel_size = 0.028
+no_depth_test = true
+alpha_antialiasing_mode = 1
+alpha_antialiasing_edge = 1.0
+render_priority = 10
+outline_render_priority = 10
+modulate = Color(0, 0, 0, 1)
+text = "#"
+font = SubResource("FontFile_t05xm")
+font_size = 400
+outline_size = 50
+uppercase = true
+
+[node name="Addtl" type="Node3D" parent="Machine_Info/Mass"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Machine_Info/Mass/Addtl"]
+transform = Transform3D(1, 2.6138878e-09, 1.4901161e-08, -5.11136e-10, 1, 4.7257345e-09, 0, -4.489266e-09, 1, -0.08614087, 0.18514828, -0.019465208)
+cast_shadow = 0
+mesh = SubResource("BoxMesh_a081e")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Machine_Info/Mass/Addtl"]
+transform = Transform3D(0.17364828, -0.9848077, 2.9802322e-08, 0.9848072, 0.1736483, 5.1913958e-09, 7.450581e-09, -2.9802322e-08, 1, -0.13512659, 0.09418329, -0.02317667)
+cast_shadow = 0
+mesh = SubResource("BoxMesh_gg8mx")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="Machine_Info/Mass/Addtl"]
+transform = Transform3D(0.17364818, 0.9848079, 1.4901161e-08, -0.9848079, 0.17364824, 3.0195224e-10, 2.6077032e-08, 1.4901161e-07, 1, -0.038368702, 0.09497647, -0.025402188)
+cast_shadow = 0
+mesh = SubResource("BoxMesh_gg8mx")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="Machine_Info/Mass/Addtl"]
+transform = Transform3D(-4.0331543e-08, -1.0000001, 0, 1, -4.2322426e-08, 3.0195224e-10, 5.6024874e-10, -2.0861626e-07, 1, -0.0970698, 0.097718276, -0.020675898)
+cast_shadow = 0
+mesh = SubResource("BoxMesh_sb1ko")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D5" type="MeshInstance3D" parent="Machine_Info/Mass/Addtl"]
+transform = Transform3D(1, 2.7694114e-09, -1.4901161e-08, 1.3496901e-09, 1.0000001, -1.6370905e-10, 5.9604645e-08, 2.728484e-10, 1, -0.08644158, 0.002586387, -0.028328657)
+cast_shadow = 0
+mesh = SubResource("BoxMesh_n01wu")
+skeleton = NodePath("../..")
+
+[node name="Circle" type="MeshInstance3D" parent="Machine_Info/Mass/Addtl"]
+transform = Transform3D(1, 8.940697e-08, -2.7939677e-09, 1.0662916e-08, 0.06062872, 0.99904835, 5.9604645e-08, -1.3886771, 0.043617785, -0.08754122, 0.19978088, -0.030127525)
+cast_shadow = 0
+mesh = SubResource("TorusMesh_k44yu")
+skeleton = NodePath("../..")
+
+[node name="Title" type="Label3D" parent="Machine_Info/Mass/Addtl"]
+transform = Transform3D(0.007, -3.7780976e-11, -6.5192585e-10, 2.9385206e-11, 0.009, 4.8245817e-12, 6.5192585e-10, -6.2030368e-12, 0.007, -0.08883244, 0.1603012, -0.02006507)
+pixel_size = 0.025
+no_depth_test = true
+alpha_antialiasing_mode = 1
+alpha_antialiasing_edge = 1.0
+render_priority = 10
+outline_render_priority = 10
+modulate = Color(0, 0, 0, 1)
+text = "MASS"
+font = SubResource("FontFile_t05xm")
+font_size = 145
+outline_size = 20
+uppercase = true
+
+[node name="kg" type="Label3D" parent="Machine_Info/Mass/Addtl"]
+transform = Transform3D(0.0070000025, -4.0081716e-11, -1.1641532e-10, 6.571099e-11, 0.009, 5.7127636e-12, 2.561137e-09, 3.126388e-12, 0.0069999993, -0.08610189, 0.010040775, -0.019257784)
+pixel_size = 0.025
+no_depth_test = true
+alpha_antialiasing_mode = 1
+alpha_antialiasing_edge = 1.0
+render_priority = 10
+outline_render_priority = 10
+modulate = Color(0, 0, 0, 1)
+text = "KG"
+font = SubResource("FontFile_t05xm")
+font_size = 145
+outline_size = 20
+uppercase = true
+
+[node name="Scanner" type="Node3D" parent="Machine_Info"]
+transform = Transform3D(0.97654915, -0.02809168, -0.077237666, 0.028570076, 0.9795714, 0.0049487855, 0.07706185, -0.0071830675, 0.97694045, -0.025203764, -0.27845109, -1.5978252)
+
+[node name="Bar_D" type="MeshInstance3D" parent="Machine_Info/Scanner"]
+transform = Transform3D(-0.34529832, 0.23462325, 0, -0.9384934, -0.08632455, 0, 0, 0, 1.0000007, -0.922, 0, 0)
+mesh = SubResource("BoxMesh_k44yu")
+
+[node name="Bar_D2" type="MeshInstance3D" parent="Machine_Info/Scanner"]
+transform = Transform3D(-0.34529832, 0.23462322, 0, -0.9384934, -0.08632454, 0, 0, 0, 1.0000006, -0.882, 0, 0)
+mesh = SubResource("BoxMesh_k44yu")
+
+[node name="Bar_D3" type="MeshInstance3D" parent="Machine_Info/Scanner"]
+transform = Transform3D(-0.34529832, 0.23462322, 0, -0.9384934, -0.08632454, 0, 0, 0, 1.0000006, -0.842, 0, 0)
+mesh = SubResource("BoxMesh_k44yu")
+
+[node name="Bar_D4" type="MeshInstance3D" parent="Machine_Info/Scanner"]
+transform = Transform3D(-0.34529832, 0.23462322, 0, -0.9384934, -0.08632454, 0, 0, 0, 1.0000006, -0.802, 0, 0)
+mesh = SubResource("BoxMesh_k44yu")
+
+[node name="Bar_D5" type="MeshInstance3D" parent="Machine_Info/Scanner"]
+transform = Transform3D(-0.34529832, 0.23462322, 0, -0.9384934, -0.08632454, 0, 0, 0, 1.0000006, -0.762, 0, 0)
+mesh = SubResource("BoxMesh_k44yu")
+
+[node name="Bar_D6" type="MeshInstance3D" parent="Machine_Info/Scanner"]
+transform = Transform3D(-0.34529832, 0.23462322, 0, -0.9384934, -0.08632454, 0, 0, 0, 1.0000006, -0.722, 0, 0)
+mesh = SubResource("BoxMesh_k44yu")
+
+[node name="Bar_D7" type="MeshInstance3D" parent="Machine_Info/Scanner"]
+transform = Transform3D(-0.34529832, 0.23462322, 0, -0.9384934, -0.08632454, 0, 0, 0, 1.0000006, -0.682, 0, 0)
+mesh = SubResource("BoxMesh_k44yu")
+
+[node name="Bar_D8" type="MeshInstance3D" parent="Machine_Info/Scanner"]
+transform = Transform3D(-0.34529832, 0.23462322, 0, -0.9384934, -0.08632454, 0, 0, 0, 1.0000006, -0.642, 0, 0)
+mesh = SubResource("BoxMesh_k44yu")
+
+[node name="Bar_D9" type="MeshInstance3D" parent="Machine_Info/Scanner"]
+transform = Transform3D(-0.34529832, 0.23462322, 0, -0.9384934, -0.08632454, 0, 0, 0, 1.0000006, -0.602, 0, 0)
+mesh = SubResource("BoxMesh_k44yu")
+
+[node name="Bar_D10" type="MeshInstance3D" parent="Machine_Info/Scanner"]
+transform = Transform3D(-0.34529832, 0.23462322, 0, -0.9384934, -0.08632454, 0, 0, 0, 1.0000006, -0.562, 0, 0)
+mesh = SubResource("BoxMesh_k44yu")
+
+[node name="Bar_D11" type="MeshInstance3D" parent="Machine_Info/Scanner"]
+transform = Transform3D(-0.34529832, 0.23462322, 0, -0.9384934, -0.08632454, 0, 0, 0, 1.0000006, -0.522, 0, 0)
+mesh = SubResource("BoxMesh_k44yu")
+
+[node name="Bar_D12" type="MeshInstance3D" parent="Machine_Info/Scanner"]
+transform = Transform3D(-0.34529832, 0.23462322, 0, -0.9384934, -0.08632454, 0, 0, 0, 1.0000006, -0.482, 0, 0)
+mesh = SubResource("BoxMesh_k44yu")
+
+[node name="Bar_D13" type="MeshInstance3D" parent="Machine_Info/Scanner"]
+transform = Transform3D(-0.34529832, 0.23462325, 0, -0.9384934, -0.08632455, 0, 0, 0, 1.0000007, -0.442, 0, 0)
+mesh = SubResource("BoxMesh_k44yu")
+
+[node name="Bar_D14" type="MeshInstance3D" parent="Machine_Info/Scanner"]
+transform = Transform3D(-0.34529832, 0.23462321, 0, -0.9384934, -0.086324535, 0, 0, 0, 1.0000006, -0.402, 0, 0)
+mesh = SubResource("BoxMesh_k44yu")
+
+[node name="Bar_D15" type="MeshInstance3D" parent="Machine_Info/Scanner"]
+transform = Transform3D(-0.34529832, 0.23462321, 0, -0.9384934, -0.086324535, 0, 0, 0, 1.0000006, -0.362, 0, 0)
+mesh = SubResource("BoxMesh_k44yu")
+
+[node name="Bar_D16" type="MeshInstance3D" parent="Machine_Info/Scanner"]
+transform = Transform3D(-0.34529832, 0.23462321, 0, -0.9384934, -0.086324535, 0, 0, 0, 1.0000006, -0.322, 0, 0)
+mesh = SubResource("BoxMesh_k44yu")
+
+[node name="Bar_D17" type="MeshInstance3D" parent="Machine_Info/Scanner"]
+transform = Transform3D(-0.34529832, 0.23462321, 0, -0.9384934, -0.086324535, 0, 0, 0, 1.0000006, -0.282, 0, 0)
+mesh = SubResource("BoxMesh_k44yu")
+
+[node name="Bar_D18" type="MeshInstance3D" parent="Machine_Info/Scanner"]
+transform = Transform3D(-0.34529832, 0.23462321, 0, -0.9384934, -0.086324535, 0, 0, 0, 1.0000006, -0.242, 0, 0)
+mesh = SubResource("BoxMesh_k44yu")
+
+[node name="Bar_D19" type="MeshInstance3D" parent="Machine_Info/Scanner"]
+transform = Transform3D(-0.34529832, 0.23462321, 0, -0.9384934, -0.086324535, 0, 0, 0, 1.0000006, -0.202, 0, 0)
+mesh = SubResource("BoxMesh_k44yu")
+
+[node name="Bar_D20" type="MeshInstance3D" parent="Machine_Info/Scanner"]
+transform = Transform3D(-0.34529832, 0.23462321, 0, -0.9384934, -0.086324535, 0, 0, 0, 1.0000006, -0.162, 0, 0)
+mesh = SubResource("BoxMesh_k44yu")
+
+[node name="Bar_D21" type="MeshInstance3D" parent="Machine_Info/Scanner"]
+transform = Transform3D(-0.34529832, 0.23462321, 0, -0.9384934, -0.086324535, 0, 0, 0, 1.0000006, -0.122, 0, 0)
+mesh = SubResource("BoxMesh_k44yu")
+
+[node name="Bar_D22" type="MeshInstance3D" parent="Machine_Info/Scanner"]
+transform = Transform3D(-0.34529832, 0.23462321, 0, -0.9384934, -0.086324535, 0, 0, 0, 1.0000006, -0.082, 0, 0)
+mesh = SubResource("BoxMesh_k44yu")
+
+[node name="Bar_D23" type="MeshInstance3D" parent="Machine_Info/Scanner"]
+transform = Transform3D(-0.34529832, 0.23462321, 0, -0.9384934, -0.086324535, 0, 0, 0, 1.0000006, -0.042, 0, 0)
+mesh = SubResource("BoxMesh_k44yu")
+
+[node name="Bar_D24" type="MeshInstance3D" parent="Machine_Info/Scanner"]
+transform = Transform3D(-0.34529832, 0.23462321, 0, -0.9384934, -0.086324535, 0, 0, 0, 1.0000006, -0.002, 0, 0)
+mesh = SubResource("BoxMesh_k44yu")
+
+[node name="Bar_D25" type="MeshInstance3D" parent="Machine_Info/Scanner"]
+transform = Transform3D(-0.34529832, 0.23462321, 0, -0.9384934, -0.086324535, 0, 0, 0, 1.0000006, 0.038, 0, 0)
+mesh = SubResource("BoxMesh_k44yu")
+
+[node name="Bar_D26" type="MeshInstance3D" parent="Machine_Info/Scanner"]
+transform = Transform3D(-0.34529832, 0.23462321, 0, -0.9384934, -0.086324535, 0, 0, 0, 1.0000006, 0.078, 0, 0)
+mesh = SubResource("BoxMesh_k44yu")
+
+[node name="Bar_D27" type="MeshInstance3D" parent="Machine_Info/Scanner"]
+transform = Transform3D(-0.34529832, 0.23462321, 0, -0.9384934, -0.086324535, 0, 0, 0, 1.0000006, 0.118, 0, 0)
+mesh = SubResource("BoxMesh_k44yu")
+
+[node name="Bar_D28" type="MeshInstance3D" parent="Machine_Info/Scanner"]
+transform = Transform3D(-0.34529832, 0.23462321, 0, -0.9384934, -0.086324535, 0, 0, 0, 1.0000006, 0.158, 0, 0)
+mesh = SubResource("BoxMesh_k44yu")
+
+[node name="Bar_D29" type="MeshInstance3D" parent="Machine_Info/Scanner"]
+transform = Transform3D(-0.34529832, 0.23462321, 0, -0.9384934, -0.086324535, 0, 0, 0, 1.0000006, 0.198, 0, 0)
+mesh = SubResource("BoxMesh_k44yu")
+
+[node name="Bar_D30" type="MeshInstance3D" parent="Machine_Info/Scanner"]
+transform = Transform3D(-0.34529832, 0.23462321, 0, -0.9384934, -0.086324535, 0, 0, 0, 1.0000006, 0.238, 0, 0)
+mesh = SubResource("BoxMesh_k44yu")
+
+[node name="Bar_D31" type="MeshInstance3D" parent="Machine_Info/Scanner"]
+transform = Transform3D(-0.34529832, 0.23462321, 0, -0.9384934, -0.086324535, 0, 0, 0, 1.0000006, 0.278, 0, 0)
+mesh = SubResource("BoxMesh_k44yu")
+
+[node name="Bar_D32" type="MeshInstance3D" parent="Machine_Info/Scanner"]
+transform = Transform3D(-0.34529832, 0.23462321, 0, -0.9384934, -0.086324535, 0, 0, 0, 1.0000006, 0.318, 0, 0)
+mesh = SubResource("BoxMesh_k44yu")
+
+[node name="Bar_D33" type="MeshInstance3D" parent="Machine_Info/Scanner"]
+transform = Transform3D(-0.34529832, 0.23462321, 0, -0.9384934, -0.086324535, 0, 0, 0, 1.0000006, 0.358, 0, 0)
+mesh = SubResource("BoxMesh_k44yu")
+
+[node name="Bar_D34" type="MeshInstance3D" parent="Machine_Info/Scanner"]
+transform = Transform3D(-0.34529832, 0.23462321, 0, -0.9384934, -0.086324535, 0, 0, 0, 1.0000006, 0.398, 0, 0)
+mesh = SubResource("BoxMesh_k44yu")
+
+[node name="Bar_D36" type="MeshInstance3D" parent="Machine_Info/Scanner"]
+transform = Transform3D(-0.34529832, 0.23462321, 0, -0.9384934, -0.086324535, 0, 0, 0, 1.0000006, 0.438, 0, 0)
+mesh = SubResource("BoxMesh_k44yu")
+
+[node name="Bar_D37" type="MeshInstance3D" parent="Machine_Info/Scanner"]
+transform = Transform3D(-0.34529832, 0.23462321, 0, -0.9384934, -0.086324535, 0, 0, 0, 1.0000006, 0.478, 0, 0)
+mesh = SubResource("BoxMesh_k44yu")
+
+[node name="Bar_D38" type="MeshInstance3D" parent="Machine_Info/Scanner"]
+transform = Transform3D(-0.34529832, 0.23462321, 0, -0.9384934, -0.086324535, 0, 0, 0, 1.0000006, 0.518, 0, 0)
+mesh = SubResource("BoxMesh_k44yu")
+
+[node name="Spin_Box" type="Node3D" parent="Machine_Info"]
+transform = Transform3D(4.1200004, 0, 0, 0, 4.4, 0, 0, 0, 4.1200004, 0.21549693, 0.040822417, -1.4756329)
+
+[node name="Thrust" type="Label3D" parent="Machine_Info/Spin_Box"]
+transform = Transform3D(1, 0, -4.4703484e-08, 0, 1.0000002, 0, 4.4703484e-08, 0, 1, -0.002, 0.044, 0)
+pixel_size = 0.0002
+no_depth_test = true
+render_priority = 10
+outline_render_priority = 10
+outline_modulate = Color(1, 1, 1, 1)
+text = "0.6x"
+font_size = 200
+
+[node name="Failure" type="Label3D" parent="Machine_Info/Spin_Box"]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1.0000004, 0, 8.742278e-08, 0, -1, -0.002, 0.044, 0)
 visible = false
-texture = ExtResource("3_8m00m")
+pixel_size = 0.0002
+no_depth_test = true
+render_priority = 10
+outline_render_priority = 10
+outline_modulate = Color(1, 1, 1, 1)
+text = "38%"
+font_size = 215
+outline_size = 6
+
+[node name="Addtl" type="Node3D" parent="Machine_Info/Spin_Box"]
+transform = Transform3D(1, 0, -1.4901161e-08, 0, 1.0000001, 0, 1.4901161e-08, 0, 1, 0, 0, 0)
+
+[node name="Bar1" type="MeshInstance3D" parent="Machine_Info/Spin_Box/Addtl"]
+transform = Transform3D(-4.3710585e-08, 0.24999562, 0.0061086416, -1.0000002, -1.0927858e-08, 0, 2.670193e-10, -0.0015271753, 0.9999816, -0.0018291473, -0.0059999973, -2.9802322e-08)
+mesh = SubResource("BoxMesh_v515h")
+skeleton = NodePath("../..")
+
+[node name="Bar2" type="MeshInstance3D" parent="Machine_Info/Spin_Box/Addtl"]
+transform = Transform3D(0.99972254, -1.433651e-09, 0.023559809, 3.20142e-10, 0.2500003, 8.14907e-10, -0.023559824, 4.674039e-12, 0.9997228, -0.0498716, 0.041739807, 0)
+mesh = SubResource("BoxMesh_v515h")
+skeleton = NodePath("../..")
+
+[node name="Bar3" type="MeshInstance3D" parent="Machine_Info/Spin_Box/Addtl"]
+transform = Transform3D(-0.0017275991, 0.24999793, 0.0041196942, -0.999999, -0.00043233862, 0.0004221887, 0.00042930865, -0.0010297485, 0.9999923, -0.0006056577, 0.089351326, 0)
+mesh = SubResource("BoxMesh_v515h")
+skeleton = NodePath("../..")
+
+[node name="Bar4" type="MeshInstance3D" parent="Machine_Info/Spin_Box/Addtl"]
+transform = Transform3D(-0.9999957, -0.00043262192, -0.0025824308, 0.0017294008, -0.24999993, 0.0004221886, -0.0025831312, 0.00010443027, 0.99999684, 0.048131637, 0.0416978, -2.9802322e-08)
+mesh = SubResource("BoxMesh_v515h")
+skeleton = NodePath("../..")
+
+[node name="Text1" type="Label3D" parent="Machine_Info/Spin_Box/Addtl"]
+transform = Transform3D(0.010000017, 0, 0, 0, 0.009999976, 0, -4.656613e-10, 0, 0.010000018, 0, 0.040774867, 0)
+pixel_size = 0.025
+no_depth_test = true
+alpha_antialiasing_mode = 1
+alpha_antialiasing_edge = 1.0
+render_priority = 10
+outline_render_priority = 10
+modulate = Color(1, 1, 1, 0.87058824)
+outline_modulate = Color(1, 1, 1, 0.87058824)
+text = "Thrust
+Factor"
+font = SubResource("FontFile_t05xm")
+font_size = 48
+outline_size = 5
+uppercase = true
+line_spacing = 260.0
+
+[node name="Text2" type="Label3D" parent="Machine_Info/Spin_Box/Addtl"]
+transform = Transform3D(-0.0100000175, 0, -1.3969839e-09, 0, 0.009999976, 0, 1.1641532e-09, 0, -0.01000002, 0, 0.040705204, 0)
+visible = false
+pixel_size = 0.025
+no_depth_test = true
+alpha_antialiasing_mode = 1
+alpha_antialiasing_edge = 1.0
+render_priority = 10
+outline_render_priority = 10
+outline_modulate = Color(1, 1, 1, 1)
+text = "Failure
+Risk"
+font = SubResource("FontFile_t05xm")
+font_size = 48
+outline_size = 5
+uppercase = true
+line_spacing = 260.0
+
+[node name="Color" type="MeshInstance3D" parent="Machine_Info/Spin_Box/Addtl"]
+transform = Transform3D(0.9999994, 0, 1.4901161e-08, 0, 0.9999998, 0, -1.4901161e-08, 0, 0.9999994, -4.6394765e-05, 0.041806534, -0.0020756423)
+cast_shadow = 0
+mesh = SubResource("BoxMesh_okbm5")
+skeleton = NodePath("../..")
 
 [node name="BOTTOM_MESH" type="MeshInstance3D" parent="Machine_Info"]
-transform = Transform3D(1.6654974, -0.023393366, -0.058086365, 0.020333854, 1.6642703, -0.0872271, 0.05922669, 0.08645695, 1.6633782, -0.18624234, 0.10620868, -1.8953713)
+transform = Transform3D(1.6654977, -0.023393366, -0.058086365, 0.020333856, 1.6642703, -0.0872271, 0.05922669, 0.08645696, 1.6633785, -0.18623155, 0.10702932, -1.895405)
 mesh = SubResource("BoxMesh_61m6q")
 skeleton = NodePath("../..")
 
+[node name="Bar_H" type="MeshInstance3D" parent="Machine_Info/BOTTOM_MESH"]
+transform = Transform3D(0.99953413, 0.00089717517, -0.030301645, -0.005400557, 0.24954645, -0.059923943, 0.03003177, 0.015014935, 0.997742, -0.0090020895, 0.3159497, 0.036626697)
+mesh = SubResource("BoxMesh_x00vi")
+
 [node name="TOP_MESH" type="MeshInstance3D" parent="Machine_Info"]
-transform = Transform3D(1.6654975, -0.023393381, -0.058086455, 0.020333856, 1.6642711, -0.08722712, 0.05922669, 0.086457014, 1.6633787, -0.19647598, 0.7913737, -1.85837)
+transform = Transform3D(1.6654977, -0.023393383, -0.058086455, 0.020333856, 1.6642711, -0.08722712, 0.05922669, 0.08645702, 1.6633788, -0.19647592, 0.7913737, -1.85837)
 mesh = SubResource("BoxMesh_3nktn")
 skeleton = NodePath("../..")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Machine_Info"]
-transform = Transform3D(0.99934936, -0.023737032, -0.027217492, 0.022211585, 0.9982387, -0.055039562, 0.02847594, 0.05439907, 0.99811447, -0.77251726, 0.469, -1.6164767)
-mesh = SubResource("BoxMesh_5hhbi")
-
-[node name="Mass" type="MeshInstance3D" parent="Machine_Info"]
-transform = Transform3D(0.9992665, -0.038183015, 0.0030056834, 0.03818301, 0.9869545, -0.15640771, 0.0030056983, 0.15640774, 0.98768795, 0.22555733, 0.28818607, -1.5667089)
-mesh = SubResource("SphereMesh_l5ika")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Machine_Info/Mass"]
-transform = Transform3D(0.98101646, -0.029636526, -0.1916449, 0.03106938, 0.99950695, 0.004475206, 0.19141781, -0.010344565, 0.98145384, -0.041570187, 0.09008953, 0.17028248)
-mesh = SubResource("PrismMesh_dpu46")
-
 [node name="Control_Position" type="Node3D" parent="."]
 transform = Transform3D(0.816545, -0.0553647, -0.57462, -0.034534, 0.988922, -0.144356, 0.576248, 0.137717, 0.805588, -0.0550965, 0.418735, -0.460591)
+
+[node name="Holo_Position" type="Node3D" parent="."]
+transform = Transform3D(0.81654537, -0.0553647, -0.57462, -0.034534, 0.988922, -0.144356, 0.57624817, 0.137717, 0.80558825, -0.02269724, 0.418735, -0.5563364)
 
 [node name="Extract_Message" type="Label3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.967462, -0.253015, 0, 0.253015, 0.967463, 0, 3.32047, -7.9787)

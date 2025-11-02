@@ -21,10 +21,12 @@ var shader_material: ShaderMaterial
 @onready var machine_name_back: Label3D = $Machine_Info/All_Data/Main/Main_Name_Back
 @onready var machine_desc: Label3D = $Machine_Info/All_Data/Main/Main_Desc
 @onready var component_name: Label3D = $Machine_Info/All_Data/Component/Screen/Comp_Name
+@onready var component_name_front: Label3D = $Machine_Info/All_Data/Component/Screen/Comp_Name_Front
+@onready var component_name_back: Label3D = $Machine_Info/All_Data/Component/Screen/Comp_Name_Back
 @onready var component_stars: Label3D = $Machine_Info/All_Data/Component/Screen/Comp_Stars
 @onready var component_module: Label3D = $Machine_Info/All_Data/Module/Screen/Data
 @onready var component_power: Label3D = $Machine_Info/All_Data/Power/Screen/Data
-@onready var component_mass: Label3D = $Machine_Info/All_Data/Mass/Screen/Data
+@onready var component_mass: Label3D = $Machine_Info/Mass/Mass
 @onready var component_lift: Label3D = $Machine_Info/All_Data/Lift/Screen/Data
 
 @onready var module_screen: MeshInstance3D = $Machine_Info/All_Data/Module/Screen
@@ -33,6 +35,18 @@ var shader_material: ShaderMaterial
 @onready var lift_screen: MeshInstance3D = $Machine_Info/All_Data/Lift/Screen
 
 @onready var control_position: Node3D = $Control_Position
+@onready var hologram_position: Node3D = $Holo_Position
+
+@onready var radar: MeshInstance3D = $Machine_Info/Class_Box/Radar
+@onready var radar2: MeshInstance3D = $Machine_Info/Class_Box/Radar2
+@onready var radar3: MeshInstance3D = $Machine_Info/Class_Box/Radar3
+@onready var radar4: MeshInstance3D = $Machine_Info/Class_Box/Radar4
+@onready var radar5: MeshInstance3D = $Machine_Info/Class_Box/Radar5
+
+@onready var scanner = $Machine_Info/Scanner
+var is_scanning: bool = false
+
+@onready var spin_anim: AnimationPlayer = $Spin_Animation
 
 var grabbed_object_name: StringName
 var handling_object: bool = false
@@ -66,6 +80,9 @@ var grab_object_complete: bool = false
 
 func _ready() -> void:
 	
+	start_scan()
+	spin_anim.play("spin")
+	
 	extract_message.visible = false
 	
 	machine_info.visible = false
@@ -94,6 +111,16 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
+	
+	radar.rotate_z(-.0015)
+	radar2.rotate_z(-.006)
+	radar3.rotate_z(-.003)
+	radar4.rotate_z(.004)
+	radar5.rotate_z(.005)
+	
+	for child in rotating_children.keys():
+		if is_instance_valid(child) and child is MeshInstance3D:
+			child.rotate_x(0.01)
 	
 	if touching_object and not beam_active:
 		touch_anim.play("touching_object")
@@ -247,3 +274,32 @@ func _on_grab_animation_animation_finished(anim_name: StringName) -> void:
 func _on_touch_animation_animation_finished(anim_name: StringName) -> void:
 	if anim_name == "touching_object":
 		touch_anim.play("extended_touch")
+
+
+var rotating_children = {}  # Track which children are currently rotating
+
+func start_scan():
+	if is_scanning:
+		return
+	is_scanning = true
+	scan_effect()
+
+func scan_effect():
+	var children = scanner.get_children()
+	
+	if children.size() == 0:
+		is_scanning = false
+		return
+	
+	while is_scanning:
+		# Forward pass - start each child rotating
+		for i in range(children.size()):
+			if children[i] is MeshInstance3D:
+				rotating_children[children[i]] = true
+				await get_tree().create_timer(0.1).timeout
+		
+		# Reverse pass - start each child rotating
+		for i in range(children.size() - 1, -1, -1):
+			if children[i] is MeshInstance3D:
+				rotating_children[children[i]] = true
+				await get_tree().create_timer(0.1).timeout

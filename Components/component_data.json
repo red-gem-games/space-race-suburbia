@@ -7,7 +7,7 @@
         "components": [
             {
                 "name": "Washer Door",
-                "stars": 2,
+                "stars": 5,
                 "scale": 1.75,
                 "glow": 7.0,
                 "module": "Structure",
@@ -97,7 +97,7 @@
     },
    "WaterHeater": {
     "name": "Water Heater",
-    "description": "Pressure is Important.",
+    "description": "''Launch Your Rocket, Then Hit The Shower''",
     "scale": 0.5,
     "distance": 6.5,
     "components": [
@@ -147,7 +147,7 @@
    
    "Fridge": {
        "name": "Refrigerator",
-       "description": "Still smells like leftovers.",
+       "description": "''Still Smells Like Leftovers''",
        "scale": 0.8,
        "components": []
        

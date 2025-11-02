@@ -165,6 +165,8 @@ func _ready() -> void:
 	
 	mass = mass * 2
 	
+	freeze = true
+	
 	physics_mat.friction = 0.9
 	physics_mat.bounce = 0.0
 	self.physics_material_override = physics_mat
