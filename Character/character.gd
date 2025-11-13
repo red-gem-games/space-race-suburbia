@@ -149,7 +149,7 @@ var desired_pitch: float = 0.0
 var extracting_yaw: float = 0.0
 
 var yaw: float = 0.0
-var distance_factor: float = 0.0
+var distance_factor: float = 5.0
 var height_factor: float = 0.0
 var last_y: float = 0.0
 var change_rate: float = 0.05  # Adjust this value to control sensitivity
@@ -626,15 +626,17 @@ func _on_extract_key() -> void:
 		if PREM_7.extract_message.visible:
 			PREM_7.extract_message.visible = false
 		HUD.message_status('Extract', 'ON')
-		#grabbed_object.object_body.scale = Vector3(0.25, 0.25, 0.25)
 		for child in grabbed_object.get_children():
 			if child is CollisionShape3D:
 				child.disabled = true
 		PREM_7.ctrl_anim.play("extract")
 		PREM_7.holo_anim.play("cast_hologram")
+		PREM_7.is_scanning = true
+		PREM_7.start_scan()
+		PREM_7.spin_anim.play("spin")
 		grabbed_object.is_extracting = true
-		#PREM_7.machine_info.scale = Vector3(1.0, 1.0, 1.0)
-		PREM_7.machine_info.visible = true
+		#PREM_7.dashboard.scale = Vector3(1.0, 1.0, 1.0)
+		PREM_7.dashboard.visible = true
 		grabbed_object.extract_active = true
 		#module = PREM_7.component_module.get_parent()
 		#power = PREM_7.component_power.get_parent()
@@ -659,8 +661,9 @@ func _on_extract_key() -> void:
 			selected_component_mesh.scale.z = comp_scale_z
 			selected_component_mesh.position = selected_component_pos
 		PREM_7.ctrl_anim.play_backwards("extract")
-		
 		PREM_7.holo_anim.play_backwards("cast_hologram")
+		PREM_7.is_scanning = false
+		PREM_7.spin_anim.stop()
 		gravity_strength = 10.0
 		grabbed_object.visible = true
 		grabbed_object.extract_active = false
@@ -958,8 +961,8 @@ func release_object():
 		if child is CollisionShape3D:
 			child.disabled = false
 	grabbed_object.object_body.scale = grabbed_object.current_scale
-	PREM_7.machine_info.scale = Vector3.ZERO
-	PREM_7.machine_info.visible = false
+	PREM_7.dashboard.scale = Vector3.ZERO
+	PREM_7.dashboard.visible = false
 	PREM_7.control_position.remove_child(grabbed_object.extract_body)
 	grabbed_object.extract_body = null
 	if touched_object:

@@ -1,0 +1,42 @@
+[remap]
+
+importer="texture"
+type="CompressedTexture2D"
+uid="uid://db5jvn4uorn4c"
+path.s3tc="res://.godot/imported/2008439171-ad496188c9df29e8bf094614df32aa32a38231c59121ad1ae598ed783d657eea-d.webp-de0e0d22a0b581b62ac759fe22b9f9f8.s3tc.ctex"
+path.etc2="res://.godot/imported/2008439171-ad496188c9df29e8bf094614df32aa32a38231c59121ad1ae598ed783d657eea-d.webp-de0e0d22a0b581b62ac759fe22b9f9f8.etc2.ctex"
+metadata={
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"vram_texture": true
+}
+
+[deps]
+
+source_file="res://Assets/Reference_Placeholder/2008439171-ad496188c9df29e8bf094614df32aa32a38231c59121ad1ae598ed783d657eea-d.webp"
+dest_files=["res://.godot/imported/2008439171-ad496188c9df29e8bf094614df32aa32a38231c59121ad1ae598ed783d657eea-d.webp-de0e0d22a0b581b62ac759fe22b9f9f8.s3tc.ctex", "res://.godot/imported/2008439171-ad496188c9df29e8bf094614df32aa32a38231c59121ad1ae598ed783d657eea-d.webp-de0e0d22a0b581b62ac759fe22b9f9f8.etc2.ctex"]
+
+[params]
+
+compress/mode=2
+compress/high_quality=false
+compress/lossy_quality=0.7
+compress/uastc_level=0
+compress/rdo_quality_loss=0.0
+compress/hdr_compression=1
+compress/normal_map=0
+compress/channel_pack=0
+mipmaps/generate=true
+mipmaps/limit=-1
+roughness/mode=0
+roughness/src_normal=""
+process/channel_remap/red=0
+process/channel_remap/green=1
+process/channel_remap/blue=2
+process/channel_remap/alpha=3
+process/fix_alpha_border=true
+process/premult_alpha=false
+process/normal_map_invert_y=false
+process/hdr_as_srgb=false
+process/hdr_clamp_exposure=false
+process/size_limit=0
+detect_3d/compress_to=0

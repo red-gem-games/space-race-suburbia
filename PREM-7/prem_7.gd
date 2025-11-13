@@ -16,34 +16,28 @@ var GLOW_SHADER := preload("res://Shaders/grabbed_glow.gdshader")
 var shader: Shader
 var shader_material: ShaderMaterial
 
-@onready var machine_info: Node3D = $Machine_Info
-@onready var machine_name: Label3D = $Machine_Info/All_Data/Main/Main_Name
-@onready var machine_name_back: Label3D = $Machine_Info/All_Data/Main/Main_Name_Back
-@onready var machine_desc: Label3D = $Machine_Info/All_Data/Main/Main_Desc
-@onready var component_name: Label3D = $Machine_Info/All_Data/Component/Screen/Comp_Name
-@onready var component_name_front: Label3D = $Machine_Info/All_Data/Component/Screen/Comp_Name_Front
-@onready var component_name_back: Label3D = $Machine_Info/All_Data/Component/Screen/Comp_Name_Back
-@onready var component_stars: Label3D = $Machine_Info/All_Data/Component/Screen/Comp_Stars
-@onready var component_module: Label3D = $Machine_Info/All_Data/Module/Screen/Data
-@onready var component_power: Label3D = $Machine_Info/All_Data/Power/Screen/Data
-@onready var component_mass: Label3D = $Machine_Info/Mass/Mass
-@onready var component_lift: Label3D = $Machine_Info/All_Data/Lift/Screen/Data
+@onready var dashboard: Node3D = $Dashboard
+@onready var machine_name: Label3D = $Dashboard/All_Data/Main/Main_Name
+@onready var machine_name_back: Label3D = $Dashboard/All_Data/Main/Main_Name_Back
+@onready var machine_desc: Label3D = $Dashboard/All_Data/Main/Main_Desc
+@onready var component_name: Label3D = $Dashboard/All_Data/Component/Screen/Comp_Name
+@onready var component_name_front: Label3D = $Dashboard/All_Data/Component/Screen/Comp_Name_Front
+@onready var component_name_back: Label3D = $Dashboard/All_Data/Component/Screen/Comp_Name_Back
+@onready var component_stars: Label3D = $Dashboard/All_Data/Component/Screen/Comp_Stars
+@onready var component_module: Label3D = $Dashboard/All_Data/Module/Screen/Data
+@onready var component_power: Label3D = $Dashboard/All_Data/Power/Screen/Data
+@onready var component_mass: Label3D = $Dashboard/Mass/Mass
+@onready var component_lift: Label3D = $Dashboard/All_Data/Lift/Screen/Data
 
-@onready var module_screen: MeshInstance3D = $Machine_Info/All_Data/Module/Screen
-@onready var power_screen: MeshInstance3D = $Machine_Info/All_Data/Power/Screen
-@onready var mass_screen: MeshInstance3D = $Machine_Info/All_Data/Mass/Screen
-@onready var lift_screen: MeshInstance3D = $Machine_Info/All_Data/Lift/Screen
+@onready var module_screen: MeshInstance3D = $Dashboard/All_Data/Module/Screen
+@onready var power_screen: MeshInstance3D = $Dashboard/All_Data/Power/Screen
+@onready var mass_screen: MeshInstance3D = $Dashboard/All_Data/Mass/Screen
+@onready var lift_screen: MeshInstance3D = $Dashboard/All_Data/Lift/Screen
 
 @onready var control_position: Node3D = $Control_Position
 @onready var hologram_position: Node3D = $Holo_Position
 
-@onready var radar: MeshInstance3D = $Machine_Info/Class_Box/Radar
-@onready var radar2: MeshInstance3D = $Machine_Info/Class_Box/Radar2
-@onready var radar3: MeshInstance3D = $Machine_Info/Class_Box/Radar3
-@onready var radar4: MeshInstance3D = $Machine_Info/Class_Box/Radar4
-@onready var radar5: MeshInstance3D = $Machine_Info/Class_Box/Radar5
-
-@onready var scanner = $Machine_Info/Scanner
+@onready var scanner = $Dashboard/Scanner
 var is_scanning: bool = false
 
 @onready var spin_anim: AnimationPlayer = $Spin_Animation
@@ -81,12 +75,11 @@ var grab_object_complete: bool = false
 func _ready() -> void:
 	
 	start_scan()
-	spin_anim.play("spin")
 	
 	extract_message.visible = false
 	
-	machine_info.visible = false
-	machine_info.scale = Vector3(0.6, 0.6, 0.6)
+	dashboard.visible = false
+	dashboard.scale = Vector3(0.6, 0.6, 0.6)
 	add_child(control_hologram_timer)
 	control_hologram_timer.one_shot = true
 	grab_anim.play("RESET")
@@ -111,12 +104,6 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
-	
-	radar.rotate_z(-.0015)
-	radar2.rotate_z(-.006)
-	radar3.rotate_z(-.003)
-	radar4.rotate_z(.004)
-	radar5.rotate_z(.005)
 	
 	for child in rotating_children.keys():
 		if is_instance_valid(child) and child is MeshInstance3D:

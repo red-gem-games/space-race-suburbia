@@ -1,4 +1,4 @@
-[gd_scene load_steps=131 format=4 uid="uid://dw2grejb4tc3k"]
+[gd_scene load_steps=132 format=4 uid="uid://dw2grejb4tc3k"]
 
 [ext_resource type="PackedScene" uid="uid://f722yn8gdiyj" path="res://Character/character.tscn" id="1_f3sb7"]
 [ext_resource type="Script" uid="uid://cpdnlycwlet2q" path="res://World/world.gd" id="1_tlwt5"]
@@ -39,6 +39,7 @@
 [ext_resource type="Texture2D" uid="uid://b7s66o5ovayfj" path="res://World/Workshop/House_Isolate_GameReady_Wood063_2K_Normal.jpg" id="35_g3lo7"]
 [ext_resource type="Texture2D" uid="uid://b7hdyf8kce12c" path="res://World/Workshop/House_Isolate_GameReady_T_KitchenFloor_DF.png" id="36_5aim4"]
 [ext_resource type="Texture2D" uid="uid://jg01bby0riwq" path="res://Assets/Blender/Workbench/Workbench_v1_GameReady_T_Workbench_DF.png" id="36_dlis5"]
+[ext_resource type="PackedScene" uid="uid://boygyox51bm3l" path="res://Rocket/real_trs_1.tscn" id="36_i363k"]
 [ext_resource type="Texture2D" uid="uid://q5jm1o2x2k4s" path="res://Assets/Blender/Workbench/Workbench_v1_GameReady_T_Workbench_MT-T_Workbench_RG.png" id="37_h4hkh"]
 [ext_resource type="Texture2D" uid="uid://blvhd47lg3tya" path="res://World/Workshop/House_Isolate_GameReady_T_KitchenFloor_RG.png" id="37_h4nnu"]
 [ext_resource type="Texture2D" uid="uid://d315ua81k5ney" path="res://World/Workshop/House_Isolate_GameReady_SP_2K_Roughness.png" id="38_houwb"]
@@ -986,10 +987,13 @@ transform = Transform3D(2.52, 0, 0, 0, 2.52, 0, 0, 0, 2.52, 38.984047, 0.4130418
 shape = SubResource("ConcavePolygonShape3D_ngrok")
 
 [node name="Stepladder" parent="Workshop" instance=ExtResource("9_w47uh")]
-transform = Transform3D(0.443462, 0, -0.896293, 0, 1, 0, 0.896293, 0, 0.443462, 6.43669, -0.966892, -73.8728)
+transform = Transform3D(0.443462, 0, -0.896293, 0, 1, 0, 0.896293, 0, 0.443462, 6.1333723, -1.0438408, -73.52673)
 
 [node name="Harmonizer" parent="Workshop" instance=ExtResource("10_lo5ox")]
-transform = Transform3D(-0.750238, 0, 0.66116786, 0, 1, 0, -0.66116786, 0, -0.750238, -22.407, -1.00976, -29.5301)
+transform = Transform3D(0.9999155, 0, 0.013002366, 0, 1, 0, -0.013002366, 0, 0.9999155, -11.31698, -1.00976, -39.666084)
+
+[node name="Real_TRS1" parent="Workshop/Harmonizer" instance=ExtResource("36_i363k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.3581686, 0)
 
 [node name="Workbench" type="StaticBody3D" parent="Workshop"]
 
@@ -1255,13 +1259,6 @@ modulate = Color(1, 0, 0, 1)
 text = "DEFECT: 
 Able to Push Component 
 Through Wall of Workshop"
-font_size = 125
-
-[node name="ModifyComponents" type="Label3D" parent="."]
-transform = Transform3D(-0.777947, 0, 0.62833, 0, 1, 0, -0.62833, 0, -0.777947, -36.9522, 2.96284, 17.9953)
-modulate = Color(1, 0.55, 0, 1)
-text = "MODIFY YOUR 
-COMPONENTS"
 font_size = 125
 
 [node name="PickupDeliveries" type="Label3D" parent="."]

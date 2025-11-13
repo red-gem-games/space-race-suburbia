@@ -148,11 +148,11 @@ func _physics_process(delta: float) -> void:
 				grabbed_object.extract_body.position.x = lerp(grabbed_object.extract_body.position.x, 0.01, delta * 7.0)
 				grabbed_object.extract_body.position.y = lerp(grabbed_object.extract_body.position.y, -0.35, delta * 7.0)
 				grabbed_object.extract_body.position.z = lerp(grabbed_object.extract_body.position.z, 0.1, delta * 7.0)
-				player_character.PREM_7.machine_info.scale = lerp(player_character.PREM_7.machine_info.scale, Vector3.ZERO, delta * 10.0)
+				player_character.PREM_7.dashboard.scale = lerp(player_character.PREM_7.dashboard.scale, Vector3.ZERO, delta * 10.0)
 				if grabbed_object.object_body.scale.y > 0.01:
 					grabbed_object.object_body.visible = true
-				if player_character.PREM_7.machine_info.scale.y <= 0.5:
-					player_character.PREM_7.machine_info.visible = false
+				if player_character.PREM_7.dashboard.scale.y <= 0.5:
+					player_character.PREM_7.dashboard.visible = false
 				if grabbed_object.extract_body.scale.y <= 0.01:
 					grabbed_object.extract_body.visible = false
 			distance_forward = player_character.distance_factor
@@ -176,7 +176,7 @@ func _physics_process(delta: float) -> void:
 							child.disabled = false
 					release_object()
 					return
-			player_character.PREM_7.machine_info.visible = true
+			player_character.PREM_7.dashboard.visible = true
 			grabbed_object.extract_body.visible = true
 			distance_forward = 6.0 
 			offset_left = 0.0
@@ -196,7 +196,7 @@ func _physics_process(delta: float) -> void:
 				grabbed_object.extract_body.position.x = lerp(grabbed_object.extract_body.position.x, 0.0, delta * 7.0)
 				grabbed_object.extract_body.position.y = lerp(grabbed_object.extract_body.position.y, 0.1, delta * 5.0)
 				grabbed_object.extract_body.position.z = lerp(grabbed_object.extract_body.position.z, -1.0, delta * 5.0)
-				player_character.PREM_7.machine_info.scale = lerp(player_character.PREM_7.machine_info.scale, Vector3.ONE, delta * 5.0)
+				player_character.PREM_7.dashboard.scale = lerp(player_character.PREM_7.dashboard.scale, Vector3.ONE, delta * 5.0)
 				if current_spin_timer > 0.25:
 					extraction_spin_initialized = true
 			if extraction_spin_initialized:
