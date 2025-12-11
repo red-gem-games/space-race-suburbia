@@ -95,11 +95,6 @@ var computer_active: bool = false
 
 func _physics_process(delta: float) -> void:
 	
-	
-	#if grabbed_object:
-		#if grabbed_object.extract_body:
-			#print(grabbed_object.extract_body.scale)
-	
 	if player_character.is_using_computer:
 		computer_active = true
 		camera_tween(player_character.camera, 10, 0.65)
@@ -159,6 +154,7 @@ func _physics_process(delta: float) -> void:
 			offset_left = 0.0
 			offset_up = 0.0
 			smooth_speed = 6.0
+			grabbed_object.freeze = false
 			current_spin_timer = 0.0
 			extraction_spin_initialized = false
 
@@ -169,7 +165,7 @@ func _physics_process(delta: float) -> void:
 					for child in grabbed_object.get_children():
 						if child is CollisionShape3D:
 							child.disabled = true
-					await get_tree().create_timer(1.0).timeout
+					await get_tree().create_timer(3.0).timeout
 				if grabbed_object:
 					for child in grabbed_object.get_children():
 						if child is CollisionShape3D:
@@ -178,14 +174,20 @@ func _physics_process(delta: float) -> void:
 					return
 			player_character.PREM_7.dashboard.visible = true
 			grabbed_object.extract_body.visible = true
-			distance_forward = 6.0 
+			distance_forward = 6.0
 			offset_left = 0.0
 			offset_up = 0.0
 			smooth_speed = 1.0
+			if grabbed_object:
+				for child in grabbed_object.get_children():
+					if child is CollisionShape3D:
+						child.disabled = true
+			
 			if grabbed_object.object_body.scale.y >= 0.01:
-				grabbed_object.object_body.scale = lerp(grabbed_object.object_body.scale, Vector3.ZERO, delta * 20.0)
+				grabbed_object.object_body.scale = lerp(grabbed_object.object_body.scale, Vector3.ZERO, delta * 50.0)
 				if grabbed_object.object_body.scale.y < 0.02:
 					grabbed_object.object_body.visible = false
+					#grabbed_object.freeze = true
 			if not extraction_spin_initialized:
 				grabbed_object.extract_body.rotation_degrees.x = lerp(grabbed_object.extract_body.rotation_degrees.x, 0.0, delta * 5.0)
 				grabbed_object.extract_body.rotation_degrees.y = lerp(grabbed_object.extract_body.rotation_degrees.y, 0.0, delta * 5.0)

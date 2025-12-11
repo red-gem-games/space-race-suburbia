@@ -1,0 +1,1 @@
+DT.onReady(()=>{document.querySelectorAll('[data-tooltip-auto]').forEach((tooltip)=>{DT.tooltip(tooltip)})})

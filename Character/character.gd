@@ -358,8 +358,8 @@ func _physics_process(delta: float) -> void:
 
 	# Grabbed object physics update
 	#update_grabbed_object_physics(delta)
-
-	move_and_slide()
+	if not extracting_object_active:
+		move_and_slide()
 	
 	#print(velocity)
 	#
@@ -574,14 +574,11 @@ func _process(delta: float) -> void:
 			#desired_yaw = clamp(desired_yaw, extracting_yaw - yaw_range, extracting_yaw + yaw_range)
 		#else:
 			#desired_yaw = extracting_yaw
-	if not grabbed_object and (extracting_object_active or fusing_object_active):
+	if not grabbed_object and camera.fov < 74.9:
 		camera.fov = lerp(camera.fov, 75.0, delta * 10)
 		PREM_7.release_handle()
-		if camera.fov >= 74.9:
-			extracting_object_active = false
-			grabbed_object.extract_in_motion = false
-			grabbed_object.is_extracting = false
-			fusing_object_active = false
+		
+		print('is something happening')
 
 ##--------------------------------------##
 ##------------INPUT RESPONSE------------##
@@ -603,6 +600,8 @@ func _on_action_key(status: String):
 			
 
 func _on_extract_key() -> void:
+	if action_wait_timer.time_left > 0.0:
+		return
 	if extract_time < 1.9:
 		return
 	else:
@@ -618,6 +617,9 @@ func _on_extract_key() -> void:
 
 	action_wait_timer.start(0.5)
 	desired_pitch = 0.0
+	desired_yaw = grabbed_object.rotation.y
+	#print(yaw + grabbed_object.rotation.y)
+	#print(desired_yaw)
 	
 	extracting_object_active =! extracting_object_active
 		
@@ -768,12 +770,12 @@ func _input(event: InputEvent) -> void:
 		current_mouse_speed_x = event.relative.x
 		current_mouse_speed_y = event.relative.y
 
-		# camera turning still lives here
 		if not extracting_object_active:
 			var max_delta: float = 0.15 * screen_res_sway_multiplier
 			var dx = clamp(event.relative.x * mouse_speed, -max_delta, max_delta)
 			var dy = clamp(event.relative.y * mouse_speed, -max_delta, max_delta)
 			desired_yaw -= dx
+			desired_yaw = wrapf(desired_yaw, -PI, PI)
 			desired_pitch -= dy
 			desired_pitch = clamp(desired_pitch, pitch_min, pitch_max)
 
@@ -1044,8 +1046,12 @@ func handle_pitch_and_yaw():
 		pitch_min = base_pitch_min
 
 	desired_pitch = clamp(desired_pitch, pitch_min, pitch_max)
-	yaw = lerp(yaw, desired_yaw, smoothing)
+	var angle_diff = desired_yaw - yaw
+	angle_diff = wrapf(angle_diff + PI, 0, TAU) - PI
+	yaw += angle_diff * smoothing
+	yaw = wrapf(yaw, -PI, PI)
 	pitch = lerp(pitch, desired_pitch, smoothing)
+	
 	rotation.y = yaw
 	camera.rotation.x = pitch
 
@@ -1362,7 +1368,6 @@ func activate_component_data():
 
 	# machine-level labels
 	PREM_7.machine_name.text = current_object_json.get("name", "Unknown Object")
-	PREM_7.machine_name_back.text = current_object_json.get("name", "Unknown Object")
 	PREM_7.machine_desc.text = current_object_json.get("description", "")
 	extraction_scale = current_object_json.get("scale", 0.0)
 	distance_factor = current_object_json.get("distance", 0.0)
@@ -1408,7 +1413,6 @@ func update_component_display():
 
 	# UI
 	PREM_7.component_name.text  = comp.get("name", "??")
-	PREM_7.component_name_front.text  = comp.get("name", "??")
 	PREM_7.component_name_back.text  = comp.get("name", "??")
 	PREM_7.component_stars.text = "★".repeat(int(comp.get("stars", 0)))
 	selected_component_scale = comp.get("scale", 0.0)

@@ -17,13 +17,13 @@ uniform float edge_intensity : hint_range(0.0, 5.0) = 2.5;
 // Grupo: Scanlines
 group_uniforms scanlines;
 uniform sampler2D scanline_texture;
-uniform vec4 scanline_tint : source_color = vec4(1.0, 1.0, 1.0, 0.25); // #FF8000
-uniform float scanline_intensity : hint_range(0.0, 2.0) = 1.0;
-uniform float scanline_density : hint_range(0.0, 10.0) = 3.75;
-uniform float scanline_thickness : hint_range(0.1, 3.0) = 3.0;
+uniform vec4 scanline_tint : source_color = vec4(1.0, 1.0, 1.0, 1.0); // #FF8000
+uniform float scanline_intensity : hint_range(0.0, 2.0) = 0.253;
+uniform float scanline_density : hint_range(0.0, 10.0) = 3.351;
+uniform float scanline_thickness : hint_range(0.1, 3.0) = 0.513;
 uniform float scanline_spacing : hint_range(0.5, 4.0) = 4.0;
-uniform float scanline_angle : hint_range(0.0, 6.283) = 2.25;
-uniform float scanline_speed = 2.5;
+uniform float scanline_angle : hint_range(0.0, 6.283) = 1.569;
+uniform float scanline_speed = -2.96;
 
 // Grupo: Glitch
 group_uniforms glitch;

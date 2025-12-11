@@ -1,0 +1,4 @@
+function SignUPPopup_load_new(param,callback){return popup_loader_new('ajax/signup_decide.php?nd=1&new=1&'+(typeof param!='undefined'?'param='+param:''),'signup',callback)}
+function SignUPPopup_close(){return popup_close()}
+DT.onReady(()=>{const signupBtns=document.querySelectorAll('.js-signup-btn');if(!signupBtns.length)return;signupBtns.forEach(signupBtn=>{const param=signupBtn.getAttribute('data-param')??undefined;signupBtn.addEventListener('click',async(event)=>{try{event.preventDefault()}catch(_){}
+await DT.Scheduler.waitForHighPriority();await DT.UI.showLoading({element:signupBtn,type:'btn',theme:'dark',});SignUPPopup_load_new(param,async()=>{await DT.loadScripts('js/register.js');DT.UI.hideLoading(signupBtn)})})})})

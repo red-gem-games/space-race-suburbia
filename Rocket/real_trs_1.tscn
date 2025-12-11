@@ -1670,11 +1670,12 @@ skeleton = NodePath("")
 
 [node name="Delivery_Op1_Baked" type="MeshInstance3D" parent="Propellent"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.25372148, 0.35741135, -0.2429199)
+visible = false
 mesh = SubResource("ArrayMesh_ot0bu")
 skeleton = NodePath("")
 
 [node name="Delivery_Op2_Baked" type="MeshInstance3D" parent="Propellent"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.23194778, 0.31264406, -0.24792585)
+transform = Transform3D(0.98974353, 0.10441807, -0.09749279, -0.112531975, 0.9902751, -0.081802554, 0.08800302, 0.09193461, 0.99186873, -0.20549896, 0.31264406, -0.25020814)
 mesh = SubResource("ArrayMesh_npb17")
 skeleton = NodePath("")
 

@@ -1,0 +1,5 @@
+function popup_loader_new(url,id,callback){loc='/';if(window.location.origin=="https://blog.dreamstime.com")
+loc='https://www.dreamstime.com/';if($('.popup').length>0)$('.popup').remove();$('body').append('<div class="popup" style="display:none;" id="'+id+'"></div>');const display=()=>{$('html').addClass('documentLocked');$('#'+id).addClass('show').css('display','');if($('.popup').children('div:first').length==1)
+$('.popup').children('div:first').css('top',($(window).height()-$('.popup').children('div:first').height())/2);};$('#'+id).load(loc+url,function(){if(callback){callback()?.then(display)}else{display()}})}
+async function popup_close(){await DT.Scheduler.waitForHighPriority();if($('.g-recaptcha-bubble-arrow').length>0)
+$('.g-recaptcha-bubble-arrow').parent().remove();if($('.popup').length>0)$('.popup').remove();if($('.jconfirm-popup-signup-v1').length>0)$('.jconfirm-popup-signup-v1').remove();if($('html').hasClass('documentLocked'))$('html').removeClass('documentLocked');document.body.style.overflow='';document.body.style.height=''}

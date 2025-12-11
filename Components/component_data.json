@@ -1,7 +1,7 @@
 {
     "WashingMachine": {
-        "name": "Washing Machine",
-        "description": "''Clean Clothes, Clean Launch''",
+        "name": " . . . . . . . . . . . . . . . W a s h i n g  M a c h i n e",
+        "description": "''Now with 45% Cleaner Launches''",
         "scale": 0.6,
         "distance": 6.0,
         "components": [
@@ -49,7 +49,7 @@
     },
     "DryingMachine": {
         "name": "Drying Machine",
-        "description": "''Fairly Resistant to Heat''",
+        "description": "''Stay Fresh on Launch Day''",
         "scale": 0.6,
         "distance": 6.0,
         "components": [

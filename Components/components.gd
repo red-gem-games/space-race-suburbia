@@ -193,7 +193,7 @@ var curr_y_pos
 var set_it_up
 
 func _physics_process(delta: float) -> void:
-
+	
 	if not object_set:
 		connect("body_shape_entered", Callable(self, "_on_body_shape_entered"))
 		connect("body_shape_exited",  Callable(self, "_on_body_shape_exited"))

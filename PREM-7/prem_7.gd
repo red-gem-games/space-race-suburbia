@@ -17,13 +17,11 @@ var shader: Shader
 var shader_material: ShaderMaterial
 
 @onready var dashboard: Node3D = $Dashboard
-@onready var machine_name: Label3D = $Dashboard/All_Data/Main/Main_Name
-@onready var machine_name_back: Label3D = $Dashboard/All_Data/Main/Main_Name_Back
-@onready var machine_desc: Label3D = $Dashboard/All_Data/Main/Main_Desc
-@onready var component_name: Label3D = $Dashboard/All_Data/Component/Screen/Comp_Name
-@onready var component_name_front: Label3D = $Dashboard/All_Data/Component/Screen/Comp_Name_Front
-@onready var component_name_back: Label3D = $Dashboard/All_Data/Component/Screen/Comp_Name_Back
-@onready var component_stars: Label3D = $Dashboard/All_Data/Component/Screen/Comp_Stars
+@onready var machine_name: Label3D = $Dashboard/All_Data/Machine/Machine_Name
+@onready var machine_desc: Label3D = $Dashboard/All_Data/Machine/Machine_Desc
+@onready var component_name: Label3D = $Dashboard/All_Data/Component/Component_Name
+@onready var component_name_back: Label3D = $Dashboard/All_Data/Component/Component_Name_Back
+@onready var component_stars: Label3D = $Dashboard/All_Data/Component/Comp_Stars
 @onready var component_module: Label3D = $Dashboard/All_Data/Module/Screen/Data
 @onready var component_power: Label3D = $Dashboard/All_Data/Power/Screen/Data
 @onready var component_mass: Label3D = $Dashboard/Mass/Mass
