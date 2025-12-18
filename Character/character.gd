@@ -1555,42 +1555,106 @@ func update_condition_display(condition_value: int):
 	current_condition = condition_value
 
 func update_rating_display(rating_value: float):
-	# Clamp to 0.0-5.0 range
 	rating_value = clampf(rating_value, 0.0, 5.0)
 	
-	# Get the Stars node under Rating
+	# If rating hasn't changed, do nothing
+	if rating_value == current_rating:
+		return
+	
 	var stars_node = PREM_7.component_rating.get_node_or_null("Stars")
 	if not stars_node:
 		push_error("Stars node not found under Rating")
 		return
 	
-	# Loop through each star (1-5)
-	for i in range(1, 6):
-		var star_node = stars_node.get_node_or_null(str(i))
+	# Kill existing tween
+	if rating_tween:
+		rating_tween.kill()
+	
+	# Create tween for sequential star appearance
+	rating_tween = create_tween()
+	
+	var is_increasing = rating_value > current_rating
+	
+	# Create list of all half-star steps in order
+	var steps = []
+	for i in range(1, 6):  # Stars 1-5
+		steps.append({"star": i, "is_left": true, "value": float(i) - 0.5})   # Left half
+		steps.append({"star": i, "is_left": false, "value": float(i)})        # Right half (full)
+	
+	# Filter to only the steps that need to change
+	var steps_to_animate = []
+	for step in steps:
+		if is_increasing:
+			if step.value > current_rating and step.value <= rating_value:
+				steps_to_animate.append(step)
+		else:
+			if step.value <= current_rating and step.value > rating_value:
+				steps_to_animate.append(step)
+	
+	# Reverse order if decreasing (remove from highest to lowest)
+	if not is_increasing:
+		steps_to_animate.reverse()
+	
+	# Animate each step in order
+	for step in steps_to_animate:
+		var star_node = stars_node.get_node_or_null(str(step.star))
 		if not star_node:
 			continue
 		
-		var half_star = star_node.get_node_or_null("Half") as MeshInstance3D
-		var full_star = star_node.get_node_or_null("Full") as MeshInstance3D
+		var left_half = star_node.get_node_or_null("Half") as MeshInstance3D
+		var right_half = star_node.get_node_or_null("Full") as MeshInstance3D
 		
-		if not half_star or not full_star:
+		if not left_half or not right_half:
 			continue
 		
-		# Determine what to show for this star position
-		var star_fill = rating_value - float(i - 1)  # How much this star should be filled
+		var target_mesh = left_half if step.is_left else right_half
 		
-		if star_fill >= 1.0:
-			# Full star
-			half_star.visible = false
-			full_star.visible = true
-		elif star_fill >= 0.5:
-			# Half star
-			half_star.visible = true
-			full_star.visible = false
-		else:
-			# Empty (no star)
-			half_star.visible = false
-			full_star.visible = false
+		rating_tween.tween_callback(func():
+			if is_increasing:
+				# Growing - pulse bigger then settle, make visible
+				target_mesh.visible = true
+				var pulse_tween = create_tween()
+				pulse_tween.tween_property(target_mesh, "scale", Vector3.ONE * 1.3, 0.15)
+				pulse_tween.tween_property(target_mesh, "scale", Vector3.ONE, 0.08)
+			else:
+				# Shrinking - just make invisible
+				target_mesh.visible = false
+		)
+		rating_tween.tween_interval(0.05)
+	
+	# SAFETY: Ensure ALL stars are at correct state at the end
+	rating_tween.tween_callback(func():
+		for i in range(1, 6):
+			var star_node = stars_node.get_node_or_null(str(i))
+			if not star_node:
+				continue
+			
+			var left_half = star_node.get_node_or_null("Half") as MeshInstance3D
+			var right_half = star_node.get_node_or_null("Full") as MeshInstance3D
+			
+			if not left_half or not right_half:
+				continue
+			
+			var star_fill = rating_value - float(i - 1)
+			
+			if star_fill >= 1.0:
+				# Full star - both halves visible
+				left_half.visible = true
+				left_half.scale = Vector3.ONE
+				right_half.visible = true
+				right_half.scale = Vector3.ONE
+			elif star_fill >= 0.5:
+				# Half star - only left half visible
+				left_half.visible = true
+				left_half.scale = Vector3.ONE
+				right_half.visible = false
+			else:
+				# Empty - both halves hidden
+				left_half.visible = false
+				right_half.visible = false
+	)
+	
+	current_rating = rating_value
 
 func pulse_mass_label():
 	var mass_label = PREM_7.component_mass

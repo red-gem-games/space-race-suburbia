@@ -1,4 +1,4 @@
-[gd_scene load_steps=186 format=4 uid="uid://bpvm0l41dywjs"]
+[gd_scene load_steps=187 format=4 uid="uid://bpvm0l41dywjs"]
 
 [ext_resource type="Script" uid="uid://so25svauxmkt" path="res://PREM-7/prem_7.gd" id="1_iarxa"]
 [ext_resource type="Shader" uid="uid://cgr7dnph387rx" path="res://PREM-7/prem_7_holo_glow.gdshader" id="2_t05xm"]
@@ -7,6 +7,7 @@
 [ext_resource type="Shader" uid="uid://c63841j4jafhp" path="res://Shaders/force_factor.gdshader" id="4_t05xm"]
 [ext_resource type="Texture2D" uid="uid://df3jvcngnl2ll" path="res://Assets/Blender/UI/Icons_GameReady_T_Icons_NR.png" id="5_5hhbi"]
 [ext_resource type="FontFile" uid="uid://cdiv0rihnxge6" path="res://Assets/UI/FONTS/VT323-Regular.ttf" id="5_8d6ws"]
+[ext_resource type="FontFile" uid="uid://o8k1jjl4ybbn" path="res://Assets/UI/FONTS/Doto_Rounded-SemiBold.ttf" id="5_ja6ch"]
 [ext_resource type="Texture2D" uid="uid://crn50jmfslys2" path="res://Assets/UI/Iconsv2_T_Iconsv2_MT-PBR fresh gold_Roughness.png" id="5_s7cmo"]
 [ext_resource type="Shader" uid="uid://d2pelneqc3oj" path="res://Shaders/manipulation_depth_disabled.gdshader" id="5_t05xm"]
 [ext_resource type="Texture2D" uid="uid://c6ulma1tbgxme" path="res://Assets/UI/Iconsv2_PBR fresh gold_Normal.jpg" id="6_8d6ws"]
@@ -14,6 +15,7 @@
 [ext_resource type="FontFile" uid="uid://14w6sr1us48x" path="res://Assets/UI/FONTS/NewTegomin-Regular.ttf" id="9_dpu46"]
 [ext_resource type="FontFile" uid="uid://cvt6hjqgrq7vu" path="res://Assets/UI/FONTS/Arbutus-Regular.ttf" id="9_njh5b"]
 [ext_resource type="FontFile" uid="uid://hvstj0oywnij" path="res://Assets/UI/FONTS/SourceCodePro-VariableFont_wght.ttf" id="11_k44yu"]
+[ext_resource type="FontFile" uid="uid://djejmr28fevjl" path="res://Assets/UI/FONTS/DarumadropOne-Regular.ttf" id="14_bj344"]
 [ext_resource type="FontFile" uid="uid://cjf0q3t7s7a1m" path="res://Assets/UI/FONTS/Creepster-Regular.ttf" id="14_gssec"]
 [ext_resource type="FontFile" uid="uid://dfqpfewxx6i48" path="res://Assets/UI/FONTS/Audiowide-Regular.ttf" id="15_gssec"]
 
@@ -3840,6 +3842,11 @@ emission_energy_multiplier = 10.0
 material = SubResource("StandardMaterial3D_65yr6")
 size = Vector3(0.08, 0.01, 0.03)
 
+[sub_resource type="FontVariation" id="FontVariation_a081e"]
+base_font = ExtResource("5_ja6ch")
+variation_embolden = 1.2
+spacing_glyph = -5
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_u5of7"]
 no_depth_test = true
 emission_enabled = true
@@ -3946,52 +3953,6 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_vk3fu")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1g1ec"]
-resource_name = "Gold"
-cull_mode = 2
-albedo_texture = ExtResource("4_61m6q")
-metallic = 1.0
-metallic_texture = ExtResource("5_s7cmo")
-metallic_texture_channel = 2
-roughness_texture = ExtResource("5_s7cmo")
-roughness_texture_channel = 1
-normal_enabled = true
-normal_texture = ExtResource("6_8d6ws")
-
-[sub_resource type="ArrayMesh" id="ArrayMesh_uaxt7"]
-_surfaces = [{
-"aabb": AABB(1.5504615, 0.05, -0.99815303, 1.8990769, 0.05000001, 1.8061297),
-"format": 34896613377,
-"index_count": 492,
-"index_data": PackedByteArray("IgA8ACEAIQA8AD0APQA8AD4AIgA/ADwAPAA/AD4ALAA/ACIAPgA/AEAALABAAD8APQA+AEEAIQA9ABoAGgA9AEEAIQAjACIAPgBAAEIAQQA+AEMAPgBCAEMAEwBCAEAAEwBAACwAQwBCAEQANwBEAEIANwBCABMAQwBEAEUAQQBDAEYARgBDAEUADgBFAEQADgBEADcARgBFAEcAFABBAEYADQBHAEUADQBFAA4AEQBGAEcAEQBHAA0AFABGABEAGgBBABQADgALAA0AFAAXABoADgAJAAsAEQASABQAFAAVABcAFQAUABIAGwAaABcAGQAXABUAGwAXABkAGgAbAB0AGgAdACEAIAAhAB0AIQAgACMAHgAdABsAHgAgAB0AGwAZABwAHgAbABwAGAAcABkAHAAfAB4AHAAYAB8AHgAkACAAHwAkAB4AJQAgACQAJQAjACAAJAAfACYAJAAmACUAJQAnACMAIgAjACcAJQAoACcAJQAmACgAIgAnACsAIgArACwAKgAnACgAKgArACcAKAAmACkAKAApACoALQAsACsAKgAtACsALAAtADEALAAxABMAKgAuAC0AKQAuACoAMAAxAC0AMAAtAC4ALgApAC8ALgAvADAAMgATADEAMgAxADAAEwAyADYAEwA2ADcAMgAwADMALwAzADAANQA2ADIANQAyADMAMwAvADQAMwA0ADUAOAA3ADYANQA4ADYANwA4ADoANwA6AA4ANQA5ADgANAA5ADUACQAOADoAOwA6ADgAOwAJADoAOwA4ADkAOQA0AAEAOQABADsAOwAHAAkAAQAHADsABQAJAAcABQALAAkABwABAAMABwADAAUACAALAAUACAANAAsACAAFAAQAAwAEAAUADQAIAAwADQAMABEABgAIAAQABgAMAAgABAADAAAABAAAAAYADwARAAwABgAPAAwAEQAPABIABgAKAA8AAAAKAAYAEAASAA8AEAAPAAoAEAAVABIACgAAAAIACgACABAAEAAWABUAAgAWABAAGQAVABYAFgAYABkAFgACABgAAABIAAIAAgBJABgAAgBIAEkAGABJAEoAGABKAB8ASQBIAEsASQBLAEoAAABMAEgAHwBKAE0ASgBLAE0AHwBNACYAAwBMAAAAJgBNAE4ATQBLAE4AJgBOACkAAwBPAEwAAQBPAAMAKQBOAFAASwBQAE4AKQBQAC8AAQBRAE8ATABPAFEANABRAAEALwBSADQANABSAFEALwBQAFIATABRAFMAUwBRAFIAUwBSAFAASwBTAFAASABMAFMASABTAEsA"),
-"lods": [2.2680471e-05, PackedByteArray("AAABAAIAAwABAAAABAADAAAAAwAEAAUABAAAAAYABwADAAUABwABAAMACAAFAAQABgAIAAQABQAJAAcAAAAKAAYACgAAAAIACAALAAUABQALAAkABgAMAAgACAANAAsADQAIAAwADgAJAAsADgALAA0ABgAKAA8ABgAPAAwAEAAPAAoACgACABAADwARAAwADQAMABEAEAASAA8AEQAPABIAEQATAA0AEwAOAA0AEQASABQAFAATABEAEAAVABIAFQAUABIAEAAWABUAAgAWABAAFAAVABcAFgACABgAGQAVABYAGQAXABUAFgAYABkAFAAXABoAGgATABQAGwAXABkAGwAaABcAGwAZABwAGAAcABkAGgAbAB0AAgABABgAHgAbABwAHgAdABsAHAAfAB4AHAAYAB8AHgAgAB0AGgAdACEAIAAhAB0AIQAiABoAGgAiABMAIQAgACMAIQAjACIAHgAkACAAHwAkAB4AJQAjACAAJQAgACQAJAAfACYAJAAmACUAHwAYACYAJQAnACMAIgAjACcAJQAmACgAJQAoACcAJgAYACkAKAAmACkAKAApACoAKgAnACgAIgAnACsAKgArACcAIgArACwALAATACIAKgAtACsALQAsACsAKQAuACoAKgAuAC0ALgApAC8AGAAvACkAMAAtAC4ALgAvADAALAAtADEAMAAxAC0ALAAxABMAMgAxADAAMgATADEALwAzADAAMgAwADMAGAA0AC8AMwAvADQAGAABADQANQAyADMAMwA0ADUAEwAyADYANQA2ADIAEwA2ADcANwAOABMANQA4ADYAOAA3ADYANAA5ADUANQA5ADgAOQA0AAEANwA6AA4ANwA4ADoACQAOADoAOwA4ADkAOQABADsAOwA6ADgAOwAJADoAAQAHADsAOwAHAAkA")],
-"name": "Gold",
-"primitive": 3,
-"uv_scale": Vector4(0, 0, 0, 0),
-"vertex_count": 84,
-"vertex_data": PackedByteArray("gqMAABVaAAB8XAAAFVoAAIj/AADnYQAA/38AAHkAAAAagD0KAAAAAOR/PQoAAAAAl6M9Co1ZAABnXD0KjVkAABqAwfUAAAAAZ1zB9Y1ZAAD2oz0K1lkAAOR/wfUAAAAAl6PB9Y1ZAAD/f/7/eQAAAHxc/v8VWgAA9qPB9dZZAADu/z0Kp2EAAIKj/v8VWgAA7v/B9adhAACJRv7/G6EAAIj//v/nYQAA///B9dxhAAD//z0K3GEAAPa5wfUGoQAAdbkAABuhAAD2uT0KBqEAAHW5/v8boQAA0rnB9XyhAADSuT0KfKEAACvPwfXe/wAAK889Ct7/AADRzgAAjP8AAADPwfX+/wAA0c7+/4z/AAD/f/7/AM0AADqAwfV7zQAAAM89Cv7/AAA6gD0Ke80AAP9/AAAAzQAAxH/B9XvNAADEfz0Ke80AAC0xAACM/wAA/jA9Cv7/AAD+MMH1//8AAC0x/v+M/wAA0zDB9d7/AADTMD0K3v8AAIlGAAAboQAALEY9CnyhAAAsRsH1fKEAAAhGwfUGoQAACEY9CgahAAB2AAAA52EAAAAAPQrcYQAAAADB9dxhAAB2AP7/52EAABAAwfWnYQAAEAA9CqdhAAAIXMH11lkAAAhcPQrWWQAAwL7+/0voAAC+rf7/Gp0AADeH//+xlwAA/3/+/w3AAAA+Qf7/S+gAAInl/v/JagAAQFL+/xqdAAD7fP7/HIkAAHUa/v/JagAAuWP+/45kAABFnP7/jmQAAP9//v83HQAAieUAAMlqAAC+rQAAGp0AAMC+AABL6AAAN4cAALGXAABFnAAAjmQAAP9/AAANwAAAPkEAAEvoAAD/fwAANx0AAEBSAAAanQAAuWMAAI5kAAB1GgAAyWoAAPt8AAAciQAA")
-}]
-blend_shape_mode = 0
-
-[sub_resource type="ArrayMesh" id="ArrayMesh_6v3b0"]
-resource_name = "Iconsv2_Circle_006"
-_surfaces = [{
-"aabb": AABB(1.5504615, 0.05, -0.99815303, 1.8990769, 0.05000001, 1.8061297),
-"attribute_data": PackedByteArray("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"),
-"format": 34896613431,
-"index_count": 492,
-"index_data": PackedByteArray("NADwADUANQDwAPEANQDxADYANADyAPAAMgDyADQA8QDwAPMA8ADyAPMANgDxAPQA8QDzAPQANgD0ADcAMgD1APIA8wDyAPUAMwD1ADIAMwD2APUA8wD1APYAOwD2ADMA9ADzAPcA8wD2APcAOwD4APYA9wD2APgAOgD4ADsAOgD5APgA9wD4APkAOQD5ADoA9AD3APoA+gD3APkANwD0APoAOQD7APkA+gD5APsAOAD7ADkANwD6ADgAOAD6APsABQD8AAEAAQD9AAMAAQD8AP0ABQD+APwABgD+AAUA/wD9APwAAAH9AP8AAAH/AAAA/wD8AAEBAQH8AP4AAAD/AAIBAgH/AAEBAAACAQIABgADAf4AAQH+AAMBBwADAQYAAgEBAQQBBAEBAQMBAgACAQUBBQECAQQBAgAFAQQABwAGAQMBBAEDAQYBCAAGAQcABAAFAQcBBQEEAQcBBAAHAQkACAEEAQYBCAAIAQYBBwEEAQgBCQAIAQgACQAHAQgBCgALAAwACgANAAsADgAPABAADgARAA8AEgATABQAEgAVABMAFgAXABgAFgAZABcAGgAbABwAGgAdABsAHgAfACAAHgAhAB8AIgAjACQAIgAlACMAJgAnACgAJgApACcAKgArACwAKgAtACsALgAvADAALgAxAC8APAA9AD4APwBAAEEAQgBDAEQARQBGAEcASABJAEoASwBMAE0ATgBPAFAAUQBSAFMAVABVAFYAVwBYAFkAWgBbAFwAXQBeAF8AYABhAGIAYwBkAGUAZgBnAGgAaQBqAGsAbABtAG4AbwBwAHEAcgBzAHQAdQB2AHcAeAB5AHoAeAB7AHkAfAB9AH4AfAB/AH0AgACBAIIAgACDAIEAhACFAIYAhACHAIUAiACJAIoAiACLAIkAjACNAI4AjACPAI0AkACRAJIAkACTAJEAlACVAJYAlACXAJUAmACZAJoAmACbAJkAnACdAJ4AnACfAJ0AoAChAKIAoACjAKEApAClAKYApACnAKUAqACpAKoAqACrAKkArACtAK4ArACvAK0AsACxALIAsACzALEAtAC1ALYAtAC3ALUAuAC5ALoAuAC7ALkAvAC9AL4AvAC/AL0AwADBAMIAwADDAMEAxADFAMYAxADHAMUAyADJAMoAyADLAMkAzADNAM4AzADPAM0A0ADRANIA0ADTANEA1ADVANYA1ADXANUA2ADZANoA2ADbANkA3ADdAN4A3ADfAN0A4ADhAOIA4ADjAOEA5ADlAOYA5ADnAOUA6ADpAOoA6ADrAOkA7ADtAO4A7ADvAO0A"),
-"lods": [2.2680471e-05, PackedByteArray("AAABAAIAAwABAAAAAgABAAQABAABAAUABAAFAAYABAAGAAcACAAEAAcACQAEAAgACgALAAwACgANAAsADgAPABAADgARAA8AEgATABQAEgAVABMAFgAXABgAFgAZABcAGgAbABwAGgAdABsAHgAfACAAHgAhAB8AIgAjACQAIgAlACMAJgAnACgAJgApACcAKgArACwAKgAtACsALgAvADAALgAxAC8AMgAzADQANQA0ADYANgA0ADMANgAzADcANwAzADgAOAAzADkAMwA6ADkAOwA6ADMAPAA9AD4APwBAAEEAQgBDAEQARQBGAEcASABJAEoASwBMAE0ATgBPAFAAUQBSAFMAVABVAFYAVwBYAFkAWgBbAFwAXQBeAF8AYABhAGIAYwBkAGUAZgBnAGgAaQBqAGsAbABtAG4AbwBwAHEAcgBzAHQAdQB2AHcAeAB5AHoAeAB7AHkAfAB9AH4AfAB/AH0AgACBAIIAgACDAIEAhACFAIYAhACHAIUAiACJAIoAiACLAIkAjACNAI4AjACPAI0AkACRAJIAkACTAJEAlACVAJYAlACXAJUAmACZAJoAmACbAJkAnACdAJ4AnACfAJ0AoAChAKIAoACjAKEApAClAKYApACnAKUAqACpAKoAqACrAKkArACtAK4ArACvAK0AsACxALIAsACzALEAtAC1ALYAtAC3ALUAuAC5ALoAuAC7ALkAvAC9AL4AvAC/AL0AwADBAMIAwADDAMEAxADFAMYAxADHAMUAyADJAMoAyADLAMkAzADNAM4AzADPAM0A0ADRANIA0ADTANEA1ADVANYA1ADXANUA2ADZANoA2ADbANkA3ADdAN4A3ADfAN0A4ADhAOIA4ADjAOEA5ADlAOYA5ADnAOUA6ADpAOoA6ADrAOkA7ADtAO4A7ADvAO0A")],
-"material": SubResource("StandardMaterial3D_1g1ec"),
-"name": "Gold",
-"primitive": 3,
-"uv_scale": Vector4(1.9996163, 1.298466, 3.0042953, 2.607964),
-"vertex_count": 265,
-"vertex_data": PackedByteArray("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")
-}]
-blend_shape_mode = 0
-shadow_mesh = SubResource("ArrayMesh_uaxt7")
-
 [sub_resource type="FontVariation" id="FontVariation_f14fn"]
 base_font = ExtResource("9_njh5b")
 spacing_glyph = -20
@@ -4067,9 +4028,8 @@ shader_parameter/fill_opacity = 0.9
 shader_parameter/empty_opacity = 0.50000002375
 
 [sub_resource type="FontVariation" id="FontVariation_42ejm"]
-base_font = ExtResource("3_s7cmo")
-variation_embolden = -0.56
-spacing_top = 20
+base_font = ExtResource("14_bj344")
+spacing_top = -40
 
 [sub_resource type="FontVariation" id="FontVariation_rlhfq"]
 base_font = ExtResource("14_gssec")
@@ -4077,6 +4037,9 @@ base_font = ExtResource("14_gssec")
 [sub_resource type="FontVariation" id="FontVariation_gssec"]
 base_font = ExtResource("14_gssec")
 variation_embolden = -0.83
+spacing_glyph = 5
+spacing_space = 11
+spacing_bottom = 20
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_n43i2"]
 no_depth_test = true
@@ -4121,6 +4084,10 @@ shader_parameter/start_angle = 0.0250000011875
 shader_parameter/clockwise = false
 shader_parameter/glow_intensity = 15.0000007125
 shader_parameter/smooth_transition = 0.0
+
+[sub_resource type="FontVariation" id="FontVariation_yciqh"]
+base_font = ExtResource("15_gssec")
+spacing_top = 47
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_k44yu"]
 no_depth_test = true
@@ -4695,8 +4662,8 @@ alpha_antialiasing_mode = 1
 alpha_antialiasing_edge = 1.0
 render_priority = 10
 outline_render_priority = 10
-modulate = Color(1, 1, 0.39607844, 1)
-outline_modulate = Color(1, 1, 0.39607844, 1)
+modulate = Color(1, 0.87058824, 0.2, 1)
+outline_modulate = Color(1, 0.87058824, 0.2, 1)
 text = "ORIGIN"
 font = SubResource("FontVariation_njh5b")
 font_size = 400
@@ -4710,8 +4677,8 @@ alpha_antialiasing_mode = 1
 alpha_antialiasing_edge = 1.0
 render_priority = 10
 outline_render_priority = 10
-modulate = Color(1, 1, 0.39607844, 1)
-outline_modulate = Color(1, 1, 0.39607844, 1)
+modulate = Color(1, 0.87058824, 0.2, 1)
+outline_modulate = Color(1, 0.87058824, 0.2, 1)
 text = "................APPLIANCE NAME"
 font = SubResource("FontVariation_k44yu")
 font_size = 400
@@ -4726,8 +4693,8 @@ alpha_antialiasing_mode = 1
 alpha_antialiasing_edge = 1.0
 render_priority = 10
 outline_render_priority = 10
-modulate = Color(1, 1, 0.39607844, 1)
-outline_modulate = Color(1, 1, 0.39607844, 1)
+modulate = Color(1, 0.87058824, 0.2, 1)
+outline_modulate = Color(1, 0.87058824, 0.2, 1)
 text = "CLASS"
 font = SubResource("FontVariation_bj344")
 font_size = 400
@@ -4741,8 +4708,8 @@ alpha_antialiasing_mode = 1
 alpha_antialiasing_edge = 1.0
 render_priority = 10
 outline_render_priority = 10
-modulate = Color(1, 1, 0.39607844, 1)
-outline_modulate = Color(1, 1, 0.39607844, 1)
+modulate = Color(1, 0.87058824, 0.2, 1)
+outline_modulate = Color(1, 0.87058824, 0.2, 1)
 text = "...........................TYPE"
 font = SubResource("FontVariation_s7cmo")
 font_size = 400
@@ -4757,8 +4724,8 @@ alpha_antialiasing_mode = 1
 alpha_antialiasing_edge = 1.0
 render_priority = 10
 outline_render_priority = 10
-modulate = Color(1, 1, 0.39607844, 1)
-outline_modulate = Color(1, 1, 0.39607844, 1)
+modulate = Color(1, 0.87058824, 0.2, 1)
+outline_modulate = Color(1, 0.87058824, 0.2, 1)
 text = "SYSTEM"
 font = SubResource("FontVariation_ja6ch")
 font_size = 400
@@ -4772,8 +4739,8 @@ alpha_antialiasing_mode = 1
 alpha_antialiasing_edge = 1.0
 render_priority = 10
 outline_render_priority = 10
-modulate = Color(1, 1, 0.39607844, 1)
-outline_modulate = Color(1, 1, 0.39607844, 1)
+modulate = Color(1, 0.87058824, 0.2, 1)
+outline_modulate = Color(1, 0.87058824, 0.2, 1)
 text = "..........[ENGINE][COMBUSTION]"
 font = SubResource("FontVariation_1amol")
 font_size = 400
@@ -4837,9 +4804,9 @@ outline_render_priority = 10
 modulate = Color(1, 0.87058824, 0.2, 1)
 outline_modulate = Color(1, 0.87058824, 0.2, 1)
 text = "C  O  N  D  I  T  I  O  N"
-font = ExtResource("15_gssec")
+font = SubResource("FontVariation_a081e")
 font_size = 30
-outline_size = 3
+outline_size = 1
 uppercase = true
 
 [node name="V1" type="MeshInstance3D" parent="Dashboard/Condition/adtl"]
@@ -4875,32 +4842,32 @@ skeleton = NodePath("")
 surface_material_override/0 = SubResource("StandardMaterial3D_rdnf8")
 
 [node name="Half" type="MeshInstance3D" parent="Dashboard/Rating/Stars/1"]
-transform = Transform3D(1.0000001, -2.9802322e-08, -1.1175871e-08, 5.9604645e-08, 1, -4.172325e-07, 1.8626451e-09, 3.501773e-07, 1.0000001, -2.5172386, 0, -9.536743e-07)
+transform = Transform3D(1.0000001, -5.9604638e-08, -1.8626243e-09, 5.9604645e-08, 1, -3.5017732e-07, 1.8626451e-09, 3.501773e-07, 1.0000001, -2.5, 0, 0)
 mesh = SubResource("ArrayMesh_peyg7")
 skeleton = NodePath("")
 surface_material_override/0 = SubResource("StandardMaterial3D_rdnf8")
 
 [node name="Full" type="MeshInstance3D" parent="Dashboard/Rating/Stars/1"]
-transform = Transform3D(1.0000001, -2.9802322e-08, -1.1175871e-08, 5.9604645e-08, 1, -4.172325e-07, 1.8626451e-09, 3.501773e-07, 1.0000001, -5, 3.8146973e-06, 0)
-mesh = SubResource("ArrayMesh_6v3b0")
+transform = Transform3D(-1.0000001, 8.742278e-08, 0, -8.7422784e-08, -1, 0, 0, 0, 1.0000001, -2.534, 0, 0)
+mesh = SubResource("ArrayMesh_peyg7")
 skeleton = NodePath("")
 surface_material_override/0 = SubResource("StandardMaterial3D_rdnf8")
 
 [node name="2" type="MeshInstance3D" parent="Dashboard/Rating/Stars"]
-transform = Transform3D(0.029000005, 0, -5.820766e-11, -1.978151e-11, -0.0024309144, -0.03790275, -1.8626451e-09, 0.033912994, -0.002716904, -0.07699996, 0.37, 0.03999996)
+transform = Transform3D(0.029000005, -1.313882e-11, -4.1024328e-10, -3.1308042e-10, -0.0024309275, -0.03790275, -1.1206639e-11, 0.033912994, -0.0027169185, -0.07699996, 0.37, 0.03999996)
 mesh = SubResource("ArrayMesh_6jhb6")
 skeleton = NodePath("")
 surface_material_override/0 = SubResource("StandardMaterial3D_rdnf8")
 
 [node name="Half" type="MeshInstance3D" parent="Dashboard/Rating/Stars/2"]
-transform = Transform3D(1.0000001, -2.9802322e-08, -1.1175871e-08, 5.9604645e-08, 1, -4.172325e-07, 1.8626451e-09, 3.501773e-07, 1.0000001, -2.5172386, 0, -9.536743e-07)
+transform = Transform3D(1.0000001, -5.9604638e-08, -1.8626243e-09, 5.9604645e-08, 1, -3.5017732e-07, 1.8626451e-09, 3.501773e-07, 1.0000001, -2.5, 0, 0)
 mesh = SubResource("ArrayMesh_peyg7")
 skeleton = NodePath("")
 surface_material_override/0 = SubResource("StandardMaterial3D_rdnf8")
 
 [node name="Full" type="MeshInstance3D" parent="Dashboard/Rating/Stars/2"]
-transform = Transform3D(1.0000001, -2.9802322e-08, -1.1175871e-08, 5.9604645e-08, 1, -4.172325e-07, 1.8626451e-09, 3.501773e-07, 1.0000001, -5, 3.8146973e-06, 0)
-mesh = SubResource("ArrayMesh_6v3b0")
+transform = Transform3D(-1.0000001, 8.742278e-08, 0, -8.7422784e-08, -1, 0, 0, 0, 1.0000001, -2.515, 0, 0)
+mesh = SubResource("ArrayMesh_peyg7")
 skeleton = NodePath("")
 surface_material_override/0 = SubResource("StandardMaterial3D_rdnf8")
 
@@ -4911,15 +4878,14 @@ skeleton = NodePath("")
 surface_material_override/0 = SubResource("StandardMaterial3D_rdnf8")
 
 [node name="Half" type="MeshInstance3D" parent="Dashboard/Rating/Stars/3"]
-transform = Transform3D(1.0000001, -2.9802322e-08, -1.1175871e-08, 5.9604645e-08, 1, -4.172325e-07, 1.8626451e-09, 3.501773e-07, 1.0000001, -2.5172386, 0, -9.536743e-07)
+transform = Transform3D(1.0000001, -2.9802322e-08, -1.1175871e-08, 5.9604645e-08, 1, -4.172325e-07, 1.8626451e-09, 3.501773e-07, 1.0000001, -2.5, 0, 0)
 mesh = SubResource("ArrayMesh_peyg7")
 skeleton = NodePath("")
 surface_material_override/0 = SubResource("StandardMaterial3D_rdnf8")
 
 [node name="Full" type="MeshInstance3D" parent="Dashboard/Rating/Stars/3"]
-transform = Transform3D(1.0000001, -2.9802322e-08, -1.1175871e-08, 5.9604645e-08, 1, -4.172325e-07, 1.8626451e-09, 3.501773e-07, 1.0000001, -5, 3.8146973e-06, 0)
-visible = false
-mesh = SubResource("ArrayMesh_6v3b0")
+transform = Transform3D(-1.0000001, 8.742278e-08, 0, -8.7422784e-08, -1, 0, 0, 0, 1.0000001, -2.505, 0, 0)
+mesh = SubResource("ArrayMesh_peyg7")
 skeleton = NodePath("")
 surface_material_override/0 = SubResource("StandardMaterial3D_rdnf8")
 
@@ -4930,16 +4896,14 @@ skeleton = NodePath("")
 surface_material_override/0 = SubResource("StandardMaterial3D_rdnf8")
 
 [node name="Half" type="MeshInstance3D" parent="Dashboard/Rating/Stars/4"]
-transform = Transform3D(1.0000001, -2.9802322e-08, -1.1175871e-08, 5.9604645e-08, 1, -4.172325e-07, 1.8626451e-09, 3.501773e-07, 1.0000001, -2.5172386, 0, -9.536743e-07)
-visible = false
+transform = Transform3D(1.0000001, -2.9802322e-08, -1.1175871e-08, 5.9604645e-08, 1, -4.172325e-07, 1.8626451e-09, 3.501773e-07, 1.0000001, -2.5, 0, 0)
 mesh = SubResource("ArrayMesh_peyg7")
 skeleton = NodePath("")
 surface_material_override/0 = SubResource("StandardMaterial3D_rdnf8")
 
 [node name="Full" type="MeshInstance3D" parent="Dashboard/Rating/Stars/4"]
-transform = Transform3D(1.0000001, -2.9802322e-08, -1.1175871e-08, 5.9604645e-08, 1, -4.172325e-07, 1.8626451e-09, 3.501773e-07, 1.0000001, -5, 3.8146973e-06, 0)
-visible = false
-mesh = SubResource("ArrayMesh_6v3b0")
+transform = Transform3D(-1.0000001, 8.742278e-08, 0, -8.7422784e-08, -1, 0, 0, 0, 1.0000001, -2.534, 0, 0)
+mesh = SubResource("ArrayMesh_peyg7")
 skeleton = NodePath("")
 surface_material_override/0 = SubResource("StandardMaterial3D_rdnf8")
 
@@ -4950,16 +4914,14 @@ skeleton = NodePath("")
 surface_material_override/0 = SubResource("StandardMaterial3D_rdnf8")
 
 [node name="Half" type="MeshInstance3D" parent="Dashboard/Rating/Stars/5"]
-transform = Transform3D(1.0000001, -2.9802322e-08, -1.1175871e-08, 5.9604645e-08, 1, -4.172325e-07, 1.8626451e-09, 3.501773e-07, 1.0000001, -2.5172386, 0, -9.536743e-07)
-visible = false
+transform = Transform3D(1.0000001, -2.9802322e-08, -1.1175871e-08, 5.9604645e-08, 1, -4.172325e-07, 1.8626451e-09, 3.501773e-07, 1.0000001, -2.5, 0, 0)
 mesh = SubResource("ArrayMesh_peyg7")
 skeleton = NodePath("")
 surface_material_override/0 = SubResource("StandardMaterial3D_rdnf8")
 
 [node name="Full" type="MeshInstance3D" parent="Dashboard/Rating/Stars/5"]
-transform = Transform3D(1.0000001, -2.9802322e-08, -1.1175871e-08, 5.9604645e-08, 1, -4.172325e-07, 1.8626451e-09, 3.501773e-07, 1.0000001, -5, 3.8146973e-06, 0)
-visible = false
-mesh = SubResource("ArrayMesh_6v3b0")
+transform = Transform3D(-1.0000001, 8.742278e-08, 0, -8.7422784e-08, -1, 0, 0, 0, 1.0000001, -2.534, 0, 0)
+mesh = SubResource("ArrayMesh_peyg7")
 skeleton = NodePath("")
 surface_material_override/0 = SubResource("StandardMaterial3D_rdnf8")
 
@@ -5066,12 +5028,12 @@ alpha_antialiasing_mode = 1
 alpha_antialiasing_edge = 1.0
 render_priority = 10
 outline_render_priority = 10
-modulate = Color(0.7294118, 0, 0, 1)
+modulate = Color(1, 0, 0, 1)
 outline_modulate = Color(1, 0, 0, 1)
 text = "50%"
 font = SubResource("FontVariation_42ejm")
 font_size = 175
-outline_size = 10
+outline_size = 0
 uppercase = true
 
 [node name="Mayhem" type="Label3D" parent="Dashboard/Mayhem"]
@@ -5091,7 +5053,7 @@ outline_size = 0
 uppercase = true
 
 [node name="Meter" type="Label3D" parent="Dashboard/Mayhem"]
-transform = Transform3D(0.004999878, -4.188755e-05, -7.400841e-10, -3.4217486e-05, -0.0058814837, 0.0009882866, -6.900209e-06, -0.0011859151, -0.0049013556, 0, 0.323, -0.005)
+transform = Transform3D(0.004999878, -4.188755e-05, -7.400841e-10, -3.4217486e-05, -0.0058814837, 0.0009882866, -6.900209e-06, -0.0011859151, -0.0049013556, 0.003, 0.323, -0.005)
 pixel_size = 0.05
 no_depth_test = true
 alpha_antialiasing_mode = 1
@@ -5137,6 +5099,7 @@ outline_render_priority = 10
 modulate = Color(0, 1, 0, 1)
 outline_modulate = Color(0, 1, 0, 1)
 text = "2.5x"
+font = SubResource("FontVariation_yciqh")
 font_size = 280
 outline_size = 6
 

@@ -1,23 +1,23 @@
 {
     "WashingMachine": {
-        "name": "...............WASHING MACHINE",
-        "class": "UTILITY",
+        "name": "Washing Maching",
+        "class": "Utility",
         "scale": 0.6,
         "distance": 6.0,
         "components": [
             {
-                "name" : "Washer Door",
+                "name": "Washer Panel",
                 "size" : 0.05,
-                "system" : "[???][???]",
-                "condition" : 4,
-                
-                "rating" : 0.5,
-                "mass" : 5,
+                "system" : "[Operation][Console]",
+                "condition" : 8,
 
-                "mayhem" : 5,
-                "force" : 2.5,
+                "rating" : 5.0,
+                "mass" : 1,
 
-                "scale" : 1.75,
+                "mayhem" : 0.9,
+                "force" : 0.01,
+
+                "scale" : 1.5,
                 "glow" : 7.0,
             },
             {
@@ -26,7 +26,7 @@
                 "system" : "[Propellent][Storage]",
                 "condition" : 7,
 
-                "rating" : 1.0,
+                "rating" : 2.5,
                 "mass" : 12,
 
                 "mayhem" : 8,
@@ -36,12 +36,27 @@
                 "glow" : 6.5,
             },
             {
+                "name": "Inlet Valve",
+                "size" : 0.05,
+                "system" : "[Propellent][Regulation]",
+                "condition" : 4,
+
+                "rating" : 1.5,
+                "mass" : 1,
+
+                "mayhem" : 20,
+                "force" : 1.5,
+
+                "scale" : 2.5,
+                "glow" : 8.0,
+            },
+            {
                 "name": "Inlet Hose",
                 "size" : 0.05,
                 "system" : "[Propellent][Delivery]",
                 "condition" : 8,
 
-                "rating" : 1.0,
+                "rating" : 3.0,
                 "mass" : 2,
 
                 "mayhem" : 6,
@@ -50,88 +65,73 @@
                 "scale" : 1.5,
                 "glow" : 8.0,
             },
+        ]
+    },
+    "DryingMachine": {
+        "name": "Drying Machine",
+        "class": "Utility",
+        "scale": 0.6,
+        "distance": 6.0,
+        "components": [
             {
-                "name": "Washer Panel",
+                "name": "Dryer Panel",
                 "size" : 0.05,
-                "system" : "[Operation][???]",
+                "system" : "[Operation][Console]",
                 "condition" : 8,
 
                 "rating" : 2.5,
-                "mass" : 3,
-
-                "mayhem" : 85,
+                "mass" : 8,
+                
+                "mayhem" : 18,
                 "force" : 2.5,
 
                 "scale" : 1.5,
                 "glow" : 7.0,
             },
-        ]
-    },
-    "DryingMachine": {
-        "name": "Drying Machine",
-        "description": "''Stay Fresh on Launch Day''",
-        "scale": 0.6,
-        "distance": 6.0,
-        "components": [
             {
-                "name": "Dryer Door",
+                "name": "Dryer Basket",
                 "size" : 0.05,
-                "system" : ". . . . . [ ? ? ? ][ ? ? ? ]",
-                "condition" : 8,
+                "system" : "[Engine][Nozzle]",
+                "condition" : 4,
 
-                "rating" : 2.5,
+                "rating" : 3.0,
                 "mass" : 8,
 
-                "mayhem" : 18,
-                "force" : 2.5,
-
-                "scale" : 1.75,
-                "glow" : 7.0,
-            },
-            {
-                "name": "Tumble Drum",
-                "size" : 0.05,
-                "system" : ". . . . . [ ? ? ? ][ ? ? ? ]",
-                "condition" : 8,
-
-                "rating" : 2.5,
-                "mass" : 8,
-
-                "mayhem" : 18,
-                "force" : 2.5,
+                "mayhem" : 33,
+                "force" : 1.25,
 
                 "scale" : 1.25,
                 "glow" : 7.0,
             },
             {
-                "name": "Vent Hose",
+                "name": "Blower Motor",
                 "size" : 0.05,
-                "system" : ". . . . . [ ? ? ? ][ ? ? ? ]",
-                "condition" : 8,
+                "system" : "[Propellent][Ventilation]",
+                "condition" : 4,
 
-                "rating" : 2.5,
-                "mass" : 8,
+                "rating" : 3.5,
+                "mass" : 10,
                 
-                "mayhem" : 18,
-                "force" : 2.5,
-
-                "scale" : 1.5,
-                "glow" : 7.5,
-            },
-            {
-                "name": "Dryer Panel",
-                "size" : 0.05,
-                "system" : ". . . . . [ ? ? ? ][ ? ? ? ]",
-                "condition" : 8,
-
-                "rating" : 2.5,
-                "mass" : 8,
-                
-                "mayhem" : 18,
-                "force" : 2.5,
+                "mayhem" : 25,
+                "force" : 3.0,
 
                 "scale" : 1.5,
                 "glow" : 7.0,
+            },
+            {
+                "name": "Vent Duct",
+                "size" : 0.05,
+                "system" : "[Structure][Shield]",
+                "condition" : 5,
+
+                "rating" : 1.5,
+                "mass" : 3,
+                
+                "mayhem" : 26,
+                "force" : 1.7,
+
+                "scale" : 1.5,
+                "glow" : 7.5,
             }
         ]
     },

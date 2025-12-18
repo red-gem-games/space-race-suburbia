@@ -1,0 +1,45 @@
+[remap]
+
+importer="texture"
+type="CompressedTexture2D"
+uid="uid://dfh0plswtvfos"
+path.s3tc="res://.godot/imported/Dryer_GameReady_v3_T_Dryer_NR.png-0119912808ed9ac0b2c38af2c559abb9.s3tc.ctex"
+path.etc2="res://.godot/imported/Dryer_GameReady_v3_T_Dryer_NR.png-0119912808ed9ac0b2c38af2c559abb9.etc2.ctex"
+metadata={
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"vram_texture": true
+}
+generator_parameters={
+"md5": "77667ebf970fa2956729f06f419ce3ad"
+}
+
+[deps]
+
+source_file="res://Assets/Blender/DryingMachine/Dryer_GameReady_v3_T_Dryer_NR.png"
+dest_files=["res://.godot/imported/Dryer_GameReady_v3_T_Dryer_NR.png-0119912808ed9ac0b2c38af2c559abb9.s3tc.ctex", "res://.godot/imported/Dryer_GameReady_v3_T_Dryer_NR.png-0119912808ed9ac0b2c38af2c559abb9.etc2.ctex"]
+
+[params]
+
+compress/mode=2
+compress/high_quality=false
+compress/lossy_quality=0.7
+compress/uastc_level=0
+compress/rdo_quality_loss=0.0
+compress/hdr_compression=1
+compress/normal_map=1
+compress/channel_pack=0
+mipmaps/generate=true
+mipmaps/limit=-1
+roughness/mode=1
+roughness/src_normal="res://Assets/Blender/DryingMachine/Dryer_GameReady_v3_T_Dryer_NR.png"
+process/channel_remap/red=0
+process/channel_remap/green=1
+process/channel_remap/blue=2
+process/channel_remap/alpha=3
+process/fix_alpha_border=true
+process/premult_alpha=false
+process/normal_map_invert_y=false
+process/hdr_as_srgb=false
+process/hdr_clamp_exposure=false
+process/size_limit=0
+detect_3d/compress_to=0
