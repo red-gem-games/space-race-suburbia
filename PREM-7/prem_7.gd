@@ -17,28 +17,26 @@ var shader: Shader
 var shader_material: ShaderMaterial
 
 @onready var dashboard: Node3D = $Dashboard
-@onready var machine_name: Label3D = $Dashboard/All_Data/Machine/Machine_Name
-@onready var machine_desc: Label3D = $Dashboard/All_Data/Machine/Machine_Desc
-@onready var component_name: Label3D = $Dashboard/All_Data/Component/Component_Name
-@onready var component_name_back: Label3D = $Dashboard/All_Data/Component/Component_Name_Back
-@onready var component_stars: Label3D = $Dashboard/All_Data/Component/Comp_Stars
-@onready var component_module: Label3D = $Dashboard/All_Data/Module/Screen/Data
-@onready var component_power: Label3D = $Dashboard/All_Data/Power/Screen/Data
-@onready var component_mass: Label3D = $Dashboard/Mass/Mass
-@onready var component_lift: Label3D = $Dashboard/All_Data/Lift/Screen/Data
 
-@onready var module_screen: MeshInstance3D = $Dashboard/All_Data/Module/Screen
-@onready var power_screen: MeshInstance3D = $Dashboard/All_Data/Power/Screen
-@onready var mass_screen: MeshInstance3D = $Dashboard/All_Data/Mass/Screen
-@onready var lift_screen: MeshInstance3D = $Dashboard/All_Data/Lift/Screen
+@onready var component_name: Label3D = $Dashboard/Data/Component/Component_Name
+@onready var component_name_back: Label3D = $Dashboard/Data/Component/Component_Name_Back
+
+@onready var machine_name: Label3D = $Dashboard/Data/Information/Machine_Name
+@onready var machine_class: Label3D = $Dashboard/Data/Information/Class_Data
+@onready var component_system: Label3D = $Dashboard/Data/Information/System_Data
+@onready var component_condition: Node3D = $Dashboard/Condition
+
+@onready var component_rating: Node3D = $Dashboard/Rating
+@onready var component_mass: Label3D = $Dashboard/Mass/Mass
+
+@onready var component_mayhem: MeshInstance3D = $Dashboard/Mayhem
+@onready var component_mayhem_pct: Label3D = $Dashboard/Mayhem/Percentage
+
+@onready var component_force: MeshInstance3D = $Dashboard/Force
+@onready var component_force_amt: Label3D = $Dashboard/Force/Force_Data
 
 @onready var control_position: Node3D = $Control_Position
 @onready var hologram_position: Node3D = $Holo_Position
-
-@onready var scanner = $Dashboard/Scanner
-var is_scanning: bool = false
-
-@onready var spin_anim: AnimationPlayer = $Spin_Animation
 
 var grabbed_object_name: StringName
 var handling_object: bool = false
@@ -72,8 +70,6 @@ var grab_object_complete: bool = false
 
 func _ready() -> void:
 	
-	start_scan()
-	
 	extract_message.visible = false
 	
 	dashboard.visible = false
@@ -102,10 +98,6 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
-	
-	for child in rotating_children.keys():
-		if is_instance_valid(child) and child is MeshInstance3D:
-			child.rotate_x(0.01)
 	
 	if touching_object and not beam_active:
 		touch_anim.play("touching_object")
@@ -259,32 +251,3 @@ func _on_grab_animation_animation_finished(anim_name: StringName) -> void:
 func _on_touch_animation_animation_finished(anim_name: StringName) -> void:
 	if anim_name == "touching_object":
 		touch_anim.play("extended_touch")
-
-
-var rotating_children = {}  # Track which children are currently rotating
-
-func start_scan():
-	if is_scanning:
-		return
-	is_scanning = true
-	scan_effect()
-
-func scan_effect():
-	var children = scanner.get_children()
-	
-	if children.size() == 0:
-		is_scanning = false
-		return
-	
-	while is_scanning:
-		# Forward pass - start each child rotating
-		for i in range(children.size()):
-			if children[i] is MeshInstance3D:
-				rotating_children[children[i]] = true
-				await get_tree().create_timer(0.1).timeout
-		
-		# Reverse pass - start each child rotating
-		for i in range(children.size() - 1, -1, -1):
-			if children[i] is MeshInstance3D:
-				rotating_children[children[i]] = true
-				await get_tree().create_timer(0.1).timeout

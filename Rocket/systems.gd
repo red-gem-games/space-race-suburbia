@@ -12,5 +12,5 @@ func _ready() -> void:
 	elif name.contains("Propellent"):
 		is_propellent = true 
 	
-	freeze = true
+	freeze = false
 	gravity_scale = 0.0

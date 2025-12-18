@@ -45,15 +45,15 @@ shader_parameter/glass_roughness = 0.2
 shader_parameter/glass_metallic = 1.0
 shader_parameter/refraction_amount = 0.5
 shader_parameter/scroll_speed = 0.1
-shader_parameter/char_width = 0.03900000115398
-shader_parameter/char_spacing = 0.64800002996503
-shader_parameter/text_height = 0.0430000020425
-shader_parameter/vertical_position = 0.5600000266
+shader_parameter/char_width = 0.020999999600470002
+shader_parameter/char_spacing = 0.4690000222775
+shader_parameter/text_height = 0.05000000074506
+shader_parameter/vertical_position = 0.5630000267425
 shader_parameter/glow_intensity = 3.0
 shader_parameter/use_scanlines = true
 shader_parameter/scanline_intensity = 0.0
 shader_parameter/text_chars = PackedInt32Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
-shader_parameter/text_length = 10
+shader_parameter/text_length = 30
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_3svgt"]
 material = SubResource("ShaderMaterial_3svgt")

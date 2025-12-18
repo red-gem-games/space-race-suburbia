@@ -205,7 +205,7 @@ var bounce_cooldown: float = 0.0
 var bounce_decay: float = 0.1
 
 var scroll_cooldown := 0.0
-var scroll_cooldown_duration := 0.05  # Adjust to taste (0.1–0.2 is typical)
+var scroll_cooldown_duration := 0.15  # Adjust to taste (0.1–0.2 is typical)
 
 var scale_tween: Tween
 
@@ -422,14 +422,6 @@ func _process(delta: float) -> void:
 			grabbed_object.manipulation_material.set_shader_parameter("albedo_alpha", extract_alpha)
 			grabbed_object.manipulation_material.set_shader_parameter("edge_intensity", extract_edge)
 			grabbed_object.manipulation_material.set_shader_parameter("alpha_multiplier", alpha_x)
-			var screen_mat = PREM_7.module_screen.get_surface_override_material(0)
-			var module_labels = PREM_7.module_screen.get_children()
-			var power_labels = PREM_7.power_screen.get_children()
-			#var mass_labels = PREM_7.mass_screen.get_children()
-			var lift_labels = PREM_7.lift_screen.get_children()
-			var screen_labels = module_labels + power_labels + lift_labels
-			
-			var photon_mat = PREM_7.photon_tip.mesh.material
 			
 			if extraction_started:
 				if extract_time >= 0.002:
@@ -439,16 +431,6 @@ func _process(delta: float) -> void:
 				grabbed_object.EXTRACT_MATERIAL.albedo_color = lerp(grabbed_object.EXTRACT_MATERIAL.albedo_color, Color.DARK_ORANGE, delta)
 				grabbed_object.EXTRACT_MATERIAL.emission = lerp(grabbed_object.EXTRACT_MATERIAL.emission, Color.WHITE, delta)
 				grabbed_object.EXTRACT_MATERIAL.emission_energy_multiplier = lerp(grabbed_object.EXTRACT_MATERIAL.emission_energy_multiplier, 16.0, delta * 7.5)
-				photon_mat.emission_energy_multiplier = lerp(photon_mat.emission_energy_multiplier, 200.0, delta)
-				photon_mat.albedo_color.a = lerp(photon_mat.albedo_color.a, 0.85, delta)
-				PREM_7.module_screen.scale = lerp(PREM_7.module_screen.scale, Vector3.ZERO, delta * 7.5)
-				PREM_7.power_screen.scale = lerp(PREM_7.power_screen.scale, Vector3.ZERO, delta * 7.5)
-				#PREM_7.mass_screen.scale = lerp(PREM_7.mass_screen.scale, Vector3.ZERO, delta * 7.5)
-				PREM_7.lift_screen.scale = lerp(PREM_7.lift_screen.scale, Vector3.ZERO, delta * 7.5)
-				screen_mat.albedo_color.a = lerp(screen_mat.albedo_color.a, 0.0, delta * 7.5)
-				for child in screen_labels:
-					child.modulate.a = lerp(child.modulate.a, 0.0, delta * 7.5)
-					child.outline_modulate.a = lerp(child.outline_modulate.a, 0.0, delta * 7.5)
 				if control_timer.is_stopped() == false:
 					var t_left_ratio = control_timer.time_left / control_timer.wait_time
 					var progress = 1.0 - t_left_ratio
@@ -462,7 +444,6 @@ func _process(delta: float) -> void:
 					selected_component_mesh.position = lerp(selected_component_mesh.position, Vector3.ZERO, delta * 2.5)
 					selected_component_mesh.scale = lerp(selected_component_mesh.scale, Vector3(x*s, y*s, z*s), delta * 2.5)
 				if control_timer.time_left < 1.0:
-					photon_mat.grow_amount = lerp(photon_mat.grow_amount, 0.4, delta * 1.5)
 					selected_component_mesh.position = lerp(selected_component_mesh.position, Vector3(0.0, -5.0, 0.0), delta * 1.5)
 					selected_component_mesh.scale = lerp(selected_component_mesh.scale, Vector3(0.0, 0.0, 0.0), delta * 6.0)
 				if control_timer.time_left == 0.0:
@@ -481,17 +462,6 @@ func _process(delta: float) -> void:
 				if not selected_component_mesh:
 					return
 				extract_speed = lerp(extract_speed, base_extract_speed, delta * 7.5)
-				PREM_7.module_screen.scale = lerp(PREM_7.module_screen.scale, Vector3.ONE, delta * 7.5)
-				PREM_7.power_screen.scale = lerp(PREM_7.power_screen.scale, Vector3.ONE, delta * 7.5)
-				#PREM_7.mass_screen.scale = lerp(PREM_7.mass_screen.scale, Vector3.ONE, delta * 7.5)
-				PREM_7.lift_screen.scale = lerp(PREM_7.lift_screen.scale, Vector3.ONE, delta * 7.5)
-				screen_mat.albedo_color.a = lerp(screen_mat.albedo_color.a, 1.0, delta * 7.5)
-				photon_mat.emission_energy_multiplier = lerp(photon_mat.emission_energy_multiplier, 40.0, delta * 7.5)
-				photon_mat.grow_amount = lerp(photon_mat.grow_amount, 0.0, delta * 9.0)
-				photon_mat.albedo_color.a = lerp(photon_mat.albedo_color.a, 1.0, delta)
-				for child in screen_labels:
-					child.modulate.a = lerp(child.modulate.a, 1.0, delta * 7.5)
-					child.outline_modulate.a = lerp(child.outline_modulate.a, 1.0, delta * 7.5)
 				grabbed_object.EXTRACT_MATERIAL.emission = lerp(grabbed_object.EXTRACT_MATERIAL.emission, Color.ORANGE_RED, delta * 7.5)
 				grabbed_object.EXTRACT_MATERIAL.albedo_color = lerp(grabbed_object.EXTRACT_MATERIAL.albedo_color, Color.RED, delta * 7.5)
 				grabbed_object.EXTRACT_MATERIAL.albedo_color.a = 0.9
@@ -633,9 +603,6 @@ func _on_extract_key() -> void:
 				child.disabled = true
 		PREM_7.ctrl_anim.play("extract")
 		PREM_7.holo_anim.play("cast_hologram")
-		PREM_7.is_scanning = true
-		PREM_7.start_scan()
-		PREM_7.spin_anim.play("spin")
 		grabbed_object.is_extracting = true
 		#PREM_7.dashboard.scale = Vector3(1.0, 1.0, 1.0)
 		PREM_7.dashboard.visible = true
@@ -664,8 +631,6 @@ func _on_extract_key() -> void:
 			selected_component_mesh.position = selected_component_pos
 		PREM_7.ctrl_anim.play_backwards("extract")
 		PREM_7.holo_anim.play_backwards("cast_hologram")
-		PREM_7.is_scanning = false
-		PREM_7.spin_anim.stop()
 		gravity_strength = 10.0
 		grabbed_object.visible = true
 		grabbed_object.extract_active = false
@@ -721,30 +686,22 @@ func _input(event: InputEvent) -> void:
 		elif event.button_index == MOUSE_BUTTON_WHEEL_UP and event.pressed:
 			if not middle_mouse_down and not right_mouse_down and not left_mouse_down:
 				if extracting_object_active:
-					scroll_component_data('UP')
+					# Check cooldown before allowing scroll
+					if scroll_cooldown <= 0:
+						scroll_component_data('UP')
+						scroll_cooldown = scroll_cooldown_duration  # Start cooldown
 					return
 				print('Still need to figure out INSPECT, Cycling Stored Components, etc.')
-				#PREM_7.switch_hologram('Up')
-				scroll_cooldown = scroll_cooldown_duration
-			#if right_mouse_down and shifting_object_active:
-				#if grabbed_target_position.y <= max_y:
-					#if grabbed_object.is_suspended:
-						#print('***Move Camera with this***')
-						#grabbed_target_position.y += 0.1
-
 
 		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN and event.pressed:
 			if not middle_mouse_down and not right_mouse_down and not left_mouse_down:
 				if extracting_object_active:
-					scroll_component_data('DOWN')
+					# Check cooldown before allowing scroll
+					if scroll_cooldown <= 0:
+						scroll_component_data('DOWN')
+						scroll_cooldown = scroll_cooldown_duration  # Start cooldown
 					return
 				print('Still need to figure out INSPECT, Cycling Stored Components, etc.')
-				scroll_cooldown = scroll_cooldown_duration
-			#if right_mouse_down and shifting_object_active:
-				#if grabbed_target_position.y >= 0.5:
-					#if grabbed_object.is_suspended:
-						#print('***Move Camera with this***')
-						#grabbed_target_position.y -= 0.1
 
 
 		elif event.button_index == MOUSE_BUTTON_MIDDLE:
@@ -1366,9 +1323,12 @@ func activate_component_data():
 	current_extraction_data = current_object_json.get("components", [])
 	current_component_index = 0
 
-	# machine-level labels
-	PREM_7.machine_name.text = current_object_json.get("name", "Unknown Object")
-	PREM_7.machine_desc.text = current_object_json.get("description", "")
+	# Kill existing tweens
+	if name_tween:
+		name_tween.kill()
+	if class_tween:
+		class_tween.kill()
+	
 	extraction_scale = current_object_json.get("scale", 0.0)
 	distance_factor = current_object_json.get("distance", 0.0)
 
@@ -1399,29 +1359,73 @@ func scroll_component_data(dir):
 		current_component_index = (current_component_index + count) % count
 		update_component_display()
 
+func pad_with_dots(text: String, total_length: int) -> String:
+	var text_length = text.length()
+	var dots_needed = total_length - text_length
+	
+	if dots_needed <= 0:
+		return text  # Already at or over max length
+	
+	return ".".repeat(dots_needed) + text
+
 func update_component_display():
 	if current_extraction_data.is_empty():
+		PREM_7.machine_name.text = ""
+		PREM_7.machine_class.text = ""
 		PREM_7.component_name.text  = ""
-		PREM_7.component_stars.text = ""
-		PREM_7.component_module.text = ""
-		PREM_7.component_power.text  = ""
+		PREM_7.component_system.text = ""
+		PREM_7.component_rating.text  = ""
 		PREM_7.component_mass.text   = ""
-		PREM_7.component_lift.text   = ""
 		return
 
 	var comp: Dictionary = current_extraction_data[current_component_index]
 
-	# UI
+	var machine_name_text = pad_with_dots(current_object_json.get("name", "??"), 30)
+	var machine_class_text = pad_with_dots(current_object_json.get("class", "??"), 31)
+	var system_text = pad_with_dots(comp.get("system", "??"), 30)
+	
+	# Only animate if text changed
+	if PREM_7.machine_name.text != machine_name_text:
+		if name_tween:
+			name_tween.kill()
+		name_tween = animate_typing_text(PREM_7.machine_name, machine_name_text, 0.015)
+	
+	if PREM_7.machine_class.text != machine_class_text:
+		if class_tween:
+			class_tween.kill()
+		class_tween = animate_typing_text(PREM_7.machine_class, machine_class_text, 0.015)
+	
+	if PREM_7.component_system.text != system_text:
+		if system_tween:
+			system_tween.kill()
+		system_tween = animate_typing_text(PREM_7.component_system, system_text, 0.015)
+
+	# UI - Name
 	PREM_7.component_name.text  = comp.get("name", "??")
 	PREM_7.component_name_back.text  = comp.get("name", "??")
-	PREM_7.component_stars.text = "★".repeat(int(comp.get("stars", 0)))
+	
+	var name_size = comp.get("size", .05)
+	PREM_7.component_name.pixel_size = name_size
+	PREM_7.component_name_back.pixel_size = name_size
+	
+	var condition = comp.get("condition", 0)
+	update_condition_display(condition)
+	
+	var rating = comp.get("rating", 0.0)
+	update_rating_display(rating)
+	
+	selected_component_mass  = comp.get("mass",  0)
+	PREM_7.component_mass.text   = str(int(comp.get("mass", 0)))
+	pulse_mass_label()
+	
+	var mayhem = comp.get("mayhem", 0)
+	update_mayhem_meter(mayhem)
+	
+	var force = comp.get("force", 0.0)
+	update_force_factor(force)
+	
 	selected_component_scale = comp.get("scale", 0.0)
 	selected_component_glow  = comp.get("glow",  0.0)
-	selected_component_mass  = comp.get("mass",  0)
-	PREM_7.component_module.text = str(comp.get("module", comp.get("fit", "")))
-	PREM_7.component_power.text  = str(comp.get("power",  comp.get("life", 0)))
-	PREM_7.component_mass.text   = str(int(comp.get("mass",   comp.get("weight", 0))))
-	PREM_7.component_lift.text   = str(comp.get("lift",   comp.get("durability", 0)))
 
 	# Find matching shape base name
 	var target_id := _normalize_id(comp.get("name", ""))
@@ -1460,6 +1464,264 @@ func update_component_display():
 
 	if matched_base_name == "":
 		print("No matching CollisionShape3D for component:", comp.get("name", "??"))
+
+var current_condition: int = 0  # Track current state
+var current_rating: float = 0.0
+var current_mass: int = 0
+var name_tween: Tween = null
+var class_tween: Tween = null
+var system_tween: Tween = null
+var condition_tween: Tween = null
+var rating_tween: Tween = null
+var mass_pulse_tween: Tween = null
+var mayhem_tween: Tween = null
+var force_tween: Tween = null
+
+func animate_typing_text(label: Label3D, full_text: String, duration_per_char: float = 0.03):
+	# Store full text and start with empty
+	var char_count = full_text.length()
+	
+	# Create tween
+	var tween = create_tween()
+	tween.set_ease(Tween.EASE_IN_OUT)
+	
+	# Animate from 0 characters to full length
+	tween.tween_method(
+		func(chars): 
+			var visible_chars = int(chars)
+			label.text = full_text.substr(0, visible_chars),
+		0.0,
+		float(char_count),
+		duration_per_char * char_count
+	)
+	
+	return tween
+
+func update_condition_display(condition_value: int):
+	condition_value = clampi(condition_value, 0, 10)
+	
+	# If condition hasn't changed, do nothing
+	if condition_value == current_condition:
+		return
+	
+	# Kill existing tween
+	if condition_tween:
+		condition_tween.kill()
+	
+	# Create tween for sequential block appearance
+	condition_tween = create_tween()
+	
+	# Determine direction (filling up or emptying)
+	var start = current_condition
+	var end = condition_value
+	var step = 1 if end > start else -1
+	var is_increasing = end > start
+	
+	# Animate each block with a slight delay
+	for i in range(start, end + step, step):
+		if i < 1 or i > 10:
+			continue
+		
+		# Skip the block at the target condition when decreasing (it stays at normal size)
+		if not is_increasing and i == condition_value:
+			continue
+		
+		var block = PREM_7.component_condition.get_node_or_null(str(i))
+		if block and block is MeshInstance3D:
+			condition_tween.tween_callback(func():
+				var pulse_tween = create_tween()
+				
+				if is_increasing:
+					# Growing - start from zero, pulse bigger, then settle at normal
+					pulse_tween.tween_property(block, "scale", Vector3.ONE * 1.3, 0.15)
+					pulse_tween.tween_property(block, "scale", Vector3.ONE, 0.08)
+				else:
+					# Shrinking - shrink from normal to zero
+					pulse_tween.tween_property(block, "scale", Vector3.ZERO, 0.15)
+			)
+			condition_tween.tween_interval(0.05)
+	
+	# SAFETY: Ensure ALL blocks are at correct scale at the end
+	condition_tween.tween_callback(func():
+		for i in range(1, 11):
+			var block = PREM_7.component_condition.get_node_or_null(str(i))
+			if block and block is MeshInstance3D:
+				if i <= condition_value:
+					block.scale = Vector3.ONE  # Normal size
+				else:
+					block.scale = Vector3.ZERO  # Invisible (zero size)
+	)
+	
+	current_condition = condition_value
+
+func update_rating_display(rating_value: float):
+	# Clamp to 0.0-5.0 range
+	rating_value = clampf(rating_value, 0.0, 5.0)
+	
+	# Get the Stars node under Rating
+	var stars_node = PREM_7.component_rating.get_node_or_null("Stars")
+	if not stars_node:
+		push_error("Stars node not found under Rating")
+		return
+	
+	# Loop through each star (1-5)
+	for i in range(1, 6):
+		var star_node = stars_node.get_node_or_null(str(i))
+		if not star_node:
+			continue
+		
+		var half_star = star_node.get_node_or_null("Half") as MeshInstance3D
+		var full_star = star_node.get_node_or_null("Full") as MeshInstance3D
+		
+		if not half_star or not full_star:
+			continue
+		
+		# Determine what to show for this star position
+		var star_fill = rating_value - float(i - 1)  # How much this star should be filled
+		
+		if star_fill >= 1.0:
+			# Full star
+			half_star.visible = false
+			full_star.visible = true
+		elif star_fill >= 0.5:
+			# Half star
+			half_star.visible = true
+			full_star.visible = false
+		else:
+			# Empty (no star)
+			half_star.visible = false
+			full_star.visible = false
+
+func pulse_mass_label():
+	var mass_label = PREM_7.component_mass
+	
+	if not mass_label:
+		return
+	
+	# Kill existing pulse tween
+	if mass_pulse_tween:
+		mass_pulse_tween.kill()
+	
+	# Store original scale
+	var original_scale = Vector3(0.013, 0.013, 0.013)
+	
+	# Create pulse: shrink fast, grow back gradually
+	mass_pulse_tween = create_tween()
+	mass_pulse_tween.set_ease(Tween.EASE_OUT)
+	mass_pulse_tween.set_trans(Tween.TRANS_BACK)  # Adds a little bounce at the end
+	
+	# Drop to 0.6x size quickly
+	mass_pulse_tween.tween_property(mass_label, "scale", original_scale * 0.6, 0.1)
+	# Grow back to original size more gradually with bounce
+	mass_pulse_tween.tween_property(mass_label, "scale", original_scale, 0.3)
+
+func update_mayhem_meter(mayhem_value: float, max_mayhem: float = 100.0):
+	var mayhem_meter = PREM_7.component_mayhem 
+	var mayhem_text = PREM_7.component_mayhem_pct
+	
+	if not mayhem_meter:
+		push_error("MayhemMeter node not found")
+		return
+	
+	# Get the shader material
+	var mat = mayhem_meter.get_surface_override_material(0) as ShaderMaterial
+	
+	if not mat:
+		push_error("MayhemMeter has no ShaderMaterial")
+		return
+	
+	# Calculate target progress (0.0 to 1.0)
+	var target_progress = clampf(mayhem_value / max_mayhem, 0.0, 1.0) / 2
+	var current_progress = mat.get_shader_parameter("progress")
+	
+	# Get current displayed value from text (for smooth counting)
+	var current_value = float(mayhem_text.text.replace("%", ""))
+	
+	# Kill existing tween if running
+	if mayhem_tween:
+		mayhem_tween.kill()
+	
+	# Create new tween
+	mayhem_tween = create_tween()
+	mayhem_tween.set_ease(Tween.EASE_OUT)
+	mayhem_tween.set_trans(Tween.TRANS_CUBIC)
+	mayhem_tween.set_parallel(true)  # Run both animations simultaneously
+	
+	# Animate the progress bar
+	mayhem_tween.tween_method(
+		func(value): mat.set_shader_parameter("progress", value),
+		current_progress,
+		target_progress,
+		0.5
+	)
+	
+	# Animate the text value counting up/down
+	mayhem_tween.tween_method(
+		func(value): mayhem_text.text = str(int(value)) + "%",
+		current_value,
+		mayhem_value,
+		0.5
+	)
+
+func update_force_factor(force_value: float, max_force: float = 5.0):
+	var force_meter = PREM_7.component_force 
+	var force_text = PREM_7.component_force_amt
+	
+	if not force_meter:
+		push_error("Force Factor meter not found")
+		return
+	
+	# Get the shader material
+	var mat = force_meter.get_surface_override_material(0) as ShaderMaterial
+	
+	if not mat:
+		push_error("Force Factor has no ShaderMaterial")
+		return
+	
+	# Calculate target fill amount (0.0 to 1.0)
+	var target_fill = clampf(force_value / max_force, 0.0, 1.0)
+	var current_fill = mat.get_shader_parameter("fill_amount")
+	
+	# Get current displayed value from text (for smooth counting)
+	var current_value = float(force_text.text.replace("x", ""))
+	
+	# Kill existing tween if running
+	if force_tween:
+		force_tween.kill()
+	
+	# Create new tween
+	force_tween = create_tween()
+	force_tween.set_ease(Tween.EASE_OUT)
+	force_tween.set_trans(Tween.TRANS_CUBIC)
+	force_tween.set_parallel(true)  # Run both animations simultaneously
+	
+	# Animate the ring fill
+	force_tween.tween_method(
+		func(value): mat.set_shader_parameter("fill_amount", value),
+		current_fill,
+		target_fill,
+		0.5
+	)
+	
+	# Animate the text value counting up/down
+	# Format with one decimal place
+	force_tween.tween_method(
+		func(value): force_text.text = "%.1fx" % value,
+		current_value,
+		force_value,
+		0.5
+	)
+
+
+
+
+
+
+
+
+
+
+
 
 
 func _normalize_id(s: String) -> String:
@@ -1515,7 +1777,6 @@ func extract_component(mesh, col):
 	#fresh_component.position = Vector3(2.0, -0.85, -4.0)
 	#new_mesh.rotation_degrees = Vector3(0, new_mesh.rotation_degrees.y + 28, 0)
 	
-	#PREM_7.holo_anim.play("spin_hologram")
 	
 	print('how many times')
 	

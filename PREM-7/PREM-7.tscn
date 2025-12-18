@@ -1,14 +1,21 @@
-[gd_scene load_steps=184 format=4 uid="uid://bpvm0l41dywjs"]
+[gd_scene load_steps=186 format=4 uid="uid://bpvm0l41dywjs"]
 
 [ext_resource type="Script" uid="uid://so25svauxmkt" path="res://PREM-7/prem_7.gd" id="1_iarxa"]
 [ext_resource type="Shader" uid="uid://cgr7dnph387rx" path="res://PREM-7/prem_7_holo_glow.gdshader" id="2_t05xm"]
+[ext_resource type="FontFile" uid="uid://cj55d06mwoe4y" path="res://Assets/UI/FONTS/CabinSketch-Bold.ttf" id="3_s7cmo"]
 [ext_resource type="Texture2D" uid="uid://4kqmkvi005mc" path="res://Assets/UI/Iconsv2_PBR fresh gold_BaseColor.jpg" id="4_61m6q"]
-[ext_resource type="Shader" uid="uid://c63841j4jafhp" path="res://PREM-7/force_factor.gdshader" id="4_t05xm"]
+[ext_resource type="Shader" uid="uid://c63841j4jafhp" path="res://Shaders/force_factor.gdshader" id="4_t05xm"]
 [ext_resource type="Texture2D" uid="uid://df3jvcngnl2ll" path="res://Assets/Blender/UI/Icons_GameReady_T_Icons_NR.png" id="5_5hhbi"]
-[ext_resource type="Shader" uid="uid://kl25hjo2s4fs" path="res://Shaders/CRT_3D.gdshader" id="5_l5ika"]
+[ext_resource type="FontFile" uid="uid://cdiv0rihnxge6" path="res://Assets/UI/FONTS/VT323-Regular.ttf" id="5_8d6ws"]
 [ext_resource type="Texture2D" uid="uid://crn50jmfslys2" path="res://Assets/UI/Iconsv2_T_Iconsv2_MT-PBR fresh gold_Roughness.png" id="5_s7cmo"]
 [ext_resource type="Shader" uid="uid://d2pelneqc3oj" path="res://Shaders/manipulation_depth_disabled.gdshader" id="5_t05xm"]
 [ext_resource type="Texture2D" uid="uid://c6ulma1tbgxme" path="res://Assets/UI/Iconsv2_PBR fresh gold_Normal.jpg" id="6_8d6ws"]
+[ext_resource type="Shader" uid="uid://bov1ef7ll4pe6" path="res://Shaders/mayhem_meter.gdshader" id="8_61m6q"]
+[ext_resource type="FontFile" uid="uid://14w6sr1us48x" path="res://Assets/UI/FONTS/NewTegomin-Regular.ttf" id="9_dpu46"]
+[ext_resource type="FontFile" uid="uid://cvt6hjqgrq7vu" path="res://Assets/UI/FONTS/Arbutus-Regular.ttf" id="9_njh5b"]
+[ext_resource type="FontFile" uid="uid://hvstj0oywnij" path="res://Assets/UI/FONTS/SourceCodePro-VariableFont_wght.ttf" id="11_k44yu"]
+[ext_resource type="FontFile" uid="uid://cjf0q3t7s7a1m" path="res://Assets/UI/FONTS/Creepster-Regular.ttf" id="14_gssec"]
+[ext_resource type="FontFile" uid="uid://dfqpfewxx6i48" path="res://Assets/UI/FONTS/Audiowide-Regular.ttf" id="15_gssec"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vjm6r"]
 depth_draw_mode = 2
@@ -53,6 +60,9 @@ material = SubResource("StandardMaterial3D_sb1ko")
 size = Vector3(0.1, 0.1, 0)
 
 [sub_resource type="FontFile" id="FontFile_t05xm"]
+subpixel_positioning = 0
+msdf_pixel_range = 14
+msdf_size = 128
 cache/0/50/0/ascent = 0.0
 cache/0/50/0/descent = 0.0
 cache/0/50/0/underline_position = 0.0
@@ -1343,6 +1353,211 @@ cache/0/149/0/descent = 0.0
 cache/0/149/0/underline_position = 0.0
 cache/0/149/0/underline_thickness = 0.0
 cache/0/149/0/scale = 1.0
+cache/0/135/0/ascent = 0.0
+cache/0/135/0/descent = 0.0
+cache/0/135/0/underline_position = 0.0
+cache/0/135/0/underline_thickness = 0.0
+cache/0/135/0/scale = 1.0
+cache/0/185/0/ascent = 0.0
+cache/0/185/0/descent = 0.0
+cache/0/185/0/underline_position = 0.0
+cache/0/185/0/underline_thickness = 0.0
+cache/0/185/0/scale = 1.0
+cache/0/175/0/ascent = 0.0
+cache/0/175/0/descent = 0.0
+cache/0/175/0/underline_position = 0.0
+cache/0/175/0/underline_thickness = 0.0
+cache/0/175/0/scale = 1.0
+cache/0/165/0/ascent = 0.0
+cache/0/165/0/descent = 0.0
+cache/0/165/0/underline_position = 0.0
+cache/0/165/0/underline_thickness = 0.0
+cache/0/165/0/scale = 1.0
+cache/0/172/0/ascent = 0.0
+cache/0/172/0/descent = 0.0
+cache/0/172/0/underline_position = 0.0
+cache/0/172/0/underline_thickness = 0.0
+cache/0/172/0/scale = 1.0
+cache/0/173/0/ascent = 0.0
+cache/0/173/0/descent = 0.0
+cache/0/173/0/underline_position = 0.0
+cache/0/173/0/underline_thickness = 0.0
+cache/0/173/0/scale = 1.0
+cache/0/174/0/ascent = 0.0
+cache/0/174/0/descent = 0.0
+cache/0/174/0/underline_position = 0.0
+cache/0/174/0/underline_thickness = 0.0
+cache/0/174/0/scale = 1.0
+cache/0/194/0/ascent = 0.0
+cache/0/194/0/descent = 0.0
+cache/0/194/0/underline_position = 0.0
+cache/0/194/0/underline_thickness = 0.0
+cache/0/194/0/scale = 1.0
+cache/0/193/0/ascent = 0.0
+cache/0/193/0/descent = 0.0
+cache/0/193/0/underline_position = 0.0
+cache/0/193/0/underline_thickness = 0.0
+cache/0/193/0/scale = 1.0
+cache/0/192/0/ascent = 0.0
+cache/0/192/0/descent = 0.0
+cache/0/192/0/underline_position = 0.0
+cache/0/192/0/underline_thickness = 0.0
+cache/0/192/0/scale = 1.0
+cache/0/191/0/ascent = 0.0
+cache/0/191/0/descent = 0.0
+cache/0/191/0/underline_position = 0.0
+cache/0/191/0/underline_thickness = 0.0
+cache/0/191/0/scale = 1.0
+cache/0/189/0/ascent = 0.0
+cache/0/189/0/descent = 0.0
+cache/0/189/0/underline_position = 0.0
+cache/0/189/0/underline_thickness = 0.0
+cache/0/189/0/scale = 1.0
+cache/0/188/0/ascent = 0.0
+cache/0/188/0/descent = 0.0
+cache/0/188/0/underline_position = 0.0
+cache/0/188/0/underline_thickness = 0.0
+cache/0/188/0/scale = 1.0
+cache/0/187/0/ascent = 0.0
+cache/0/187/0/descent = 0.0
+cache/0/187/0/underline_position = 0.0
+cache/0/187/0/underline_thickness = 0.0
+cache/0/187/0/scale = 1.0
+cache/0/186/0/ascent = 0.0
+cache/0/186/0/descent = 0.0
+cache/0/186/0/underline_position = 0.0
+cache/0/186/0/underline_thickness = 0.0
+cache/0/186/0/scale = 1.0
+cache/0/184/0/ascent = 0.0
+cache/0/184/0/descent = 0.0
+cache/0/184/0/underline_position = 0.0
+cache/0/184/0/underline_thickness = 0.0
+cache/0/184/0/scale = 1.0
+cache/0/183/0/ascent = 0.0
+cache/0/183/0/descent = 0.0
+cache/0/183/0/underline_position = 0.0
+cache/0/183/0/underline_thickness = 0.0
+cache/0/183/0/scale = 1.0
+cache/0/182/0/ascent = 0.0
+cache/0/182/0/descent = 0.0
+cache/0/182/0/underline_position = 0.0
+cache/0/182/0/underline_thickness = 0.0
+cache/0/182/0/scale = 1.0
+cache/0/181/0/ascent = 0.0
+cache/0/181/0/descent = 0.0
+cache/0/181/0/underline_position = 0.0
+cache/0/181/0/underline_thickness = 0.0
+cache/0/181/0/scale = 1.0
+cache/0/179/0/ascent = 0.0
+cache/0/179/0/descent = 0.0
+cache/0/179/0/underline_position = 0.0
+cache/0/179/0/underline_thickness = 0.0
+cache/0/179/0/scale = 1.0
+cache/0/178/0/ascent = 0.0
+cache/0/178/0/descent = 0.0
+cache/0/178/0/underline_position = 0.0
+cache/0/178/0/underline_thickness = 0.0
+cache/0/178/0/scale = 1.0
+cache/0/177/0/ascent = 0.0
+cache/0/177/0/descent = 0.0
+cache/0/177/0/underline_position = 0.0
+cache/0/177/0/underline_thickness = 0.0
+cache/0/177/0/scale = 1.0
+cache/0/176/0/ascent = 0.0
+cache/0/176/0/descent = 0.0
+cache/0/176/0/underline_position = 0.0
+cache/0/176/0/underline_thickness = 0.0
+cache/0/176/0/scale = 1.0
+cache/0/171/0/ascent = 0.0
+cache/0/171/0/descent = 0.0
+cache/0/171/0/underline_position = 0.0
+cache/0/171/0/underline_thickness = 0.0
+cache/0/171/0/scale = 1.0
+cache/0/169/0/ascent = 0.0
+cache/0/169/0/descent = 0.0
+cache/0/169/0/underline_position = 0.0
+cache/0/169/0/underline_thickness = 0.0
+cache/0/169/0/scale = 1.0
+cache/0/168/0/ascent = 0.0
+cache/0/168/0/descent = 0.0
+cache/0/168/0/underline_position = 0.0
+cache/0/168/0/underline_thickness = 0.0
+cache/0/168/0/scale = 1.0
+cache/0/167/0/ascent = 0.0
+cache/0/167/0/descent = 0.0
+cache/0/167/0/underline_position = 0.0
+cache/0/167/0/underline_thickness = 0.0
+cache/0/167/0/scale = 1.0
+cache/0/166/0/ascent = 0.0
+cache/0/166/0/descent = 0.0
+cache/0/166/0/underline_position = 0.0
+cache/0/166/0/underline_thickness = 0.0
+cache/0/166/0/scale = 1.0
+cache/0/164/0/ascent = 0.0
+cache/0/164/0/descent = 0.0
+cache/0/164/0/underline_position = 0.0
+cache/0/164/0/underline_thickness = 0.0
+cache/0/164/0/scale = 1.0
+cache/0/163/0/ascent = 0.0
+cache/0/163/0/descent = 0.0
+cache/0/163/0/underline_position = 0.0
+cache/0/163/0/underline_thickness = 0.0
+cache/0/163/0/scale = 1.0
+cache/0/162/0/ascent = 0.0
+cache/0/162/0/descent = 0.0
+cache/0/162/0/underline_position = 0.0
+cache/0/162/0/underline_thickness = 0.0
+cache/0/162/0/scale = 1.0
+cache/0/161/0/ascent = 0.0
+cache/0/161/0/descent = 0.0
+cache/0/161/0/underline_position = 0.0
+cache/0/161/0/underline_thickness = 0.0
+cache/0/161/0/scale = 1.0
+cache/0/159/0/ascent = 0.0
+cache/0/159/0/descent = 0.0
+cache/0/159/0/underline_position = 0.0
+cache/0/159/0/underline_thickness = 0.0
+cache/0/159/0/scale = 1.0
+cache/0/158/0/ascent = 0.0
+cache/0/158/0/descent = 0.0
+cache/0/158/0/underline_position = 0.0
+cache/0/158/0/underline_thickness = 0.0
+cache/0/158/0/scale = 1.0
+cache/0/157/0/ascent = 0.0
+cache/0/157/0/descent = 0.0
+cache/0/157/0/underline_position = 0.0
+cache/0/157/0/underline_thickness = 0.0
+cache/0/157/0/scale = 1.0
+cache/0/156/0/ascent = 0.0
+cache/0/156/0/descent = 0.0
+cache/0/156/0/underline_position = 0.0
+cache/0/156/0/underline_thickness = 0.0
+cache/0/156/0/scale = 1.0
+cache/0/155/0/ascent = 0.0
+cache/0/155/0/descent = 0.0
+cache/0/155/0/underline_position = 0.0
+cache/0/155/0/underline_thickness = 0.0
+cache/0/155/0/scale = 1.0
+cache/0/154/0/ascent = 0.0
+cache/0/154/0/descent = 0.0
+cache/0/154/0/underline_position = 0.0
+cache/0/154/0/underline_thickness = 0.0
+cache/0/154/0/scale = 1.0
+cache/0/153/0/ascent = 0.0
+cache/0/153/0/descent = 0.0
+cache/0/153/0/underline_position = 0.0
+cache/0/153/0/underline_thickness = 0.0
+cache/0/153/0/scale = 1.0
+cache/0/152/0/ascent = 0.0
+cache/0/152/0/descent = 0.0
+cache/0/152/0/underline_position = 0.0
+cache/0/152/0/underline_thickness = 0.0
+cache/0/152/0/scale = 1.0
+cache/0/151/0/ascent = 0.0
+cache/0/151/0/descent = 0.0
+cache/0/151/0/underline_position = 0.0
+cache/0/151/0/underline_thickness = 0.0
+cache/0/151/0/scale = 1.0
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_67xxr"]
 resource_name = "Yellow"
@@ -2662,227 +2877,6 @@ _data = {
 &"spin_hologram": SubResource("Animation_l5ika")
 }
 
-[sub_resource type="Animation" id="Animation_ja6ch"]
-length = 0.001
-tracks/0/type = "bezier"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Spin_Box-DELETE:rotation:y")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"handle_modes": PackedInt32Array(0),
-"points": PackedFloat32Array(0, -0.25, 0, 0.25, 0),
-"times": PackedFloat32Array(0)
-}
-tracks/1/type = "bezier"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Spin_Box-DELETE/Addtl/Color:mesh:material:emission:a")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"handle_modes": PackedInt32Array(0),
-"points": PackedFloat32Array(1, -0.25, 0, 0.25, 0),
-"times": PackedFloat32Array(0)
-}
-tracks/2/type = "bezier"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Spin_Box-DELETE/Addtl/Color:mesh:material:emission:b")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"handle_modes": PackedInt32Array(0),
-"points": PackedFloat32Array(0.0021566427, -0.25, 0, 0.25, 0),
-"times": PackedFloat32Array(0)
-}
-tracks/3/type = "bezier"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("Spin_Box-DELETE/Addtl/Color:mesh:material:emission:g")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"handle_modes": PackedInt32Array(0),
-"points": PackedFloat32Array(0.20459503, -0.25, 0, 0.25, 0),
-"times": PackedFloat32Array(0)
-}
-tracks/4/type = "bezier"
-tracks/4/imported = false
-tracks/4/enabled = true
-tracks/4/path = NodePath("Spin_Box-DELETE/Addtl/Color:mesh:material:emission:r")
-tracks/4/interp = 1
-tracks/4/loop_wrap = true
-tracks/4/keys = {
-"handle_modes": PackedInt32Array(0),
-"points": PackedFloat32Array(0, -0.25, 0, 0.25, 0),
-"times": PackedFloat32Array(0)
-}
-tracks/5/type = "value"
-tracks/5/imported = false
-tracks/5/enabled = true
-tracks/5/path = NodePath("Spin_Box-DELETE/Addtl/Force_Text:visible")
-tracks/5/interp = 1
-tracks/5/loop_wrap = true
-tracks/5/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [true]
-}
-tracks/6/type = "value"
-tracks/6/imported = false
-tracks/6/enabled = true
-tracks/6/path = NodePath("Spin_Box-DELETE/Addtl/Mayhem_Text:visible")
-tracks/6/interp = 1
-tracks/6/loop_wrap = true
-tracks/6/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [false]
-}
-tracks/7/type = "value"
-tracks/7/imported = false
-tracks/7/enabled = true
-tracks/7/path = NodePath("Spin_Box-DELETE/Force_Data:visible")
-tracks/7/interp = 1
-tracks/7/loop_wrap = true
-tracks/7/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [true]
-}
-tracks/8/type = "value"
-tracks/8/imported = false
-tracks/8/enabled = true
-tracks/8/path = NodePath("Spin_Box-DELETE/Mayhem_Data:visible")
-tracks/8/interp = 1
-tracks/8/loop_wrap = true
-tracks/8/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [false]
-}
-
-[sub_resource type="Animation" id="Animation_bj344"]
-resource_name = "spin"
-length = 5.0
-loop_mode = 1
-step = 0.025
-tracks/0/type = "bezier"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Spin_Box-DELETE:rotation:y")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"handle_modes": PackedInt32Array(0, 0, 0, 0, 0, 0, 0),
-"points": PackedFloat32Array(0, -0.25, 0, 0.25, 0, 0, -0.041666668, -0.009090257, 0.058333337, 0.01272636, 0.4, -0.016666671, -0.021816617, 0, 0, -3.1415927, -0.108333334, 0.54541546, 0, 0, -3.1415927, -0.041666668, 0, 0, 0, -2.742, -0.083333336, -0.021816611, 0, 0, -6.2831855, -0.083333336, 0.5454154, 0, 0),
-"times": PackedFloat32Array(0, 1.7, 2, 2.5, 4.2, 4.5, 5)
-}
-tracks/1/type = "bezier"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Spin_Box-DELETE/Addtl/Color:mesh:material:emission:a")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"handle_modes": PackedInt32Array(0, 0, 0, 0, 0),
-"points": PackedFloat32Array(1, -0.25, 0, 0.25, 0, 1, -0.30416667, 0, 0, 0, 1, -0.008333325, 0, 0, 0, 1, -0.3291667, 0, 0, 0, 1, -0.25, 0, 0.25, 0),
-"times": PackedFloat32Array(0, 2.3, 2.35, 4.825, 4.875)
-}
-tracks/2/type = "bezier"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Spin_Box-DELETE/Addtl/Color:mesh:material:emission:b")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"handle_modes": PackedInt32Array(0, 0, 0, 0, 0),
-"points": PackedFloat32Array(0.0021566427, -0.25, 0, 0.25, 0, 0.0021566427, -0.30416667, 0, 0, 0, 0.008914248, -0.008333325, -0.0011262676, 0, 0, 0.008914248, -0.3291667, 0, 0, 0, 0.0021566427, -0.25, 0, 0.25, 0),
-"times": PackedFloat32Array(0, 2.3, 2.35, 4.825, 4.875)
-}
-tracks/3/type = "bezier"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("Spin_Box-DELETE/Addtl/Color:mesh:material:emission:g")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"handle_modes": PackedInt32Array(0, 0, 0, 0, 0),
-"points": PackedFloat32Array(0.20459503, -0.25, 0, 0.25, 0, 0.20459503, -0.30416667, 0, 0, 0, 0, -0.008333325, 0.034099173, 0, 0, 0, -0.3291667, 0, 0, 0, 0.20459503, -0.25, 0, 0.25, 0),
-"times": PackedFloat32Array(0, 2.3, 2.35, 4.825, 4.875)
-}
-tracks/4/type = "bezier"
-tracks/4/imported = false
-tracks/4/enabled = true
-tracks/4/path = NodePath("Spin_Box-DELETE/Addtl/Color:mesh:material:emission:r")
-tracks/4/interp = 1
-tracks/4/loop_wrap = true
-tracks/4/keys = {
-"handle_modes": PackedInt32Array(0, 0, 0, 0, 0),
-"points": PackedFloat32Array(0, -0.25, 0, 0.25, 0, 0, -0.30416667, 0, 0, 0, 0.33198425, -0.008333325, -0.05533071, 0, 0, 0.33198425, -0.3291667, 0, 0, 0, 0, -0.25, 0, 0.25, 0),
-"times": PackedFloat32Array(0, 2.3, 2.35, 4.825, 4.875)
-}
-tracks/5/type = "value"
-tracks/5/imported = false
-tracks/5/enabled = true
-tracks/5/path = NodePath("Spin_Box-DELETE/Addtl/Force_Text:visible")
-tracks/5/interp = 1
-tracks/5/loop_wrap = true
-tracks/5/keys = {
-"times": PackedFloat32Array(0, 2.3249998, 4.85),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 1,
-"values": [true, false, true]
-}
-tracks/6/type = "value"
-tracks/6/imported = false
-tracks/6/enabled = true
-tracks/6/path = NodePath("Spin_Box-DELETE/Addtl/Mayhem_Text:visible")
-tracks/6/interp = 1
-tracks/6/loop_wrap = true
-tracks/6/keys = {
-"times": PackedFloat32Array(0, 2.3249998, 4.85),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 1,
-"values": [false, true, false]
-}
-tracks/7/type = "value"
-tracks/7/imported = false
-tracks/7/enabled = true
-tracks/7/path = NodePath("Spin_Box-DELETE/Force_Data:visible")
-tracks/7/interp = 1
-tracks/7/loop_wrap = true
-tracks/7/keys = {
-"times": PackedFloat32Array(0, 2.3249998, 4.85),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 1,
-"values": [true, false, true]
-}
-tracks/8/type = "value"
-tracks/8/imported = false
-tracks/8/enabled = true
-tracks/8/path = NodePath("Spin_Box-DELETE/Mayhem_Data:visible")
-tracks/8/interp = 1
-tracks/8/loop_wrap = true
-tracks/8/keys = {
-"times": PackedFloat32Array(0, 2.3249998, 4.85),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 1,
-"values": [false, true, false]
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_1amol"]
-_data = {
-&"RESET": SubResource("Animation_ja6ch"),
-&"spin": SubResource("Animation_bj344")
-}
-
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_a4na6"]
 resource_name = "Material.003"
 cull_mode = 2
@@ -3702,163 +3696,37 @@ rings = 16
 cap_top = false
 cap_bottom = false
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_njh5b"]
-transparency = 1
-blend_mode = 3
-no_depth_test = true
-albedo_color = Color(0, 0, 0, 0.654902)
-emission_enabled = true
-emission = Color(1, 0.3372549, 0, 1)
-emission_energy_multiplier = 12.0
+[sub_resource type="FontVariation" id="FontVariation_8d6ws"]
+base_font = ExtResource("3_s7cmo")
+spacing_glyph = 25
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_k44yu"]
-material = SubResource("StandardMaterial3D_njh5b")
-size = Vector2(1.4, 0.5)
+[sub_resource type="FontVariation" id="FontVariation_dpu46"]
+base_font = ExtResource("3_s7cmo")
+spacing_glyph = 25
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gssec"]
-transparency = 1
-no_depth_test = true
-albedo_color = Color(0.1728327, 0.17283267, 0.17283267, 1)
-metallic = 1.0
-roughness = 0.44
-emission_enabled = true
-emission = Color(0.6901961, 0.28235295, 0.8235294, 1)
-emission_energy_multiplier = 20.0
+[sub_resource type="FontVariation" id="FontVariation_njh5b"]
+base_font = ExtResource("5_8d6ws")
+spacing_glyph = 60
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_bj344"]
-material = SubResource("StandardMaterial3D_gssec")
-size = Vector2(1.4, 0.5)
+[sub_resource type="FontVariation" id="FontVariation_k44yu"]
+base_font = ExtResource("5_8d6ws")
+spacing_glyph = 58
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ja6ch"]
-transparency = 1
-blend_mode = 3
-no_depth_test = true
-albedo_color = Color(0, 0, 0, 0.654902)
-metallic = 1.0
-roughness = 0.44
-emission_enabled = true
-emission = Color(1, 0.3372549, 0, 1)
-emission_energy_multiplier = 12.0
+[sub_resource type="FontVariation" id="FontVariation_bj344"]
+base_font = ExtResource("5_8d6ws")
+spacing_glyph = 60
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_1amol"]
-material = SubResource("StandardMaterial3D_ja6ch")
-size = Vector2(1.4, 0.5)
+[sub_resource type="FontVariation" id="FontVariation_s7cmo"]
+base_font = ExtResource("5_8d6ws")
+spacing_glyph = 58
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_f14fn"]
-transparency = 1
-blend_mode = 3
-no_depth_test = true
-albedo_color = Color(0, 0, 0, 0.654902)
-metallic = 1.0
-roughness = 0.44
-emission_enabled = true
-emission = Color(1, 0.3372549, 0, 1)
-emission_energy_multiplier = 12.0
+[sub_resource type="FontVariation" id="FontVariation_ja6ch"]
+base_font = ExtResource("5_8d6ws")
+spacing_glyph = 60
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_rlhfq"]
-material = SubResource("StandardMaterial3D_f14fn")
-size = Vector2(1.4, 0.5)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yciqh"]
-transparency = 1
-blend_mode = 4
-no_depth_test = true
-albedo_color = Color(0, 0, 0, 0.654902)
-metallic = 1.0
-roughness = 0.44
-emission_enabled = true
-emission = Color(1, 0.3372549, 0, 1)
-emission_energy_multiplier = 12.0
-
-[sub_resource type="PlaneMesh" id="PlaneMesh_sv71j"]
-material = SubResource("StandardMaterial3D_yciqh")
-size = Vector2(1.25, 0.4)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_12cn7"]
-transparency = 1
-blend_mode = 3
-no_depth_test = true
-albedo_color = Color(0, 0, 0, 0.654902)
-metallic = 1.0
-roughness = 0.44
-emission_enabled = true
-emission = Color(1, 0.3372549, 0, 1)
-emission_energy_multiplier = 12.0
-
-[sub_resource type="PlaneMesh" id="PlaneMesh_x00vi"]
-material = SubResource("StandardMaterial3D_12cn7")
-size = Vector2(1.25, 0.4)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_42ejm"]
-transparency = 1
-blend_mode = 3
-no_depth_test = true
-albedo_color = Color(0, 0, 0, 0.654902)
-metallic = 1.0
-roughness = 0.44
-emission_enabled = true
-emission = Color(1, 0.3372549, 0, 1)
-emission_energy_multiplier = 12.0
-
-[sub_resource type="PlaneMesh" id="PlaneMesh_a081e"]
-material = SubResource("StandardMaterial3D_42ejm")
-size = Vector2(1.25, 0.4)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_g31vf"]
-transparency = 1
-blend_mode = 3
-no_depth_test = true
-albedo_color = Color(0, 0, 0, 0.654902)
-metallic = 1.0
-roughness = 0.44
-emission_enabled = true
-emission = Color(1, 0.3372549, 0, 1)
-emission_energy_multiplier = 12.0
-
-[sub_resource type="PlaneMesh" id="PlaneMesh_gg8mx"]
-material = SubResource("StandardMaterial3D_g31vf")
-size = Vector2(1.25, 0.4)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_n01wu"]
-transparency = 1
-blend_mode = 3
-no_depth_test = true
-albedo_color = Color(0, 0, 0, 0.654902)
-metallic = 1.0
-roughness = 0.44
-emission_enabled = true
-emission = Color(1, 0.3372549, 0, 1)
-emission_energy_multiplier = 12.0
-
-[sub_resource type="PlaneMesh" id="PlaneMesh_sb1ko"]
-material = SubResource("StandardMaterial3D_n01wu")
-size = Vector2(1.25, 0.4)
-
-[sub_resource type="PlaneMesh" id="PlaneMesh_t05xm"]
-material = SubResource("StandardMaterial3D_yciqh")
-size = Vector2(1.25, 0.6)
-
-[sub_resource type="PlaneMesh" id="PlaneMesh_l5ika"]
-material = SubResource("StandardMaterial3D_12cn7")
-size = Vector2(1.25, 0.6)
-
-[sub_resource type="PlaneMesh" id="PlaneMesh_6dr8p"]
-material = SubResource("StandardMaterial3D_42ejm")
-size = Vector2(1.25, 0.6)
-
-[sub_resource type="PlaneMesh" id="PlaneMesh_4qq6n"]
-size = Vector2(1.4, 0.5)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_s7cmo"]
-transparency = 1
-blend_mode = 3
-no_depth_test = true
-albedo_color = Color(0, 0, 0, 0.654902)
-metallic = 1.0
-roughness = 0.44
-emission_enabled = true
-emission = Color(1, 0.3372549, 0, 1)
-emission_energy_multiplier = 12.0
+[sub_resource type="FontVariation" id="FontVariation_1amol"]
+base_font = ExtResource("5_8d6ws")
+spacing_glyph = 58
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8d6ws"]
 transparency = 1
@@ -4124,14 +3992,33 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_uaxt7")
 
+[sub_resource type="FontVariation" id="FontVariation_f14fn"]
+base_font = ExtResource("9_njh5b")
+spacing_glyph = -20
+spacing_bottom = 21
+
+[sub_resource type="FontVariation" id="FontVariation_sv71j"]
+base_font = ExtResource("9_dpu46")
+variation_embolden = 0.45
+spacing_glyph = 15
+
+[sub_resource type="FontVariation" id="FontVariation_12cn7"]
+base_font = ExtResource("11_k44yu")
+variation_embolden = 1.66
+
+[sub_resource type="FontVariation" id="FontVariation_x00vi"]
+base_font = ExtResource("9_dpu46")
+variation_embolden = 0.45
+spacing_glyph = 5
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_q4hlv"]
 no_depth_test = true
-albedo_color = Color(0, 0, 0, 1)
+albedo_color = Color(1, 0.8666667, 0, 1)
 metallic = 1.0
 roughness = 0.0
 emission_enabled = true
-emission = Color(1, 0.44705883, 0, 1)
-emission_energy_multiplier = 1.96
+emission = Color(1, 0.29803923, 0, 1)
+emission_energy_multiplier = 0.75
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_txe7i"]
 _surfaces = [{
@@ -4167,36 +4054,67 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_txe7i")
 
-[sub_resource type="Curve" id="Curve_8d6ws"]
-_data = [Vector2(1, 0.5845248), 0.0, 0.0, 0, 0]
-point_count = 1
+[sub_resource type="BoxMesh" id="BoxMesh_q4hlv"]
+size = Vector3(0.2, 0.45, 0)
 
-[sub_resource type="Curve" id="Curve_dpu46"]
-_data = [Vector2(1, 0.5389683), 0.0, 0.0, 0, 0]
-point_count = 1
-
-[sub_resource type="CurveXYZTexture" id="CurveXYZTexture_t05xm"]
-curve_x = SubResource("Curve_8d6ws")
-curve_y = SubResource("Curve_dpu46")
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_61m6q"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_s7cmo"]
 render_priority = 0
-shader = ExtResource("5_l5ika")
-shader_parameter/tex = SubResource("CurveXYZTexture_t05xm")
-shader_parameter/mask_type = 1
-shader_parameter/curve = 0.214000010165
-shader_parameter/color_offset = 0.17600003211000004
-shader_parameter/mask_brightness = 1.0
-shader_parameter/aspect = 0.75
+shader = ExtResource("8_61m6q")
+shader_parameter/progress = 0.250000011875
+shader_parameter/fill_color = Color(2.2794397, 0, 0, 1)
+shader_parameter/empty_color = Color(0.27058825, 0, 0.007843138, 0.69803923)
+shader_parameter/fill_opacity = 0.9
+shader_parameter/empty_opacity = 0.50000002375
+
+[sub_resource type="FontVariation" id="FontVariation_42ejm"]
+base_font = ExtResource("3_s7cmo")
+variation_embolden = -0.56
+spacing_top = 20
+
+[sub_resource type="FontVariation" id="FontVariation_rlhfq"]
+base_font = ExtResource("14_gssec")
+
+[sub_resource type="FontVariation" id="FontVariation_gssec"]
+base_font = ExtResource("14_gssec")
+variation_embolden = -0.83
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_n43i2"]
+no_depth_test = true
+albedo_color = Color(1, 0, 0, 1)
+emission_enabled = true
+emission = Color(1, 0, 0, 1)
+emission_energy_multiplier = 0.92
+stencil_flags = 2
+stencil_reference = 6
+
+[sub_resource type="BoxMesh" id="BoxMesh_5hhbi"]
+material = SubResource("StandardMaterial3D_n43i2")
+size = Vector3(0.21, 0.07, 0.01)
+
+[sub_resource type="BoxMesh" id="BoxMesh_bj344"]
+material = SubResource("StandardMaterial3D_n43i2")
+size = Vector3(0.21, 0.07, 0.02)
 
 [sub_resource type="BoxMesh" id="BoxMesh_k44yu"]
-material = SubResource("ShaderMaterial_61m6q")
-size = Vector3(0.065, 0.01, 0.01)
+material = SubResource("StandardMaterial3D_n43i2")
+size = Vector3(0.45, 0.07, 0.01)
+
+[sub_resource type="BoxMesh" id="BoxMesh_1amol"]
+material = SubResource("StandardMaterial3D_n43i2")
+size = Vector3(0.452, 0.07, -0.018)
+
+[sub_resource type="TorusMesh" id="TorusMesh_61m6q"]
+lightmap_size_hint = Vector2i(3, 2)
+flip_faces = true
+inner_radius = 0.052
+outer_radius = 0.044
+rings = 1000
+ring_segments = 100
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_3nktn"]
 render_priority = 0
 shader = ExtResource("4_t05xm")
-shader_parameter/fill_amount = 0.946000044935
+shader_parameter/fill_amount = 0.50000002375
 shader_parameter/fill_color = Color(0, 0.93333334, 0, 1)
 shader_parameter/empty_color = Color(0, 0.27450982, 0, 1)
 shader_parameter/start_angle = 0.0250000011875
@@ -4204,14 +4122,26 @@ shader_parameter/clockwise = false
 shader_parameter/glow_intensity = 15.0000007125
 shader_parameter/smooth_transition = 0.0
 
-[sub_resource type="TorusMesh" id="TorusMesh_61m6q"]
-lightmap_size_hint = Vector2i(3, 2)
-material = SubResource("ShaderMaterial_3nktn")
-flip_faces = true
-inner_radius = 0.052
-outer_radius = 0.044
-rings = 1000
-ring_segments = 100
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_k44yu"]
+no_depth_test = true
+albedo_color = Color(0, 0.7607843, 0, 1)
+emission_enabled = true
+emission = Color(0.4117647, 0.7529412, 0, 1)
+
+[sub_resource type="TorusMesh" id="TorusMesh_gssec"]
+material = SubResource("StandardMaterial3D_k44yu")
+inner_radius = 0.706
+outer_radius = 0.73
+
+[sub_resource type="TorusMesh" id="TorusMesh_5hhbi"]
+material = SubResource("StandardMaterial3D_k44yu")
+inner_radius = 0.725
+outer_radius = 0.72
+
+[sub_resource type="TorusMesh" id="TorusMesh_s7cmo"]
+material = SubResource("StandardMaterial3D_k44yu")
+inner_radius = 0.745
+outer_radius = 0.74
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_4qq6n"]
 render_priority = 0
@@ -4228,7 +4158,7 @@ shader_parameter/scanline_intensity = 0.2530000120175
 shader_parameter/scanline_density = 3.3510001591725
 shader_parameter/scanline_thickness = 0.51300002110762
 shader_parameter/scanline_spacing = 4.0
-shader_parameter/scanline_angle = 1.5690000745275001
+shader_parameter/scanline_angle = 1.5690000745275
 shader_parameter/scanline_speed = -2.96
 shader_parameter/enable_glitch = false
 shader_parameter/glitch_intensity = 0.5
@@ -4458,11 +4388,6 @@ libraries = {
 }
 movie_quit_on_finish = true
 
-[node name="Spin_Animation" type="AnimationPlayer" parent="."]
-libraries = {
-&"": SubResource("AnimationLibrary_1amol")
-}
-
 [node name="Multitool" type="Node3D" parent="."]
 transform = Transform3D(-0.246939, -0.00781692, -0.022926, -0.00958782, 0.249578, 0.00654291, 0.0378046, 0.0122367, -0.148093, 0.00330822, -0.113262, -0.384817)
 
@@ -4681,7 +4606,7 @@ mesh = SubResource("BoxMesh_t05xm")
 skeleton = NodePath("../../Object_Inventory")
 
 [node name="Square_Glow" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.24612574, -0.006317363, 0.0433845, 0.008626057, 0.24953316, -0.012601346, -0.04298506, 0.013903012, 0.24588409, -0.003, 0, -0.533)
+transform = Transform3D(0.24612574, -0.0063173594, 0.043384507, 0.008626054, 0.24953316, -0.012601349, -0.042985067, 0.013903013, 0.24588409, -0.003, 0, -0.533)
 cast_shadow = 0
 mesh = SubResource("BoxMesh_njh5b")
 skeleton = NodePath("../Holo_Glow")
@@ -4721,62 +4646,50 @@ outline_size = 5
 [node name="Dashboard" type="Node3D" parent="."]
 transform = Transform3D(0.58288205, 0, 0.142296, 0, 0.6, 0, -0.142296, 0, 0.58288205, -0.4003819, 0.27699238, 0.13641)
 
-[node name="All_Data" type="Node3D" parent="Dashboard"]
+[node name="Data" type="Node3D" parent="Dashboard"]
 transform = Transform3D(0.25, 0, 3.72529e-09, 0, 0.25, 0, -3.72529e-09, 0, 0.25, -0.539668, 0.328448, -0.107834)
 
-[node name="Component" type="Node3D" parent="Dashboard/All_Data"]
-transform = Transform3D(0.9991274, -0.009412922, 0.040693343, 0.016512455, 0.983922, -0.17782876, -0.038365364, 0.17834541, 0.9832198, 1.451, 1.423, -6.962)
+[node name="Component" type="Node3D" parent="Dashboard/Data"]
+transform = Transform3D(0.9991273, -0.009412897, 0.040693484, 0.016512455, 0.983922, -0.17782882, -0.03836536, 0.1783454, 0.9832198, 1.451, 1.395, -6.962)
 
-[node name="Component_Name" type="Label3D" parent="Dashboard/All_Data/Component"]
-transform = Transform3D(0.009978685, -0.00010552752, -0.0006443267, 6.975909e-05, 0.009984343, -0.00055487663, 0.0006491719, 0.00054920034, 0.009963752, -0.088027954, -0.17462659, -0.03811741)
-pixel_size = 0.0475
+[node name="Component_Name" type="Label3D" parent="Dashboard/Data/Component"]
+transform = Transform3D(0.009978685, -0.00010552734, -0.0006443214, 6.975908e-05, 0.009984343, -0.0005548776, 0.0006491719, 0.0005492003, 0.009963752, -0.088027954, -0.17462659, -0.03811741)
+pixel_size = 0.05
 no_depth_test = true
 alpha_antialiasing_mode = 2
 render_priority = 10
 outline_render_priority = 10
 modulate = Color(1, 0.19607843, 0, 1)
 outline_modulate = Color(1, 0.19607843, 0, 1)
-text = "COMPONENT"
+text = "High-pressure air hose"
+font = SubResource("FontVariation_8d6ws")
 font_size = 1375
 outline_size = 106
 uppercase = true
 line_spacing = -650.0
 
-[node name="Component_Name_Back" type="Label3D" parent="Dashboard/All_Data/Component"]
+[node name="Component_Name_Back" type="Label3D" parent="Dashboard/Data/Component"]
 transform = Transform3D(0.009978679, -0.00010552758, -0.000644326, 6.975903e-05, 0.009984342, -0.00055487687, 0.0006491726, 0.0005492002, 0.00996375, -0.06269574, -0.1745944, -0.014702797)
 transparency = 0.78
-pixel_size = 0.0475
+pixel_size = 0.05
 no_depth_test = true
 alpha_antialiasing_mode = 2
 render_priority = 10
 outline_render_priority = 10
 modulate = Color(0, 1, 0, 1)
 outline_modulate = Color(0, 1, 0, 1)
-text = "COMPONENT"
+text = "High-pressure air hose"
+font = SubResource("FontVariation_dpu46")
 font_size = 1370
 outline_size = 105
 uppercase = true
 line_spacing = -650.0
 
-[node name="Comp_Stars" type="Label3D" parent="Dashboard/All_Data/Component"]
-transform = Transform3D(0.71941215, -0.0012490898, -0.02906242, -0.0021168925, 0.71518123, -0.0831404, 0.029012471, 0.083157934, 0.7145927, -0.032314062, -1.7868414, -0.32063103)
-visible = false
-pixel_size = 0.0029
-alpha_antialiasing_mode = 1
-alpha_antialiasing_edge = 1.0
-render_priority = 10
-outline_render_priority = 10
-modulate = Color(18.892157, 18.892157, 0, 1)
-outline_modulate = Color(0, 0, 0, 0)
-text = "★★★★★"
-font_size = 190
-
-[node name="Machine" type="Node3D" parent="Dashboard/All_Data"]
+[node name="Information" type="Node3D" parent="Dashboard/Data"]
 transform = Transform3D(0.38595238, -0.006063025, 0, 0.006062941, 0.38594708, -0.0020210822, 3.1745778e-05, 0.0020208328, 0.3859947, 2.238, 0.756, -7.152)
 
-[node name="Origin" type="Label3D" parent="Dashboard/All_Data/Machine"]
-transform = Transform3D(0.24999961, -0.00043633292, -1.0997887e-09, 0.00042970382, 0.24620155, -0.043412045, 7.5769494e-05, 0.043411978, 0.24620193, -8.96, -0.474, 0.011)
-pixel_size = 0.004
+[node name="Origin" type="Label3D" parent="Dashboard/Data/Information"]
+transform = Transform3D(0.24999961, -0.00043633292, -1.0997887e-09, 0.00042970382, 0.24620155, -0.043412045, 7.5769494e-05, 0.043411978, 0.24620193, -9.001, -0.474, 0.011)
 no_depth_test = true
 alpha_antialiasing_mode = 1
 alpha_antialiasing_edge = 1.0
@@ -4784,15 +4697,14 @@ render_priority = 10
 outline_render_priority = 10
 modulate = Color(1, 1, 0.39607844, 1)
 outline_modulate = Color(1, 1, 0.39607844, 1)
-text = "O r i g i n"
-font = SubResource("FontFile_t05xm")
+text = "ORIGIN"
+font = SubResource("FontVariation_njh5b")
 font_size = 400
-outline_size = 30
+outline_size = 0
 horizontal_alignment = 2
 
-[node name="Machine_Name" type="Label3D" parent="Dashboard/All_Data/Machine"]
-transform = Transform3D(0.2749996, -0.0004799653, 0, 0.00047267354, 0.2708217, -0.04775325, 8.33451e-05, 0.047753178, 0.27082214, -0.006, -0.454, 0.011)
-pixel_size = 0.004
+[node name="Machine_Name" type="Label3D" parent="Dashboard/Data/Information"]
+transform = Transform3D(0.2749996, -0.0004799653, 0, 0.00047267354, 0.2708217, -0.04775325, 8.33451e-05, 0.047753178, 0.27082214, -8.906, -0.454, 0.011)
 no_depth_test = true
 alpha_antialiasing_mode = 1
 alpha_antialiasing_edge = 1.0
@@ -4800,15 +4712,15 @@ render_priority = 10
 outline_render_priority = 10
 modulate = Color(1, 1, 0.39607844, 1)
 outline_modulate = Color(1, 1, 0.39607844, 1)
-text = "Machine"
-font = SubResource("FontFile_t05xm")
+text = "................APPLIANCE NAME"
+font = SubResource("FontVariation_k44yu")
 font_size = 400
-outline_size = 30
-horizontal_alignment = 2
+outline_size = 0
+horizontal_alignment = 0
+uppercase = true
 
-[node name="Class" type="Label3D" parent="Dashboard/All_Data/Machine"]
-transform = Transform3D(0.24999963, -0.00043633208, 3.7252903e-09, 0.0004297035, 0.24620156, -0.043412045, 7.5772405e-05, 0.043411978, 0.24620195, -9.125, -1.109, 0.011)
-pixel_size = 0.004
+[node name="Class" type="Label3D" parent="Dashboard/Data/Information"]
+transform = Transform3D(0.24999963, -0.00043633208, 3.7252903e-09, 0.0004297035, 0.24620156, -0.043412045, 7.5772405e-05, 0.043411978, 0.24620195, -9.283, -1.109, 0.011)
 no_depth_test = true
 alpha_antialiasing_mode = 1
 alpha_antialiasing_edge = 1.0
@@ -4816,15 +4728,14 @@ render_priority = 10
 outline_render_priority = 10
 modulate = Color(1, 1, 0.39607844, 1)
 outline_modulate = Color(1, 1, 0.39607844, 1)
-text = "C l a s s"
-font = SubResource("FontFile_t05xm")
+text = "CLASS"
+font = SubResource("FontVariation_bj344")
 font_size = 400
-outline_size = 30
+outline_size = 0
 horizontal_alignment = 2
 
-[node name="Machine_Class" type="Label3D" parent="Dashboard/All_Data/Machine"]
-transform = Transform3D(0.2749996, -0.00047996533, -7.522084e-13, 0.00047267356, 0.2708217, -0.04775325, 8.33451e-05, 0.047753178, 0.27082214, -0.014, -1.069, 0.011)
-pixel_size = 0.004
+[node name="Class_Data" type="Label3D" parent="Dashboard/Data/Information"]
+transform = Transform3D(0.2749996, -0.00047996533, -7.522084e-13, 0.00047267356, 0.2708217, -0.04775325, 8.33451e-05, 0.047753178, 0.27082214, -9.214, -1.069, 0.011)
 no_depth_test = true
 alpha_antialiasing_mode = 1
 alpha_antialiasing_edge = 1.0
@@ -4832,15 +4743,15 @@ render_priority = 10
 outline_render_priority = 10
 modulate = Color(1, 1, 0.39607844, 1)
 outline_modulate = Color(1, 1, 0.39607844, 1)
-text = "  . . . . . . . . . . . . . . . . . . . . . . . . . . . . K i t c h e n"
-font = SubResource("FontFile_t05xm")
+text = "...........................TYPE"
+font = SubResource("FontVariation_s7cmo")
 font_size = 400
-outline_size = 30
-horizontal_alignment = 2
+outline_size = 0
+horizontal_alignment = 0
+uppercase = true
 
-[node name="System" type="Label3D" parent="Dashboard/All_Data/Machine"]
-transform = Transform3D(0.24999961, -0.0004363338, -9.51272e-10, 0.00042970473, 0.24620155, -0.043412045, 7.576951e-05, 0.043411978, 0.24620193, -8.655, -1.704, 0.011)
-pixel_size = 0.004
+[node name="System" type="Label3D" parent="Dashboard/Data/Information"]
+transform = Transform3D(0.24999961, -0.0004363338, -9.51272e-10, 0.00042970473, 0.24620155, -0.043412045, 7.576951e-05, 0.043411978, 0.24620193, -8.988, -1.704, 0.011)
 no_depth_test = true
 alpha_antialiasing_mode = 1
 alpha_antialiasing_edge = 1.0
@@ -4848,30 +4759,14 @@ render_priority = 10
 outline_render_priority = 10
 modulate = Color(1, 1, 0.39607844, 1)
 outline_modulate = Color(1, 1, 0.39607844, 1)
-text = "S y s t e m"
-font = SubResource("FontFile_t05xm")
+text = "SYSTEM"
+font = SubResource("FontVariation_ja6ch")
 font_size = 400
-outline_size = 30
+outline_size = 0
 horizontal_alignment = 2
 
-[node name="Machine_Desc" type="Label3D" parent="Dashboard/All_Data/Machine"]
-transform = Transform3D(0.28290996, -0.0010864047, -0.0070541613, 0.00026264094, 0.28109753, -0.03275824, 0.0071324953, 0.032741275, 0.28100914, -0.074, -1.836, 0.623)
-visible = false
-pixel_size = 0.004
-no_depth_test = true
-alpha_antialiasing_mode = 2
-render_priority = 10
-outline_render_priority = 10
-modulate = Color(1, 1, 0.39607844, 1)
-outline_modulate = Color(1, 1, 0.39607844, 1)
-text = "Machine Description"
-font_size = 400
-outline_size = 30
-horizontal_alignment = 2
-
-[node name="System_data" type="Label3D" parent="Dashboard/All_Data/Machine"]
-transform = Transform3D(0.2749996, -0.00047996533, -7.522084e-13, 0.00047267356, 0.2708217, -0.04775325, 8.33451e-05, 0.047753178, 0.27082214, -0.014, -1.669, 0.011)
-pixel_size = 0.004
+[node name="System_Data" type="Label3D" parent="Dashboard/Data/Information"]
+transform = Transform3D(0.2749996, -0.00047996533, -7.522084e-13, 0.00047267356, 0.2708217, -0.04775325, 8.33451e-05, 0.047753178, 0.27082214, -8.916, -1.669, 0.011)
 no_depth_test = true
 alpha_antialiasing_mode = 1
 alpha_antialiasing_edge = 1.0
@@ -4879,550 +4774,12 @@ render_priority = 10
 outline_render_priority = 10
 modulate = Color(1, 1, 0.39607844, 1)
 outline_modulate = Color(1, 1, 0.39607844, 1)
-text = " . . . . . . . . . . . . . . [ E n g i n e ] [ N o z z l e ]"
-font = SubResource("FontFile_t05xm")
+text = "..........[ENGINE][COMBUSTION]"
+font = SubResource("FontVariation_1amol")
 font_size = 400
-outline_size = 30
-horizontal_alignment = 2
-
-[node name="System" type="Node3D" parent="Dashboard/All_Data"]
-transform = Transform3D(0.9993758, 0, 0.035370767, 0, 1, 0, -0.035370767, 0, 0.9993758, -0.023, -0.761, -6.697)
-visible = false
-
-[node name="Engine" type="MeshInstance3D" parent="Dashboard/All_Data/System"]
-transform = Transform3D(0.99923396, -0.032806084, 0.021494646, 0.020840587, -0.02014905, -0.99958014, 0.033225477, 0.99926245, -0.01944995, -1.032, -0.402, 0)
-cast_shadow = 0
-mesh = SubResource("PlaneMesh_k44yu")
-skeleton = NodePath("../../../..")
-
-[node name="Data" type="Label3D" parent="Dashboard/All_Data/System/Engine"]
-transform = Transform3D(0.01, -2.3283064e-10, -2.7939677e-09, 2.561137e-09, 0.00034899206, 0.00999391, -1.7462298e-10, -0.00999391, 0.00034899195, 0.023301125, 0.017380834, -0.015919924)
-pixel_size = 0.1
-alpha_antialiasing_mode = 1
-alpha_antialiasing_edge = 1.0
-render_priority = 10
-outline_render_priority = 10
-modulate = Color(0, 0, 0, 1)
-text = "ENGINE"
-font_size = 230
-outline_size = 20
-
-[node name="Propellent" type="MeshInstance3D" parent="Dashboard/All_Data/System"]
-transform = Transform3D(0.99923396, -0.032806233, 0.021494653, 0.020840576, -0.020148989, -0.9995809, 0.033225536, 0.99926245, -0.019449934, -1.021, -0.961, 0)
-cast_shadow = 0
-mesh = SubResource("PlaneMesh_bj344")
-skeleton = NodePath("../../../..")
-
-[node name="Data" type="Label3D" parent="Dashboard/All_Data/System/Propellent"]
-transform = Transform3D(0.01, -2.1827873e-10, -2.7939677e-09, 2.7939677e-09, 0.0003489921, 0.00999391, -2.0372681e-10, -0.009993911, 0.00034899203, 0.010910034, 0.014783382, -0.016125917)
-pixel_size = 0.1
-alpha_antialiasing_mode = 1
-alpha_antialiasing_edge = 1.0
-render_priority = 10
-outline_render_priority = 10
-modulate = Color(0, 0, 0, 1)
-text = "PROPELLENT"
-font_size = 210
-outline_size = 20
-
-[node name="Structure" type="MeshInstance3D" parent="Dashboard/All_Data/System"]
-transform = Transform3D(0.99923396, -0.03280592, 0.02149466, 0.02084058, -0.020148976, -0.99958104, 0.033225402, 0.9992625, -0.019449895, 0.414, -0.382, 0)
-cast_shadow = 0
-mesh = SubResource("PlaneMesh_1amol")
-skeleton = NodePath("../../../..")
-
-[node name="Data" type="Label3D" parent="Dashboard/All_Data/System/Structure"]
-transform = Transform3D(0.01, -2.1827873e-10, -2.7939677e-09, 2.7939677e-09, 0.0003489921, 0.00999391, -2.0372681e-10, -0.009993911, 0.00034899203, 0.010910034, 0.014783382, -0.016125917)
-pixel_size = 0.1
-alpha_antialiasing_mode = 1
-alpha_antialiasing_edge = 1.0
-render_priority = 10
-outline_render_priority = 10
-modulate = Color(0, 0, 0, 1)
-text = "STRUCTURE"
-font_size = 220
-outline_size = 20
-
-[node name="Operation" type="MeshInstance3D" parent="Dashboard/All_Data/System"]
-transform = Transform3D(0.9992336, -0.032806084, 0.02149465, 0.020840563, -0.020149, -0.99958044, 0.033225536, 0.99926245, -0.019449847, 0.434, -0.937, 0)
-cast_shadow = 0
-mesh = SubResource("PlaneMesh_rlhfq")
-skeleton = NodePath("../../../..")
-
-[node name="Data" type="Label3D" parent="Dashboard/All_Data/System/Operation"]
-transform = Transform3D(0.01, -2.1827873e-10, -2.7939677e-09, 2.7939677e-09, 0.0003489921, 0.00999391, -2.0372681e-10, -0.009993911, 0.00034899203, 0.010910034, 0.014783382, -0.016125917)
-pixel_size = 0.1
-alpha_antialiasing_mode = 1
-alpha_antialiasing_edge = 1.0
-render_priority = 10
-outline_render_priority = 10
-modulate = Color(0, 0, 0, 1)
-text = "OPERATION"
-font_size = 225
-outline_size = 20
-
-[node name="Subsystem" type="Node3D" parent="Dashboard/All_Data/System"]
-transform = Transform3D(0.99999994, 0, 0, 0, 1.0000002, 0, 0, 0, 0.99999994, 2.3692992, -0.0046179295, 0.7320709)
-
-[node name="Engine" type="Node3D" parent="Dashboard/All_Data/System/Subsystem"]
-transform = Transform3D(1.0000001, 0, 1.4901161e-08, 0, 1, 0, -1.4901161e-08, 0, 1.0000001, 0, 0, 0)
-visible = false
-
-[node name="Combustion" type="MeshInstance3D" parent="Dashboard/All_Data/System/Subsystem/Engine"]
-transform = Transform3D(0.9993106, -0.03289111, 0.017375031, 0.016689094, -0.021017462, -0.99963975, 0.033244357, 0.9992429, -0.020453885, 0.3540454, -0.30548334, 0)
-cast_shadow = 0
-mesh = SubResource("PlaneMesh_sv71j")
-skeleton = NodePath("../../../../../..")
-
-[node name="Name" type="Label3D" parent="Dashboard/All_Data/System/Subsystem/Engine/Combustion"]
-transform = Transform3D(0.01, -2.3283064e-10, -2.7939677e-09, 2.561137e-09, 0.00034899206, 0.00999391, -1.7462298e-10, -0.00999391, 0.00034899195, 0.023301125, 0.017380834, -0.015919924)
-pixel_size = 0.15
-alpha_antialiasing_mode = 1
-alpha_antialiasing_edge = 1.0
-render_priority = 10
-outline_render_priority = 10
-modulate = Color(0, 0, 0, 1)
-text = "COMBUSTION"
-font_size = 100
-outline_size = 5
+outline_size = 0
+horizontal_alignment = 0
 uppercase = true
-
-[node name="Ignition" type="MeshInstance3D" parent="Dashboard/All_Data/System/Subsystem/Engine"]
-transform = Transform3D(0.9993103, -0.03289117, 0.017376138, 0.01668996, -0.021018717, -0.99964046, 0.033244357, 0.9992427, -0.020455483, 0.3634243, -0.762545, 0)
-cast_shadow = 0
-mesh = SubResource("PlaneMesh_x00vi")
-skeleton = NodePath("../../../../../..")
-
-[node name="Name" type="Label3D" parent="Dashboard/All_Data/System/Subsystem/Engine/Ignition"]
-transform = Transform3D(0.01, -2.3283064e-10, -2.7939677e-09, 2.561137e-09, 0.00034899206, 0.00999391, -1.7462298e-10, -0.00999391, 0.00034899195, 0.023301125, 0.017380834, -0.015919924)
-pixel_size = 0.15
-alpha_antialiasing_mode = 1
-alpha_antialiasing_edge = 1.0
-render_priority = 10
-outline_render_priority = 10
-modulate = Color(0, 0, 0, 1)
-text = "IGNITION"
-font_size = 100
-outline_size = 5
-uppercase = true
-
-[node name="Nozzle" type="MeshInstance3D" parent="Dashboard/All_Data/System/Subsystem/Engine"]
-transform = Transform3D(0.99931, -0.032890767, 0.01737614, 0.016690016, -0.021018699, -0.99964076, 0.033244297, 0.99924284, -0.02045538, 0.37503862, -1.2231913, 0)
-cast_shadow = 0
-mesh = SubResource("PlaneMesh_a081e")
-skeleton = NodePath("../../../../../..")
-
-[node name="Name" type="Label3D" parent="Dashboard/All_Data/System/Subsystem/Engine/Nozzle"]
-transform = Transform3D(0.01, -2.3283064e-10, -2.7939677e-09, 2.561137e-09, 0.00034899206, 0.00999391, -1.7462298e-10, -0.00999391, 0.00034899195, 0.023301125, 0.017380834, -0.015919924)
-pixel_size = 0.15
-alpha_antialiasing_mode = 1
-alpha_antialiasing_edge = 1.0
-render_priority = 10
-outline_render_priority = 10
-modulate = Color(0, 0, 0, 1)
-text = "NOZZLE"
-font_size = 100
-outline_size = 5
-uppercase = true
-
-[node name="Turbopump" type="MeshInstance3D" parent="Dashboard/All_Data/System/Subsystem/Engine"]
-transform = Transform3D(0.9993093, -0.032890856, 0.01737615, 0.01668996, -0.021018438, -0.99964017, 0.033244565, 0.9992418, -0.020455386, 0.38415098, -1.6826484, 0)
-cast_shadow = 0
-mesh = SubResource("PlaneMesh_gg8mx")
-skeleton = NodePath("../../../../../..")
-
-[node name="Name" type="Label3D" parent="Dashboard/All_Data/System/Subsystem/Engine/Turbopump"]
-transform = Transform3D(0.01, -2.3283064e-10, -2.7939677e-09, 2.561137e-09, 0.00034899206, 0.00999391, -1.7462298e-10, -0.00999391, 0.00034899195, 0.023301125, 0.017380834, -0.015919924)
-pixel_size = 0.15
-alpha_antialiasing_mode = 1
-alpha_antialiasing_edge = 1.0
-render_priority = 10
-outline_render_priority = 10
-modulate = Color(0, 0, 0, 1)
-text = "TURBOPUMP"
-font_size = 100
-outline_size = 5
-uppercase = true
-
-[node name="Injection" type="MeshInstance3D" parent="Dashboard/All_Data/System/Subsystem/Engine"]
-transform = Transform3D(0.9993093, -0.03289111, 0.017376129, 0.016689949, -0.021018261, -0.99963987, 0.033244446, 0.99924254, -0.020455265, 0.40165854, -2.140767, 0)
-cast_shadow = 0
-mesh = SubResource("PlaneMesh_sb1ko")
-skeleton = NodePath("../../../../../..")
-
-[node name="Name" type="Label3D" parent="Dashboard/All_Data/System/Subsystem/Engine/Injection"]
-transform = Transform3D(0.01, -2.4738256e-10, -3.0267984e-09, 2.7939677e-09, 0.000348992, 0.009993908, -1.5279511e-10, -0.00999391, 0.00034899186, -0.009525299, 0.010499954, -0.016444191)
-pixel_size = 0.15
-alpha_antialiasing_mode = 1
-alpha_antialiasing_edge = 1.0
-render_priority = 10
-outline_render_priority = 10
-modulate = Color(0, 0, 0, 1)
-text = "INJECTION"
-font_size = 100
-outline_size = 5
-uppercase = true
-
-[node name="Propellent" type="Node3D" parent="Dashboard/All_Data/System/Subsystem"]
-transform = Transform3D(1.0000001, 0, 1.4901161e-08, 0, 1, 0, -1.4901161e-08, 0, 1.0000001, 0, 0, 0)
-
-[node name="Storage" type="MeshInstance3D" parent="Dashboard/All_Data/System/Subsystem/Propellent"]
-transform = Transform3D(0.9993106, -0.03289111, 0.017375031, 0.016689094, -0.021017462, -0.99963975, 0.033244357, 0.9992429, -0.020453885, 0.3540454, -0.30548334, 0)
-cast_shadow = 0
-mesh = SubResource("PlaneMesh_sv71j")
-skeleton = NodePath("../../../../../..")
-
-[node name="Name" type="Label3D" parent="Dashboard/All_Data/System/Subsystem/Propellent/Storage"]
-transform = Transform3D(0.01, -2.3283064e-10, -2.7939677e-09, 2.561137e-09, 0.00034899206, 0.00999391, -1.7462298e-10, -0.00999391, 0.00034899195, 0.023301125, 0.017380834, -0.015919924)
-pixel_size = 0.15
-alpha_antialiasing_mode = 1
-alpha_antialiasing_edge = 1.0
-render_priority = 10
-outline_render_priority = 10
-modulate = Color(0, 0, 0, 1)
-text = "STORAGE"
-font_size = 100
-outline_size = 5
-uppercase = true
-
-[node name="Delivery" type="MeshInstance3D" parent="Dashboard/All_Data/System/Subsystem/Propellent"]
-transform = Transform3D(0.9993103, -0.03289117, 0.017376138, 0.01668996, -0.021018717, -0.99964046, 0.033244357, 0.9992427, -0.020455483, 0.3634243, -0.762545, 0)
-cast_shadow = 0
-mesh = SubResource("PlaneMesh_x00vi")
-skeleton = NodePath("../../../../../..")
-
-[node name="Name" type="Label3D" parent="Dashboard/All_Data/System/Subsystem/Propellent/Delivery"]
-transform = Transform3D(0.01, -2.3283064e-10, -2.7939677e-09, 2.561137e-09, 0.00034899206, 0.00999391, -1.7462298e-10, -0.00999391, 0.00034899195, 0.023301125, 0.017380834, -0.015919924)
-pixel_size = 0.15
-alpha_antialiasing_mode = 1
-alpha_antialiasing_edge = 1.0
-render_priority = 10
-outline_render_priority = 10
-modulate = Color(0, 0, 0, 1)
-text = "DELIVERY"
-font_size = 100
-outline_size = 5
-uppercase = true
-
-[node name="Regulation" type="MeshInstance3D" parent="Dashboard/All_Data/System/Subsystem/Propellent"]
-transform = Transform3D(0.99931, -0.032890767, 0.01737614, 0.016690016, -0.021018699, -0.99964076, 0.033244297, 0.99924284, -0.02045538, 0.37503862, -1.2231913, 0)
-cast_shadow = 0
-mesh = SubResource("PlaneMesh_a081e")
-skeleton = NodePath("../../../../../..")
-
-[node name="Name" type="Label3D" parent="Dashboard/All_Data/System/Subsystem/Propellent/Regulation"]
-transform = Transform3D(0.01, -2.3283064e-10, -2.7939677e-09, 2.561137e-09, 0.00034899206, 0.00999391, -1.7462298e-10, -0.00999391, 0.00034899195, 0.023301125, 0.017380834, -0.015919924)
-pixel_size = 0.15
-alpha_antialiasing_mode = 1
-alpha_antialiasing_edge = 1.0
-render_priority = 10
-outline_render_priority = 10
-modulate = Color(0, 0, 0, 1)
-text = "REGULATION"
-font_size = 100
-outline_size = 5
-uppercase = true
-
-[node name="Ventilation" type="MeshInstance3D" parent="Dashboard/All_Data/System/Subsystem/Propellent"]
-transform = Transform3D(0.9993093, -0.032890856, 0.01737615, 0.01668996, -0.021018438, -0.99964017, 0.033244565, 0.9992418, -0.020455386, 0.38415098, -1.6826484, 0)
-cast_shadow = 0
-mesh = SubResource("PlaneMesh_gg8mx")
-skeleton = NodePath("../../../../../..")
-
-[node name="Name" type="Label3D" parent="Dashboard/All_Data/System/Subsystem/Propellent/Ventilation"]
-transform = Transform3D(0.01, -2.3283064e-10, -2.7939677e-09, 2.561137e-09, 0.00034899206, 0.00999391, -1.7462298e-10, -0.00999391, 0.00034899195, 0.023301125, 0.017380834, -0.015919924)
-pixel_size = 0.15
-alpha_antialiasing_mode = 1
-alpha_antialiasing_edge = 1.0
-render_priority = 10
-outline_render_priority = 10
-modulate = Color(0, 0, 0, 1)
-text = "VENTILATION"
-font_size = 100
-outline_size = 5
-uppercase = true
-
-[node name="Conditioning" type="MeshInstance3D" parent="Dashboard/All_Data/System/Subsystem/Propellent"]
-transform = Transform3D(0.9993093, -0.03289111, 0.017376129, 0.016689949, -0.021018261, -0.99963987, 0.033244446, 0.99924254, -0.020455265, 0.40165854, -2.140767, 0)
-cast_shadow = 0
-mesh = SubResource("PlaneMesh_sb1ko")
-skeleton = NodePath("../../../../../..")
-
-[node name="Name" type="Label3D" parent="Dashboard/All_Data/System/Subsystem/Propellent/Conditioning"]
-transform = Transform3D(0.01, -2.4738256e-10, -3.0267984e-09, 2.7939677e-09, 0.000348992, 0.009993908, -1.5279511e-10, -0.00999391, 0.00034899186, -0.009525299, 0.010499954, -0.016444191)
-pixel_size = 0.15
-alpha_antialiasing_mode = 1
-alpha_antialiasing_edge = 1.0
-render_priority = 10
-outline_render_priority = 10
-modulate = Color(0, 0, 0, 1)
-text = "CONDITIONING"
-font_size = 100
-outline_size = 5
-uppercase = true
-
-[node name="Structure" type="Node3D" parent="Dashboard/All_Data/System/Subsystem"]
-transform = Transform3D(1.0000001, 0, 1.4901161e-08, 0, 1, 0, -1.4901161e-08, 0, 1.0000001, 0, -0.5, 0)
-visible = false
-
-[node name="Body" type="MeshInstance3D" parent="Dashboard/All_Data/System/Subsystem/Structure"]
-transform = Transform3D(0.9993105, -0.03289111, 0.017375031, 0.016689094, -0.021017462, -0.99963975, 0.03324434, 0.9992429, -0.020453885, 0.3539996, -0.034933686, 0)
-cast_shadow = 0
-mesh = SubResource("PlaneMesh_t05xm")
-skeleton = NodePath("../../../../../..")
-
-[node name="Name" type="Label3D" parent="Dashboard/All_Data/System/Subsystem/Structure/Body"]
-transform = Transform3D(0.01, -2.3283064e-10, -2.7939677e-09, 2.561137e-09, 0.00034899206, 0.00999391, -1.7462298e-10, -0.00999391, 0.00034899195, 0.023301125, 0.017380834, -0.015919924)
-pixel_size = 0.15
-alpha_antialiasing_mode = 1
-alpha_antialiasing_edge = 1.0
-render_priority = 10
-outline_render_priority = 10
-modulate = Color(0, 0, 0, 1)
-text = "Body"
-font_size = 125
-outline_size = 5
-uppercase = true
-
-[node name="Fins" type="MeshInstance3D" parent="Dashboard/All_Data/System/Subsystem/Structure"]
-transform = Transform3D(0.9993102, -0.03289114, 0.017376138, 0.01668996, -0.021018717, -0.99964046, 0.03324434, 0.99924266, -0.020455483, 0.3634243, -0.69808567, 0)
-cast_shadow = 0
-mesh = SubResource("PlaneMesh_l5ika")
-skeleton = NodePath("../../../../../..")
-
-[node name="Name" type="Label3D" parent="Dashboard/All_Data/System/Subsystem/Structure/Fins"]
-transform = Transform3D(0.01, -2.3283064e-10, -2.7939677e-09, 2.561137e-09, 0.00034899206, 0.00999391, -1.7462298e-10, -0.00999391, 0.00034899195, 0.023301125, 0.017380834, -0.015919924)
-pixel_size = 0.15
-alpha_antialiasing_mode = 1
-alpha_antialiasing_edge = 1.0
-render_priority = 10
-outline_render_priority = 10
-modulate = Color(0, 0, 0, 1)
-text = "FINS"
-font_size = 125
-outline_size = 5
-uppercase = true
-
-[node name="Shield" type="MeshInstance3D" parent="Dashboard/All_Data/System/Subsystem/Structure"]
-transform = Transform3D(0.99931, -0.032890737, 0.01737614, 0.016690016, -0.021018699, -0.99964076, 0.033244327, 0.99924284, -0.020455383, 0.38499975, -1.3731396, 0)
-cast_shadow = 0
-mesh = SubResource("PlaneMesh_6dr8p")
-skeleton = NodePath("../../../../../..")
-
-[node name="Name" type="Label3D" parent="Dashboard/All_Data/System/Subsystem/Structure/Shield"]
-transform = Transform3D(0.01, -2.3283064e-10, -2.7939677e-09, 2.561137e-09, 0.00034899206, 0.00999391, -1.7462298e-10, -0.00999391, 0.00034899195, 0.023301125, 0.017380834, -0.015919924)
-pixel_size = 0.15
-alpha_antialiasing_mode = 1
-alpha_antialiasing_edge = 1.0
-render_priority = 10
-outline_render_priority = 10
-modulate = Color(0, 0, 0, 1)
-text = "SHIELD"
-font_size = 125
-outline_size = 5
-uppercase = true
-
-[node name="Operation" type="Node3D" parent="Dashboard/All_Data/System/Subsystem"]
-transform = Transform3D(1.0000001, 0, 1.4901161e-08, 0, 1, 0, -1.4901161e-08, 0, 1.0000001, 0, -0.5, 0)
-visible = false
-
-[node name="Power" type="MeshInstance3D" parent="Dashboard/All_Data/System/Subsystem/Operation"]
-transform = Transform3D(0.9993105, -0.03289111, 0.017375031, 0.016689094, -0.021017462, -0.99963975, 0.03324434, 0.9992429, -0.020453885, 0.3539996, -0.034933686, 0)
-cast_shadow = 0
-mesh = SubResource("PlaneMesh_t05xm")
-skeleton = NodePath("../../../../../..")
-
-[node name="Name" type="Label3D" parent="Dashboard/All_Data/System/Subsystem/Operation/Power"]
-transform = Transform3D(0.01, -2.3283064e-10, -2.7939677e-09, 2.561137e-09, 0.00034899206, 0.00999391, -1.7462298e-10, -0.00999391, 0.00034899195, 0.023301125, 0.017380834, -0.015919924)
-pixel_size = 0.15
-alpha_antialiasing_mode = 1
-alpha_antialiasing_edge = 1.0
-render_priority = 10
-outline_render_priority = 10
-modulate = Color(0, 0, 0, 1)
-text = "POWER"
-font_size = 125
-outline_size = 5
-uppercase = true
-
-[node name="Sensor" type="MeshInstance3D" parent="Dashboard/All_Data/System/Subsystem/Operation"]
-transform = Transform3D(0.9993102, -0.03289114, 0.017376138, 0.01668996, -0.021018717, -0.99964046, 0.03324434, 0.99924266, -0.020455483, 0.3634243, -0.69808567, 0)
-cast_shadow = 0
-mesh = SubResource("PlaneMesh_l5ika")
-skeleton = NodePath("../../../../../..")
-
-[node name="Name" type="Label3D" parent="Dashboard/All_Data/System/Subsystem/Operation/Sensor"]
-transform = Transform3D(0.01, -2.3283064e-10, -2.7939677e-09, 2.561137e-09, 0.00034899206, 0.00999391, -1.7462298e-10, -0.00999391, 0.00034899195, 0.023301125, 0.017380834, -0.015919924)
-pixel_size = 0.15
-alpha_antialiasing_mode = 1
-alpha_antialiasing_edge = 1.0
-render_priority = 10
-outline_render_priority = 10
-modulate = Color(0, 0, 0, 1)
-text = "SENSOR"
-font_size = 125
-outline_size = 5
-uppercase = true
-
-[node name="Console" type="MeshInstance3D" parent="Dashboard/All_Data/System/Subsystem/Operation"]
-transform = Transform3D(0.99931, -0.032890737, 0.01737614, 0.016690016, -0.021018699, -0.99964076, 0.033244327, 0.99924284, -0.020455383, 0.38499975, -1.3731396, 0)
-cast_shadow = 0
-mesh = SubResource("PlaneMesh_6dr8p")
-skeleton = NodePath("../../../../../..")
-
-[node name="Name" type="Label3D" parent="Dashboard/All_Data/System/Subsystem/Operation/Console"]
-transform = Transform3D(0.01, -2.3283064e-10, -2.7939677e-09, 2.561137e-09, 0.00034899206, 0.00999391, -1.7462298e-10, -0.00999391, 0.00034899195, 0.023301125, 0.017380834, -0.015919924)
-pixel_size = 0.15
-alpha_antialiasing_mode = 1
-alpha_antialiasing_edge = 1.0
-render_priority = 10
-outline_render_priority = 10
-modulate = Color(0, 0, 0, 1)
-text = "CONSOLE"
-font_size = 125
-outline_size = 5
-uppercase = true
-
-[node name="Module" type="Node3D" parent="Dashboard/All_Data"]
-transform = Transform3D(0.9998407, -0.01788009, 0.0025093853, 0.017452467, 0.9926896, 0.11942856, -0.004626453, -0.11936568, 0.99284357, 2.361992, -0.71000004, -7.238065)
-
-[node name="Screen" type="MeshInstance3D" parent="Dashboard/All_Data/Module"]
-transform = Transform3D(0.9992777, -0.03777522, 0.004135918, -0.001143992, -0.13869196, -0.9903352, 0.03798379, 0.9896149, -0.13863498, -1.620645, 0.3872459, -0.22839737)
-visible = false
-cast_shadow = 0
-mesh = SubResource("PlaneMesh_4qq6n")
-skeleton = NodePath("../../../..")
-surface_material_override/0 = SubResource("StandardMaterial3D_s7cmo")
-
-[node name="Title" type="Label3D" parent="Dashboard/All_Data/Module/Screen"]
-transform = Transform3D(0.01, -2.6193447e-10, -2.7939677e-09, 2.7939677e-09, 0.00034899206, 0.00999391, -2.0372681e-10, -0.00999391, 0.00034899206, -0.009288311, 0.011615515, -0.18301308)
-pixel_size = 0.15
-alpha_antialiasing_mode = 1
-alpha_antialiasing_edge = 1.0
-render_priority = 10
-outline_render_priority = 10
-modulate = Color(0, 0, 0, 1)
-text = "Module Type"
-font_size = 60
-outline_size = 5
-
-[node name="Type" type="Label3D" parent="Dashboard/All_Data/Module/Screen"]
-transform = Transform3D(0.01, -3.783498e-10, -3.0267984e-09, 3.0267984e-09, 0.00034899206, 0.009993909, -2.0372681e-10, -0.00999391, 0.00034899206, -0.018161774, 0.023331523, 0.16647196)
-pixel_size = 0.15
-alpha_antialiasing_mode = 1
-alpha_antialiasing_edge = 1.0
-render_priority = 10
-outline_render_priority = 10
-modulate = Color(0, 0, 0, 1)
-text = "String"
-font_size = 60
-outline_size = 5
-
-[node name="Data" type="Label3D" parent="Dashboard/All_Data/Module/Screen"]
-transform = Transform3D(0.01, -2.3283064e-10, -2.7939677e-09, 2.561137e-09, 0.00034899206, 0.00999391, -1.7462298e-10, -0.00999391, 0.00034899195, 0.023301125, 0.017380834, -0.015919924)
-pixel_size = 0.15
-alpha_antialiasing_mode = 1
-alpha_antialiasing_edge = 1.0
-render_priority = 10
-outline_render_priority = 10
-modulate = Color(0, 0, 0, 1)
-text = "*String*"
-font_size = 100
-outline_size = 5
-
-[node name="Power" type="Node3D" parent="Dashboard/All_Data"]
-transform = Transform3D(1.0000001, 0, 1.4901161e-08, 0, 1, 0, -1.4901161e-08, 0, 1.0000001, 3.955442, -0.72275996, -8.361115)
-visible = false
-
-[node name="Screen" type="MeshInstance3D" parent="Dashboard/All_Data/Power"]
-transform = Transform3D(1, 5.96046e-08, -1.86265e-08, 0, -0.139173, -0.990268, -5.96046e-08, 0.990268, -0.139173, -0.551838, 0.215596, 0.0340638)
-cast_shadow = 0
-mesh = SubResource("PlaneMesh_4qq6n")
-skeleton = NodePath("../../../..")
-surface_material_override/0 = SubResource("StandardMaterial3D_s7cmo")
-
-[node name="Title" type="Label3D" parent="Dashboard/All_Data/Power/Screen"]
-transform = Transform3D(0.01, -2.03727e-10, -4.65661e-10, 2.32831e-10, 0.00034899, 0.00999391, -2.91038e-11, -0.00999391, 0.00034899, 0.00071311, 0.011616, -0.183013)
-pixel_size = 0.15
-alpha_antialiasing_mode = 1
-alpha_antialiasing_edge = 1.0
-render_priority = 10
-outline_render_priority = 10
-modulate = Color(0, 0, 0, 1)
-text = "Power Level"
-font_size = 60
-outline_size = 5
-
-[node name="Type" type="Label3D" parent="Dashboard/All_Data/Power/Screen"]
-transform = Transform3D(0.01, -2.32831e-10, -6.98492e-10, 4.65661e-10, 0.00034899, 0.00999391, -8.73115e-11, -0.00999391, 0.00034899, -0.0181623, 0.0233316, 0.166472)
-pixel_size = 0.15
-alpha_antialiasing_mode = 1
-alpha_antialiasing_edge = 1.0
-render_priority = 10
-outline_render_priority = 10
-modulate = Color(0, 0, 0, 1)
-text = "Power Bar"
-font_size = 60
-outline_size = 5
-
-[node name="Data" type="Label3D" parent="Dashboard/All_Data/Power/Screen"]
-transform = Transform3D(0.01, -2.0372681e-10, -4.656613e-10, 0, 0.00034899008, 0.00999391, 0, -0.00999391, 0.0003489902, 0.02330041, 0.017380953, -0.015920043)
-pixel_size = 0.15
-alpha_antialiasing_mode = 1
-alpha_antialiasing_edge = 1.0
-render_priority = 10
-outline_render_priority = 10
-modulate = Color(0, 0, 0, 1)
-text = "*Power Bar*"
-font_size = 100
-outline_size = 5
-
-[node name="Lift" type="Node3D" parent="Dashboard/All_Data"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.18845, -1.243, -1.194)
-visible = false
-
-[node name="Screen" type="MeshInstance3D" parent="Dashboard/All_Data/Lift"]
-transform = Transform3D(1, 5.96046e-08, -1.86265e-08, 0, -0.139173, -0.990268, -5.96046e-08, 0.990268, -0.139173, -0.551838, 0.215596, 0.0340638)
-cast_shadow = 0
-mesh = SubResource("PlaneMesh_4qq6n")
-skeleton = NodePath("../../../..")
-surface_material_override/0 = SubResource("StandardMaterial3D_s7cmo")
-
-[node name="Title" type="Label3D" parent="Dashboard/All_Data/Lift/Screen"]
-transform = Transform3D(0.01, -2.03727e-10, -4.65661e-10, 2.32831e-10, 0.00034899, 0.00999391, -2.91038e-11, -0.00999391, 0.00034899, 0.000712633, 0.0116156, -0.183013)
-pixel_size = 0.15
-alpha_antialiasing_mode = 1
-alpha_antialiasing_edge = 1.0
-render_priority = 10
-outline_render_priority = 10
-modulate = Color(0, 0, 0, 1)
-text = "Lift Factor"
-font_size = 60
-outline_size = 5
-
-[node name="Type" type="Label3D" parent="Dashboard/All_Data/Lift/Screen"]
-transform = Transform3D(0.01, -2.32831e-10, -6.98492e-10, 4.65661e-10, 0.00034899, 0.00999391, -8.73115e-11, -0.00999391, 0.00034899, -0.0181618, 0.0233316, 0.166472)
-pixel_size = 0.15
-alpha_antialiasing_mode = 1
-alpha_antialiasing_edge = 1.0
-render_priority = 10
-outline_render_priority = 10
-modulate = Color(0, 0, 0, 1)
-text = "Multiplier"
-font_size = 60
-outline_size = 5
-
-[node name="Data" type="Label3D" parent="Dashboard/All_Data/Lift/Screen"]
-transform = Transform3D(0.01, -1.45519e-10, -2.32831e-10, 0, 0.00034899, 0.00999391, 0, -0.00999391, 0.00034899, 0.0233009, 0.0173808, -0.01592)
-pixel_size = 0.15
-alpha_antialiasing_mode = 1
-alpha_antialiasing_edge = 1.0
-render_priority = 10
-outline_render_priority = 10
-modulate = Color(0, 0, 0, 1)
-text = "*Multiplier*"
-font_size = 100
-outline_size = 5
 
 [node name="Condition" type="Node3D" parent="Dashboard"]
 transform = Transform3D(1.1258129, -0.0059290957, -0.019651378, 0.005895687, 1.1259829, -0.0019652396, 0.019661428, 0.0018620195, 1.1258268, 0.306, 0.411, -1.662)
@@ -5467,8 +4824,10 @@ mesh = SubResource("BoxMesh_rdnf8")
 transform = Transform3D(0.014279779, -0.10123149, 0.9947608, 0.9998969, 0.0013089795, -0.014220343, 0.0001374251, 0.9948617, 0.101239935, 0.14466071, -0.007970542, 0.014974117)
 mesh = SubResource("BoxMesh_pskw0")
 
-[node name="Text" type="Label3D" parent="Dashboard/Condition"]
-transform = Transform3D(0.007199975, 1.2566335e-05, 0, -1.2529304e-05, 0.0071787518, -0.0005523756, -9.640775e-07, 0.00055237487, 0.007178762, -0.04, -0.08, -0.005)
+[node name="adtl" type="Node3D" parent="Dashboard/Condition"]
+
+[node name="Text" type="Label3D" parent="Dashboard/Condition/adtl"]
+transform = Transform3D(0.0071999757, 1.25663355e-05, 0, -1.252931e-05, 0.0071787513, -0.00055237557, -9.641517e-07, 0.0005523749, 0.007178762, -0.04, -0.077, -0.005)
 pixel_size = 0.15
 no_depth_test = true
 alpha_antialiasing_mode = 1
@@ -5478,29 +4837,33 @@ outline_render_priority = 10
 modulate = Color(1, 0.87058824, 0.2, 1)
 outline_modulate = Color(1, 0.87058824, 0.2, 1)
 text = "C  O  N  D  I  T  I  O  N"
-font = SubResource("FontFile_t05xm")
+font = ExtResource("15_gssec")
 font_size = 30
 outline_size = 3
 uppercase = true
 
-[node name="V1" type="MeshInstance3D" parent="Dashboard/Condition"]
-transform = Transform3D(0.0044178157, -0.16291001, -0.01263405, 0.29487556, 0.0025595226, -0.010408113, 0.0073408973, -0.0047724764, 0.4256854, -0.277, -0.032, 0.137)
+[node name="V1" type="MeshInstance3D" parent="Dashboard/Condition/adtl"]
+transform = Transform3D(0.0044178157, -0.16291001, -0.012634054, 0.29487556, 0.0025595224, -0.010408112, 0.0073408973, -0.004772477, 0.42568544, -0.27700004, -0.032000005, 0.13699996)
 mesh = SubResource("BoxMesh_dpu46")
+skeleton = NodePath("../..")
 
-[node name="V2" type="MeshInstance3D" parent="Dashboard/Condition"]
-transform = Transform3D(0.0046208375, -0.043840375, -0.04593907, 0.29796278, 0.0006911193, -0.0009581853, 0.0009098965, -0.0036801687, 0.5470738, 0.12, -0.028, 0.137)
+[node name="V2" type="MeshInstance3D" parent="Dashboard/Condition/adtl"]
+transform = Transform3D(0.0046208375, -0.04384037, -0.045939058, 0.29796278, 0.0006911193, -0.0009581853, 0.00090989657, -0.0036801677, 0.5470738, 0.120000035, -0.027999938, 0.13699996)
 mesh = SubResource("BoxMesh_dpu46")
+skeleton = NodePath("../..")
 
-[node name="V3" type="MeshInstance3D" parent="Dashboard/Condition"]
-transform = Transform3D(1.2980976, -0.0016770734, -0.022621946, 0, 0.16104123, -0.08055466, 0.07030246, 0.03096627, 0.41770226, -0.081, 0.014, 0.137)
+[node name="V3" type="MeshInstance3D" parent="Dashboard/Condition/adtl"]
+transform = Transform3D(1.2980976, -0.0016770735, -0.022621945, -6.9849193e-10, 0.16104123, -0.08055465, 0.07030246, 0.03096627, 0.41770226, -0.08099994, 0.013999999, 0.13700008)
 mesh = SubResource("BoxMesh_dpu46")
+skeleton = NodePath("../..")
 
-[node name="V4" type="MeshInstance3D" parent="Dashboard/Condition"]
-transform = Transform3D(1.2961005, -0.0016770735, -0.022621948, 0, 0.16104123, -0.08055466, 0.070194304, 0.03096627, 0.41770226, -0.081, -0.074, 0.137)
+[node name="V4" type="MeshInstance3D" parent="Dashboard/Condition/adtl"]
+transform = Transform3D(1.2961005, -0.001677074, -0.022621945, -2.3283064e-10, 0.16104123, -0.08055465, 0.070194304, 0.03096627, 0.41770226, -0.081, -0.074, 0.13700008)
 mesh = SubResource("BoxMesh_dpu46")
+skeleton = NodePath("../..")
 
 [node name="Rating" type="Node3D" parent="Dashboard"]
-transform = Transform3D(1.2823623, -0.010074561, 0.14699234, 0.011318248, 1.1009513, 0.0034313104, -0.19397902, -0.002363128, 0.9719416, -0.587, -0.284, -1.703)
+transform = Transform3D(1.2827177, -0.008169987, 0.14529575, 0.009054639, 1.1009665, 0.0034313104, -0.19173537, -0.0026647828, 0.9721967, -0.587, -0.284, -1.703)
 
 [node name="Stars" type="Node3D" parent="Dashboard/Rating"]
 transform = Transform3D(1.0599854, -0.0055501214, 0, 0.0055501214, 1.0599854, 0, 0, 0, 1.06, 0.01, -0.011, 0)
@@ -5631,16 +4994,16 @@ outline_render_priority = 10
 modulate = Color(1, 0.87058824, 0.2, 1)
 outline_modulate = Color(1, 0.87058824, 0.2, 1)
 text = "R  A  T  I  N  G"
-font = SubResource("FontFile_t05xm")
+font = SubResource("FontVariation_f14fn")
 font_size = 144
 outline_size = 8
 uppercase = true
 
 [node name="Mass" type="Node3D" parent="Dashboard"]
-transform = Transform3D(1.0696551, 0.0013342933, -0.06712723, -0.022537163, 1.2684656, -0.049736653, -0.17431584, -0.15581134, -0.40548268, -0.633, -0.326, -1.703)
+transform = Transform3D(1.0748465, 0.0064995117, -0.053646468, -0.022537163, 1.2684656, -0.049736653, -0.13875541, -0.15568145, -0.4074854, -0.633, -0.326, -1.703)
 
 [node name="Title" type="Label3D" parent="Dashboard/Mass"]
-transform = Transform3D(0.007708997, -2.6909585e-05, 0.002137907, 2.7925213e-05, 0.007999952, 0, -0.002137894, 7.4626887e-06, 0.007709044, -0.066, 0.159, 0.109)
+transform = Transform3D(0.007708997, -2.6909585e-05, 0.002137907, 2.7925213e-05, 0.007999952, 0, -0.002137894, 7.4626887e-06, 0.007709044, -0.066, 0.166, 0.109)
 pixel_size = 0.025
 no_depth_test = true
 alpha_antialiasing_mode = 1
@@ -5649,13 +5012,13 @@ render_priority = 10
 outline_render_priority = 10
 modulate = Color(0, 0, 0, 1)
 text = "MASS"
-font = SubResource("FontFile_t05xm")
-font_size = 145
+font = SubResource("FontVariation_sv71j")
+font_size = 165
 outline_size = 20
 uppercase = true
 
 [node name="Mass" type="Label3D" parent="Dashboard/Mass"]
-transform = Transform3D(0.010971246, -0.0001357848, 0.0007864718, 0.00011518962, 0.012999288, 0, -0.00078642875, 9.733174e-06, 0.010971848, -0.063, 0.069, 0.11)
+transform = Transform3D(0.012966019, -0.00013578481, 0.0009294667, 0.0001361332, 0.012999289, 1.9842433e-12, -0.0009294158, 9.733173e-06, 0.012966729, -0.067, 0.075, 0.11)
 pixel_size = 0.028
 no_depth_test = true
 alpha_antialiasing_mode = 1
@@ -5664,9 +5027,9 @@ render_priority = 10
 outline_render_priority = 10
 modulate = Color(0, 0, 0, 1)
 text = "#"
-font = SubResource("FontFile_t05xm")
+font = SubResource("FontVariation_12cn7")
 font_size = 400
-outline_size = 50
+outline_size = 25
 uppercase = true
 
 [node name="kg" type="Label3D" parent="Dashboard/Mass"]
@@ -5679,8 +5042,8 @@ render_priority = 10
 outline_render_priority = 10
 modulate = Color(0, 0, 0, 1)
 text = "KG"
-font = SubResource("FontFile_t05xm")
-font_size = 145
+font = SubResource("FontVariation_x00vi")
+font_size = 165
 outline_size = 20
 uppercase = true
 
@@ -5689,164 +5052,83 @@ transform = Transform3D(0.144, 0, 0, 0, -1.1758363e-08, -0.145, 0, 0.269, -6.338
 mesh = SubResource("ArrayMesh_o1jae")
 skeleton = NodePath("")
 
-[node name="Scanner" type="Node3D" parent="Dashboard"]
-transform = Transform3D(0.96671706, -0.022741253, -0.076425925, 0.023133133, 0.96971565, 0.004064688, 0.07630823, -0.0058735814, 0.966976, -0.025, -0.331, -1.598)
-visible = false
+[node name="Mayhem" type="MeshInstance3D" parent="Dashboard"]
+transform = Transform3D(0.949958, 0.0033159934, 0.008290209, 0.0033161188, -0.9499942, 8.305164e-08, 0.008290158, 2.885518e-05, -0.9499638, -0.265, -0.04, -1.668)
+mesh = SubResource("BoxMesh_q4hlv")
+surface_material_override/0 = SubResource("ShaderMaterial_s7cmo")
 
-[node name="Bar_D" type="MeshInstance3D" parent="Dashboard/Scanner"]
-transform = Transform3D(-0.34529832, 0.23462325, 0, -0.9384934, -0.08632455, 0, 0, 0, 1.0000007, -0.922, 0, 0)
+[node name="Percentage" type="Label3D" parent="Dashboard/Mayhem"]
+unique_name_in_owner = true
+transform = Transform3D(0.0059962803, -9.471425e-05, -0.00019500674, -4.1060983e-05, -0.006861731, 0.0011859441, -0.00020720136, -0.0013811869, -0.0058783935, 0, -0.277, 0)
+pixel_size = 0.05
+no_depth_test = true
+alpha_antialiasing_mode = 1
+alpha_antialiasing_edge = 1.0
+render_priority = 10
+outline_render_priority = 10
+modulate = Color(0.7294118, 0, 0, 1)
+outline_modulate = Color(1, 0, 0, 1)
+text = "50%"
+font = SubResource("FontVariation_42ejm")
+font_size = 175
+outline_size = 10
+uppercase = true
+
+[node name="Mayhem" type="Label3D" parent="Dashboard/Mayhem"]
+transform = Transform3D(0.0059962803, -9.471425e-05, -0.00019500674, -4.1060983e-05, -0.006861731, 0.001185944, -0.00020720136, -0.0013811868, -0.0058783935, 0, 0.273, -0.005)
+pixel_size = 0.05
+no_depth_test = true
+alpha_antialiasing_mode = 1
+alpha_antialiasing_edge = 1.0
+render_priority = 10
+outline_render_priority = 10
+modulate = Color(1, 0, 0, 1)
+outline_modulate = Color(1, 0, 0, 1)
+text = "M A Y H E M"
+font = SubResource("FontVariation_rlhfq")
+font_size = 165
+outline_size = 0
+uppercase = true
+
+[node name="Meter" type="Label3D" parent="Dashboard/Mayhem"]
+transform = Transform3D(0.004999878, -4.188755e-05, -7.400841e-10, -3.4217486e-05, -0.0058814837, 0.0009882866, -6.900209e-06, -0.0011859151, -0.0049013556, 0, 0.323, -0.005)
+pixel_size = 0.05
+no_depth_test = true
+alpha_antialiasing_mode = 1
+alpha_antialiasing_edge = 1.0
+render_priority = 10
+outline_render_priority = 10
+modulate = Color(1, 0, 0, 1)
+outline_modulate = Color(1, 0, 0, 1)
+text = "M  E  T  E  R"
+font = SubResource("FontVariation_gssec")
+font_size = 175
+outline_size = 0
+uppercase = true
+
+[node name="H1" type="MeshInstance3D" parent="Dashboard/Mayhem"]
+transform = Transform3D(-1.0527737, 0.0052833706, 0.0019395822, -0.008891064, -0.0001337229, -0.22999178, -0.019935459, -0.27894998, 0.00014698942, 0, 0.236, -0.006)
+mesh = SubResource("BoxMesh_5hhbi")
+
+[node name="H2" type="MeshInstance3D" parent="Dashboard/Mayhem"]
+transform = Transform3D(-1.0528059, 0.0053560715, -1.002532e-08, 4.595632e-08, 6.807702e-10, -0.23, -0.020214846, -0.27894863, -7.538072e-10, 0, -0.234, -0.006)
+mesh = SubResource("BoxMesh_bj344")
+
+[node name="V1" type="MeshInstance3D" parent="Dashboard/Mayhem"]
+transform = Transform3D(0.004741676, 0.021021966, -0.22934385, 1.051318, 0.015573612, 0.002007112, 0.05930251, -0.2777707, -0.017244441, 0.111, 0.002, -0.006)
 mesh = SubResource("BoxMesh_k44yu")
 
-[node name="Bar_D2" type="MeshInstance3D" parent="Dashboard/Scanner"]
-transform = Transform3D(-0.34529832, 0.23462322, 0, -0.9384934, -0.08632454, 0, 0, 0, 1.0000006, -0.882, 0, 0)
-mesh = SubResource("BoxMesh_k44yu")
+[node name="V2" type="MeshInstance3D" parent="Dashboard/Mayhem"]
+transform = Transform3D(0.004741676, 0.021021966, -0.22934385, 1.051318, 0.015573612, 0.002007112, 0.05930251, -0.2777707, -0.017244441, -0.112, 0.001, -0.006)
+mesh = SubResource("BoxMesh_1amol")
 
-[node name="Bar_D3" type="MeshInstance3D" parent="Dashboard/Scanner"]
-transform = Transform3D(-0.34529832, 0.23462322, 0, -0.9384934, -0.08632454, 0, 0, 0, 1.0000006, -0.842, 0, 0)
-mesh = SubResource("BoxMesh_k44yu")
-
-[node name="Bar_D4" type="MeshInstance3D" parent="Dashboard/Scanner"]
-transform = Transform3D(-0.34529832, 0.23462322, 0, -0.9384934, -0.08632454, 0, 0, 0, 1.0000006, -0.802, 0, 0)
-mesh = SubResource("BoxMesh_k44yu")
-
-[node name="Bar_D5" type="MeshInstance3D" parent="Dashboard/Scanner"]
-transform = Transform3D(-0.34529832, 0.23462322, 0, -0.9384934, -0.08632454, 0, 0, 0, 1.0000006, -0.762, 0, 0)
-mesh = SubResource("BoxMesh_k44yu")
-
-[node name="Bar_D6" type="MeshInstance3D" parent="Dashboard/Scanner"]
-transform = Transform3D(-0.34529832, 0.23462322, 0, -0.9384934, -0.08632454, 0, 0, 0, 1.0000006, -0.722, 0, 0)
-mesh = SubResource("BoxMesh_k44yu")
-
-[node name="Bar_D7" type="MeshInstance3D" parent="Dashboard/Scanner"]
-transform = Transform3D(-0.34529832, 0.23462322, 0, -0.9384934, -0.08632454, 0, 0, 0, 1.0000006, -0.682, 0, 0)
-mesh = SubResource("BoxMesh_k44yu")
-
-[node name="Bar_D8" type="MeshInstance3D" parent="Dashboard/Scanner"]
-transform = Transform3D(-0.34529832, 0.23462322, 0, -0.9384934, -0.08632454, 0, 0, 0, 1.0000006, -0.642, 0, 0)
-mesh = SubResource("BoxMesh_k44yu")
-
-[node name="Bar_D9" type="MeshInstance3D" parent="Dashboard/Scanner"]
-transform = Transform3D(-0.34529832, 0.23462322, 0, -0.9384934, -0.08632454, 0, 0, 0, 1.0000006, -0.602, 0, 0)
-mesh = SubResource("BoxMesh_k44yu")
-
-[node name="Bar_D10" type="MeshInstance3D" parent="Dashboard/Scanner"]
-transform = Transform3D(-0.34529832, 0.23462322, 0, -0.9384934, -0.08632454, 0, 0, 0, 1.0000006, -0.562, 0, 0)
-mesh = SubResource("BoxMesh_k44yu")
-
-[node name="Bar_D11" type="MeshInstance3D" parent="Dashboard/Scanner"]
-transform = Transform3D(-0.34529832, 0.23462322, 0, -0.9384934, -0.08632454, 0, 0, 0, 1.0000006, -0.522, 0, 0)
-mesh = SubResource("BoxMesh_k44yu")
-
-[node name="Bar_D12" type="MeshInstance3D" parent="Dashboard/Scanner"]
-transform = Transform3D(-0.34529832, 0.23462322, 0, -0.9384934, -0.08632454, 0, 0, 0, 1.0000006, -0.482, 0, 0)
-mesh = SubResource("BoxMesh_k44yu")
-
-[node name="Bar_D13" type="MeshInstance3D" parent="Dashboard/Scanner"]
-transform = Transform3D(-0.34529832, 0.23462325, 0, -0.9384934, -0.08632455, 0, 0, 0, 1.0000007, -0.442, 0, 0)
-mesh = SubResource("BoxMesh_k44yu")
-
-[node name="Bar_D14" type="MeshInstance3D" parent="Dashboard/Scanner"]
-transform = Transform3D(-0.34529832, 0.23462321, 0, -0.9384934, -0.086324535, 0, 0, 0, 1.0000006, -0.402, 0, 0)
-mesh = SubResource("BoxMesh_k44yu")
-
-[node name="Bar_D15" type="MeshInstance3D" parent="Dashboard/Scanner"]
-transform = Transform3D(-0.34529832, 0.23462321, 0, -0.9384934, -0.086324535, 0, 0, 0, 1.0000006, -0.362, 0, 0)
-mesh = SubResource("BoxMesh_k44yu")
-
-[node name="Bar_D16" type="MeshInstance3D" parent="Dashboard/Scanner"]
-transform = Transform3D(-0.34529832, 0.23462321, 0, -0.9384934, -0.086324535, 0, 0, 0, 1.0000006, -0.322, 0, 0)
-mesh = SubResource("BoxMesh_k44yu")
-
-[node name="Bar_D17" type="MeshInstance3D" parent="Dashboard/Scanner"]
-transform = Transform3D(-0.34529832, 0.23462321, 0, -0.9384934, -0.086324535, 0, 0, 0, 1.0000006, -0.282, 0, 0)
-mesh = SubResource("BoxMesh_k44yu")
-
-[node name="Bar_D18" type="MeshInstance3D" parent="Dashboard/Scanner"]
-transform = Transform3D(-0.34529832, 0.23462321, 0, -0.9384934, -0.086324535, 0, 0, 0, 1.0000006, -0.242, 0, 0)
-mesh = SubResource("BoxMesh_k44yu")
-
-[node name="Bar_D19" type="MeshInstance3D" parent="Dashboard/Scanner"]
-transform = Transform3D(-0.34529832, 0.23462321, 0, -0.9384934, -0.086324535, 0, 0, 0, 1.0000006, -0.202, 0, 0)
-mesh = SubResource("BoxMesh_k44yu")
-
-[node name="Bar_D20" type="MeshInstance3D" parent="Dashboard/Scanner"]
-transform = Transform3D(-0.34529832, 0.23462321, 0, -0.9384934, -0.086324535, 0, 0, 0, 1.0000006, -0.162, 0, 0)
-mesh = SubResource("BoxMesh_k44yu")
-
-[node name="Bar_D21" type="MeshInstance3D" parent="Dashboard/Scanner"]
-transform = Transform3D(-0.34529832, 0.23462321, 0, -0.9384934, -0.086324535, 0, 0, 0, 1.0000006, -0.122, 0, 0)
-mesh = SubResource("BoxMesh_k44yu")
-
-[node name="Bar_D22" type="MeshInstance3D" parent="Dashboard/Scanner"]
-transform = Transform3D(-0.34529832, 0.23462321, 0, -0.9384934, -0.086324535, 0, 0, 0, 1.0000006, -0.082, 0, 0)
-mesh = SubResource("BoxMesh_k44yu")
-
-[node name="Bar_D23" type="MeshInstance3D" parent="Dashboard/Scanner"]
-transform = Transform3D(-0.34529832, 0.23462321, 0, -0.9384934, -0.086324535, 0, 0, 0, 1.0000006, -0.042, 0, 0)
-mesh = SubResource("BoxMesh_k44yu")
-
-[node name="Bar_D24" type="MeshInstance3D" parent="Dashboard/Scanner"]
-transform = Transform3D(-0.34529832, 0.23462321, 0, -0.9384934, -0.086324535, 0, 0, 0, 1.0000006, -0.002, 0, 0)
-mesh = SubResource("BoxMesh_k44yu")
-
-[node name="Bar_D25" type="MeshInstance3D" parent="Dashboard/Scanner"]
-transform = Transform3D(-0.34529832, 0.23462321, 0, -0.9384934, -0.086324535, 0, 0, 0, 1.0000006, 0.038, 0, 0)
-mesh = SubResource("BoxMesh_k44yu")
-
-[node name="Bar_D26" type="MeshInstance3D" parent="Dashboard/Scanner"]
-transform = Transform3D(-0.34529832, 0.23462321, 0, -0.9384934, -0.086324535, 0, 0, 0, 1.0000006, 0.078, 0, 0)
-mesh = SubResource("BoxMesh_k44yu")
-
-[node name="Bar_D27" type="MeshInstance3D" parent="Dashboard/Scanner"]
-transform = Transform3D(-0.34529832, 0.23462321, 0, -0.9384934, -0.086324535, 0, 0, 0, 1.0000006, 0.118, 0, 0)
-mesh = SubResource("BoxMesh_k44yu")
-
-[node name="Bar_D28" type="MeshInstance3D" parent="Dashboard/Scanner"]
-transform = Transform3D(-0.34529832, 0.23462321, 0, -0.9384934, -0.086324535, 0, 0, 0, 1.0000006, 0.158, 0, 0)
-mesh = SubResource("BoxMesh_k44yu")
-
-[node name="Bar_D29" type="MeshInstance3D" parent="Dashboard/Scanner"]
-transform = Transform3D(-0.34529832, 0.23462321, 0, -0.9384934, -0.086324535, 0, 0, 0, 1.0000006, 0.198, 0, 0)
-mesh = SubResource("BoxMesh_k44yu")
-
-[node name="Bar_D30" type="MeshInstance3D" parent="Dashboard/Scanner"]
-transform = Transform3D(-0.34529832, 0.23462321, 0, -0.9384934, -0.086324535, 0, 0, 0, 1.0000006, 0.238, 0, 0)
-mesh = SubResource("BoxMesh_k44yu")
-
-[node name="Bar_D31" type="MeshInstance3D" parent="Dashboard/Scanner"]
-transform = Transform3D(-0.34529832, 0.23462321, 0, -0.9384934, -0.086324535, 0, 0, 0, 1.0000006, 0.278, 0, 0)
-mesh = SubResource("BoxMesh_k44yu")
-
-[node name="Bar_D32" type="MeshInstance3D" parent="Dashboard/Scanner"]
-transform = Transform3D(-0.34529832, 0.23462321, 0, -0.9384934, -0.086324535, 0, 0, 0, 1.0000006, 0.318, 0, 0)
-mesh = SubResource("BoxMesh_k44yu")
-
-[node name="Bar_D33" type="MeshInstance3D" parent="Dashboard/Scanner"]
-transform = Transform3D(-0.34529832, 0.23462321, 0, -0.9384934, -0.086324535, 0, 0, 0, 1.0000006, 0.358, 0, 0)
-mesh = SubResource("BoxMesh_k44yu")
-
-[node name="Bar_D34" type="MeshInstance3D" parent="Dashboard/Scanner"]
-transform = Transform3D(-0.34529832, 0.23462321, 0, -0.9384934, -0.086324535, 0, 0, 0, 1.0000006, 0.398, 0, 0)
-mesh = SubResource("BoxMesh_k44yu")
-
-[node name="Bar_D36" type="MeshInstance3D" parent="Dashboard/Scanner"]
-transform = Transform3D(-0.34529832, 0.23462321, 0, -0.9384934, -0.086324535, 0, 0, 0, 1.0000006, 0.438, 0, 0)
-mesh = SubResource("BoxMesh_k44yu")
-
-[node name="Bar_D37" type="MeshInstance3D" parent="Dashboard/Scanner"]
-transform = Transform3D(-0.34529832, 0.23462321, 0, -0.9384934, -0.086324535, 0, 0, 0, 1.0000006, 0.478, 0, 0)
-mesh = SubResource("BoxMesh_k44yu")
-
-[node name="Bar_D38" type="MeshInstance3D" parent="Dashboard/Scanner"]
-transform = Transform3D(-0.34529832, 0.23462321, 0, -0.9384934, -0.086324535, 0, 0, 0, 1.0000006, 0.518, 0, 0)
-mesh = SubResource("BoxMesh_k44yu")
-
-[node name="Force_Factor" type="MeshInstance3D" parent="Dashboard"]
-transform = Transform3D(4.98951, 0.32266513, -0.025978904, -0.026133567, 0.0015526213, -4.9999313, -0.3226527, 4.9895773, 0.0032358426, 0.209, -0.054, -1.653)
+[node name="Force" type="MeshInstance3D" parent="Dashboard"]
+transform = Transform3D(4.740035, 0.3065319, -0.02467996, -0.024826892, 0.0014749902, -4.7499347, -0.3065201, 4.740099, 0.0030740504, 0.19199997, -0.05399999, -1.6530001)
 mesh = SubResource("TorusMesh_61m6q")
 skeleton = NodePath("../../Spin_Box-DELETE")
+surface_material_override/0 = SubResource("ShaderMaterial_3nktn")
 
-[node name="Force_Data" type="Label3D" parent="Dashboard/Force_Factor"]
+[node name="Force_Data" type="Label3D" parent="Dashboard/Force"]
 transform = Transform3D(0.9999999, 3.3178367e-09, 7.450581e-09, 0, -4.4470653e-08, 0.9999999, 1.891749e-09, -1.0000004, -4.2608008e-08, 5.4433942e-05, 7.897615e-06, -0.0031512976)
 pixel_size = 0.0001
 no_depth_test = true
@@ -5854,13 +5136,13 @@ render_priority = 10
 outline_render_priority = 10
 modulate = Color(0, 1, 0, 1)
 outline_modulate = Color(0, 1, 0, 1)
-text = "1.2x"
+text = "2.5x"
 font_size = 280
 outline_size = 6
 
-[node name="Letters" type="Node3D" parent="Dashboard/Force_Factor"]
+[node name="Letters" type="Node3D" parent="Dashboard/Force"]
 
-[node name="F" type="Label3D" parent="Dashboard/Force_Factor/Letters"]
+[node name="F" type="Label3D" parent="Dashboard/Force/Letters"]
 transform = Transform3D(0.050776232, -0.048184834, -9.3038194e-05, 1.298124e-05, -0.00012147939, 0.069999896, -0.048184857, -0.050776243, -7.918138e-05, -0.025000006, 0, -0.026000008)
 pixel_size = 0.001
 no_depth_test = true
@@ -5871,12 +5153,12 @@ outline_render_priority = 10
 modulate = Color(0, 1, 0, 1)
 outline_modulate = Color(0, 1, 0, 1)
 text = "F"
-font = SubResource("FontFile_t05xm")
+font = ExtResource("15_gssec")
 font_size = 130
-outline_size = 5
+outline_size = 20
 uppercase = true
 
-[node name="O" type="Label3D" parent="Dashboard/Force_Factor/Letters"]
+[node name="O" type="Label3D" parent="Dashboard/Force/Letters"]
 transform = Transform3D(0.06602565, -0.023251329, -9.313226e-10, 0, -2.561137e-09, 0.06999998, -0.023251304, -0.06602572, -2.8667273e-09, -0.013999999, 0, -0.033999994)
 pixel_size = 0.001
 no_depth_test = true
@@ -5887,12 +5169,12 @@ outline_render_priority = 10
 modulate = Color(0, 1, 0, 1)
 outline_modulate = Color(0, 1, 0, 1)
 text = "O"
-font = SubResource("FontFile_t05xm")
+font = ExtResource("15_gssec")
 font_size = 130
-outline_size = 5
+outline_size = 20
 uppercase = true
 
-[node name="R" type="Label3D" parent="Dashboard/Force_Factor/Letters"]
+[node name="R" type="Label3D" parent="Dashboard/Force/Letters"]
 transform = Transform3D(0.06999906, 0.00036656408, 6.2556006e-05, -6.310595e-05, 0.00010461103, 0.0699999, 0.000366468, -0.06999905, 0.00010493994, -0.00036746264, 9.36687e-05, -0.03618206)
 pixel_size = 0.001
 no_depth_test = true
@@ -5903,12 +5185,12 @@ outline_render_priority = 10
 modulate = Color(0, 1, 0, 1)
 outline_modulate = Color(0, 1, 0, 1)
 text = "R"
-font = SubResource("FontFile_t05xm")
+font = ExtResource("15_gssec")
 font_size = 130
-outline_size = 5
+outline_size = 20
 uppercase = true
 
-[node name="C" type="Label3D" parent="Dashboard/Force_Factor/Letters"]
+[node name="C" type="Label3D" parent="Dashboard/Force/Letters"]
 transform = Transform3D(0.0675512, 0.018353324, 5.374709e-05, -8.063391e-05, 9.1782655e-05, 0.06999988, 0.018353198, -0.06755125, 0.00010971287, 0.013000026, 0, -0.033999994)
 pixel_size = 0.001
 no_depth_test = true
@@ -5919,12 +5201,12 @@ outline_render_priority = 10
 modulate = Color(0, 1, 0, 1)
 outline_modulate = Color(0, 1, 0, 1)
 text = "C"
-font = SubResource("FontFile_t05xm")
+font = ExtResource("15_gssec")
 font_size = 130
-outline_size = 5
+outline_size = 20
 uppercase = true
 
-[node name="E" type="Label3D" parent="Dashboard/Force_Factor/Letters"]
+[node name="E" type="Label3D" parent="Dashboard/Force/Letters"]
 transform = Transform3D(0.053228375, 0.04546153, 7.3881354e-05, -0.00020744232, 0.00012912089, 0.06999955, 0.045461074, -0.05322832, 0.00023290687, 0.024000004, 0, -0.026999995)
 pixel_size = 0.001
 no_depth_test = true
@@ -5935,12 +5217,12 @@ outline_render_priority = 10
 modulate = Color(0, 1, 0, 1)
 outline_modulate = Color(0, 1, 0, 1)
 text = "E"
-font = SubResource("FontFile_t05xm")
+font = ExtResource("15_gssec")
 font_size = 130
-outline_size = 5
+outline_size = 20
 uppercase = true
 
-[node name="2_F" type="Label3D" parent="Dashboard/Force_Factor/Letters"]
+[node name="2_F" type="Label3D" parent="Dashboard/Force/Letters"]
 transform = Transform3D(0.0444506, 0.054075353, 7.3541887e-06, -0.00029281783, 0.00023118826, 0.06999909, 0.054074742, -0.044450056, 0.00037300948, -0.029673785, -0.0001976788, 0.023769043)
 pixel_size = 0.001
 no_depth_test = true
@@ -5951,12 +5233,12 @@ outline_render_priority = 10
 modulate = Color(0, 1, 0, 1)
 outline_modulate = Color(0, 1, 0, 1)
 text = "F"
-font = SubResource("FontFile_t05xm")
-font_size = 130
-outline_size = 5
+font = ExtResource("15_gssec")
+font_size = 105
+outline_size = 0
 uppercase = true
 
-[node name="2_A" type="Label3D" parent="Dashboard/Force_Factor/Letters"]
+[node name="2_A" type="Label3D" parent="Dashboard/Force/Letters"]
 transform = Transform3D(0.058181796, 0.038921278, 6.089313e-05, -0.00027200812, 0.00029710704, 0.069998875, 0.03892044, -0.05818124, 0.00039819098, -0.020119727, -0.00027117133, 0.032325365)
 pixel_size = 0.001
 no_depth_test = true
@@ -5967,12 +5249,12 @@ outline_render_priority = 10
 modulate = Color(0, 1, 0, 1)
 outline_modulate = Color(0, 1, 0, 1)
 text = "A"
-font = SubResource("FontFile_t05xm")
-font_size = 130
-outline_size = 5
+font = ExtResource("15_gssec")
+font_size = 105
+outline_size = 0
 uppercase = true
 
-[node name="2_C" type="Label3D" parent="Dashboard/Force_Factor/Letters"]
+[node name="2_C" type="Label3D" parent="Dashboard/Force/Letters"]
 transform = Transform3D(0.06823181, 0.01563341, 0.00010102987, -0.00022375397, 0.00052424613, 0.069997765, 0.015632253, -0.06823021, 0.0005609771, -0.007834107, -0.00031006336, 0.037767038)
 pixel_size = 0.001
 no_depth_test = true
@@ -5983,12 +5265,12 @@ outline_render_priority = 10
 modulate = Color(0, 1, 0, 1)
 outline_modulate = Color(0, 1, 0, 1)
 text = "C"
-font = SubResource("FontFile_t05xm")
-font_size = 130
-outline_size = 5
+font = ExtResource("15_gssec")
+font_size = 105
+outline_size = 0
 uppercase = true
 
-[node name="2_T" type="Label3D" parent="Dashboard/Force_Factor/Letters"]
+[node name="2_T" type="Label3D" parent="Dashboard/Force/Letters"]
 transform = Transform3D(0.06913061, -0.0109874355, 0.00048733782, -0.00018186495, 0.0019593204, 0.06997244, -0.010996612, -0.069104776, 0.0019064387, 0.0061564595, -0.0010642707, 0.038229622)
 pixel_size = 0.001
 no_depth_test = true
@@ -5999,12 +5281,12 @@ outline_render_priority = 10
 modulate = Color(0, 1, 0, 1)
 outline_modulate = Color(0, 1, 0, 1)
 text = "T"
-font = SubResource("FontFile_t05xm")
-font_size = 130
-outline_size = 5
+font = ExtResource("15_gssec")
+font_size = 105
+outline_size = 0
 uppercase = true
 
-[node name="2_O" type="Label3D" parent="Dashboard/Force_Factor/Letters"]
+[node name="2_O" type="Label3D" parent="Dashboard/Force/Letters"]
 transform = Transform3D(0.062479742, -0.03154298, 0.0011528274, 0.00024563028, 0.00304247, 0.069933556, -0.031562913, -0.062416527, 0.0028262942, 0.01893431, -0.0017348826, 0.03327296)
 pixel_size = 0.001
 no_depth_test = true
@@ -6015,12 +5297,12 @@ outline_render_priority = 10
 modulate = Color(0, 1, 0, 1)
 outline_modulate = Color(0, 1, 0, 1)
 text = "O"
-font = SubResource("FontFile_t05xm")
-font_size = 130
-outline_size = 5
+font = ExtResource("15_gssec")
+font_size = 105
+outline_size = 0
 uppercase = true
 
-[node name="2_R" type="Label3D" parent="Dashboard/Force_Factor/Letters"]
+[node name="2_R" type="Label3D" parent="Dashboard/Force/Letters"]
 transform = Transform3D(0.048995733, -0.049949124, 0.0021251151, 0.0010334528, 0.0039867824, 0.06987892, -0.049983453, -0.048879735, 0.003527934, 0.029916093, -0.0022950172, 0.024238184)
 pixel_size = 0.001
 no_depth_test = true
@@ -6031,10 +5313,22 @@ outline_render_priority = 10
 modulate = Color(0, 1, 0, 1)
 outline_modulate = Color(0, 1, 0, 1)
 text = "R"
-font = SubResource("FontFile_t05xm")
-font_size = 130
-outline_size = 5
+font = ExtResource("15_gssec")
+font_size = 105
+outline_size = 0
 uppercase = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Dashboard/Force"]
+transform = Transform3D(0.0759537, -0.0026523615, 0, 0.0026523615, 0.0759537, 0, 0, 0, 0.076, 0, 0, 0)
+mesh = SubResource("TorusMesh_gssec")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Dashboard/Force"]
+transform = Transform3D(0.0759537, -0.0026523615, 0, 0.0026523615, 0.0759537, 0, 0, 0, 0.076, 0, 0, 0)
+mesh = SubResource("TorusMesh_5hhbi")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="Dashboard/Force"]
+transform = Transform3D(0.07695309, -0.0026872612, 0, 0.0026872612, 0.07695309, 0, 0, 0, 0.077, 0, 0, 0)
+mesh = SubResource("TorusMesh_s7cmo")
 
 [node name="MAIN_SCREEN" type="MeshInstance3D" parent="Dashboard"]
 transform = Transform3D(1.6658232, -0.026906861, -0.05809766, 0.020337826, 1.91423, -0.087244056, 0.059238195, 0.099442124, 1.6637018, -0.18623269, 0.13113421, -1.89541)

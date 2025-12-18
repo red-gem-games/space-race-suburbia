@@ -9,7 +9,7 @@ uniform float glass_metallic : hint_range(0.0, 1.0) = 0.0;
 uniform float refraction_amount : hint_range(0.0, 1.0) = 0.1;
 uniform float scroll_speed : hint_range(-2.0, 2.0) = 0.1;
 uniform float char_width : hint_range(0.02, 0.3) = 0.08;
-uniform float char_spacing : hint_range(0.0, 0.5) = 0.3;  // Gap between characters (0-1, where 1 = full character width)
+uniform float char_spacing : hint_range(0.0, 1.0) = 0.3;  // Gap between characters (0-1, where 1 = full character width)
 uniform float text_height : hint_range(0.05, 0.5) = 0.15;
 uniform float vertical_position : hint_range(0.0, 1.0) = 0.5;
 uniform float glow_intensity : hint_range(0.0, 5.0) = 3.0;
