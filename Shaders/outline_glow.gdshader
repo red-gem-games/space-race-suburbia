@@ -1,5 +1,7 @@
 shader_type spatial;
 
+render_mode blend_mix, depth_test_disabled;
+
 uniform vec4 glow_color : source_color = vec4(0.0, 0.5, 1.0, 1.0);
 uniform vec4 pulse_color : source_color = vec4(0.25, 1.0, 0.25, 1.0);
 uniform float speed : hint_range(0.1, 10.0) = 5.0;

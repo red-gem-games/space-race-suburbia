@@ -255,7 +255,7 @@ transform = Transform3D(-8.74228e-08, 0, 2, 0, 2, 0, -2, 0, -8.74228e-08, -0.065
 visible = false
 shape = SubResource("ConvexPolygonShape3D_rfry8")
 
-[node name="OuterShell_Shape" type="CollisionShape3D" parent="."]
+[node name="InsulatedTank_Shape" type="CollisionShape3D" parent="."]
 transform = Transform3D(-8.74228e-08, 0, 2, 0, 2, 0, -2, 0, -8.74228e-08, -0.0221124, 0.103215, 0)
 shape = SubResource("ConvexPolygonShape3D_tam5o")
 
@@ -282,7 +282,7 @@ cast_shadow = 0
 mesh = SubResource("ArrayMesh_78n6r")
 skeleton = NodePath("")
 
-[node name="OuterShell" type="MeshInstance3D" parent="Body"]
+[node name="InsulatedTank" type="MeshInstance3D" parent="Body"]
 transform = Transform3D(-8.74228e-08, 0, 2, 0, 2, 0, -2, 0, -8.74228e-08, -0.0221124, 0.103215, 0)
 mesh = SubResource("ArrayMesh_6iall")
 skeleton = NodePath("")

@@ -654,9 +654,7 @@ func _on_reset_key() -> void:
 func _input(event: InputEvent) -> void:
 	if is_using_computer:
 		return
-	# Process Mouse Button events.
 	if event is InputEventMouseButton:
-		# Ignore events from opposite buttons if one is held.
 		if left_mouse_down and event.button_index == MOUSE_BUTTON_RIGHT:
 			return
 		if right_mouse_down and event.button_index == MOUSE_BUTTON_LEFT:
@@ -884,7 +882,7 @@ func _input(event: InputEvent) -> void:
 ##---------------------------------------##
 
 
-func grab_object():	
+func grab_object():
 	if distance_to_ground > 2.97:
 		print('why would this work?')
 		for child in get_children():
@@ -906,6 +904,7 @@ func grab_object():
 	object_is_grabbed = true
 	grabbed_object.linear_damp = 0
 	grabbed_initial_rotation = rotation_degrees
+	action_wait_timer.start(0.5)
 	await get_tree().create_timer(0.5).timeout
 	for child in get_children():
 		if child is CollisionShape3D:
@@ -1409,23 +1408,21 @@ func update_component_display():
 	PREM_7.component_name_back.pixel_size = name_size
 	
 	var condition = comp.get("condition", 0)
-	update_condition_display(condition)
-	
-	var rating = comp.get("rating", 0.0)
-	update_rating_display(rating)
-	
-	selected_component_mass  = comp.get("mass",  0)
-	PREM_7.component_mass.text   = str(int(comp.get("mass", 0)))
-	pulse_mass_label()
-	
+	var mass = comp.get("mass", 0)
 	var mayhem = comp.get("mayhem", 0)
-	update_mayhem_meter(mayhem)
-	
 	var force = comp.get("force", 0.0)
-	update_force_factor(force)
+	var rating = calculate_rating(condition, mass, mayhem, force)
 	
+	selected_component_mass  = mass
+	PREM_7.component_mass.text   = str(int(comp.get("mass", 0)))
 	selected_component_scale = comp.get("scale", 0.0)
 	selected_component_glow  = comp.get("glow",  0.0)
+	
+	update_condition_display(condition)
+	update_rating_display(rating)
+	pulse_mass_label()
+	update_mayhem_meter(mayhem)
+	update_force_factor(force)
 
 	# Find matching shape base name
 	var target_id := _normalize_id(comp.get("name", ""))
@@ -1514,11 +1511,15 @@ func update_condition_display(condition_value: int):
 	# Determine direction (filling up or emptying)
 	var start = current_condition
 	var end = condition_value
-	var step = 1 if end > start else -1
 	var is_increasing = end > start
 	
+	# Adjust start position based on direction
+	var first_block = start + 1 if is_increasing else start
+	var last_block = end if is_increasing else end + 1
+	var step = 1 if is_increasing else -1
+	
 	# Animate each block with a slight delay
-	for i in range(start, end + step, step):
+	for i in range(first_block, last_block + step, step):
 		if i < 1 or i > 10:
 			continue
 		
@@ -1532,7 +1533,7 @@ func update_condition_display(condition_value: int):
 				var pulse_tween = create_tween()
 				
 				if is_increasing:
-					# Growing - start from zero, pulse bigger, then settle at normal
+					# Growing - pulse bigger, then settle at normal
 					pulse_tween.tween_property(block, "scale", Vector3.ONE * 1.3, 0.15)
 					pulse_tween.tween_property(block, "scale", Vector3.ONE, 0.08)
 				else:
@@ -1554,10 +1555,32 @@ func update_condition_display(condition_value: int):
 	
 	current_condition = condition_value
 
+func calculate_rating(condition: int, mass: int, mayhem: float, force: float) -> float:
+	# Normalize all values to 0-1 scale
+	var condition_norm = clampf(condition / 10.0, 0.0, 1.0)  # Higher is better
+	var max_mass = 50.0
+	var mass_norm = 1.0 - clampf(mass / max_mass, 0.0, 1.0)  # Lower is better, so invert
+	var mayhem_norm = 1.0 - clampf(mayhem / 100.0, 0.0, 1.0)  # Lower is better, so invert
+	var force_norm = clampf(force / 5.0, 0.0, 1.0)  # Higher is better
+	
+	var weighted_score = (
+		(condition_norm * 1.5) +
+		(mass_norm * 1.0) +
+		(mayhem_norm * 4.5) +
+		(force_norm * 4.0)
+	) / 10.0
+	
+	# Convert to 0-5 star rating
+	var rating = weighted_score * 5.0
+	
+	# Round to nearest 0.5 (for half stars)
+	rating = round(rating * 2.0) / 2.0
+	
+	return clampf(rating, 0.0, 5.0)
+
 func update_rating_display(rating_value: float):
 	rating_value = clampf(rating_value, 0.0, 5.0)
 	
-	# If rating hasn't changed, do nothing
 	if rating_value == current_rating:
 		return
 	
@@ -1566,22 +1589,18 @@ func update_rating_display(rating_value: float):
 		push_error("Stars node not found under Rating")
 		return
 	
-	# Kill existing tween
 	if rating_tween:
 		rating_tween.kill()
 	
-	# Create tween for sequential star appearance
 	rating_tween = create_tween()
 	
 	var is_increasing = rating_value > current_rating
 	
-	# Create list of all half-star steps in order
 	var steps = []
-	for i in range(1, 6):  # Stars 1-5
-		steps.append({"star": i, "is_left": true, "value": float(i) - 0.5})   # Left half
-		steps.append({"star": i, "is_left": false, "value": float(i)})        # Right half (full)
+	for i in range(1, 6): 
+		steps.append({"star": i, "is_left": true, "value": float(i) - 0.5}) 
+		steps.append({"star": i, "is_left": false, "value": float(i)}) 
 	
-	# Filter to only the steps that need to change
 	var steps_to_animate = []
 	for step in steps:
 		if is_increasing:
@@ -1591,11 +1610,9 @@ func update_rating_display(rating_value: float):
 			if step.value <= current_rating and step.value > rating_value:
 				steps_to_animate.append(step)
 	
-	# Reverse order if decreasing (remove from highest to lowest)
 	if not is_increasing:
 		steps_to_animate.reverse()
 	
-	# Animate each step in order
 	for step in steps_to_animate:
 		var star_node = stars_node.get_node_or_null(str(step.star))
 		if not star_node:
@@ -1611,18 +1628,15 @@ func update_rating_display(rating_value: float):
 		
 		rating_tween.tween_callback(func():
 			if is_increasing:
-				# Growing - pulse bigger then settle, make visible
 				target_mesh.visible = true
 				var pulse_tween = create_tween()
 				pulse_tween.tween_property(target_mesh, "scale", Vector3.ONE * 1.3, 0.15)
 				pulse_tween.tween_property(target_mesh, "scale", Vector3.ONE, 0.08)
 			else:
-				# Shrinking - just make invisible
 				target_mesh.visible = false
 		)
 		rating_tween.tween_interval(0.05)
 	
-	# SAFETY: Ensure ALL stars are at correct state at the end
 	rating_tween.tween_callback(func():
 		for i in range(1, 6):
 			var star_node = stars_node.get_node_or_null(str(i))
@@ -1662,7 +1676,6 @@ func pulse_mass_label():
 	if not mass_label:
 		return
 	
-	# Kill existing pulse tween
 	if mass_pulse_tween:
 		mass_pulse_tween.kill()
 	
@@ -1680,6 +1693,10 @@ func pulse_mass_label():
 	mass_pulse_tween.tween_property(mass_label, "scale", original_scale, 0.3)
 
 func update_mayhem_meter(mayhem_value: float, max_mayhem: float = 100.0):
+	# Set minimum value if below 1
+	if mayhem_value < 1.0:
+		mayhem_value = 0.9
+	
 	var mayhem_meter = PREM_7.component_mayhem 
 	var mayhem_text = PREM_7.component_mayhem_pct
 	
@@ -1687,31 +1704,25 @@ func update_mayhem_meter(mayhem_value: float, max_mayhem: float = 100.0):
 		push_error("MayhemMeter node not found")
 		return
 	
-	# Get the shader material
 	var mat = mayhem_meter.get_surface_override_material(0) as ShaderMaterial
 	
 	if not mat:
 		push_error("MayhemMeter has no ShaderMaterial")
 		return
 	
-	# Calculate target progress (0.0 to 1.0)
 	var target_progress = clampf(mayhem_value / max_mayhem, 0.0, 1.0) / 2
 	var current_progress = mat.get_shader_parameter("progress")
 	
-	# Get current displayed value from text (for smooth counting)
 	var current_value = float(mayhem_text.text.replace("%", ""))
 	
-	# Kill existing tween if running
 	if mayhem_tween:
 		mayhem_tween.kill()
 	
-	# Create new tween
 	mayhem_tween = create_tween()
 	mayhem_tween.set_ease(Tween.EASE_OUT)
 	mayhem_tween.set_trans(Tween.TRANS_CUBIC)
-	mayhem_tween.set_parallel(true)  # Run both animations simultaneously
+	mayhem_tween.set_parallel(true)
 	
-	# Animate the progress bar
 	mayhem_tween.tween_method(
 		func(value): mat.set_shader_parameter("progress", value),
 		current_progress,
@@ -1719,7 +1730,6 @@ func update_mayhem_meter(mayhem_value: float, max_mayhem: float = 100.0):
 		0.5
 	)
 	
-	# Animate the text value counting up/down
 	mayhem_tween.tween_method(
 		func(value): mayhem_text.text = str(int(value)) + "%",
 		current_value,
@@ -1728,6 +1738,10 @@ func update_mayhem_meter(mayhem_value: float, max_mayhem: float = 100.0):
 	)
 
 func update_force_factor(force_value: float, max_force: float = 5.0):
+	# Set minimum value if below 1
+	if force_value < 0.1:
+		force_value = 0.01
+	
 	var force_meter = PREM_7.component_force 
 	var force_text = PREM_7.component_force_amt
 	
@@ -1735,31 +1749,25 @@ func update_force_factor(force_value: float, max_force: float = 5.0):
 		push_error("Force Factor meter not found")
 		return
 	
-	# Get the shader material
 	var mat = force_meter.get_surface_override_material(0) as ShaderMaterial
 	
 	if not mat:
 		push_error("Force Factor has no ShaderMaterial")
 		return
 	
-	# Calculate target fill amount (0.0 to 1.0)
 	var target_fill = clampf(force_value / max_force, 0.0, 1.0)
 	var current_fill = mat.get_shader_parameter("fill_amount")
 	
-	# Get current displayed value from text (for smooth counting)
 	var current_value = float(force_text.text.replace("x", ""))
 	
-	# Kill existing tween if running
 	if force_tween:
 		force_tween.kill()
 	
-	# Create new tween
 	force_tween = create_tween()
 	force_tween.set_ease(Tween.EASE_OUT)
 	force_tween.set_trans(Tween.TRANS_CUBIC)
-	force_tween.set_parallel(true)  # Run both animations simultaneously
+	force_tween.set_parallel(true)
 	
-	# Animate the ring fill
 	force_tween.tween_method(
 		func(value): mat.set_shader_parameter("fill_amount", value),
 		current_fill,
@@ -1767,8 +1775,6 @@ func update_force_factor(force_value: float, max_force: float = 5.0):
 		0.5
 	)
 	
-	# Animate the text value counting up/down
-	# Format with one decimal place
 	force_tween.tween_method(
 		func(value): force_text.text = "%.1fx" % value,
 		current_value,
@@ -1797,6 +1803,8 @@ func _base_from_shape(name_string: String) -> String:
 	return name_string
 
 func extract_component(mesh, col):
+	
+	print('ah ha')
 
 	fresh_component = RigidBody3D.new()
 	fresh_component.name = mesh.name

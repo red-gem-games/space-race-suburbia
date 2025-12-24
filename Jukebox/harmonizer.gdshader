@@ -1,29 +1,27 @@
+// Harmonizer Shader
+
 shader_type spatial;
 render_mode blend_mix, cull_back, unshaded, specular_schlick_ggx;
 
 uniform vec4 text_color : source_color = vec4(0.0, 1.0, 0.0, 3.0);
-uniform vec4 bg_color : source_color = vec4(0.0, 0.1, 0.0, 0.1);  // More transparent
-uniform vec4 glass_tint : source_color = vec4(0.2, 0.5, 0.2, 0.35);  // Slight blue tint
-uniform float glass_roughness : hint_range(0.0, 1.0) = 0.05;  // Very smooth
+uniform vec4 bg_color : source_color = vec4(0.0, 0.1, 0.0, 0.1);  
+uniform vec4 glass_tint : source_color = vec4(0.2, 0.5, 0.2, 0.35);
+uniform float glass_roughness : hint_range(0.0, 1.0) = 0.05;
 uniform float glass_metallic : hint_range(0.0, 1.0) = 0.0;
 uniform float refraction_amount : hint_range(0.0, 1.0) = 0.1;
 uniform float scroll_speed : hint_range(-2.0, 2.0) = 0.1;
 uniform float char_width : hint_range(0.02, 0.3) = 0.08;
-uniform float char_spacing : hint_range(0.0, 1.0) = 0.3;  // Gap between characters (0-1, where 1 = full character width)
-uniform float text_height : hint_range(0.05, 0.5) = 0.15;
+uniform float char_spacing : hint_range(0.0, 1.0) = 0.3;
+uniform float text_height : hint_range(0.01, 0.5) = 0.15;
 uniform float vertical_position : hint_range(0.0, 1.0) = 0.5;
 uniform float glow_intensity : hint_range(0.0, 5.0) = 3.0;
-uniform bool use_scanlines = true;
-uniform float scanline_intensity : hint_range(0.0, 1.0) = 0.3;
 
 // Dynamic text support
-uniform int text_chars[30];  // Array of ASCII character codes
-uniform int text_length : hint_range(1, 30) = 10;
-
-// Simple 5x5 pixel font - each row is represented as a float (0-31 = 5 bits)
-// More reliable than complex bitmasking
+uniform int text_chars[250];
+uniform int text_length : hint_range(1, 250) = 25;
 
 bool check_pixel(int char_code, int px, int py) {
+	// LETTERS
 	// A
 	if (char_code == 65) {
 		if (py == 0 && (px >= 1 && px <= 3)) return true;
@@ -269,8 +267,13 @@ bool check_pixel(int char_code, int px, int py) {
 	}
 	// Comma ,
 	else if (char_code == 44) {
-		if (py == 4 && px == 2) return true;
-		if (py == 3 && px == 1) return true;
+	if (py == 4 && px == 2) return true;
+	if (py == 3 && px == 3) return true;
+	}
+	// Apostrophe '
+	else if (char_code == 39) {
+		if (py == 0 && px == 2) return true;
+		if (py == 1 && px == 2) return true;
 	}
 	// Exclamation !
 	else if (char_code == 33) {
@@ -321,7 +324,9 @@ bool check_pixel(int char_code, int px, int py) {
 void fragment() {
 	// Scroll the text horizontally around the capsule
 	float scroll_offset = TIME * scroll_speed;
-	float scroll_uv = fract(UV.x + scroll_offset);
+	
+	// DON'T use fract() - let it keep scrolling through the full text array
+	float scroll_uv = UV.x + scroll_offset;
 	
 	// Define text area
 	float text_area_start = vertical_position - text_height / 2.0;
@@ -329,32 +334,30 @@ void fragment() {
 	
 	// Check if we're in the text display area
 	if (UV.y < text_area_start || UV.y > text_area_end) {
-		// Outside text area - show glass
 		ALBEDO = mix(bg_color.rgb, glass_tint.rgb, 0.5);
 		ALPHA = glass_tint.a;
 		ROUGHNESS = glass_roughness;
 		METALLIC = glass_metallic;
 	} else {
-		// Calculate which character we're on
+		// Character Calculation - now scroll_uv can be > 1.0
 		float char_position = scroll_uv / char_width;
 		int char_index = int(char_position) % text_length;
 		
-		// Position within the current character (0-1)
+		// Position within current character
 		float local_x = fract(char_position);
 		
-		// Add spacing - if we're in the spacing gap, show background
+		// Spacing
 		if (local_x > (1.0 - char_spacing)) {
 			ALBEDO = mix(bg_color.rgb, glass_tint.rgb, 0.3);
 			ALPHA = bg_color.a;
 			ROUGHNESS = glass_roughness;
 			METALLIC = glass_metallic;
 		} else {
-			// Remap local_x to account for spacing (so character uses full available space)
+			// Remap local_x
 			local_x = local_x / (1.0 - char_spacing);
 			
 			float local_y = (UV.y - text_area_start) / (text_area_end - text_area_start);
 			
-			// Convert to pixel coordinates (5x5 grid)
 			int pixel_x = int(local_x * 5.0);
 			int pixel_y = int(local_y * 5.0);
 			
@@ -364,20 +367,14 @@ void fragment() {
 			// Check if this pixel should be lit
 			bool is_text = check_pixel(current_char, pixel_x, pixel_y);
 			
-			// Apply scanlines
-			float scanline = 1.0;
-			if (use_scanlines) {
-				scanline = 1.0 - scanline_intensity * (0.5 + 0.5 * sin(UV.y * 200.0));
-			}
-			
 			// Choose color
 			if (is_text) {
-				ALBEDO = text_color.rgb * scanline;
+				ALBEDO = text_color.rgb;
 				EMISSION = text_color.rgb * glow_intensity;
 				ALPHA = text_color.a;
 				ROUGHNESS = 0.0;
 			} else {
-				ALBEDO = mix(bg_color.rgb, glass_tint.rgb, 0.3) * scanline;
+				ALBEDO = mix(bg_color.rgb, glass_tint.rgb, 0.3);
 				ALPHA = bg_color.a;
 				ROUGHNESS = glass_roughness;
 				METALLIC = glass_metallic;

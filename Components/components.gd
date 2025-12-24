@@ -248,13 +248,29 @@ func _process(delta: float) -> void:
 		if is_touchable:
 			if is_touched:
 				for child in object_body.get_children():
-					child.set_material_overlay(standard_material)
-					standard_material.emission = Color(0.6, 0.9, 0.6)
-					standard_material.emission_energy_multiplier = 2.0
+					if child is MeshInstance3D:
+						child.set_material_overlay(standard_material)
+						standard_material.emission = Color(0.6, 0.9, 0.6)
+						standard_material.emission_energy_multiplier = 2.0
+						
+						# Handle nested meshes
+						var xtra_children = child.get_children()
+						if not xtra_children.is_empty():
+							for child2 in xtra_children:
+								if child2 is MeshInstance3D:
+									child2.set_material_overlay(standard_material)
 				
 			if not is_touched:
 				for child in object_body.get_children():
-					child.set_material_overlay(null)
+					if child is MeshInstance3D:
+						child.set_material_overlay(null)
+						
+						# Handle nested meshes
+						var xtra_children = child.get_children()
+						if not xtra_children.is_empty():
+							for child2 in xtra_children:
+								if child2 is MeshInstance3D:
+									child2.set_material_overlay(null)
 
 
 	if is_grabbed:
@@ -583,11 +599,23 @@ func manipulation_mode(type):
 				for i in range(surface_count):
 					child.set_surface_override_material(i, manipulation_material)
 					child.cast_shadow = false
-
+				var xtra_children = child.get_children()
+				if not xtra_children.is_empty():
+					for child2 in xtra_children:
+						if child2 is MeshInstance3D:
+							var x_surface_count = child2.mesh.get_surface_count()
+							for i in range(x_surface_count):
+								child2.set_surface_override_material(i, manipulation_material)
+								child2.cast_shadow = false
 	elif type == "Inactive":
 		for child in extract_body.get_children():
 			if child is MeshInstance3D:
 				child.set_material_overlay(standard_material)
+			var xtra_children = child.get_children()
+			if not xtra_children.is_empty():
+				for child2 in xtra_children:
+					if child2 is MeshInstance3D:
+						child2.set_material_overlay(standard_material)
 
 func set_glitch(status):
 	manipulation_material.set_shader_parameter("enable_glitch", status)
@@ -597,15 +625,48 @@ func set_extract_glow(component, selection):
 	extracted_object_mat.albedo_color = Color.DARK_ORANGE
 	extracted_object_mat.albedo_color.a = 6.0
 	extracted_object_mat.emission = Color.CORAL
+	
 	if selection == 'Selected':
 		component.set_material_overlay(EXTRACT_MATERIAL)
 		for i in range(surface_count):
 			component.set_surface_override_material(i, null)
+		
+		# Handle nested children
+		var xtra_children = component.get_children()
+		if not xtra_children.is_empty():
+			for child in xtra_children:
+				if child is MeshInstance3D:
+					child.set_material_overlay(EXTRACT_MATERIAL)
+					var child_surface_count = child.mesh.get_surface_count()
+					for i in range(child_surface_count):
+						child.set_surface_override_material(i, null)
+	
 	elif selection == 'Deselected':
 		component.set_material_overlay(null)
 		for i in range(surface_count):
 			component.set_surface_override_material(i, manipulation_material)
+		
+		# Handle nested children
+		var xtra_children = component.get_children()
+		if not xtra_children.is_empty():
+			for child in xtra_children:
+				if child is MeshInstance3D:
+					child.set_material_overlay(null)
+					var child_surface_count = child.mesh.get_surface_count()
+					for i in range(child_surface_count):
+						child.set_surface_override_material(i, manipulation_material)
+	
 	elif selection == 'Complete':
 		component.set_material_overlay(extracted_object_mat)
 		for i in range(surface_count):
 			component.set_surface_override_material(i, null)
+		
+		# Handle nested children
+		var xtra_children = component.get_children()
+		if not xtra_children.is_empty():
+			for child in xtra_children:
+				if child is MeshInstance3D:
+					child.set_material_overlay(extracted_object_mat)
+					var child_surface_count = child.mesh.get_surface_count()
+					for i in range(child_surface_count):
+						child.set_surface_override_material(i, null)

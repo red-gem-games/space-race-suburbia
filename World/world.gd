@@ -89,6 +89,8 @@ func _ready() -> void:
 	start_static_glow_loop()
 	
 	$Launch_Sequence/Launch_Box_Anim.play("button_glow")
+	
+	$Workshop/Harmonizer/Spin.play("spin_start")
 
 
 var computer_active: bool = false
@@ -270,7 +272,8 @@ func grab_object():
 
 
 func release_object():
-	#exposure_tween(player_character.camera, 0.9, 0.25)
+	if player_character.action_wait_timer.time_left > 0.0:
+		return
 	if player_character.PREM_7.extract_message.visible:
 		player_character.PREM_7.extract_message.visible = false
 	grabbed_object.linear_velocity /= 2

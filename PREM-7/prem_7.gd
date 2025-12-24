@@ -78,6 +78,7 @@ func _ready() -> void:
 	control_hologram_timer.one_shot = true
 	grab_anim.play("RESET")
 	touch_anim.play("RESET")
+	holo_anim.play("research_card")
 	
 	#shader = Shader.new()
 	#shader.code = GLOW_SHADER.code

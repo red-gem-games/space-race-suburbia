@@ -1,4 +1,4 @@
-[gd_scene load_steps=138 format=4 uid="uid://dw2grejb4tc3k"]
+[gd_scene load_steps=143 format=4 uid="uid://dw2grejb4tc3k"]
 
 [ext_resource type="PackedScene" uid="uid://f722yn8gdiyj" path="res://Character/character.tscn" id="1_f3sb7"]
 [ext_resource type="Script" uid="uid://cpdnlycwlet2q" path="res://World/world.gd" id="1_tlwt5"]
@@ -46,6 +46,7 @@
 [ext_resource type="Texture2D" uid="uid://clbjtxa6gyl0e" path="res://Assets/Blender/TRS-1/TRS-1_v2_T_RO_Engine_NR.png" id="38_3gnva"]
 [ext_resource type="Texture2D" uid="uid://d315ua81k5ney" path="res://World/Workshop/House_Isolate_GameReady_SP_2K_Roughness.png" id="38_houwb"]
 [ext_resource type="Texture2D" uid="uid://cfwgernb1ine1" path="res://Assets/Blender/Workbench/Workbench_v1_GameReady_T_Workbench_NR.png" id="38_xu702"]
+[ext_resource type="Shader" uid="uid://b12bpe0r0llrf" path="res://Shaders/outline_glow.gdshader" id="39_8iv6r"]
 [ext_resource type="PackedScene" uid="uid://ciuvjv1vvl1u6" path="res://World/Workshop/computer.tscn" id="39_i363k"]
 [ext_resource type="Texture2D" uid="uid://dcfqkivc5kfgn" path="res://World/Workshop/House_Isolate_GameReady_SP_2K_Roughness_31.png" id="39_o8btu"]
 [ext_resource type="Texture2D" uid="uid://c7e5t86h25xde" path="res://World/Workshop/House_Isolate_GameReady_garage_floor_nor_gl_4k.jpg" id="40_2j1j3"]
@@ -601,6 +602,44 @@ data = PackedVector3Array(-9.7975, -0.5, 0, 0, -0.5, -4.9, 0, -0.5, 0, -9.7975, 
 [sub_resource type="BoxShape3D" id="BoxShape3D_i363k"]
 size = Vector3(1, 11.255859, 23.326172)
 
+[sub_resource type="Animation" id="Animation_8iv6r"]
+resource_name = "spin_start"
+length = 10.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 10),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 6.2831855, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_3gnva"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_i5ake"]
+_data = {
+&"RESET": SubResource("Animation_3gnva"),
+&"spin_start": SubResource("Animation_8iv6r")
+}
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_e5i3a"]
 resource_name = "M_RO_Engine_Bake"
 cull_mode = 2
@@ -646,6 +685,18 @@ _surfaces = [{
 }]
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_qs60e")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_3gnva"]
+render_priority = 0
+shader = ExtResource("39_8iv6r")
+shader_parameter/glow_color = Color(0, 0.5019608, 1, 1)
+shader_parameter/pulse_color = Color(1, 0, 1, 1)
+shader_parameter/speed = 0.32000001194012
+shader_parameter/scale = 0.10000000149012
+shader_parameter/distortion = 0.04000000120148
+shader_parameter/shield_power = 0.0
+shader_parameter/rim_power = 2.278000108205
+shader_parameter/pulse_frequency = 0.32600001222512
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5ipgq"]
 resource_name = "M_Workbench_Bake"
@@ -1047,10 +1098,18 @@ transform = Transform3D(0.443462, 0, -0.896293, 0, 1, 0, 0.896293, 0, 0.443462, 
 [node name="Harmonizer" parent="Workshop" instance=ExtResource("10_lo5ox")]
 transform = Transform3D(0.9999155, 0, 0.013002366, 0, 1, 0, -0.013002366, 0, 0.9999155, -11.31698, -1.00976, -39.666084)
 
+[node name="Spin" type="AnimationPlayer" parent="Workshop/Harmonizer"]
+root_node = NodePath("../R1_Engine_Bake2")
+libraries = {
+&"": SubResource("AnimationLibrary_i5ake")
+}
+speed_scale = 0.35
+
 [node name="R1_Engine_Bake2" type="MeshInstance3D" parent="Workshop/Harmonizer"]
 transform = Transform3D(1.8, 0, 0, 0, 1.8, 0, 0, 0, 1.8, 0, 2.41, 0)
 mesh = SubResource("ArrayMesh_i5ake")
 skeleton = NodePath("")
+surface_material_override/0 = SubResource("ShaderMaterial_3gnva")
 
 [node name="Workbench" type="StaticBody3D" parent="Workshop"]
 

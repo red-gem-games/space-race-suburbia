@@ -1,70 +1,75 @@
 {
     "WashingMachine": {
-        "name": "Washing Maching",
-        "class": "Utility",
-        "scale": 0.6,
-        "distance": 6.0,
-        "components": [
+            "name": "Washing Machine",
+            "class": "Utility",
+            "scale": 0.6,
+            "distance": 6.0,
+            "components": [
             {
                 "name": "Washer Panel",
-                "size" : 0.05,
-                "system" : "[Operation][Console]",
-                "condition" : 8,
+                "size": 0.05,
+                "system": "[Operation][Console]",
+                
+                "condition": 10,
+                "mass": 5,
+                "mayhem": 0,
+                "force": 5.0,
 
-                "rating" : 5.0,
-                "mass" : 1,
-
-                "mayhem" : 0.9,
-                "force" : 0.01,
-
-                "scale" : 1.5,
-                "glow" : 7.0,
+                "scale": 1.5,
+                "glow": 7.0
             },
             {
                 "name": "Wash Basket",
-                "size" : 0.05,
-                "system" : "[Propellent][Storage]",
-                "condition" : 7,
+                "size": 0.05,
+                "system": "[Propellent][Storage]",
+                
+                "condition": 4,
+                "mass": 35,
+                "mayhem": 55,
+                "force": 2.0,
 
-                "rating" : 2.5,
-                "mass" : 12,
+                "scale": 1.25,
+                "glow": 6.5
+            },
+            {
+                "name": "Circulation Pump",
+                "size": 0.05,
+                "system": "[Engine][Turbopump]",
+                
+                "condition": 3,
+                "mass": 6,
+                "mayhem": 62,
+                "force": 0.3,
 
-                "mayhem" : 8,
-                "force" : 1.25,
-
-                "scale" : 1.25,
-                "glow" : 6.5,
+                "scale": 2.2,
+                "glow": 7.5
             },
             {
                 "name": "Inlet Valve",
-                "size" : 0.05,
-                "system" : "[Propellent][Regulation]",
-                "condition" : 4,
+                "size": 0.05,
+                "system": "[Propellent][Regulation]",
+                
+                "condition": 4,
+                "mass": 1,
+                "mayhem": 76,
+                "force": 0.6,
 
-                "rating" : 1.5,
-                "mass" : 1,
-
-                "mayhem" : 20,
-                "force" : 1.5,
-
-                "scale" : 2.5,
-                "glow" : 8.0,
+                "scale": 2.5,
+                "glow": 8.0
             },
             {
                 "name": "Inlet Hose",
-                "size" : 0.05,
-                "system" : "[Propellent][Delivery]",
-                "condition" : 8,
+                "size": 0.05,
+                "system": "[Propellent][Delivery]",
+                
+                "condition": 2,
+                "mass": 3,
+                "mayhem": 48,
+                "force": 1.6,
 
-                "rating" : 3.0,
-                "mass" : 2,
-
-                "mayhem" : 6,
-                "force" : 2.5,
-
-                "scale" : 1.5,
-                "glow" : 8.0,
-            },
+                "scale": 1.5,
+                "glow": 8.0
+            }
         ]
     },
     "DryingMachine": {
@@ -75,83 +80,86 @@
         "components": [
             {
                 "name": "Dryer Panel",
-                "size" : 0.05,
-                "system" : "[Operation][Console]",
-                "condition" : 8,
-
-                "rating" : 2.5,
-                "mass" : 8,
+                "size": 0.05,
+                "system": "[Operation][Console]",
                 
-                "mayhem" : 18,
-                "force" : 2.5,
+                "condition": 10,
+                "mass": 6,
+                "mayhem": 0,
+                "force": 5.0,
 
-                "scale" : 1.5,
-                "glow" : 7.0,
+                "scale": 1.5,
+                "glow": 7.0
             },
             {
                 "name": "Dryer Basket",
-                "size" : 0.05,
-                "system" : "[Engine][Nozzle]",
-                "condition" : 4,
+                "size": 0.05,
+                "system": "[Engine][Nozzle]",
+                
+                "condition": 3,
+                "mass": 28,
+                "mayhem": 58,
+                "force": 2.0,
 
-                "rating" : 3.0,
-                "mass" : 8,
-
-                "mayhem" : 33,
-                "force" : 1.25,
-
-                "scale" : 1.25,
-                "glow" : 7.0,
+                "scale": 1.25,
+                "glow": 7.0
             },
             {
                 "name": "Blower Motor",
-                "size" : 0.05,
-                "system" : "[Propellent][Ventilation]",
-                "condition" : 4,
-
-                "rating" : 3.5,
-                "mass" : 10,
+                "size": 0.05,
+                "system": "[Propellent][Ventilation]",
                 
-                "mayhem" : 25,
-                "force" : 3.0,
+                "condition": 3,
+                "mass": 16,
+                "mayhem": 38,
+                "force": 2.6,
 
-                "scale" : 1.5,
-                "glow" : 7.0,
+                "scale": 1.5,
+                "glow": 7.0
             },
             {
                 "name": "Vent Duct",
-                "size" : 0.05,
-                "system" : "[Structure][Shield]",
-                "condition" : 5,
-
-                "rating" : 1.5,
-                "mass" : 3,
+                "size": 0.05,
+                "system": "[Structure][Shield]",
                 
-                "mayhem" : 26,
-                "force" : 1.7,
+                "condition": 5,
+                "mass": 2,
+                "mayhem": 84,
+                "force": 0.3,
 
-                "scale" : 1.5,
-                "glow" : 7.5,
+                "scale": 1.5,
+                "glow": 7.5
+            },
+            {
+                "name": "Metal Housing",
+                "size": 0.05,
+                "system": "[Structure][Body]",
+                
+                "condition": 4,
+                "mass": 68,
+                "mayhem": 18,
+                "force": 1.2,
+
+                "scale": 1.5,
+                "glow": 7.5
             }
         ]
     },
    "WaterHeater": {
     "name": "Water Heater",
-    "description": "''Launch Your Rocket, Then Hit The Shower''",
+    "class": "Utility",
     "scale": 0.5,
     "distance": 6.5,
     "components": [
         {
             "name": "Heating Coil",
             "size" : 0.05,
-            "system" : ". . . . . [ ? ? ? ][ ? ? ? ]",
-            "condition" : 8,
-
-            "rating" : 2.5,
-            "mass" : 8,
-
-            "mayhem" : 18,
-            "force" : 2.5,
+            "system" : "N/A",
+            
+            "condition" : 10,
+            "mass" : 1,
+            "mayhem" : 0,
+            "force" : 0,
 
             "scale" : 1.15,
             "glow" : 10.0,
@@ -159,14 +167,12 @@
         {
             "name": "Thermocoupler",
             "size" : 0.05,
-            "system" : ". . . . . [ ? ? ? ][ ? ? ? ]",
-            "condition" : 8,
-
-            "rating" : 2.5,
-            "mass" : 8,
-
-            "mayhem" : 18,
-            "force" : 2.5,
+            "system" : "N/A",
+            
+            "condition" : 10,
+            "mass" : 1,
+            "mayhem" : 0,
+            "force" : 0,
 
             "scale" : 1.5,
             "glow" : 15.0,
@@ -174,14 +180,12 @@
         {
             "name": "Supply Pipes",
             "size" : 0.05,
-            "system" : ". . . . . [ ? ? ? ][ ? ? ? ]",
-            "condition" : 8,
-
-            "rating" : 2.5,
-            "mass" : 8,
-
-            "mayhem" : 18,
-            "force" : 2.5,
+            "system" : "N/A",
+            
+            "condition" : 10,
+            "mass" : 1,
+            "mayhem" : 0,
+            "force" : 0,
 
             "scale" : 1.1,
             "glow" : 12.0,
@@ -189,16 +193,27 @@
         {
             "name": "Drip Pan",
             "size" : 0.05,
-            "system" : ". . . . . [ ? ? ? ][ ? ? ? ]",
-            "condition" : 8,
-
-            "rating" : 2.5,
-            "mass" : 8,
-
-            "mayhem" : 18,
-            "force" : 2.5,
+            "system" : "N/A",
+            
+            "condition" : 10,
+            "mass" : 1,
+            "mayhem" : 0,
+            "force" : 0,
 
             "scale" : 1.25,
+            "glow" : 10.0,
+        },
+        {
+            "name": "Insulated Tank",
+            "size" : 0.05,
+            "system" : "[Propellent][Storage]",
+            
+            "condition" : 10,
+            "mass" : 1,
+            "mayhem" : 0,
+            "force" : 0,
+
+            "scale" : 1.15,
             "glow" : 10.0,
         }
     ]

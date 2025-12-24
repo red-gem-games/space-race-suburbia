@@ -1,26 +1,33 @@
 extends StaticBody3D
+class_name Harmonizer
 
 @onready var glass: MeshInstance3D = $Glass
-@export var display_text: String = "HARMONIZER"
+@export var display_text: String
 
 func _ready() -> void:
-	update_text(" - THIS IS THE ENGINE - ")
+	update_text("Wake up, Neo. The Matrix has you...")
 
 func set_scrolling_text(text: String):
 	var mat = glass.get_active_material(0) as ShaderMaterial
 	
-	# Convert string to ASCII codes (max 30 characters)
+	text = text.to_upper()
+	
+	# Just add separator with some breathing room
+	var padded_text = text + "     - HELIOS -      "
+	
+	print("Text length: ", padded_text.length())
+	
+	# Convert string to ASCII codes (max 250 characters to match shader)
 	var char_codes = []
-	for i in range(30):
-		if i < text.length():
-			char_codes.append(text.unicode_at(i))
+	for i in range(250):
+		if i < padded_text.length():
+			char_codes.append(padded_text.unicode_at(i))
 		else:
-			char_codes.append(32)  # Pad with spaces
+			char_codes.append(32)
 	
 	mat.set_shader_parameter("text_chars", char_codes)
-	mat.set_shader_parameter("text_length", min(text.length(), 50))
+	mat.set_shader_parameter("text_length", padded_text.length())
 
-# Change text anytime!
 func update_text(new_text: String):
 	display_text = new_text
 	set_scrolling_text(new_text)

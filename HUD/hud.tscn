@@ -78,3 +78,203 @@ offset_bottom = 1511.0
 text = "Hold         to Extract Component"
 label_settings = SubResource("LabelSettings_yu8mg")
 vertical_alignment = 1
+
+[node name="1" type="Control" parent="."]
+anchors_preset = 0
+offset_left = -75.0
+offset_top = 475.0
+offset_right = -75.0
+offset_bottom = 475.0
+scale = Vector2(0.75, 0.75)
+
+[node name="Backdrop" type="ColorRect" parent="1"]
+layout_mode = 0
+offset_left = 183.826
+offset_top = 1115.0
+offset_right = 289.506
+offset_bottom = 1219.0
+color = Color(0.21568628, 0.21568628, 0.20392157, 0.61960787)
+
+[node name="1" type="ColorRect" parent="1"]
+layout_mode = 0
+offset_left = 184.0
+offset_top = 1218.0
+offset_right = 297.0
+offset_bottom = 1225.637
+color = Color(1, 0.9372549, 0, 1)
+
+[node name="2" type="ColorRect" parent="1"]
+layout_mode = 0
+offset_left = 184.0
+offset_top = 1108.0
+offset_right = 297.0
+offset_bottom = 1115.637
+color = Color(1, 0.9372549, 0, 1)
+
+[node name="3" type="ColorRect" parent="1"]
+layout_mode = 0
+offset_left = 184.12
+offset_top = 1108.0
+offset_right = 301.763
+offset_bottom = 1115.637
+rotation = 1.5707964
+color = Color(1, 0.9372549, 0, 1)
+
+[node name="4" type="ColorRect" parent="1"]
+layout_mode = 0
+offset_left = 297.0
+offset_top = 1108.0
+offset_right = 414.643
+offset_bottom = 1115.637
+rotation = 1.5707964
+color = Color(1, 0.9372549, 0, 1)
+
+[node name="2" type="Control" parent="."]
+anchors_preset = 0
+offset_left = 75.0
+offset_top = 275.0
+offset_right = 75.0
+offset_bottom = 275.0
+scale = Vector2(0.75, 0.75)
+
+[node name="Backdrop" type="ColorRect" parent="2"]
+layout_mode = 0
+offset_left = 183.826
+offset_top = 1115.0
+offset_right = 289.506
+offset_bottom = 1219.0
+color = Color(0.21568628, 0.21568628, 0.20392157, 0.61960787)
+
+[node name="1" type="ColorRect" parent="2"]
+layout_mode = 0
+offset_left = 184.0
+offset_top = 1218.0
+offset_right = 297.0
+offset_bottom = 1225.637
+color = Color(1, 0.9372549, 0, 1)
+
+[node name="2" type="ColorRect" parent="2"]
+layout_mode = 0
+offset_left = 184.0
+offset_top = 1108.0
+offset_right = 297.0
+offset_bottom = 1115.637
+color = Color(1, 0.9372549, 0, 1)
+
+[node name="3" type="ColorRect" parent="2"]
+layout_mode = 0
+offset_left = 184.12
+offset_top = 1108.0
+offset_right = 301.763
+offset_bottom = 1115.637
+rotation = 1.5707964
+color = Color(1, 0.9372549, 0, 1)
+
+[node name="4" type="ColorRect" parent="2"]
+layout_mode = 0
+offset_left = 297.0
+offset_top = 1108.0
+offset_right = 414.643
+offset_bottom = 1115.637
+rotation = 1.5707964
+color = Color(1, 0.9372549, 0, 1)
+
+[node name="3" type="Control" parent="."]
+anchors_preset = 0
+offset_left = 225.0
+offset_top = 275.0
+offset_right = 225.0
+offset_bottom = 275.0
+scale = Vector2(0.75, 0.75)
+
+[node name="Backdrop" type="ColorRect" parent="3"]
+layout_mode = 0
+offset_left = 183.826
+offset_top = 1115.0
+offset_right = 289.506
+offset_bottom = 1219.0
+color = Color(0.21568628, 0.21568628, 0.20392157, 0.61960787)
+
+[node name="1" type="ColorRect" parent="3"]
+layout_mode = 0
+offset_left = 184.0
+offset_top = 1218.0
+offset_right = 297.0
+offset_bottom = 1225.637
+color = Color(1, 0.9372549, 0, 1)
+
+[node name="2" type="ColorRect" parent="3"]
+layout_mode = 0
+offset_left = 184.0
+offset_top = 1108.0
+offset_right = 297.0
+offset_bottom = 1115.637
+color = Color(1, 0.9372549, 0, 1)
+
+[node name="3" type="ColorRect" parent="3"]
+layout_mode = 0
+offset_left = 184.12
+offset_top = 1108.0
+offset_right = 301.763
+offset_bottom = 1115.637
+rotation = 1.5707964
+color = Color(1, 0.9372549, 0, 1)
+
+[node name="4" type="ColorRect" parent="3"]
+layout_mode = 0
+offset_left = 297.0
+offset_top = 1108.0
+offset_right = 414.643
+offset_bottom = 1115.637
+rotation = 1.5707964
+color = Color(1, 0.9372549, 0, 1)
+
+[node name="4" type="Control" parent="."]
+anchors_preset = 0
+offset_left = 375.0
+offset_top = 275.0
+offset_right = 375.0
+offset_bottom = 275.0
+scale = Vector2(0.75, 0.75)
+
+[node name="Backdrop" type="ColorRect" parent="4"]
+layout_mode = 0
+offset_left = 183.826
+offset_top = 1115.0
+offset_right = 289.506
+offset_bottom = 1219.0
+color = Color(0.21568628, 0.21568628, 0.20392157, 0.61960787)
+
+[node name="1" type="ColorRect" parent="4"]
+layout_mode = 0
+offset_left = 184.0
+offset_top = 1218.0
+offset_right = 297.0
+offset_bottom = 1225.637
+color = Color(1, 0.9372549, 0, 1)
+
+[node name="2" type="ColorRect" parent="4"]
+layout_mode = 0
+offset_left = 184.0
+offset_top = 1108.0
+offset_right = 297.0
+offset_bottom = 1115.637
+color = Color(1, 0.9372549, 0, 1)
+
+[node name="3" type="ColorRect" parent="4"]
+layout_mode = 0
+offset_left = 184.12
+offset_top = 1108.0
+offset_right = 301.763
+offset_bottom = 1115.637
+rotation = 1.5707964
+color = Color(1, 0.9372549, 0, 1)
+
+[node name="4" type="ColorRect" parent="4"]
+layout_mode = 0
+offset_left = 297.0
+offset_top = 1108.0
+offset_right = 414.643
+offset_bottom = 1115.637
+rotation = 1.5707964
+color = Color(1, 0.9372549, 0, 1)
