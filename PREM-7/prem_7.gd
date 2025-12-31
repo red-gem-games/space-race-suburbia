@@ -78,24 +78,6 @@ func _ready() -> void:
 	control_hologram_timer.one_shot = true
 	grab_anim.play("RESET")
 	touch_anim.play("RESET")
-	holo_anim.play("research_card")
-	
-	#shader = Shader.new()
-	#shader.code = GLOW_SHADER.code
-	#shader_material = ShaderMaterial.new()
-	#shader_material.shader = GLOW_SHADER
-	#back_panel.set_surface_override_material(0, shader_material)
-	#back_panel.material_override = shader_material
-	#shader_material.set_shader_parameter("speed", 0.15)
-	#shader_material.set_shader_parameter("emission_strength", 1.0)
-	#shader_material.set_shader_parameter("base_alpha", 0.1)
-	#shader_material.set_shader_parameter("uv_projection_mode", 2)
-	
-	print("1. Add 'Fade Y (Min/Max)' back into Shader")
-	print("2. Launch Multicolored Beam into object when grabbing")
-	print("3. Once object is completely wrapped, release the beam (meaning it stops from the PREM-7 and the end lands within the object)")
-	print("--------------")
-	print("4. Add Tool Tips for various modes...first up is a widened split square that rotates when in extract mode")
 
 
 func _process(_delta: float) -> void:

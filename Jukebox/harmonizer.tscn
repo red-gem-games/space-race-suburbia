@@ -16,13 +16,14 @@ top_radius = 1.071
 bottom_radius = 0.786
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3svgt"]
+render_priority = 1
 transparency = 1
-albedo_color = Color(0, 0, 0, 0.5254902)
+albedo_color = Color(0.24477637, 0.2447764, 0.24477637, 0.5254902)
 metallic = 1.0
 roughness = 0.0
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_3svgt"]
-render_priority = 0
+render_priority = 1
 shader = ExtResource("3_adiye")
 shader_parameter/text_color = Color(0, 1, 0, 3)
 shader_parameter/bg_color = Color(0, 0.1, 0, 0.1)

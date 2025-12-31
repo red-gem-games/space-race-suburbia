@@ -264,7 +264,7 @@ var fresh_component: RigidBody3D
 var fresh_component_scale: Vector3
 var f_comp: RigidBody3D
 var new_component: RigidBody3D
-var launching_component: bool = false
+var storing_component: bool = false
 var extraction_finalized: bool = false
 
 var active_rocket: RigidBody3D
@@ -273,6 +273,8 @@ var under_the_hood: bool = false
 @onready var extracted_component_sound = $SoundFX/extracted_component
 
 var is_using_computer: bool = false
+
+var storage_shed: Node3D
 
 
 func _ready() -> void:
@@ -295,6 +297,9 @@ func _ready() -> void:
 	object_data = load_json_file(component_data_file)
 
 func _physics_process(delta: float) -> void:
+	
+	if extraction_started:
+		HUD.extract_time_remaining = extract_time
 
 	# Update ground distance
 	distance_to_ground = raycast_to_ground()
@@ -400,10 +405,10 @@ func _process(delta: float) -> void:
 	#if fresh_component:
 		#print(fresh_component.name)
 
-	if launching_component:
+	if storing_component:
 		reform = true
 		extraction_recently_completed = false
-		launching_component = false
+		storing_component = false
 		complete_extraction(fresh_component, selected_component_mesh)
 
 	if reform:
@@ -437,10 +442,10 @@ func _process(delta: float) -> void:
 					var high_extract_speed = 1.25
 					extract_speed = lerp(extract_speed, high_extract_speed, progress * delta * 1.25)
 				if control_timer.time_left < 2.0:
-					PREM_7.holo_anim.speed_scale = 0.1
+					PREM_7.holo_anim.speed_scale = 0.125
 					PREM_7.holo_anim.play("retract_hologram")
 				if control_timer.time_left < 2.0 and control_timer.time_left > 1.0:
-					alpha_x = lerp(alpha_x, 0.0, delta * 2.5)
+					alpha_x = lerp(alpha_x, 0.0, delta * 4.0)
 					selected_component_mesh.position = lerp(selected_component_mesh.position, Vector3.ZERO, delta * 2.5)
 					selected_component_mesh.scale = lerp(selected_component_mesh.scale, Vector3(x*s, y*s, z*s), delta * 2.5)
 				if control_timer.time_left < 1.0:
@@ -450,7 +455,8 @@ func _process(delta: float) -> void:
 					if control_timer.is_stopped():
 						extract_component(selected_component_mesh, selected_component_col)
 						setup_component()
-						launching_component = true
+						HUD.complete_extraction()
+						storing_component = true
 						scroll_component_data('DOWN')
 						extraction_started = false
 					control_timer.start(1.0)
@@ -560,12 +566,18 @@ func _on_action_key(status: String):
 		if extracting_object_active:
 			control_timer.start(extract_time)
 			PREM_7.ctrl_anim.play("activate")
+			HUD.catalog_extraction_phase = "idle"
+			HUD.extraction_complete = false
+			HUD.extraction_started = true
+			HUD.start_extraction(extract_time)
 			extraction_started = true
 	if status == "up":
 		if extraction_started:
 			PREM_7.ctrl_anim.play_backwards("activate")
 			PREM_7.holo_anim.play_backwards("retract_hologram")
 			control_timer.stop()
+			HUD.extraction_started = false
+			HUD.cancel_extraction()
 			extraction_started = false
 			
 
@@ -597,7 +609,6 @@ func _on_extract_key() -> void:
 		camera.attributes.dof_blur_near_enabled = true
 		if PREM_7.extract_message.visible:
 			PREM_7.extract_message.visible = false
-		HUD.message_status('Extract', 'ON')
 		for child in grabbed_object.get_children():
 			if child is CollisionShape3D:
 				child.disabled = true
@@ -620,7 +631,6 @@ func _on_extract_key() -> void:
 		#grabbed_target_position.x -= 10
 	else:
 		camera.attributes.dof_blur_near_enabled = false
-		HUD.message_status('Extract', 'OFF')
 		for child in grabbed_object.get_children():
 			if child is CollisionShape3D:
 				child.disabled = false
@@ -854,18 +864,7 @@ func _input(event: InputEvent) -> void:
 				current_jetpack_thrust = current_jetpack_thrust / 2
 
 		if event.keycode == KEY_CTRL:
-			print('IF YOU WAIT A FEW SECONDS BEFORE CONTROLLING, IT"S LIKE THE OBJECT SINKS???')
-			print('Instead...lets do a teleport effect here - dissolve out and reappear in the PREM-7')
-			#if not grabbed_object:
-				#return
-			#if grabbed_object.is_stepladder or grabbed_object.is_rocketship:
-				#return
-			#if pressed and grab_timer.time_left == 0.0:
-				#control_object()
-				#PREM_7.ctrl_anim.play("RESET")
-				#PREM_7.ctrl_anim.play("control_down")
-			#else:
-				#pass
+			pass
 
 
 		if event.keycode == KEY_Z:
@@ -955,19 +954,6 @@ func handle_object(status):
 		collision_layer = 1
 		right_mouse_down = false
 		_on_reset_key()
-
-func control_object():
-	if grabbed_object:
-		grabbed_object.is_controlled = true
-		controlled_object = grabbed_object
-		PREM_7.controlled_object = grabbed_object
-		grabbed_object.reparent(PREM_7.object_inventory)
-		grabbed_object.collision_layer = 0
-		grabbed_object.collision_mask = 0
-		grabbed_object.scale_object(grabbed_object.object_body, 0.25, 0.25, 0.25, 0.0, 0.15)
-		grabbed_object.scale_object(grabbed_object.glow_body, 0.25, 0.25, 0.25, 0.0, 0.15)
-		await get_tree().create_timer(0.15).timeout
-		grab_object()
 
 func fuse_mode_active():
 	if grabbed_object.is_component:
@@ -1367,6 +1353,7 @@ func pad_with_dots(text: String, total_length: int) -> String:
 	
 	return ".".repeat(dots_needed) + text
 
+
 func update_component_display():
 	if current_extraction_data.is_empty():
 		PREM_7.machine_name.text = ""
@@ -1381,9 +1368,28 @@ func update_component_display():
 
 	var machine_name_text = pad_with_dots(current_object_json.get("name", "??"), 30)
 	var machine_class_text = pad_with_dots(current_object_json.get("class", "??"), 31)
-	var system_text = pad_with_dots(comp.get("system", "??"), 30)
+	var system_text_raw = comp.get("system", "??")
+	var system_text = pad_with_dots(system_text_raw, 30)
 	
-	# Only animate if text changed
+	# Determine color based on first word
+	var first_word = system_text_raw.split(" ")[0].to_upper()
+	var text_color = Color.WHITE  # default
+	
+	if first_word.begins_with("[ENGINE]"):
+		text_color = Color.from_hsv(0.062, 0.53, 1.0, 1.0)
+		HUD.component_color = Color.from_hsv(0.062, 0.53, 1.0, 1.0)
+	elif first_word.begins_with("[PROPELLANT]"):
+		text_color = Color.from_hsv(0.422, 1.0, 0.977, 1.0)
+		HUD.component_color = Color.from_hsv(0.422, 1.0, 0.977, 1.0)
+	elif first_word.begins_with("[STRUCTURE]"):
+		text_color = Color.from_hsv(0.532, 0.707, 1.0, 1.0)
+		HUD.component_color = Color.from_hsv(0.532, 0.707, 1.0, 1.0)
+	elif first_word.begins_with("[OPERATION]"):
+		text_color = Color.from_hsv(0.861, 0.374, 1.0, 1.0)
+		HUD.component_color = Color.from_hsv(0.861, 0.374, 1.0, 1.0)
+	
+	PREM_7.component_system.modulate = text_color
+	
 	if PREM_7.machine_name.text != machine_name_text:
 		if name_tween:
 			name_tween.kill()
@@ -1394,12 +1400,11 @@ func update_component_display():
 			class_tween.kill()
 		class_tween = animate_typing_text(PREM_7.machine_class, machine_class_text, 0.015)
 	
-	if PREM_7.component_system.text != system_text:
+	if PREM_7.component_system.text != system_text_raw:
 		if system_tween:
 			system_tween.kill()
 		system_tween = animate_typing_text(PREM_7.component_system, system_text, 0.015)
-
-	# UI - Name
+	
 	PREM_7.component_name.text  = comp.get("name", "??")
 	PREM_7.component_name_back.text  = comp.get("name", "??")
 	
@@ -1439,12 +1444,10 @@ func update_component_display():
 
 	selected_component_col = matched_shape  # may be null; that's OK
 
-	# Pick the correct body holder
 	var body_in_use: Node = grabbed_object.extract_body if grabbed_object.extract_body else grabbed_object.object_body
 	if body_in_use == null:
 		return
 
-	# Highlight meshes by *string* base name (no .name on nulls)
 	selected_component_mesh = null
 	for mesh in body_in_use.get_children():
 		if mesh is MeshInstance3D:
@@ -1462,7 +1465,7 @@ func update_component_display():
 	if matched_base_name == "":
 		print("No matching CollisionShape3D for component:", comp.get("name", "??"))
 
-var current_condition: int = 0  # Track current state
+var current_condition: int = 0
 var current_rating: float = 0.0
 var current_mass: int = 0
 var name_tween: Tween = null
@@ -1803,8 +1806,6 @@ func _base_from_shape(name_string: String) -> String:
 	return name_string
 
 func extract_component(mesh, col):
-	
-	print('ah ha')
 
 	fresh_component = RigidBody3D.new()
 	fresh_component.name = mesh.name
@@ -1815,8 +1816,6 @@ func extract_component(mesh, col):
 	fresh_component.position = Vector3(1.0, -0.5, -3.0)
 	fresh_component.add_child(fresh_mesh)
 	fresh_component.add_child(fresh_col)
-	
-	#fresh_mesh.scale = true_scale
 	
 	fresh_mesh.position = Vector3.ZERO
 	fresh_col.position = Vector3.ZERO
@@ -1834,9 +1833,6 @@ func extract_component(mesh, col):
 				child.queue_free()
 				child = null
 
-	#fresh_component.scale = Vector3.ZERO
-	#new_mesh.scale = Vector3(s / xtra, s / xtra, s / xtra)
-
 	mesh.get_parent().remove_child(mesh)
 	#mesh.queue_free()
 	mesh = null
@@ -1849,12 +1845,7 @@ func extract_component(mesh, col):
 	#fresh_component.position = Vector3(2.0, -0.85, -4.0)
 	#new_mesh.rotation_degrees = Vector3(0, new_mesh.rotation_degrees.y + 28, 0)
 	
-	
-	print('how many times')
-	
 	extraction_recently_completed = true
-	
-	
 	
 	print('Rigid Pos: ', fresh_component.position)
 	print('Mesh Pos: ', fresh_mesh.position)
@@ -1895,21 +1886,14 @@ func setup_component():
 
 	f_comp.set_physics_process(true)
 	f_comp.set_process(true)
-
-	launch_component(f_comp)
-
-func launch_component(obj):
 	
-	extracted_component_sound.play()
+	store_component(f_comp)
 	
-	var forward = -camera.global_transform.basis.z.normalized()
-	var upward = camera.global_transform.basis.y.normalized()
-	var sideways = camera.global_transform.basis.y.normalized()
-
-	obj.apply_impulse(forward * 5 * obj.mass)
-	obj.apply_impulse(upward * 5)
-	obj.apply_torque_impulse(sideways * 15 * obj.mass)
-	#obj.EXTRACT_MATERIAL.emission_energy_multiplier *= 3.0
+func store_component(obj):
+	action_wait_timer.start(0.5)
+	obj.reparent(storage_shed)
+	obj.position = Vector3.ZERO
+	HUD.extraction_complete = true
 
 func reform_component(obj, time, parent):
 	if current_extraction_data.is_empty():
@@ -1918,7 +1902,7 @@ func reform_component(obj, time, parent):
 
 	for child in fresh_component.get_children():
 		if child is CollisionShape3D:
-			child.disabled = false
+			child.disabled = true
 	parent.EXTRACT_MATERIAL.emission = lerp(parent.EXTRACT_MATERIAL.emission, Color.TRANSPARENT, time * 2.0)
 	parent.EXTRACT_MATERIAL.albedo_color = lerp(parent.EXTRACT_MATERIAL.albedo_color, Color.TRANSPARENT, time * 2.0)
 	parent.EXTRACT_MATERIAL.emission_energy_multiplier = lerp(parent.EXTRACT_MATERIAL.emission_energy_multiplier, 0.0, time)

@@ -21,7 +21,7 @@
             {
                 "name": "Wash Basket",
                 "size": 0.05,
-                "system": "[Propellent][Storage]",
+                "system": "[Propellant][Storage]",
                 
                 "condition": 4,
                 "mass": 35,
@@ -47,7 +47,7 @@
             {
                 "name": "Inlet Valve",
                 "size": 0.05,
-                "system": "[Propellent][Regulation]",
+                "system": "[Propellant][Regulation]",
                 
                 "condition": 4,
                 "mass": 1,
@@ -60,7 +60,7 @@
             {
                 "name": "Inlet Hose",
                 "size": 0.05,
-                "system": "[Propellent][Delivery]",
+                "system": "[Propellant][Delivery]",
                 
                 "condition": 2,
                 "mass": 3,
@@ -107,7 +107,7 @@
             {
                 "name": "Blower Motor",
                 "size": 0.05,
-                "system": "[Propellent][Ventilation]",
+                "system": "[Propellant][Ventilation]",
                 
                 "condition": 3,
                 "mass": 16,

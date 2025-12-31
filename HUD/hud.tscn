@@ -1,11 +1,24 @@
-[gd_scene load_steps=5 format=3 uid="uid://baomcogkgkbvv"]
+[gd_scene load_steps=9 format=3 uid="uid://baomcogkgkbvv"]
 
 [ext_resource type="Texture2D" uid="uid://dj7bpyq468f67" path="res://Assets/UI/Reticle.png" id="1_37p78"]
 [ext_resource type="Script" uid="uid://bi78c7lvurqh7" path="res://HUD/hud.gd" id="1_64ctp"]
-[ext_resource type="Texture2D" uid="uid://cv0xlti56yuxi" path="res://Assets/UI/KEY.png" id="4_jvmdh"]
+[ext_resource type="FontFile" uid="uid://dfqpfewxx6i48" path="res://Assets/UI/FONTS/Audiowide-Regular.ttf" id="4_1rsjr"]
+[ext_resource type="Texture2D" uid="uid://37d2pt4u35lr" path="res://Assets/Reference_Placeholder/Grundfos_Circulation_Pump.webp" id="4_jvmdh"]
 
-[sub_resource type="LabelSettings" id="LabelSettings_yu8mg"]
-font_size = 100
+[sub_resource type="FontVariation" id="FontVariation_tnm0g"]
+base_font = ExtResource("4_1rsjr")
+variation_embolden = 0.25
+
+[sub_resource type="Theme" id="Theme_ncsg0"]
+default_font = SubResource("FontVariation_tnm0g")
+default_font_size = 250
+
+[sub_resource type="FontVariation" id="FontVariation_1rsjr"]
+base_font = ExtResource("4_1rsjr")
+
+[sub_resource type="Theme" id="Theme_tnm0g"]
+default_font = SubResource("FontVariation_1rsjr")
+default_font_size = 350
 
 [node name="HUD" type="Control"]
 layout_mode = 3
@@ -44,237 +57,594 @@ grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("1_37p78")
 
-[node name="Message" type="Control" parent="CanvasLayer"]
-layout_mode = 3
+[node name="Catalog" type="Control" parent="."]
 anchors_preset = 0
-offset_left = 127.0
-offset_top = 605.0
-offset_right = 336.0
-offset_bottom = 894.0
-scale = Vector2(0.56, 0.56)
+offset_left = 6.86
+offset_top = 460.0
+offset_right = 46.85933
+offset_bottom = 499.99988
+pivot_offset = Vector2(0, 0.99)
 
-[node name="Key" type="Sprite2D" parent="CanvasLayer/Message"]
-position = Vector2(445.179, 1310.19)
-scale = Vector2(0.0847249, 0.0847249)
-texture = ExtResource("4_jvmdh")
-
-[node name="Q_KEY" type="Label" parent="CanvasLayer/Message"]
-layout_mode = 0
-offset_left = 376.929
-offset_top = 1092.86
-offset_right = 510.929
-offset_bottom = 1510.86
-text = "Q"
-label_settings = SubResource("LabelSettings_yu8mg")
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="Instructions" type="Label" parent="CanvasLayer/Message"]
-layout_mode = 0
-offset_left = 102.0
-offset_top = 1093.0
-offset_right = 1940.0
-offset_bottom = 1511.0
-text = "Hold         to Extract Component"
-label_settings = SubResource("LabelSettings_yu8mg")
-vertical_alignment = 1
-
-[node name="1" type="Control" parent="."]
+[node name="1" type="Control" parent="Catalog"]
+modulate = Color(1, 1, 1, 0.3)
 anchors_preset = 0
 offset_left = -75.0
-offset_top = 475.0
 offset_right = -75.0
-offset_bottom = 475.0
 scale = Vector2(0.75, 0.75)
 
-[node name="Backdrop" type="ColorRect" parent="1"]
+[node name="Backdrop" type="ColorRect" parent="Catalog/1"]
 layout_mode = 0
-offset_left = 183.826
-offset_top = 1115.0
-offset_right = 289.506
-offset_bottom = 1219.0
+offset_left = 183.421
+offset_top = 1108.627
+offset_right = 286.57587
+offset_bottom = 1218.464
 color = Color(0.21568628, 0.21568628, 0.20392157, 0.61960787)
 
-[node name="1" type="ColorRect" parent="1"]
+[node name="1" type="ColorRect" parent="Catalog/1"]
 layout_mode = 0
 offset_left = 184.0
 offset_top = 1218.0
-offset_right = 297.0
-offset_bottom = 1225.637
-color = Color(1, 0.9372549, 0, 1)
+offset_right = 286.01
+offset_bottom = 1226.038
 
-[node name="2" type="ColorRect" parent="1"]
+[node name="2" type="ColorRect" parent="Catalog/1"]
 layout_mode = 0
 offset_left = 184.0
-offset_top = 1108.0
-offset_right = 297.0
-offset_bottom = 1115.637
-color = Color(1, 0.9372549, 0, 1)
+offset_top = 1100.53
+offset_right = 286.01
+offset_bottom = 1108.568
 
-[node name="3" type="ColorRect" parent="1"]
+[node name="3" type="ColorRect" parent="Catalog/1"]
 layout_mode = 0
 offset_left = 184.12
-offset_top = 1108.0
-offset_right = 301.763
-offset_bottom = 1115.637
+offset_top = 1101.42
+offset_right = 309.166
+offset_bottom = 1109.417
 rotation = 1.5707964
-color = Color(1, 0.9372549, 0, 1)
 
-[node name="4" type="ColorRect" parent="1"]
+[node name="4" type="ColorRect" parent="Catalog/1"]
 layout_mode = 0
-offset_left = 297.0
-offset_top = 1108.0
-offset_right = 414.643
-offset_bottom = 1115.637
+offset_left = 294.0
+offset_top = 1101.42
+offset_right = 419.046
+offset_bottom = 1109.417
 rotation = 1.5707964
-color = Color(1, 0.9372549, 0, 1)
 
-[node name="2" type="Control" parent="."]
+[node name="Label_1" type="Label" parent="Catalog/1"]
+layout_mode = 0
+offset_left = 228.00003
+offset_top = 1227.1201
+offset_right = 341.00003
+offset_bottom = 1636.1201
+scale = Vector2(0.165, 0.165)
+theme = SubResource("Theme_ncsg0")
+text = "1"
+horizontal_alignment = 1
+
+[node name="GrundfosCirculationPump" type="Sprite2D" parent="Catalog/1"]
+position = Vector2(234.21, 1164.011)
+scale = Vector2(0.094, 0.102)
+texture = ExtResource("4_jvmdh")
+
+[node name="2" type="Control" parent="Catalog"]
+modulate = Color(1, 1, 1, 0.3)
 anchors_preset = 0
-offset_left = 75.0
-offset_top = 275.0
-offset_right = 75.0
-offset_bottom = 275.0
+offset_left = 25.0
+offset_right = 25.0
 scale = Vector2(0.75, 0.75)
 
-[node name="Backdrop" type="ColorRect" parent="2"]
+[node name="Backdrop" type="ColorRect" parent="Catalog/2"]
 layout_mode = 0
-offset_left = 183.826
-offset_top = 1115.0
-offset_right = 289.506
-offset_bottom = 1219.0
+offset_left = 183.42096
+offset_top = 1108.627
+offset_right = 286.5758
+offset_bottom = 1218.464
 color = Color(0.21568628, 0.21568628, 0.20392157, 0.61960787)
 
-[node name="1" type="ColorRect" parent="2"]
+[node name="1" type="ColorRect" parent="Catalog/2"]
 layout_mode = 0
 offset_left = 184.0
 offset_top = 1218.0
-offset_right = 297.0
-offset_bottom = 1225.637
-color = Color(1, 0.9372549, 0, 1)
+offset_right = 286.01
+offset_bottom = 1226.038
 
-[node name="2" type="ColorRect" parent="2"]
+[node name="2" type="ColorRect" parent="Catalog/2"]
 layout_mode = 0
 offset_left = 184.0
-offset_top = 1108.0
-offset_right = 297.0
-offset_bottom = 1115.637
-color = Color(1, 0.9372549, 0, 1)
+offset_top = 1100.53
+offset_right = 286.01
+offset_bottom = 1108.568
 
-[node name="3" type="ColorRect" parent="2"]
+[node name="3" type="ColorRect" parent="Catalog/2"]
 layout_mode = 0
 offset_left = 184.12
-offset_top = 1108.0
-offset_right = 301.763
-offset_bottom = 1115.637
+offset_top = 1101.42
+offset_right = 309.166
+offset_bottom = 1109.417
 rotation = 1.5707964
-color = Color(1, 0.9372549, 0, 1)
 
-[node name="4" type="ColorRect" parent="2"]
+[node name="4" type="ColorRect" parent="Catalog/2"]
 layout_mode = 0
-offset_left = 297.0
-offset_top = 1108.0
-offset_right = 414.643
-offset_bottom = 1115.637
+offset_left = 294.0
+offset_top = 1101.42
+offset_right = 419.046
+offset_bottom = 1109.417
 rotation = 1.5707964
-color = Color(1, 0.9372549, 0, 1)
 
-[node name="3" type="Control" parent="."]
+[node name="Label_2" type="Label" parent="Catalog/2"]
+layout_mode = 0
+offset_left = 216.0
+offset_top = 1226.6667
+offset_right = 457.0
+offset_bottom = 1635.6667
+scale = Vector2(0.165, 0.165)
+theme = SubResource("Theme_ncsg0")
+text = "2"
+horizontal_alignment = 1
+
+[node name="3" type="Control" parent="Catalog"]
+modulate = Color(1, 1, 1, 0.3)
+anchors_preset = 0
+offset_left = 125.0
+offset_right = 125.0
+scale = Vector2(0.75, 0.75)
+
+[node name="Backdrop" type="ColorRect" parent="Catalog/3"]
+layout_mode = 0
+offset_left = 183.42102
+offset_top = 1108.627
+offset_right = 286.57587
+offset_bottom = 1218.464
+color = Color(0.21568628, 0.21568628, 0.20392157, 0.61960787)
+
+[node name="1" type="ColorRect" parent="Catalog/3"]
+layout_mode = 0
+offset_left = 184.0
+offset_top = 1218.0
+offset_right = 286.01
+offset_bottom = 1226.038
+
+[node name="2" type="ColorRect" parent="Catalog/3"]
+layout_mode = 0
+offset_left = 184.0
+offset_top = 1100.53
+offset_right = 286.01
+offset_bottom = 1108.568
+
+[node name="3" type="ColorRect" parent="Catalog/3"]
+layout_mode = 0
+offset_left = 184.12
+offset_top = 1101.42
+offset_right = 309.166
+offset_bottom = 1109.417
+rotation = 1.5707964
+
+[node name="4" type="ColorRect" parent="Catalog/3"]
+layout_mode = 0
+offset_left = 294.0
+offset_top = 1101.42
+offset_right = 419.046
+offset_bottom = 1109.417
+rotation = 1.5707964
+
+[node name="Label_3" type="Label" parent="Catalog/3"]
+layout_mode = 0
+offset_left = 216.0
+offset_top = 1226.6667
+offset_right = 456.99908
+offset_bottom = 1635.6667
+scale = Vector2(0.165, 0.165)
+theme = SubResource("Theme_ncsg0")
+text = "3"
+horizontal_alignment = 1
+
+[node name="4" type="Control" parent="Catalog"]
+modulate = Color(1, 1, 1, 0.3)
 anchors_preset = 0
 offset_left = 225.0
-offset_top = 275.0
 offset_right = 225.0
-offset_bottom = 275.0
 scale = Vector2(0.75, 0.75)
 
-[node name="Backdrop" type="ColorRect" parent="3"]
+[node name="Backdrop" type="ColorRect" parent="Catalog/4"]
 layout_mode = 0
-offset_left = 183.826
-offset_top = 1115.0
-offset_right = 289.506
-offset_bottom = 1219.0
+offset_left = 183.42096
+offset_top = 1108.627
+offset_right = 286.5758
+offset_bottom = 1218.464
 color = Color(0.21568628, 0.21568628, 0.20392157, 0.61960787)
 
-[node name="1" type="ColorRect" parent="3"]
+[node name="1" type="ColorRect" parent="Catalog/4"]
 layout_mode = 0
 offset_left = 184.0
 offset_top = 1218.0
-offset_right = 297.0
-offset_bottom = 1225.637
-color = Color(1, 0.9372549, 0, 1)
+offset_right = 286.01
+offset_bottom = 1226.038
 
-[node name="2" type="ColorRect" parent="3"]
+[node name="2" type="ColorRect" parent="Catalog/4"]
 layout_mode = 0
 offset_left = 184.0
-offset_top = 1108.0
-offset_right = 297.0
-offset_bottom = 1115.637
-color = Color(1, 0.9372549, 0, 1)
+offset_top = 1100.53
+offset_right = 286.01
+offset_bottom = 1108.568
 
-[node name="3" type="ColorRect" parent="3"]
+[node name="3" type="ColorRect" parent="Catalog/4"]
 layout_mode = 0
 offset_left = 184.12
-offset_top = 1108.0
-offset_right = 301.763
-offset_bottom = 1115.637
+offset_top = 1101.42
+offset_right = 309.166
+offset_bottom = 1109.417
 rotation = 1.5707964
-color = Color(1, 0.9372549, 0, 1)
 
-[node name="4" type="ColorRect" parent="3"]
+[node name="4" type="ColorRect" parent="Catalog/4"]
 layout_mode = 0
-offset_left = 297.0
-offset_top = 1108.0
-offset_right = 414.643
-offset_bottom = 1115.637
+offset_left = 294.0
+offset_top = 1101.42
+offset_right = 419.046
+offset_bottom = 1109.417
 rotation = 1.5707964
-color = Color(1, 0.9372549, 0, 1)
 
-[node name="4" type="Control" parent="."]
+[node name="Label_4" type="Label" parent="Catalog/4"]
+layout_mode = 0
+offset_left = 217.59192
+offset_top = 1226.6667
+offset_right = 464.59262
+offset_bottom = 1635.6667
+scale = Vector2(0.165, 0.165)
+theme = SubResource("Theme_ncsg0")
+text = "4"
+horizontal_alignment = 1
+
+[node name="5" type="Control" parent="Catalog"]
+modulate = Color(1, 1, 1, 0.3)
 anchors_preset = 0
-offset_left = 375.0
-offset_top = 275.0
-offset_right = 375.0
-offset_bottom = 275.0
+offset_left = 325.0
+offset_right = 325.0
 scale = Vector2(0.75, 0.75)
 
-[node name="Backdrop" type="ColorRect" parent="4"]
+[node name="Backdrop" type="ColorRect" parent="Catalog/5"]
 layout_mode = 0
-offset_left = 183.826
-offset_top = 1115.0
-offset_right = 289.506
-offset_bottom = 1219.0
+offset_left = 183.42096
+offset_top = 1108.627
+offset_right = 286.5758
+offset_bottom = 1218.464
 color = Color(0.21568628, 0.21568628, 0.20392157, 0.61960787)
 
-[node name="1" type="ColorRect" parent="4"]
+[node name="1" type="ColorRect" parent="Catalog/5"]
 layout_mode = 0
 offset_left = 184.0
 offset_top = 1218.0
-offset_right = 297.0
-offset_bottom = 1225.637
-color = Color(1, 0.9372549, 0, 1)
+offset_right = 286.01
+offset_bottom = 1226.038
 
-[node name="2" type="ColorRect" parent="4"]
+[node name="2" type="ColorRect" parent="Catalog/5"]
 layout_mode = 0
 offset_left = 184.0
-offset_top = 1108.0
-offset_right = 297.0
-offset_bottom = 1115.637
-color = Color(1, 0.9372549, 0, 1)
+offset_top = 1100.53
+offset_right = 286.01
+offset_bottom = 1108.568
 
-[node name="3" type="ColorRect" parent="4"]
+[node name="3" type="ColorRect" parent="Catalog/5"]
 layout_mode = 0
 offset_left = 184.12
-offset_top = 1108.0
-offset_right = 301.763
-offset_bottom = 1115.637
+offset_top = 1101.42
+offset_right = 309.166
+offset_bottom = 1109.417
 rotation = 1.5707964
-color = Color(1, 0.9372549, 0, 1)
 
-[node name="4" type="ColorRect" parent="4"]
+[node name="4" type="ColorRect" parent="Catalog/5"]
 layout_mode = 0
-offset_left = 297.0
-offset_top = 1108.0
-offset_right = 414.643
-offset_bottom = 1115.637
+offset_left = 294.0
+offset_top = 1101.42
+offset_right = 419.046
+offset_bottom = 1109.417
 rotation = 1.5707964
-color = Color(1, 0.9372549, 0, 1)
+
+[node name="Label_5" type="Label" parent="Catalog/5"]
+layout_mode = 0
+offset_left = 218.55206
+offset_top = 1226.6667
+offset_right = 465.5514
+offset_bottom = 1635.6667
+scale = Vector2(0.165, 0.165)
+theme = SubResource("Theme_ncsg0")
+text = "5"
+horizontal_alignment = 1
+
+[node name="6" type="Control" parent="Catalog"]
+modulate = Color(1, 1, 1, 0.3)
+anchors_preset = 0
+offset_left = 425.0
+offset_right = 425.0
+scale = Vector2(0.75, 0.75)
+
+[node name="Backdrop" type="ColorRect" parent="Catalog/6"]
+layout_mode = 0
+offset_left = 183.42102
+offset_top = 1108.627
+offset_right = 286.57587
+offset_bottom = 1218.464
+color = Color(0.21568628, 0.21568628, 0.20392157, 0.61960787)
+
+[node name="1" type="ColorRect" parent="Catalog/6"]
+layout_mode = 0
+offset_left = 184.0
+offset_top = 1218.0
+offset_right = 286.01
+offset_bottom = 1226.038
+
+[node name="2" type="ColorRect" parent="Catalog/6"]
+layout_mode = 0
+offset_left = 184.0
+offset_top = 1100.53
+offset_right = 286.01
+offset_bottom = 1108.568
+
+[node name="3" type="ColorRect" parent="Catalog/6"]
+layout_mode = 0
+offset_left = 184.12
+offset_top = 1101.42
+offset_right = 309.166
+offset_bottom = 1109.417
+rotation = 1.5707964
+
+[node name="4" type="ColorRect" parent="Catalog/6"]
+layout_mode = 0
+offset_left = 294.0
+offset_top = 1101.42
+offset_right = 419.046
+offset_bottom = 1109.417
+rotation = 1.5707964
+
+[node name="Label_6" type="Label" parent="Catalog/6"]
+layout_mode = 0
+offset_left = 217.77734
+offset_top = 1226.6667
+offset_right = 464.77667
+offset_bottom = 1635.6667
+scale = Vector2(0.165, 0.165)
+theme = SubResource("Theme_ncsg0")
+text = "6"
+horizontal_alignment = 1
+
+[node name="7" type="Control" parent="Catalog"]
+modulate = Color(1, 1, 1, 0.3)
+anchors_preset = 0
+offset_left = 525.0
+offset_right = 525.0
+scale = Vector2(0.75, 0.75)
+
+[node name="Backdrop" type="ColorRect" parent="Catalog/7"]
+layout_mode = 0
+offset_left = 183.42102
+offset_top = 1108.627
+offset_right = 286.57587
+offset_bottom = 1218.464
+color = Color(0.21568628, 0.21568628, 0.20392157, 0.61960787)
+
+[node name="1" type="ColorRect" parent="Catalog/7"]
+layout_mode = 0
+offset_left = 184.0
+offset_top = 1218.0
+offset_right = 286.01
+offset_bottom = 1226.038
+
+[node name="2" type="ColorRect" parent="Catalog/7"]
+layout_mode = 0
+offset_left = 184.0
+offset_top = 1100.53
+offset_right = 286.01
+offset_bottom = 1108.568
+
+[node name="3" type="ColorRect" parent="Catalog/7"]
+layout_mode = 0
+offset_left = 184.12
+offset_top = 1101.42
+offset_right = 309.166
+offset_bottom = 1109.417
+rotation = 1.5707964
+
+[node name="4" type="ColorRect" parent="Catalog/7"]
+layout_mode = 0
+offset_left = 294.0
+offset_top = 1101.42
+offset_right = 419.046
+offset_bottom = 1109.417
+rotation = 1.5707964
+
+[node name="Label_7" type="Label" parent="Catalog/7"]
+layout_mode = 0
+offset_left = 217.80933
+offset_top = 1226.6667
+offset_right = 464.80865
+offset_bottom = 1635.6667
+scale = Vector2(0.165, 0.165)
+theme = SubResource("Theme_ncsg0")
+text = "7"
+horizontal_alignment = 1
+
+[node name="8" type="Control" parent="Catalog"]
+modulate = Color(1, 1, 1, 0.3)
+anchors_preset = 0
+offset_left = 625.0
+offset_right = 625.0
+scale = Vector2(0.75, 0.75)
+
+[node name="Backdrop" type="ColorRect" parent="Catalog/8"]
+layout_mode = 0
+offset_left = 183.42102
+offset_top = 1108.627
+offset_right = 286.57587
+offset_bottom = 1218.464
+color = Color(0.21568628, 0.21568628, 0.20392157, 0.61960787)
+
+[node name="1" type="ColorRect" parent="Catalog/8"]
+layout_mode = 0
+offset_left = 184.0
+offset_top = 1218.0
+offset_right = 286.01
+offset_bottom = 1226.038
+
+[node name="2" type="ColorRect" parent="Catalog/8"]
+layout_mode = 0
+offset_left = 184.0
+offset_top = 1100.53
+offset_right = 286.01
+offset_bottom = 1108.568
+
+[node name="3" type="ColorRect" parent="Catalog/8"]
+layout_mode = 0
+offset_left = 184.12
+offset_top = 1101.42
+offset_right = 309.166
+offset_bottom = 1109.417
+rotation = 1.5707964
+
+[node name="4" type="ColorRect" parent="Catalog/8"]
+layout_mode = 0
+offset_left = 294.0
+offset_top = 1101.42
+offset_right = 419.046
+offset_bottom = 1109.417
+rotation = 1.5707964
+
+[node name="Label_8" type="Label" parent="Catalog/8"]
+layout_mode = 0
+offset_left = 217.94263
+offset_top = 1226.6667
+offset_right = 464.94366
+offset_bottom = 1635.6667
+scale = Vector2(0.165, 0.165)
+theme = SubResource("Theme_ncsg0")
+text = "8"
+horizontal_alignment = 1
+
+[node name="9" type="Control" parent="Catalog"]
+modulate = Color(1, 1, 1, 0.3)
+anchors_preset = 0
+offset_left = 725.0
+offset_right = 725.0
+scale = Vector2(0.75, 0.75)
+
+[node name="Backdrop" type="ColorRect" parent="Catalog/9"]
+layout_mode = 0
+offset_left = 183.42114
+offset_top = 1108.627
+offset_right = 286.576
+offset_bottom = 1218.464
+color = Color(0.21568628, 0.21568628, 0.20392157, 0.61960787)
+
+[node name="1" type="ColorRect" parent="Catalog/9"]
+layout_mode = 0
+offset_left = 184.0
+offset_top = 1218.0
+offset_right = 286.01
+offset_bottom = 1226.038
+
+[node name="2" type="ColorRect" parent="Catalog/9"]
+layout_mode = 0
+offset_left = 184.0
+offset_top = 1100.53
+offset_right = 286.01
+offset_bottom = 1108.568
+
+[node name="3" type="ColorRect" parent="Catalog/9"]
+layout_mode = 0
+offset_left = 184.12
+offset_top = 1101.42
+offset_right = 309.166
+offset_bottom = 1109.417
+rotation = 1.5707964
+
+[node name="4" type="ColorRect" parent="Catalog/9"]
+layout_mode = 0
+offset_left = 294.0
+offset_top = 1101.42
+offset_right = 419.046
+offset_bottom = 1109.417
+rotation = 1.5707964
+
+[node name="Label_9" type="Label" parent="Catalog/9"]
+layout_mode = 0
+offset_left = 217.94275
+offset_top = 1226.6667
+offset_right = 464.94373
+offset_bottom = 1635.6667
+scale = Vector2(0.165, 0.165)
+theme = SubResource("Theme_ncsg0")
+text = "9"
+horizontal_alignment = 1
+
+[node name="10" type="Control" parent="Catalog"]
+modulate = Color(1, 1, 1, 0.3)
+anchors_preset = 0
+offset_left = 825.0
+offset_right = 825.0
+scale = Vector2(0.75, 0.75)
+
+[node name="Backdrop" type="ColorRect" parent="Catalog/10"]
+layout_mode = 0
+offset_left = 183.42102
+offset_top = 1108.627
+offset_right = 286.57587
+offset_bottom = 1218.464
+color = Color(0.21568628, 0.21568628, 0.20392157, 0.61960787)
+
+[node name="1" type="ColorRect" parent="Catalog/10"]
+layout_mode = 0
+offset_left = 184.0
+offset_top = 1218.0
+offset_right = 286.01
+offset_bottom = 1226.038
+
+[node name="2" type="ColorRect" parent="Catalog/10"]
+layout_mode = 0
+offset_left = 184.0
+offset_top = 1100.53
+offset_right = 286.01
+offset_bottom = 1108.568
+
+[node name="3" type="ColorRect" parent="Catalog/10"]
+layout_mode = 0
+offset_left = 184.12
+offset_top = 1101.42
+offset_right = 309.166
+offset_bottom = 1109.417
+rotation = 1.5707964
+
+[node name="4" type="ColorRect" parent="Catalog/10"]
+layout_mode = 0
+offset_left = 294.0
+offset_top = 1101.42
+offset_right = 419.046
+offset_bottom = 1109.417
+rotation = 1.5707964
+
+[node name="Label_10" type="Label" parent="Catalog/10"]
+layout_mode = 0
+offset_left = 204.1012
+offset_top = 1226.6667
+offset_right = 614.1026
+offset_bottom = 1635.6667
+scale = Vector2(0.165, 0.165)
+theme = SubResource("Theme_ncsg0")
+text = "10"
+horizontal_alignment = 1
+
+[node name="Title" type="Label" parent="Catalog"]
+modulate = Color(1, 1, 1, 0.39215687)
+layout_mode = 0
+offset_left = 57.16
+offset_top = 772.125
+offset_right = 1991.16
+offset_bottom = 1219.1272
+scale = Vector2(0.125, 0.125)
+theme = SubResource("Theme_tnm0g")
+text = "CATALOG"
+
+[node name="ColorRect" type="ColorRect" parent="Catalog"]
+layout_mode = 0
+offset_left = 304.44226
+offset_top = 797.11426
+offset_right = 1046.6923
+offset_bottom = 804.11426
+color = Color(1, 1, 1, 0.27450982)

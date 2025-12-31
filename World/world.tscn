@@ -642,7 +642,6 @@ _data = {
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_e5i3a"]
 resource_name = "M_RO_Engine_Bake"
-cull_mode = 2
 albedo_texture = ExtResource("36_4giqt")
 metallic = 1.0
 metallic_texture = ExtResource("37_8iv6r")
@@ -686,17 +685,17 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_qs60e")
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_3gnva"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_8iv6r"]
 render_priority = 0
 shader = ExtResource("39_8iv6r")
-shader_parameter/glow_color = Color(0, 0.5019608, 1, 1)
-shader_parameter/pulse_color = Color(1, 0, 1, 1)
-shader_parameter/speed = 0.32000001194012
-shader_parameter/scale = 0.10000000149012
-shader_parameter/distortion = 0.04000000120148
-shader_parameter/shield_power = 0.0
-shader_parameter/rim_power = 2.278000108205
-shader_parameter/pulse_frequency = 0.32600001222512
+shader_parameter/glow_color = Color(0, 0.5, 1, 1)
+shader_parameter/pulse_color = Color(0.25, 1, 0.25, 1)
+shader_parameter/speed = 1.05200004671012
+shader_parameter/scale = 8.5
+shader_parameter/distortion = 0.02500000048898
+shader_parameter/shield_power = 0.3450000163875
+shader_parameter/rim_power = 3.930000186675
+shader_parameter/pulse_frequency = 0.10000000149012
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5ipgq"]
 resource_name = "M_Workbench_Bake"
@@ -1075,10 +1074,9 @@ surface_material_override/0 = SubResource("StandardMaterial3D_xmbla")
 [node name="OmniLight3D" type="OmniLight3D" parent="Workshop/House/Building"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19.4271, 2.74564, -5.47733)
 light_color = Color(1, 0.801667, 0.65, 1)
-light_energy = 4.794
+light_energy = 9.484
 light_indirect_energy = 8.36
-light_size = 1.0
-light_specular = 3.0
+light_specular = 0.0
 distance_fade_begin = 93.62
 distance_fade_length = 1636.7
 omni_range = 18.123
@@ -1109,7 +1107,7 @@ speed_scale = 0.35
 transform = Transform3D(1.8, 0, 0, 0, 1.8, 0, 0, 0, 1.8, 0, 2.41, 0)
 mesh = SubResource("ArrayMesh_i5ake")
 skeleton = NodePath("")
-surface_material_override/0 = SubResource("ShaderMaterial_3gnva")
+surface_material_override/0 = SubResource("ShaderMaterial_8iv6r")
 
 [node name="Workbench" type="StaticBody3D" parent="Workshop"]
 
@@ -1420,6 +1418,15 @@ text = "
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⢿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⢿⣿⣿⣿⣿⡿⠏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"
+
+[node name="Storage_Shed" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -37.66648, -1.2210329, -34.33974)
+
+[node name="Label3D" type="Label3D" parent="Storage_Shed"]
+transform = Transform3D(0.90515375, 0, 0.42508432, 0, 1, 0, -0.42508432, 0, 0.90515375, 0, 0, 0)
+pixel_size = 0.001
+text = "Storage Shed"
+font_size = 872
 
 [connection signal="body_entered" from="Launch_Sequence/Area3D" to="." method="_on_area_3d_body_entered"]
 [connection signal="body_exited" from="Launch_Sequence/Area3D" to="." method="_on_area_3d_body_exited"]

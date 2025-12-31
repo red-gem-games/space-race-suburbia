@@ -1,7 +1,7 @@
 // Harmonizer Shader
 
 shader_type spatial;
-render_mode blend_mix, cull_back, unshaded, specular_schlick_ggx;
+render_mode blend_mix, cull_back, specular_schlick_ggx;
 
 uniform vec4 text_color : source_color = vec4(0.0, 1.0, 0.0, 3.0);
 uniform vec4 bg_color : source_color = vec4(0.0, 0.1, 0.0, 0.1);  

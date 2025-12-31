@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://f722yn8gdiyj"]
+[gd_scene load_steps=12 format=3 uid="uid://f722yn8gdiyj"]
 
 [ext_resource type="PackedScene" uid="uid://bpvm0l41dywjs" path="res://PREM-7/PREM-7.tscn" id="1_glpr6"]
 [ext_resource type="Script" uid="uid://sw8eis2eqpyj" path="res://Character/character.gd" id="1_pjt0s"]
@@ -43,6 +43,9 @@ shader_parameter/uv_projection_mode = 0
 [sub_resource type="BoxShape3D" id="BoxShape3D_twwou"]
 size = Vector3(3.883, 1.2299805, 3.2267675)
 
+[sub_resource type="SphereShape3D" id="SphereShape3D_a23tb"]
+radius = 1.605
+
 [node name="Character" type="CharacterBody3D"]
 script = ExtResource("1_pjt0s")
 
@@ -83,3 +86,9 @@ stream = ExtResource("5_a23tb")
 volume_db = -5.0
 unit_size = 2.0
 max_db = -5.0
+
+[node name="RigidBody3D" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.699538)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D"]
+shape = SubResource("SphereShape3D_a23tb")

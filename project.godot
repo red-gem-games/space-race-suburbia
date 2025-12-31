@@ -33,6 +33,7 @@ movie_writer/movie_file="/Users/richardgibbs/Desktop/SRS - Media & Documents/VID
 
 folder_colors={
 "res://Assets/Blender/": "green",
+"res://Assets/Reference_Placeholder/": "red",
 "res://Assets/UI/": "orange"
 }
 

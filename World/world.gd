@@ -73,6 +73,8 @@ var touching_launch_button = false
 
 @onready var computer_camera: Camera3D = $Workshop/Workbench/Computer_Camera
 
+@onready var storage_shed: Node3D = $Storage_Shed
+
 func _activate_rocket():
 	active_rocket = $"Launch_Platform/TRS-1"
 	player_character.active_rocket = active_rocket
@@ -91,6 +93,8 @@ func _ready() -> void:
 	$Launch_Sequence/Launch_Box_Anim.play("button_glow")
 	
 	$Workshop/Harmonizer/Spin.play("spin_start")
+	
+	player_character.storage_shed = storage_shed
 
 
 var computer_active: bool = false
@@ -390,15 +394,15 @@ func camera_tween(cam: Camera3D, fov: float, dur: float):
 	cam_tween.set_trans(Tween.TRANS_LINEAR)
 	cam_tween.set_ease(Tween.EASE_IN_OUT)
 
-var exp_tween: Tween
+var expo_tween: Tween
 
-func exposure_tween(cam: Camera3D, exp: float, dur: float):
+func exposure_tween(cam: Camera3D, expo: float, dur: float):
 	
-	exp_tween = create_tween()
+	expo_tween = create_tween()
 	
-	exp_tween.tween_property(cam, "attributes:exposure_multiplier", exp, dur)
-	exp_tween.set_trans(Tween.TRANS_LINEAR)
-	exp_tween.set_ease(Tween.EASE_IN_OUT)
+	expo_tween.tween_property(cam, "attributes:exposure_multiplier", expo, dur)
+	expo_tween.set_trans(Tween.TRANS_LINEAR)
+	expo_tween.set_ease(Tween.EASE_IN_OUT)
 
 
 
