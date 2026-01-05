@@ -73,7 +73,7 @@ var touching_launch_button = false
 
 @onready var computer_camera: Camera3D = $Workshop/Workbench/Computer_Camera
 
-@onready var storage_shed: Node3D = $Storage_Shed
+@onready var storage_shed: Node3D = $StorageShed
 
 func _activate_rocket():
 	active_rocket = $"Launch_Platform/TRS-1"
@@ -114,12 +114,6 @@ func _physics_process(delta: float) -> void:
 		if $Launch_Platform/Smoke_Cloud.emitting:
 			$Launch_Platform/Smoke_Cloud.transparency += 0.00175
 			$Launch_Platform/Smoke_Cloud2.transparency += 0.00175
-	
-
-	if player_character.new_component:
-		if player_character.new_component.ready_to_move:
-			player_character.new_component.reparent(assembly_object_container)
-			player_character.new_component.ready_to_move = false
 
 	if grabbed_object:
 		 #--- Force Movement Toward Target ---

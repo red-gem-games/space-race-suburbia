@@ -509,7 +509,7 @@ shape = SubResource("ConvexPolygonShape3D_ag0sl")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0427239, 0.0143697, 0)
 
 [node name="WasherPanel" type="MeshInstance3D" parent="Body"]
-transform = Transform3D(-1.09278e-07, 0, 2.5, 0, 2.5, 0, -2.5, 0, -1.09278e-07, 0.0548385, 0.952278, -0.693256)
+transform = Transform3D(-1.09278474e-07, 0, 2.5, 0, 2.5, 0, -2.5, 0, -1.09278474e-07, 0.0548385, 0.952278, -0.693256)
 mesh = SubResource("ArrayMesh_p4s3u")
 skeleton = NodePath("")
 

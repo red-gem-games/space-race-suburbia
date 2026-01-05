@@ -266,6 +266,7 @@ var f_comp: RigidBody3D
 var new_component: RigidBody3D
 var storing_component: bool = false
 var extraction_finalized: bool = false
+var catalog_scale: float
 
 var active_rocket: RigidBody3D
 var under_the_hood: bool = false
@@ -275,6 +276,8 @@ var under_the_hood: bool = false
 var is_using_computer: bool = false
 
 var storage_shed: Node3D
+var catalog: Node3D
+var current_catalog_index: int = -1
 
 
 func _ready() -> void:
@@ -295,8 +298,11 @@ func _ready() -> void:
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	prem7_original_rotation = PREM_7.rotation
 	object_data = load_json_file(component_data_file)
+	catalog = PREM_7.catalog
+
 
 func _physics_process(delta: float) -> void:
+	
 	
 	if extraction_started:
 		HUD.extract_time_remaining = extract_time
@@ -415,7 +421,7 @@ func _process(delta: float) -> void:
 		for child in fresh_component.get_children():
 			if child is MeshInstance3D:
 				reform_component(child, delta, fresh_component)
-				fresh_component.scale_object(child, comp_scale_x, comp_scale_y, comp_scale_z, 0.0, 1.0)
+				fresh_component.scale_object(child, catalog_scale, catalog_scale, catalog_scale, 0.0, 1.0)
 		
 
 	if grabbed_object:
@@ -693,23 +699,28 @@ func _input(event: InputEvent) -> void:
 
 		elif event.button_index == MOUSE_BUTTON_WHEEL_UP and event.pressed:
 			if not middle_mouse_down and not right_mouse_down and not left_mouse_down:
-				if extracting_object_active:
-					# Check cooldown before allowing scroll
-					if scroll_cooldown <= 0:
+				if scroll_cooldown <= 0:
+					if extracting_object_active:
 						scroll_component_data('UP')
-						scroll_cooldown = scroll_cooldown_duration  # Start cooldown
-					return
-				print('Still need to figure out INSPECT, Cycling Stored Components, etc.')
+						scroll_cooldown = scroll_cooldown_duration
+						return
+					else:
+						cycle_catalog('UP')
+						scroll_cooldown = scroll_cooldown_duration
+						return
+				
 
 		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN and event.pressed:
 			if not middle_mouse_down and not right_mouse_down and not left_mouse_down:
-				if extracting_object_active:
-					# Check cooldown before allowing scroll
-					if scroll_cooldown <= 0:
+				if scroll_cooldown <= 0:
+					if extracting_object_active:
 						scroll_component_data('DOWN')
-						scroll_cooldown = scroll_cooldown_duration  # Start cooldown
-					return
-				print('Still need to figure out INSPECT, Cycling Stored Components, etc.')
+						scroll_cooldown = scroll_cooldown_duration
+						return
+					else:
+						cycle_catalog('DOWN')
+						scroll_cooldown = scroll_cooldown_duration
+						return
 
 
 		elif event.button_index == MOUSE_BUTTON_MIDDLE:
@@ -796,38 +807,25 @@ func _input(event: InputEvent) -> void:
 		elif event.keycode == KEY_D or event.keycode == KEY_RIGHT:
 			move_input["right"] = pressed
 
-		if event.keycode in [KEY_1, KEY_2, KEY_3, KEY_4]:
-			print('Need to use these to bring up components in specific slots, returning for now')
-			return
+		if event.keycode in [KEY_1, KEY_2, KEY_3, KEY_4, KEY_5, KEY_6, KEY_7, KEY_8, KEY_9, KEY_0]:
 			if not right_mouse_down and not left_mouse_down and not middle_mouse_down:
 				if pressed and not event.is_echo():
-					if pending_mode != "" and event.keycode != pending_mode_key:
-						return
-					if pending_mode == "":
-						var new_mode = ""
-						match event.keycode:
-							KEY_1:
-								new_mode = MODE_1
-							KEY_2:
-								new_mode = MODE_2
-							KEY_3:
-								new_mode = MODE_3
-							KEY_4:
-								new_mode = MODE_4
-						if new_mode == current_mode:
-							print("Already in mode: " + new_mode)
-							return
-						PREM_7.ctrl_anim.play("RESET")
-						PREM_7.ctrl_anim.play("shift_mode_down")
-						pending_mode = new_mode
-						pending_mode_key = event.keycode
-				elif not pressed:
-					if pending_mode != "" and event.keycode == pending_mode_key:
-						PREM_7.ctrl_anim.play("RESET")
-						PREM_7.ctrl_anim.play("shift_mode_up")
-						change_mode(pending_mode)
-						pending_mode = ""
-						pending_mode_key = 0
+					var slot_index = -1
+					match event.keycode:
+						KEY_1: slot_index = 0
+						KEY_2: slot_index = 1
+						KEY_3: slot_index = 2
+						KEY_4: slot_index = 3
+						KEY_5: slot_index = 4
+						KEY_6: slot_index = 5
+						KEY_7: slot_index = 6
+						KEY_8: slot_index = 7
+						KEY_9: slot_index = 8
+						KEY_0: slot_index = 9
+					
+					cycle_catalog(null, slot_index)
+
+
 
 		# Process SPACE for jetpack functionality.
 		# When SPACE is pressed, enable upward thrust.
@@ -1422,6 +1420,7 @@ func update_component_display():
 	PREM_7.component_mass.text   = str(int(comp.get("mass", 0)))
 	selected_component_scale = comp.get("scale", 0.0)
 	selected_component_glow  = comp.get("glow",  0.0)
+	catalog_scale = comp.get("catalog_scale", 0.0)
 	
 	update_condition_display(condition)
 	update_rating_display(rating)
@@ -1785,18 +1784,6 @@ func update_force_factor(force_value: float, max_force: float = 5.0):
 		0.5
 	)
 
-
-
-
-
-
-
-
-
-
-
-
-
 func _normalize_id(s: String) -> String:
 	return s.replace(" ", "").to_lower()
 
@@ -1813,7 +1800,7 @@ func extract_component(mesh, col):
 	var fresh_mesh = mesh.duplicate()
 	var fresh_col = col.duplicate()
 	
-	fresh_component.position = Vector3(1.0, -0.5, -3.0)
+	fresh_component.position = Vector3.ZERO
 	fresh_component.add_child(fresh_mesh)
 	fresh_component.add_child(fresh_col)
 	
@@ -1875,7 +1862,7 @@ func setup_component():
 			f_comp.object_body = child
 
 	f_comp.current_scale = Vector3(comp_scale_x, comp_scale_y, comp_scale_z)
-	print(f_comp.current_scale)
+	print("Comp Scale: ", f_comp.current_scale)
 	f_comp.physics_mat.friction = 0.9
 	f_comp.physics_mat.bounce = 0.0
 	f_comp.physics_material_override = f_comp.physics_mat
@@ -1887,13 +1874,24 @@ func setup_component():
 	f_comp.set_physics_process(true)
 	f_comp.set_process(true)
 	
-	store_component(f_comp)
+	transfer_component(f_comp)
 	
-func store_component(obj):
+func transfer_component(obj):
+	var slot_index = HUD.current_extraction_slot
+	
+	if slot_index == -1:
+		push_error("No active extraction slot!")
+		return
+	
 	action_wait_timer.start(0.5)
-	obj.reparent(storage_shed)
+	obj.reparent(catalog)
 	obj.position = Vector3.ZERO
-	HUD.extraction_complete = true
+	
+	if catalog.add_component_to_slot(obj, slot_index):
+		HUD.complete_extraction()
+		print("TRANSFER SUCCESSFUL: ", obj.name, " → Catalog Slot ", slot_index + 1)
+	else:
+		push_error("TRANSFER FAILED: Could not store ", obj.name, " in slot ", slot_index + 1)
 
 func reform_component(obj, time, parent):
 	if current_extraction_data.is_empty():
@@ -1940,6 +1938,67 @@ func object_empty():
 	print('*** Figure out what needs to happen with this animation ***')
 	print("NO CLICKS UNTIL THEN :)")
 	is_clickable = false
+
+func cycle_catalog(dir = null, direct_slot: int = -1):
+	if not catalog.has_components():
+		print("Catalog is empty - nothing to cycle through")
+		return
+	
+	# Get list of filled slot indices
+	var filled_slots = []
+	for i in range(10):
+		if not catalog.is_slot_empty(i):
+			filled_slots.append(i)
+	
+	if filled_slots.is_empty():
+		return
+	
+	# DIRECT SLOT SELECTION (number keys)
+	if direct_slot != -1:
+		if catalog.is_slot_empty(direct_slot):
+			print("Catalog Slot ", direct_slot + 1, " is empty!")
+			return
+		
+		if current_catalog_index != -1 and current_catalog_index < filled_slots.size():
+			var old_slot_index = filled_slots[current_catalog_index]
+			var old_component = catalog.get_component_from_slot(old_slot_index)
+			if old_component:
+				old_component.visible = false
+		
+		var filled_index = filled_slots.find(direct_slot)
+		if filled_index != -1:
+			current_catalog_index = filled_index
+			var d_component = catalog.get_component_from_slot(direct_slot)
+			if d_component:
+				d_component.visible = true
+			print("Now viewing: Slot ", direct_slot + 1, " || Component: ", d_component.name if d_component else "None")
+		return
+	
+	# SCROLLING (UP/DOWN)
+	if current_catalog_index != -1 and current_catalog_index < filled_slots.size():
+		var old_slot_index = filled_slots[current_catalog_index]
+		var old_component = catalog.get_component_from_slot(old_slot_index)
+		if old_component:
+			old_component.visible = false
+	
+	if dir == 'UP':
+		current_catalog_index = (current_catalog_index - 1 + filled_slots.size()) % filled_slots.size()
+	elif dir == 'DOWN':
+		current_catalog_index = (current_catalog_index + 1) % filled_slots.size()
+	
+	# Get the actual slot index and component
+	var actual_slot_index = filled_slots[current_catalog_index]
+	var a_component = catalog.get_component_from_slot(actual_slot_index)
+	
+	# Make the new component visible
+	if a_component:
+		a_component.visible = true
+	
+	print("Now viewing: Slot ", actual_slot_index + 1, " || Component: ", a_component.name if a_component else "None")
+
+
+
+
 
 
 

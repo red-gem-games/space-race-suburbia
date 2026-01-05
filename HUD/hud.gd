@@ -46,7 +46,7 @@ func _ready() -> void:
 	await get_tree().create_timer(0.05).timeout
 	print("5. If player selects a system, they then have two options: EXTRACT or FUSE -- There will also be a screen showing the overall Rating, Mass, Mayhem, and Force")
 	await get_tree().create_timer(0.05).timeout
-	print("6. If player decides to EXTRACT a broken part, they will press 'E' to enter EXTRACT mode")
+	print("6. If player decides to EXTRACT a broken/lesser part, they will press 'E' to enter EXTRACT mode")
 	await get_tree().create_timer(0.05).timeout
 	print("6a. System EXTRACT mode is very similar in that the available components for extraction (if they exist at that time and are filled) can be scrolled through and extracted the same way a component is within a grabbed object")
 	await get_tree().create_timer(0.05).timeout
@@ -59,6 +59,13 @@ func _ready() -> void:
 	print("7c. If the component fits, it will appear in green and the player can then press and hold 'Q' to fuse that component to the subsystem position")
 	await get_tree().create_timer(0.05).timeout
 	print("7c. If the component does not fit, it will appear in red and when the player presses 'Q', the hologram will shake left and right and an error tone will play")
+	await get_tree().create_timer(0.05).timeout
+	print("----------")
+	await get_tree().create_timer(0.05).timeout
+	print("8. If Catalog is full (10), player can no longer EXTRACT a component, and an error tone and shake will occur along with a quick message instructing them to FUSE or STORE one of the components in the catalog to make room.")
+	await get_tree().create_timer(0.05).timeout
+	print("8a. To STORE a component, the player must choose an item within the Catalog, and press + hold 'Q' - this will remove the component from the catalog and place it within the Storage Shed for later use")
+	
 
 func _process(delta: float) -> void:
 	if catalog_extraction_phase == "extracting" and extraction_total_time > 0:

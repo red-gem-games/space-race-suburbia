@@ -1,4 +1,4 @@
-[gd_scene load_steps=143 format=4 uid="uid://dw2grejb4tc3k"]
+[gd_scene load_steps=144 format=4 uid="uid://dw2grejb4tc3k"]
 
 [ext_resource type="PackedScene" uid="uid://f722yn8gdiyj" path="res://Character/character.tscn" id="1_f3sb7"]
 [ext_resource type="Script" uid="uid://cpdnlycwlet2q" path="res://World/world.gd" id="1_tlwt5"]
@@ -55,6 +55,7 @@
 [ext_resource type="Texture2D" uid="uid://cj3efyj54bf1u" path="res://Assets/Textures/Snow003_1K-PNG/Snow003_1K-PNG_Displacement.png" id="49_xu702"]
 [ext_resource type="PackedScene" uid="uid://b7k8hwtw0q3hh" path="res://Rocket/TRS_1.tscn" id="50_h4hkh"]
 [ext_resource type="Texture2D" uid="uid://crru6s0y3t7em" path="res://Assets/Textures/Snow003_1K-PNG/Snow003_1K-PNG_Roughness.png" id="50_i363k"]
+[ext_resource type="PackedScene" uid="uid://qtwniuu6s6h2" path="res://World/Storage_Shed/storage_shed.tscn" id="56_3gnva"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_0wqet"]
 render_priority = 0
@@ -602,6 +603,21 @@ data = PackedVector3Array(-9.7975, -0.5, 0, 0, -0.5, -4.9, 0, -0.5, 0, -9.7975, 
 [sub_resource type="BoxShape3D" id="BoxShape3D_i363k"]
 size = Vector3(1, 11.255859, 23.326172)
 
+[sub_resource type="Animation" id="Animation_3gnva"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+
 [sub_resource type="Animation" id="Animation_8iv6r"]
 resource_name = "spin_start"
 length = 10.0
@@ -617,21 +633,6 @@ tracks/0/keys = {
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector3(0, 0, 0), Vector3(0, 6.2831855, 0)]
-}
-
-[sub_resource type="Animation" id="Animation_3gnva"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:rotation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0, 0, 0)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_i5ake"]
@@ -1419,11 +1420,11 @@ text = "
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⢿⣿⣿⣿⣿⡿⠏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"
 
-[node name="Storage_Shed" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -37.66648, -1.2210329, -34.33974)
+[node name="StorageShed" parent="." instance=ExtResource("56_3gnva")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -36.956425, 0, -33.218563)
 
-[node name="Label3D" type="Label3D" parent="Storage_Shed"]
-transform = Transform3D(0.90515375, 0, 0.42508432, 0, 1, 0, -0.42508432, 0, 0.90515375, 0, 0, 0)
+[node name="Label3D" type="Label3D" parent="StorageShed"]
+transform = Transform3D(0.75, 0, 0, 0, 0.75, 0, 0, 0, 0.75, 0, 1.6658385, 0)
 pixel_size = 0.001
 text = "Storage Shed"
 font_size = 872

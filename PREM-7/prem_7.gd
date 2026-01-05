@@ -68,6 +68,9 @@ var c3: float
 
 var grab_object_complete: bool = false
 
+@onready var catalog = $Catalog
+
+
 func _ready() -> void:
 	
 	extract_message.visible = false

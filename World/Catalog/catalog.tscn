@@ -1,0 +1,23 @@
+[gd_scene load_steps=4 format=3 uid="uid://csf6eghnnf8ap"]
+
+[ext_resource type="Script" uid="uid://cft7mtt3y571h" path="res://World/Catalog/catalog.gd" id="1_7uobp"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wfdfh"]
+transparency = 1
+albedo_color = Color(1, 1, 1, 0.41960785)
+
+[sub_resource type="SphereMesh" id="SphereMesh_mbhjc"]
+material = SubResource("StandardMaterial3D_wfdfh")
+radius = 1.5
+height = 3.0
+
+[node name="Catalog" type="Node3D"]
+script = ExtResource("1_7uobp")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+cast_shadow = 0
+mesh = SubResource("SphereMesh_mbhjc")
+
+[node name="Label3D" type="Label3D" parent="MeshInstance3D2"]
+text = "Catalog"
+font_size = 112

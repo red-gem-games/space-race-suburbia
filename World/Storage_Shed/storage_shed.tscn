@@ -1,0 +1,17 @@
+[gd_scene load_steps=4 format=3 uid="uid://qtwniuu6s6h2"]
+
+[ext_resource type="Script" uid="uid://f60fifpbfmqw" path="res://World/Storage_Shed/storage_shed.gd" id="1_wfdfh"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_adwgs"]
+transparency = 1
+albedo_color = Color(1, 0.84832454, 0, 0.33900002)
+
+[sub_resource type="BoxMesh" id="BoxMesh_afgcc"]
+material = SubResource("StandardMaterial3D_adwgs")
+size = Vector3(5, 5, 5)
+
+[node name="StorageShed" type="Node3D"]
+script = ExtResource("1_wfdfh")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_afgcc")
