@@ -4,6 +4,10 @@ class_name character
 const is_character: bool = true
 var start_day: bool = false
 
+@onready var menu_background: MeshInstance3D = $Camera3D/Menu_Background
+var menu_open: bool = false
+var close_menu: bool = false
+
 var is_clickable: bool = true
 
 var object_data = {}
@@ -40,9 +44,8 @@ var desired_velocity := Vector3.ZERO
 var glow_color: Color
 var glow_opacity: float
 
-var distance_from_character: float = 7.0
 var previous_height: float
-var rotate_tween: Tween
+
 
 var base_rotation_sensitivity: float = 0.1
 var rotation_sensitivity: float = base_rotation_sensitivity
@@ -113,8 +116,6 @@ var modes = [MODE_1, MODE_2, MODE_3, MODE_4]
 var current_mode: String = MODE_1
 var pending_mode: String = ""  # Holds the pending mode change
 
-var pending_mode_key: int = 0  # Will store the keycode of the mode key that triggered pending_mode
-var shifting_object_active: bool = false
 var extracting_object_active: bool = false
 var suspending_object_active: bool = false
 var fusing_object_active: bool = false
@@ -140,7 +141,7 @@ var target_pitch_min: float
 var pitch_min_lerp_speed: float = 5.0  # Higher = faster adjustment
 var grounded_grabbed_pitch_min: float = deg_to_rad(-10.0)  # Limit downward look when grounded with object
 
-var is_touching_stepladder: bool = false
+var is_touching_scaffolding: bool = false
 
 # Variables for camera rotation
 var desired_yaw: float = 0.0
@@ -207,7 +208,9 @@ var bounce_decay: float = 0.1
 var scroll_cooldown := 0.0
 var scroll_cooldown_duration := 0.15  # Adjust to taste (0.1–0.2 is typical)
 
-var scale_tween: Tween
+var current_condition: int = 0
+var current_rating: float = 0.0
+var current_mass: int = 0
 
 var horizontal_delta
 var vertical_delta
@@ -236,6 +239,20 @@ var orbit_speed: float = 1.0  # Speed multiplier
 var input_direction_x: float = 0.0
 var input_direction_z: float = 0.0
 var grabbed_pos_set: bool = false
+
+
+var name_tween: Tween = null
+var class_tween: Tween = null
+var system_tween: Tween = null
+var condition_tween: Tween = null
+var rating_tween: Tween = null
+var mass_pulse_tween: Tween = null
+var mayhem_tween: Tween = null
+var force_tween: Tween = null
+var expo_tween: Tween
+var scale_tween: Tween
+var rotate_tween: Tween
+
 
 
 
@@ -267,6 +284,7 @@ var new_component: RigidBody3D
 var storing_component: bool = false
 var extraction_finalized: bool = false
 var catalog_scale: float
+var catalog_rotation: float
 
 var active_rocket: RigidBody3D
 var under_the_hood: bool = false
@@ -278,6 +296,7 @@ var is_using_computer: bool = false
 var storage_shed: Node3D
 var catalog: Node3D
 var current_catalog_index: int = -1
+var viewing_component: bool = false
 
 
 func _ready() -> void:
@@ -299,10 +318,13 @@ func _ready() -> void:
 	prem7_original_rotation = PREM_7.rotation
 	object_data = load_json_file(component_data_file)
 	catalog = PREM_7.catalog
+	menu_background.visible = false
 
 
 func _physics_process(delta: float) -> void:
-	
+	if menu_open:
+		if HUD.close_menu:
+			toggle_menu()
 	
 	if extraction_started:
 		HUD.extract_time_remaining = extract_time
@@ -314,36 +336,19 @@ func _physics_process(delta: float) -> void:
 	var vertical = 0
 	var horizontal = 0
 
-	if not extracting_object_active:
+	if not extracting_object_active and not fusing_object_active and not viewing_component:
 		if move_input["up"] and not move_input["down"]:
-			if not shifting_object_active:
-				vertical = lerp(vertical, 1, delta)
-				prem7_rotation_offset.x -= 0.0025
+			vertical = lerp(vertical, 1, delta)
+			prem7_rotation_offset.x -= 0.0025
 		elif move_input["down"] and not move_input["up"]:
-			if not shifting_object_active:
-				vertical = lerp(vertical, -1, delta)
-				prem7_rotation_offset.x += 0.0025
+			vertical = lerp(vertical, -1, delta)
+			prem7_rotation_offset.x += 0.0025
 		if move_input["right"] and not move_input["left"]:
-			if not shifting_object_active:
-				horizontal = lerp(horizontal, 1, delta)
-				prem7_rotation_offset.y += 0.0025
+			horizontal = lerp(horizontal, 1, delta)
+			prem7_rotation_offset.y += 0.0025
 		elif move_input["left"] and not move_input["right"]:
-			if not shifting_object_active:
-				horizontal = lerp(horizontal, -1, delta)
-				prem7_rotation_offset.y -= 0.0025
-
-	#if grabbed_object:
-		#if not grabbed_object.is_suspended:
-			#if vertical > 0:
-				#distance_from_character = lerp(distance_from_character, 5.0, delta * 2.5)  # Closer
-			#elif vertical < 0:
-				#distance_from_character = lerp(distance_from_character, 10.0, delta * 2.5)  # Further
-			#else:
-				#distance_from_character = lerp(distance_from_character, 7.0, delta * 2.0)  # Neutral
-			## Apply horizontal sway when strafing
-			#if horizontal != 0:
-				#var camera_right = camera.global_transform.basis.x.normalized()
-				#object_sway_offset.x -= horizontal * 1.75 * screen_res_sway_multiplier
+			horizontal = lerp(horizontal, -1, delta)
+			prem7_rotation_offset.y -= 0.0025
 
 	desired_direction = Vector3.ZERO
 	if vertical != 0 or horizontal != 0:
@@ -420,8 +425,9 @@ func _process(delta: float) -> void:
 	if reform:
 		for child in fresh_component.get_children():
 			if child is MeshInstance3D:
+				child.scale = Vector3(catalog_scale / 10, catalog_scale / 10, catalog_scale / 10)
+				fresh_component.rotation_degrees = Vector3(0.0, catalog_rotation, 0.0)
 				reform_component(child, delta, fresh_component)
-				fresh_component.scale_object(child, catalog_scale, catalog_scale, catalog_scale, 0.0, 1.0)
 		
 
 	if grabbed_object:
@@ -502,69 +508,72 @@ func _process(delta: float) -> void:
 	if scroll_cooldown > 0.0:
 		scroll_cooldown -= delta
 
-
+	if menu_open:
+		camera.fov = lerp(camera.fov, 85.0, delta * 10)
+	elif close_menu:
+		camera.fov = lerp(camera.fov, 75.0, delta * 10)
+		if camera.fov < 75.1:
+			close_menu = false
+			print('nice')
 
 	if grabbed_object:
-		if shifting_object_active or extracting_object_active or fusing_object_active:
+		if menu_open:
+			return
+		if extracting_object_active or fusing_object_active:
 			camera.fov = lerp(camera.fov, 55.0, delta * 10.0)
 			if not PREM_7.handling_object:
 				PREM_7.handle_object()
 				if extracting_object_active:
-					#HUD.set_highlight_color(manipulate_ORANGE, 0.5)
 					grabbed_object.extract_active = true
 				elif fusing_object_active:
-					#HUD.set_highlight_color(manipulate_BLUE, 0.7)
 					grabbed_object.fuse_active = true
-				#HUD.control_color.visible = true
 		else:
 			camera.fov = lerp(camera.fov, 75.0, delta * 10)
 			if PREM_7.handling_object:
 				grabbed_object.extract_active = false
 				grabbed_object.fuse_active = false
 				PREM_7.release_handle()
-		#grabbed_object.rotation_degrees = grabbed_rotation
-		#var z_offset = abs((grabbed_object.position.z - 3.0) / 10.0)
-		#if grabbed_object.is_suspended:
-			#if char_obj_shape:
-				#print("Clearing Char Obj Shape: ", char_obj_shape)
-				#clear_char_obj_shape()
-			#grabbed_object.gravity_scale = 0.0
-			#grabbed_object.position = grabbed_object.position.lerp(grabbed_target_position, delta * 0.5)
-			#return
-
-		#if not shifting_object_active:
-			#if z_offset >= 0.95 and z_offset <= 1.05:
-				#grabbed_pos_set = true
-			#if not grabbed_pos_set:
-				#prem7_rotation_offset.y = lerp(prem7_rotation_offset.y, -grabbed_object.position.x / 4.5 / (z_offset * 1.25), delta * 25.0)
-				#prem7_rotation_offset.x = lerp(prem7_rotation_offset.x, grabbed_object.position.y / 6.0 / z_offset, delta * 25.0)
-			#elif grabbed_pos_set:
-				#prem7_rotation_offset.y = lerp(prem7_rotation_offset.y, -grabbed_object.position.x / 4.5 / (z_offset * 1.25), delta * 50.0)
-				#prem7_rotation_offset.x = lerp(prem7_rotation_offset.x, grabbed_object.position.y / 6.0 / z_offset, delta * 50.0)
-			#object_sway_offset.x -= lerp(object_sway_offset.x, current_mouse_speed_x * object_sway_strength_x, 1.0)
-			#object_sway_offset.y -= lerp(object_sway_offset.y, current_mouse_speed_y * object_sway_strength_y, 1.0)
-			#object_sway_offset.x = clamp(object_sway_offset.x, -1.0, 1.0) 
-			#object_sway_offset.y = clamp(object_sway_offset.y, -2.0, 2.0)
-			#update_grabbed_object_sway(delta)
-
-		#if grabbed_object.is_being_extracted:
-			#handle_object('released')
-	#if extracting_object_active:
-		#desired_pitch = clamp(desired_pitch, 0.0, 0.35)
-		#if assembly_component_selection:
-			#var yaw_range = deg_to_rad(30.0)
-			#desired_yaw = clamp(desired_yaw, extracting_yaw - yaw_range, extracting_yaw + yaw_range)
-		#else:
-			#desired_yaw = extracting_yaw
-	if not grabbed_object and camera.fov < 74.9:
+	
+	elif viewing_component:
+		camera.fov = lerp(camera.fov, 55.0, delta * 10.0)
+		if not PREM_7.handling_object:
+			PREM_7.handle_object()
+			return
+		if PREM_7.handling_object:
+			PREM_7.release_handle()
+			return
+	
+	if not grabbed_object and not viewing_component and camera.fov < 74.9:
 		camera.fov = lerp(camera.fov, 75.0, delta * 10)
 		PREM_7.release_handle()
-		
-		print('is something happening')
+
 
 ##--------------------------------------##
 ##------------INPUT RESPONSE------------##
 ##--------------------------------------##
+
+func toggle_menu():
+	if not menu_open:
+		menu_background.visible = true
+		menu_open = true
+		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+		HUD.menu.visible = true
+		PREM_7.visible = false
+		HUD.catalog.visible = false
+		HUD.reticle.visible = false
+	else:
+		close_menu = true
+		menu_background.visible = false
+		menu_open = false
+		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+		if not grabbed_object:
+			HUD.reticle.visible = true
+		HUD.menu.visible = false
+		PREM_7.visible = true
+		HUD.catalog.visible = true
+		HUD.close_menu = false
+		return
+
 func _on_action_key(status: String):
 	if action_wait_timer.time_left > 0.0:
 		return
@@ -577,6 +586,11 @@ func _on_action_key(status: String):
 			HUD.extraction_started = true
 			HUD.start_extraction(extract_time)
 			extraction_started = true
+		#elif fusion_ractive:
+			#add fusion logic here
+		elif viewing_component:
+			print('LETS GOOOOO')
+			
 	if status == "up":
 		if extraction_started:
 			PREM_7.ctrl_anim.play_backwards("activate")
@@ -596,14 +610,16 @@ func _on_extract_key() -> void:
 		PREM_7.holo_anim.speed_scale = 1.0
 	if fusing_object_active:
 		return
-	if grabbed_object.is_stepladder or grabbed_object.is_rocketship:
+	if grabbed_object.is_scaffolding or grabbed_object.is_rocketship:
 		return
 	if grabbed_object.is_component:
 		print('Add warning here:')
 		print("Ah, Ah, Ah. Can't extract a component any further!")
 		return
+	PREM_7.set_catalog_glow_color(Color(0.914, 0.686, 0.0, 0.537), Color(1.0, 0.502, 0.0), Color(1.694, 0.822, 0.0), 3.6)
 
 	action_wait_timer.start(0.5)
+
 	desired_pitch = 0.0
 	desired_yaw = grabbed_object.rotation.y
 	#print(yaw + grabbed_object.rotation.y)
@@ -612,6 +628,7 @@ func _on_extract_key() -> void:
 	extracting_object_active =! extracting_object_active
 		
 	if extracting_object_active:
+		change_exposure(camera, 0.5, 0.1)
 		camera.attributes.dof_blur_near_enabled = true
 		if PREM_7.extract_message.visible:
 			PREM_7.extract_message.visible = false
@@ -628,18 +645,22 @@ func _on_extract_key() -> void:
 		#power = PREM_7.component_power.get_parent()
 		#mass = PREM_7.component_mass.get_parent()
 		#lift = PREM_7.component_lift.get_parent()
-		grabbed_object.manipulation_mode('Active')
+		grabbed_object.manipulation_mode('Extract ON')
 		var count = current_extraction_data.size()
 		for i in range(count):
 			scroll_component_data('DOWN')
 		right_mouse_down = false
 		handle_object('pressed')
+		
 		#grabbed_target_position.x -= 10
 	else:
+		change_exposure(camera, 0.9, 0.1)
 		camera.attributes.dof_blur_near_enabled = false
 		for child in grabbed_object.get_children():
 			if child is CollisionShape3D:
 				child.disabled = false
+		for child in grabbed_object.object_body.get_children():
+			child.set_material_overlay(grabbed_object.standard_material)
 		if selected_component_mesh:
 			selected_component_mesh.scale.x = comp_scale_x
 			selected_component_mesh.scale.y = comp_scale_y
@@ -658,6 +679,26 @@ func _on_extract_key() -> void:
 		#right_mouse_down = false
 		print('Stop Extracting')
 
+func _on_fuse_key() -> void:
+	pass
+
+func _on_view_key() -> void:
+	
+	viewing_component =! viewing_component
+	
+	if viewing_component:
+		change_exposure(camera, 0.5, 0.1)
+		cycle_catalog(null, current_catalog_index)
+		PREM_7.holo_anim.play("cast_catalog")
+		PREM_7.set_catalog_glow_color(Color(0.0, 0.5, 1.0, 0.535), Color(0.0, 0.0, 1.0, 1.0), Color(0.0, 0.66, 1.694, 1.0), 5.0)
+		camera.attributes.dof_blur_near_enabled = true
+		desired_pitch = 0.0
+	else:
+		change_exposure(camera, 0.9, 0.1)
+		PREM_7.holo_anim.play_backwards("cast_catalog")
+		camera.attributes.dof_blur_near_enabled = false
+	pass
+
 func _on_reset_key() -> void:
 	print('RESETTING')
 	if grabbed_object:
@@ -671,6 +712,7 @@ func _input(event: InputEvent) -> void:
 	if is_using_computer:
 		return
 	if event is InputEventMouseButton:
+		
 		if left_mouse_down and event.button_index == MOUSE_BUTTON_RIGHT:
 			return
 		if right_mouse_down and event.button_index == MOUSE_BUTTON_LEFT:
@@ -689,6 +731,9 @@ func _input(event: InputEvent) -> void:
 					PREM_7.trig_anim.play("trigger_release")
 					PREM_7.trig_anim.play("RESET")
 
+		if menu_open:
+			return
+
 		elif event.button_index == MOUSE_BUTTON_RIGHT and grabbed_object:
 			print('This will be used somewhere else down the line...')
 			#if not middle_mouse_down and not left_mouse_down:
@@ -699,13 +744,21 @@ func _input(event: InputEvent) -> void:
 
 		elif event.button_index == MOUSE_BUTTON_WHEEL_UP and event.pressed:
 			if not middle_mouse_down and not right_mouse_down and not left_mouse_down:
+				print('Make sure Arrow Keys + Controller support matches this')
 				if scroll_cooldown <= 0:
 					if extracting_object_active:
 						scroll_component_data('UP')
 						scroll_cooldown = scroll_cooldown_duration
 						return
+					elif fusing_object_active:
+						pass
 					else:
+						if grabbed_object or not PREM_7.catalog_active:
+							return
 						cycle_catalog('UP')
+						for child in PREM_7.catalog.get_children():
+							if child is RigidBody3D:
+								child.manipulation_mode('View ON')
 						scroll_cooldown = scroll_cooldown_duration
 						return
 				
@@ -713,40 +766,32 @@ func _input(event: InputEvent) -> void:
 		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN and event.pressed:
 			if not middle_mouse_down and not right_mouse_down and not left_mouse_down:
 				if scroll_cooldown <= 0:
+					print('Make sure Arrow Keys + Controller support matches this')
 					if extracting_object_active:
 						scroll_component_data('DOWN')
 						scroll_cooldown = scroll_cooldown_duration
 						return
+					elif fusing_object_active:
+						pass
 					else:
+						if grabbed_object or not PREM_7.catalog_active:
+							return
 						cycle_catalog('DOWN')
+						for child in PREM_7.catalog.get_children():
+							if child is RigidBody3D:
+								child.manipulation_mode('View ON')
 						scroll_cooldown = scroll_cooldown_duration
 						return
 
-
-		elif event.button_index == MOUSE_BUTTON_MIDDLE:
-			if not right_mouse_down and not left_mouse_down:
-				if event.is_pressed():
-					middle_mouse_down = true
-					PREM_7.ctrl_anim.play("RESET")
-					PREM_7.ctrl_anim.play("inspect")
-					print("Object is being inspected!")
-					print('Add hologram tablet above PREM-7 that shoots out of top opening')
-					print('THEN, allow player to scroll through different inspection menus for object by scrolling with wheel')
-					inspecting_object_active = true
-				if not event.is_pressed():
-					middle_mouse_down = false
-					PREM_7.ctrl_anim.play("RESET")
-					PREM_7.ctrl_anim.play("control_up")
-					print("Object is no longer being inspected!")
-					inspecting_object_active = false
-
-	# Process Mouse Motion events.
 	if event is InputEventMouseMotion and Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
+		
+		if menu_open:
+			return
 		
 		current_mouse_speed_x = event.relative.x
 		current_mouse_speed_y = event.relative.y
 
-		if not extracting_object_active:
+		if not extracting_object_active and not fusing_object_active and not viewing_component:
 			var max_delta: float = 0.15 * screen_res_sway_multiplier
 			var dx = clamp(event.relative.x * mouse_speed, -max_delta, max_delta)
 			var dy = clamp(event.relative.y * mouse_speed, -max_delta, max_delta)
@@ -755,22 +800,75 @@ func _input(event: InputEvent) -> void:
 			desired_pitch -= dy
 			desired_pitch = clamp(desired_pitch, pitch_min, pitch_max)
 
-	# Process Keyboard events.
 	if event is InputEventKey and not event.is_echo():
+		
+
 		var pressed = event.is_pressed()
+
+		if event.keycode == KEY_ESCAPE and pressed:
+			desired_pitch = 0
+			_on_reset_key()
+			if extracting_object_active:
+				_on_extract_key()
+				return
+			elif fusing_object_active:
+				_on_fuse_key()
+				return
+			elif viewing_component:
+				_on_view_key()
+				return
+			else:
+				toggle_menu()
+
+		if menu_open:
+			return
+
+		if event.keycode == KEY_UP and event.pressed:
+			if not middle_mouse_down and not right_mouse_down and not left_mouse_down:
+				if extracting_object_active:
+					scroll_component_data('UP')
+					return
+				elif fusing_object_active:
+					pass
+				else:
+					if grabbed_object or not PREM_7.catalog_active:
+						return
+					cycle_catalog('UP')
+					return
+		if event.keycode == KEY_DOWN and event.pressed:
+			if not middle_mouse_down and not right_mouse_down and not left_mouse_down:
+				if extracting_object_active:
+					scroll_component_data('DOWN')
+					return
+				elif fusing_object_active:
+					pass
+				else:
+					if grabbed_object or not PREM_7.catalog_active:
+						return
+					cycle_catalog('DOWN')
+					return
+			pass
 
 		if event.keycode == KEY_E and pressed:
 			if grabbed_object:
 				_on_extract_key()
-		if event.keycode == KEY_R and pressed:
-			desired_pitch = 0
-			_on_reset_key()
-		
-		if event.keycode == KEY_Q:
-			if pressed:
-				_on_action_key('down')
-			if not pressed:
-				_on_action_key('up')
+
+		if event.keycode == KEY_C and pressed:
+			if grabbed_object or not PREM_7.catalog.is_viewable or extracting_object_active or fusing_object_active:
+				return
+			if action_wait_timer.time_left > 0.0:
+				return
+			if not PREM_7.catalog_active:
+				PREM_7.holo_anim.play("RESET")
+				PREM_7.cast_catalog = true
+				_on_view_key()
+				action_wait_timer.start(0.5)
+				return
+			elif PREM_7.catalog_active:
+				PREM_7.cast_catalog = false
+				_on_view_key()
+				action_wait_timer.start(0.5)
+				return
 
 		if event.keycode == KEY_F:
 			if not grabbed_object or extracting_object_active:
@@ -790,12 +888,17 @@ func _input(event: InputEvent) -> void:
 					print('Stop Fusing')
 					#grabbed_object.set_outline('GRAB', glow_color, glow_opacity)
 					_on_reset_key()
+		
 
-		if event.keycode == KEY_QUOTELEFT and pressed and not event.is_echo():
-			if Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
-				Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
-			else:
-				Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+		if event.keycode == KEY_R and pressed:
+			desired_pitch = 0
+			_on_reset_key()
+		
+		if event.keycode == KEY_SPACE:
+			if pressed:
+				_on_action_key('down')
+			if not pressed:
+				_on_action_key('up')
 
 		# Update movement key states.
 		if event.keycode == KEY_W or event.keycode == KEY_UP:
@@ -810,6 +913,8 @@ func _input(event: InputEvent) -> void:
 		if event.keycode in [KEY_1, KEY_2, KEY_3, KEY_4, KEY_5, KEY_6, KEY_7, KEY_8, KEY_9, KEY_0]:
 			if not right_mouse_down and not left_mouse_down and not middle_mouse_down:
 				if pressed and not event.is_echo():
+					if grabbed_object or not PREM_7.catalog_active:
+						return
 					var slot_index = -1
 					match event.keycode:
 						KEY_1: slot_index = 0
@@ -827,24 +932,29 @@ func _input(event: InputEvent) -> void:
 
 
 
-		# Process SPACE for jetpack functionality.
-		# When SPACE is pressed, enable upward thrust.
-		if event.keycode == KEY_SPACE:
-			hover_lock = false
-			if not airborne:
-				pitch_set = false
-			if pressed and not assembly_component_selection:
-				jetpack_active = true
-			else:
-				current_jetpack_thrust = lerp(current_jetpack_accel, 0.0, 1.0)
-				jetpack_active = false
-		if event.keycode == KEY_ALT:
-			if airborne:
-				if pressed:
-					hover_lock =! hover_lock
-					print('Jetpack & Hover need to be unlocked later in game...')
-					hover_base_y = global_position.y
-					hover_bob_time = 0.0
+		## When thinking about the jetpack, we run into the issue of players attempting to fly over the natural barrier of the fencing and into the neighbors yards. Instead, if we used SCAFFOLDING, we can create another natural barrier that the player cannot go past, they can only go up/down ##
+
+
+
+		## Process SPACE for jetpack functionality.
+		## When SPACE is pressed, enable upward thrust.
+		#if event.keycode == KEY_SPACE:
+			#hover_lock = false
+			#if not airborne:
+				#pitch_set = false
+			#if pressed and not assembly_component_selection:
+				#jetpack_active = true
+			#else:
+				#current_jetpack_thrust = lerp(current_jetpack_accel, 0.0, 1.0)
+				#jetpack_active = false
+		#if event.keycode == KEY_ALT:
+			#if airborne:
+				#if pressed:
+					#hover_lock =! hover_lock
+					#print('Jetpack & Hover need to be unlocked later in game...')
+					#hover_base_y = global_position.y
+					#hover_bob_time = 0.0
+	
 		if event.keycode == KEY_SHIFT:
 			if pressed:
 				movement_speed = base_movement_speed * 1.5
@@ -861,16 +971,6 @@ func _input(event: InputEvent) -> void:
 				current_jetpack_accel = current_jetpack_accel / 2
 				current_jetpack_thrust = current_jetpack_thrust / 2
 
-		if event.keycode == KEY_CTRL:
-			pass
-
-
-		if event.keycode == KEY_Z:
-			if pressed:
-				if shifting_object_active:
-					z_rotate_mode = true
-			else:
-				z_rotate_mode = false
 
 
 
@@ -880,13 +980,16 @@ func _input(event: InputEvent) -> void:
 
 
 func grab_object():
-	if distance_to_ground > 2.97:
-		print('why would this work?')
-		for child in get_children():
-			if child is CollisionShape3D:
-				child.disabled = true
-				if is_touching_stepladder:
-					child.disabled = false
+	
+	PREM_7.cast_catalog = false
+	
+	#if distance_to_ground > 2.97:
+		#print('why would this work?')
+		#for child in get_children():
+			#if child is CollisionShape3D:
+				#child.disabled = true
+				#if is_touching_scaffolding:
+					#child.disabled = false
 	grabbed_object.extract_body = grabbed_object.object_body.duplicate()
 	grabbed_object.extract_body.position = Vector3(0.0, -0.25, 0.0)
 	grabbed_object.extract_body.scale = Vector3.ZERO
@@ -902,10 +1005,10 @@ func grab_object():
 	grabbed_object.linear_damp = 0
 	grabbed_initial_rotation = rotation_degrees
 	action_wait_timer.start(0.5)
-	await get_tree().create_timer(0.5).timeout
-	for child in get_children():
-		if child is CollisionShape3D:
-			child.disabled = false
+	#await get_tree().create_timer(0.5).timeout
+	#for child in get_children():
+		#if child is CollisionShape3D:
+			#child.disabled = false
 
 func release_object():
 	var children = grabbed_object.get_children()
@@ -1262,6 +1365,20 @@ func update_grabbed_object_physics(delta: float) -> void:
 
 
 
+
+
+
+
+
+func change_exposure(cam: Camera3D, expo: float, dur: float):
+	
+	expo_tween = create_tween()
+	
+	expo_tween.tween_property(cam, "attributes:exposure_multiplier", expo, dur)
+	expo_tween.set_trans(Tween.TRANS_LINEAR)
+	expo_tween.set_ease(Tween.EASE_IN_OUT)
+
+
 func scale_object(object, x_scale: float, y_scale: float, z_scale: float, wait_time: float, duration: float):
 	await get_tree().create_timer(wait_time).timeout
 	
@@ -1374,17 +1491,17 @@ func update_component_display():
 	var text_color = Color.WHITE  # default
 	
 	if first_word.begins_with("[ENGINE]"):
-		text_color = Color.from_hsv(0.062, 0.53, 1.0, 1.0)
-		HUD.component_color = Color.from_hsv(0.062, 0.53, 1.0, 1.0)
+		text_color = Color(1.0, 0.5, 0.0, 1.0)
+		HUD.component_color = Color(1.0, 0.5, 0.0, 1.0)
 	elif first_word.begins_with("[PROPELLANT]"):
-		text_color = Color.from_hsv(0.422, 1.0, 0.977, 1.0)
-		HUD.component_color = Color.from_hsv(0.422, 1.0, 0.977, 1.0)
+		text_color = Color(0.3, 0.85, 0.4, 1.0)
+		HUD.component_color = Color(0.3, 0.85, 0.4, 1.0)
 	elif first_word.begins_with("[STRUCTURE]"):
-		text_color = Color.from_hsv(0.532, 0.707, 1.0, 1.0)
-		HUD.component_color = Color.from_hsv(0.532, 0.707, 1.0, 1.0)
+		text_color = Color(0.0, 1.0, 1.0, 1.0)
+		HUD.component_color = Color(0.0, 1.0, 1.0, 1.0)
 	elif first_word.begins_with("[OPERATION]"):
-		text_color = Color.from_hsv(0.861, 0.374, 1.0, 1.0)
-		HUD.component_color = Color.from_hsv(0.861, 0.374, 1.0, 1.0)
+		text_color = Color(1.0, 0.5, 1.0, 1.0)
+		HUD.component_color = Color(1.0, 0.5, 1.0, 1.0)
 	
 	PREM_7.component_system.modulate = text_color
 	
@@ -1421,6 +1538,7 @@ func update_component_display():
 	selected_component_scale = comp.get("scale", 0.0)
 	selected_component_glow  = comp.get("glow",  0.0)
 	catalog_scale = comp.get("catalog_scale", 0.0)
+	catalog_rotation = comp.get("catalog_rotation", 0.0)
 	
 	update_condition_display(condition)
 	update_rating_display(rating)
@@ -1463,18 +1581,6 @@ func update_component_display():
 
 	if matched_base_name == "":
 		print("No matching CollisionShape3D for component:", comp.get("name", "??"))
-
-var current_condition: int = 0
-var current_rating: float = 0.0
-var current_mass: int = 0
-var name_tween: Tween = null
-var class_tween: Tween = null
-var system_tween: Tween = null
-var condition_tween: Tween = null
-var rating_tween: Tween = null
-var mass_pulse_tween: Tween = null
-var mayhem_tween: Tween = null
-var force_tween: Tween = null
 
 func animate_typing_text(label: Label3D, full_text: String, duration_per_char: float = 0.03):
 	# Store full text and start with empty
@@ -1932,7 +2038,7 @@ func complete_extraction(body: RigidBody3D, mesh: MeshInstance3D):
 		object_empty()
 		return
 	
-	grabbed_object.manipulation_mode('Active')
+	grabbed_object.manipulation_mode('Extract ON')
 
 func object_empty():
 	print('*** Figure out what needs to happen with this animation ***')
@@ -1940,10 +2046,10 @@ func object_empty():
 	is_clickable = false
 
 func cycle_catalog(dir = null, direct_slot: int = -1):
+	print('uhhh')
 	if not catalog.has_components():
 		print("Catalog is empty - nothing to cycle through")
 		return
-	
 	# Get list of filled slot indices
 	var filled_slots = []
 	for i in range(10):

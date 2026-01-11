@@ -16,6 +16,9 @@ var GLOW_SHADER := preload("res://Shaders/grabbed_glow.gdshader")
 var shader: Shader
 var shader_material: ShaderMaterial
 
+@onready var holo_glow: MeshInstance3D = $Holo_Glow
+@onready var square_glow: MeshInstance3D = $Square_Glow
+
 @onready var dashboard: Node3D = $Dashboard
 
 @onready var component_name: Label3D = $Dashboard/Data/Component/Component_Name
@@ -68,7 +71,9 @@ var c3: float
 
 var grab_object_complete: bool = false
 
-@onready var catalog = $Catalog
+@onready var catalog: Node3D = $Catalog
+var catalog_active: bool = false
+var cast_catalog: bool = false
 
 
 func _ready() -> void:
@@ -84,6 +89,14 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
+	
+	if cast_catalog and not catalog_active:
+		#holo_anim.play("cast_catalog")
+		catalog_active = true
+		
+	if not cast_catalog and catalog_active:
+		#holo_anim.play_backwards("cast_catalog")
+		catalog_active = false
 	
 	if touching_object and not beam_active:
 		touch_anim.play("touching_object")
@@ -204,6 +217,7 @@ func _on_hologram_animation_animation_finished(anim_name: StringName) -> void:
 	if anim_name == "cast_hologram" or anim_name == "retract_hologram":
 		holo_anim.play("spin_hologram")
 
+
 func move_object(object, x_pos: float, y_pos: float, z_pos: float, wait_time: float, duration: float):
 	await get_tree().create_timer(wait_time).timeout
 	
@@ -232,8 +246,17 @@ func _on_grab_animation_animation_finished(anim_name: StringName) -> void:
 		if not touching_object:
 			touch_anim.play_backwards("touching_object")
 
-
-
 func _on_touch_animation_animation_finished(anim_name: StringName) -> void:
 	if anim_name == "touching_object":
 		touch_anim.play("extended_touch")
+
+func set_catalog_glow_color(base_color: Color, tint_color: Color, edge_color: Color, edge_intensity: float):
+	var holo_mat = holo_glow.get_active_material(0) as ShaderMaterial
+	if holo_mat:
+		holo_mat.set_shader_parameter("base_color", base_color)
+	
+	var square_mat = square_glow.get_active_material(0) as ShaderMaterial
+	if square_mat:
+		square_mat.set_shader_parameter("tint_color", tint_color)
+		square_mat.set_shader_parameter("edge_color", edge_color)
+		square_mat.set_shader_parameter("edge_intensity", edge_intensity)

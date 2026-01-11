@@ -85,7 +85,7 @@ var particles_material: ShaderMaterial
 var is_component: bool = false
 var extracted_object_container: Node3D
 
-var is_stepladder: bool = false
+var is_scaffolding: bool = false
 var is_rocketship: bool = false
 var is_rocket_system: bool = false
 var is_touching_rocket: bool = false
@@ -180,8 +180,8 @@ func _ready() -> void:
 	resting_position = global_position.y
 	set_physics_process(true)
 
-	if name == "Stepladder":
-		is_stepladder = true
+	if name == "scaffolding":
+		is_scaffolding = true
 
 var prev_y_vel
 var curr_y_vel
@@ -313,14 +313,14 @@ func _on_body_shape_entered(_body_rid: RID, body: Node, _body_shape_index: int, 
 	if body is character:
 		body.is_on_floor()
 
-	if name == 'Stepladder':
+	if name == 'scaffolding':
 		if body is CharacterBody3D:
-			body.is_touching_stepladder = true
+			body.is_touching_scaffolding = true
 
 func _on_body_shape_exited(_body_rid: RID, body: Node, _body_shape_index: int, _local_shape_index: int) -> void:
-	if name == 'Stepladder':
+	if name == 'scaffolding':
 		if body is CharacterBody3D:
-			body.is_touching_stepladder = false
+			body.is_touching_scaffolding = false
 
 
 func set_outline(status: String, color: Color, opacity: float) -> void:
@@ -591,8 +591,7 @@ func change_glow(object, amt: float, dur: float):
 
 func manipulation_mode(type):
 	
-	if type == "Active":
-		
+	if type == "Extract ON":
 		for child in extract_body.get_children():
 			if child is MeshInstance3D:
 				var surface_count = child.mesh.get_surface_count()
@@ -607,7 +606,24 @@ func manipulation_mode(type):
 							for i in range(x_surface_count):
 								child2.set_surface_override_material(i, manipulation_material)
 								child2.cast_shadow = false
-	elif type == "Inactive":
+
+	if type == "View ON":
+		for child in get_children():
+			if child is MeshInstance3D:
+				var surface_count = child.mesh.get_surface_count()
+				for i in range(surface_count):
+					child.set_surface_override_material(i, manipulation_material)
+					child.cast_shadow = false
+				var xtra_children = child.get_children()
+				if not xtra_children.is_empty():
+					for child2 in xtra_children:
+						if child2 is MeshInstance3D:
+							var x_surface_count = child2.mesh.get_surface_count()
+							for i in range(x_surface_count):
+								child2.set_surface_override_material(i, manipulation_material)
+								child2.cast_shadow = false
+
+	elif type == "Extract OFF":
 		for child in extract_body.get_children():
 			if child is MeshInstance3D:
 				child.set_material_overlay(standard_material)

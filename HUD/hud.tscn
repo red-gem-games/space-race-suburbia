@@ -1,9 +1,9 @@
-[gd_scene load_steps=9 format=3 uid="uid://baomcogkgkbvv"]
+[gd_scene load_steps=11 format=3 uid="uid://baomcogkgkbvv"]
 
 [ext_resource type="Texture2D" uid="uid://dj7bpyq468f67" path="res://Assets/UI/Reticle.png" id="1_37p78"]
 [ext_resource type="Script" uid="uid://bi78c7lvurqh7" path="res://HUD/hud.gd" id="1_64ctp"]
 [ext_resource type="FontFile" uid="uid://dfqpfewxx6i48" path="res://Assets/UI/FONTS/Audiowide-Regular.ttf" id="4_1rsjr"]
-[ext_resource type="Texture2D" uid="uid://37d2pt4u35lr" path="res://Assets/Reference_Placeholder/Grundfos_Circulation_Pump.webp" id="4_jvmdh"]
+[ext_resource type="Texture2D" uid="uid://bu7fdjmqh3iq4" path="res://Assets/UI/Icons/DryingMachine/BlowerMotor.png" id="5_1rsjr"]
 
 [sub_resource type="FontVariation" id="FontVariation_tnm0g"]
 base_font = ExtResource("4_1rsjr")
@@ -19,6 +19,13 @@ base_font = ExtResource("4_1rsjr")
 [sub_resource type="Theme" id="Theme_tnm0g"]
 default_font = SubResource("FontVariation_1rsjr")
 default_font_size = 350
+
+[sub_resource type="FontVariation" id="FontVariation_jvmdh"]
+base_font = ExtResource("4_1rsjr")
+
+[sub_resource type="Theme" id="Theme_1rsjr"]
+default_font = SubResource("FontVariation_jvmdh")
+default_font_size = 50
 
 [node name="HUD" type="Control"]
 layout_mode = 3
@@ -61,8 +68,8 @@ texture = ExtResource("1_37p78")
 anchors_preset = 0
 offset_left = 6.86
 offset_top = 460.0
-offset_right = 46.85933
-offset_bottom = 499.99988
+offset_right = 46.8593
+offset_bottom = 500.0
 pivot_offset = Vector2(0, 0.99)
 
 [node name="1" type="Control" parent="Catalog"]
@@ -75,56 +82,51 @@ scale = Vector2(0.75, 0.75)
 [node name="Backdrop" type="ColorRect" parent="Catalog/1"]
 layout_mode = 0
 offset_left = 183.421
-offset_top = 1108.627
-offset_right = 286.57587
-offset_bottom = 1218.464
-color = Color(0.21568628, 0.21568628, 0.20392157, 0.61960787)
+offset_top = 1108.63
+offset_right = 286.576
+offset_bottom = 1218.46
+color = Color(0.215686, 0.215686, 0.203922, 0.619608)
 
 [node name="1" type="ColorRect" parent="Catalog/1"]
 layout_mode = 0
 offset_left = 184.0
 offset_top = 1218.0
 offset_right = 286.01
-offset_bottom = 1226.038
+offset_bottom = 1226.04
 
 [node name="2" type="ColorRect" parent="Catalog/1"]
 layout_mode = 0
 offset_left = 184.0
 offset_top = 1100.53
 offset_right = 286.01
-offset_bottom = 1108.568
+offset_bottom = 1108.57
 
 [node name="3" type="ColorRect" parent="Catalog/1"]
 layout_mode = 0
 offset_left = 184.12
 offset_top = 1101.42
 offset_right = 309.166
-offset_bottom = 1109.417
-rotation = 1.5707964
+offset_bottom = 1109.42
+rotation = 1.5708
 
 [node name="4" type="ColorRect" parent="Catalog/1"]
 layout_mode = 0
 offset_left = 294.0
 offset_top = 1101.42
 offset_right = 419.046
-offset_bottom = 1109.417
-rotation = 1.5707964
+offset_bottom = 1109.42
+rotation = 1.5708
 
 [node name="Label_1" type="Label" parent="Catalog/1"]
 layout_mode = 0
-offset_left = 228.00003
-offset_top = 1227.1201
-offset_right = 341.00003
-offset_bottom = 1636.1201
+offset_left = 228.0
+offset_top = 1227.12
+offset_right = 341.0
+offset_bottom = 1636.12
 scale = Vector2(0.165, 0.165)
 theme = SubResource("Theme_ncsg0")
 text = "1"
 horizontal_alignment = 1
-
-[node name="GrundfosCirculationPump" type="Sprite2D" parent="Catalog/1"]
-position = Vector2(234.714, 1164.011)
-scale = Vector2(0.095, 0.102)
-texture = ExtResource("4_jvmdh")
 
 [node name="2" type="Control" parent="Catalog"]
 modulate = Color(1, 1, 1, 0.3)
@@ -135,52 +137,57 @@ scale = Vector2(0.75, 0.75)
 
 [node name="Backdrop" type="ColorRect" parent="Catalog/2"]
 layout_mode = 0
-offset_left = 183.42096
-offset_top = 1108.627
-offset_right = 286.5758
-offset_bottom = 1218.464
-color = Color(0.21568628, 0.21568628, 0.20392157, 0.61960787)
+offset_left = 183.421
+offset_top = 1108.63
+offset_right = 286.576
+offset_bottom = 1218.46
+color = Color(0.215686, 0.215686, 0.203922, 0.619608)
 
 [node name="1" type="ColorRect" parent="Catalog/2"]
 layout_mode = 0
 offset_left = 184.0
 offset_top = 1218.0
 offset_right = 286.01
-offset_bottom = 1226.038
+offset_bottom = 1226.04
 
 [node name="2" type="ColorRect" parent="Catalog/2"]
 layout_mode = 0
 offset_left = 184.0
 offset_top = 1100.53
 offset_right = 286.01
-offset_bottom = 1108.568
+offset_bottom = 1108.57
 
 [node name="3" type="ColorRect" parent="Catalog/2"]
 layout_mode = 0
 offset_left = 184.12
 offset_top = 1101.42
 offset_right = 309.166
-offset_bottom = 1109.417
-rotation = 1.5707964
+offset_bottom = 1109.42
+rotation = 1.5708
 
 [node name="4" type="ColorRect" parent="Catalog/2"]
 layout_mode = 0
 offset_left = 294.0
 offset_top = 1101.42
 offset_right = 419.046
-offset_bottom = 1109.417
-rotation = 1.5707964
+offset_bottom = 1109.42
+rotation = 1.5708
 
 [node name="Label_2" type="Label" parent="Catalog/2"]
 layout_mode = 0
 offset_left = 216.0
-offset_top = 1226.6667
+offset_top = 1226.67
 offset_right = 457.0
-offset_bottom = 1635.6667
+offset_bottom = 1635.67
 scale = Vector2(0.165, 0.165)
 theme = SubResource("Theme_ncsg0")
 text = "2"
 horizontal_alignment = 1
+
+[node name="IconDrBlowerMotor" type="Sprite2D" parent="Catalog/2"]
+position = Vector2(234.853, 1164)
+scale = Vector2(0.413333, 0.413333)
+texture = ExtResource("5_1rsjr")
 
 [node name="3" type="Control" parent="Catalog"]
 modulate = Color(1, 1, 1, 0.3)
@@ -191,48 +198,48 @@ scale = Vector2(0.75, 0.75)
 
 [node name="Backdrop" type="ColorRect" parent="Catalog/3"]
 layout_mode = 0
-offset_left = 183.42102
-offset_top = 1108.627
-offset_right = 286.57587
-offset_bottom = 1218.464
-color = Color(0.21568628, 0.21568628, 0.20392157, 0.61960787)
+offset_left = 183.421
+offset_top = 1108.63
+offset_right = 286.576
+offset_bottom = 1218.46
+color = Color(0.215686, 0.215686, 0.203922, 0.619608)
 
 [node name="1" type="ColorRect" parent="Catalog/3"]
 layout_mode = 0
 offset_left = 184.0
 offset_top = 1218.0
 offset_right = 286.01
-offset_bottom = 1226.038
+offset_bottom = 1226.04
 
 [node name="2" type="ColorRect" parent="Catalog/3"]
 layout_mode = 0
 offset_left = 184.0
 offset_top = 1100.53
 offset_right = 286.01
-offset_bottom = 1108.568
+offset_bottom = 1108.57
 
 [node name="3" type="ColorRect" parent="Catalog/3"]
 layout_mode = 0
 offset_left = 184.12
 offset_top = 1101.42
 offset_right = 309.166
-offset_bottom = 1109.417
-rotation = 1.5707964
+offset_bottom = 1109.42
+rotation = 1.5708
 
 [node name="4" type="ColorRect" parent="Catalog/3"]
 layout_mode = 0
 offset_left = 294.0
 offset_top = 1101.42
 offset_right = 419.046
-offset_bottom = 1109.417
-rotation = 1.5707964
+offset_bottom = 1109.42
+rotation = 1.5708
 
 [node name="Label_3" type="Label" parent="Catalog/3"]
 layout_mode = 0
 offset_left = 216.0
-offset_top = 1226.6667
-offset_right = 456.99908
-offset_bottom = 1635.6667
+offset_top = 1226.67
+offset_right = 456.999
+offset_bottom = 1635.67
 scale = Vector2(0.165, 0.165)
 theme = SubResource("Theme_ncsg0")
 text = "3"
@@ -247,48 +254,48 @@ scale = Vector2(0.75, 0.75)
 
 [node name="Backdrop" type="ColorRect" parent="Catalog/4"]
 layout_mode = 0
-offset_left = 183.42096
-offset_top = 1108.627
-offset_right = 286.5758
-offset_bottom = 1218.464
-color = Color(0.21568628, 0.21568628, 0.20392157, 0.61960787)
+offset_left = 183.421
+offset_top = 1108.63
+offset_right = 286.576
+offset_bottom = 1218.46
+color = Color(0.215686, 0.215686, 0.203922, 0.619608)
 
 [node name="1" type="ColorRect" parent="Catalog/4"]
 layout_mode = 0
 offset_left = 184.0
 offset_top = 1218.0
 offset_right = 286.01
-offset_bottom = 1226.038
+offset_bottom = 1226.04
 
 [node name="2" type="ColorRect" parent="Catalog/4"]
 layout_mode = 0
 offset_left = 184.0
 offset_top = 1100.53
 offset_right = 286.01
-offset_bottom = 1108.568
+offset_bottom = 1108.57
 
 [node name="3" type="ColorRect" parent="Catalog/4"]
 layout_mode = 0
 offset_left = 184.12
 offset_top = 1101.42
 offset_right = 309.166
-offset_bottom = 1109.417
-rotation = 1.5707964
+offset_bottom = 1109.42
+rotation = 1.5708
 
 [node name="4" type="ColorRect" parent="Catalog/4"]
 layout_mode = 0
 offset_left = 294.0
 offset_top = 1101.42
 offset_right = 419.046
-offset_bottom = 1109.417
-rotation = 1.5707964
+offset_bottom = 1109.42
+rotation = 1.5708
 
 [node name="Label_4" type="Label" parent="Catalog/4"]
 layout_mode = 0
-offset_left = 217.59192
-offset_top = 1226.6667
-offset_right = 464.59262
-offset_bottom = 1635.6667
+offset_left = 217.592
+offset_top = 1226.67
+offset_right = 464.593
+offset_bottom = 1635.67
 scale = Vector2(0.165, 0.165)
 theme = SubResource("Theme_ncsg0")
 text = "4"
@@ -303,48 +310,48 @@ scale = Vector2(0.75, 0.75)
 
 [node name="Backdrop" type="ColorRect" parent="Catalog/5"]
 layout_mode = 0
-offset_left = 183.42096
-offset_top = 1108.627
-offset_right = 286.5758
-offset_bottom = 1218.464
-color = Color(0.21568628, 0.21568628, 0.20392157, 0.61960787)
+offset_left = 183.421
+offset_top = 1108.63
+offset_right = 286.576
+offset_bottom = 1218.46
+color = Color(0.215686, 0.215686, 0.203922, 0.619608)
 
 [node name="1" type="ColorRect" parent="Catalog/5"]
 layout_mode = 0
 offset_left = 184.0
 offset_top = 1218.0
 offset_right = 286.01
-offset_bottom = 1226.038
+offset_bottom = 1226.04
 
 [node name="2" type="ColorRect" parent="Catalog/5"]
 layout_mode = 0
 offset_left = 184.0
 offset_top = 1100.53
 offset_right = 286.01
-offset_bottom = 1108.568
+offset_bottom = 1108.57
 
 [node name="3" type="ColorRect" parent="Catalog/5"]
 layout_mode = 0
 offset_left = 184.12
 offset_top = 1101.42
 offset_right = 309.166
-offset_bottom = 1109.417
-rotation = 1.5707964
+offset_bottom = 1109.42
+rotation = 1.5708
 
 [node name="4" type="ColorRect" parent="Catalog/5"]
 layout_mode = 0
 offset_left = 294.0
 offset_top = 1101.42
 offset_right = 419.046
-offset_bottom = 1109.417
-rotation = 1.5707964
+offset_bottom = 1109.42
+rotation = 1.5708
 
 [node name="Label_5" type="Label" parent="Catalog/5"]
 layout_mode = 0
-offset_left = 218.55206
-offset_top = 1226.6667
-offset_right = 465.5514
-offset_bottom = 1635.6667
+offset_left = 218.552
+offset_top = 1226.67
+offset_right = 465.551
+offset_bottom = 1635.67
 scale = Vector2(0.165, 0.165)
 theme = SubResource("Theme_ncsg0")
 text = "5"
@@ -359,48 +366,48 @@ scale = Vector2(0.75, 0.75)
 
 [node name="Backdrop" type="ColorRect" parent="Catalog/6"]
 layout_mode = 0
-offset_left = 183.42102
-offset_top = 1108.627
-offset_right = 286.57587
-offset_bottom = 1218.464
-color = Color(0.21568628, 0.21568628, 0.20392157, 0.61960787)
+offset_left = 183.421
+offset_top = 1108.63
+offset_right = 286.576
+offset_bottom = 1218.46
+color = Color(0.215686, 0.215686, 0.203922, 0.619608)
 
 [node name="1" type="ColorRect" parent="Catalog/6"]
 layout_mode = 0
 offset_left = 184.0
 offset_top = 1218.0
 offset_right = 286.01
-offset_bottom = 1226.038
+offset_bottom = 1226.04
 
 [node name="2" type="ColorRect" parent="Catalog/6"]
 layout_mode = 0
 offset_left = 184.0
 offset_top = 1100.53
 offset_right = 286.01
-offset_bottom = 1108.568
+offset_bottom = 1108.57
 
 [node name="3" type="ColorRect" parent="Catalog/6"]
 layout_mode = 0
 offset_left = 184.12
 offset_top = 1101.42
 offset_right = 309.166
-offset_bottom = 1109.417
-rotation = 1.5707964
+offset_bottom = 1109.42
+rotation = 1.5708
 
 [node name="4" type="ColorRect" parent="Catalog/6"]
 layout_mode = 0
 offset_left = 294.0
 offset_top = 1101.42
 offset_right = 419.046
-offset_bottom = 1109.417
-rotation = 1.5707964
+offset_bottom = 1109.42
+rotation = 1.5708
 
 [node name="Label_6" type="Label" parent="Catalog/6"]
 layout_mode = 0
-offset_left = 217.77734
-offset_top = 1226.6667
-offset_right = 464.77667
-offset_bottom = 1635.6667
+offset_left = 217.777
+offset_top = 1226.67
+offset_right = 464.777
+offset_bottom = 1635.67
 scale = Vector2(0.165, 0.165)
 theme = SubResource("Theme_ncsg0")
 text = "6"
@@ -415,48 +422,48 @@ scale = Vector2(0.75, 0.75)
 
 [node name="Backdrop" type="ColorRect" parent="Catalog/7"]
 layout_mode = 0
-offset_left = 183.42102
-offset_top = 1108.627
-offset_right = 286.57587
-offset_bottom = 1218.464
-color = Color(0.21568628, 0.21568628, 0.20392157, 0.61960787)
+offset_left = 183.421
+offset_top = 1108.63
+offset_right = 286.576
+offset_bottom = 1218.46
+color = Color(0.215686, 0.215686, 0.203922, 0.619608)
 
 [node name="1" type="ColorRect" parent="Catalog/7"]
 layout_mode = 0
 offset_left = 184.0
 offset_top = 1218.0
 offset_right = 286.01
-offset_bottom = 1226.038
+offset_bottom = 1226.04
 
 [node name="2" type="ColorRect" parent="Catalog/7"]
 layout_mode = 0
 offset_left = 184.0
 offset_top = 1100.53
 offset_right = 286.01
-offset_bottom = 1108.568
+offset_bottom = 1108.57
 
 [node name="3" type="ColorRect" parent="Catalog/7"]
 layout_mode = 0
 offset_left = 184.12
 offset_top = 1101.42
 offset_right = 309.166
-offset_bottom = 1109.417
-rotation = 1.5707964
+offset_bottom = 1109.42
+rotation = 1.5708
 
 [node name="4" type="ColorRect" parent="Catalog/7"]
 layout_mode = 0
 offset_left = 294.0
 offset_top = 1101.42
 offset_right = 419.046
-offset_bottom = 1109.417
-rotation = 1.5707964
+offset_bottom = 1109.42
+rotation = 1.5708
 
 [node name="Label_7" type="Label" parent="Catalog/7"]
 layout_mode = 0
-offset_left = 217.80933
-offset_top = 1226.6667
-offset_right = 464.80865
-offset_bottom = 1635.6667
+offset_left = 217.809
+offset_top = 1226.67
+offset_right = 464.809
+offset_bottom = 1635.67
 scale = Vector2(0.165, 0.165)
 theme = SubResource("Theme_ncsg0")
 text = "7"
@@ -471,48 +478,48 @@ scale = Vector2(0.75, 0.75)
 
 [node name="Backdrop" type="ColorRect" parent="Catalog/8"]
 layout_mode = 0
-offset_left = 183.42102
-offset_top = 1108.627
-offset_right = 286.57587
-offset_bottom = 1218.464
-color = Color(0.21568628, 0.21568628, 0.20392157, 0.61960787)
+offset_left = 183.421
+offset_top = 1108.63
+offset_right = 286.576
+offset_bottom = 1218.46
+color = Color(0.215686, 0.215686, 0.203922, 0.619608)
 
 [node name="1" type="ColorRect" parent="Catalog/8"]
 layout_mode = 0
 offset_left = 184.0
 offset_top = 1218.0
 offset_right = 286.01
-offset_bottom = 1226.038
+offset_bottom = 1226.04
 
 [node name="2" type="ColorRect" parent="Catalog/8"]
 layout_mode = 0
 offset_left = 184.0
 offset_top = 1100.53
 offset_right = 286.01
-offset_bottom = 1108.568
+offset_bottom = 1108.57
 
 [node name="3" type="ColorRect" parent="Catalog/8"]
 layout_mode = 0
 offset_left = 184.12
 offset_top = 1101.42
 offset_right = 309.166
-offset_bottom = 1109.417
-rotation = 1.5707964
+offset_bottom = 1109.42
+rotation = 1.5708
 
 [node name="4" type="ColorRect" parent="Catalog/8"]
 layout_mode = 0
 offset_left = 294.0
 offset_top = 1101.42
 offset_right = 419.046
-offset_bottom = 1109.417
-rotation = 1.5707964
+offset_bottom = 1109.42
+rotation = 1.5708
 
 [node name="Label_8" type="Label" parent="Catalog/8"]
 layout_mode = 0
-offset_left = 217.94263
-offset_top = 1226.6667
-offset_right = 464.94366
-offset_bottom = 1635.6667
+offset_left = 217.943
+offset_top = 1226.67
+offset_right = 464.944
+offset_bottom = 1635.67
 scale = Vector2(0.165, 0.165)
 theme = SubResource("Theme_ncsg0")
 text = "8"
@@ -527,48 +534,48 @@ scale = Vector2(0.75, 0.75)
 
 [node name="Backdrop" type="ColorRect" parent="Catalog/9"]
 layout_mode = 0
-offset_left = 183.42114
-offset_top = 1108.627
+offset_left = 183.421
+offset_top = 1108.63
 offset_right = 286.576
-offset_bottom = 1218.464
-color = Color(0.21568628, 0.21568628, 0.20392157, 0.61960787)
+offset_bottom = 1218.46
+color = Color(0.215686, 0.215686, 0.203922, 0.619608)
 
 [node name="1" type="ColorRect" parent="Catalog/9"]
 layout_mode = 0
 offset_left = 184.0
 offset_top = 1218.0
 offset_right = 286.01
-offset_bottom = 1226.038
+offset_bottom = 1226.04
 
 [node name="2" type="ColorRect" parent="Catalog/9"]
 layout_mode = 0
 offset_left = 184.0
 offset_top = 1100.53
 offset_right = 286.01
-offset_bottom = 1108.568
+offset_bottom = 1108.57
 
 [node name="3" type="ColorRect" parent="Catalog/9"]
 layout_mode = 0
 offset_left = 184.12
 offset_top = 1101.42
 offset_right = 309.166
-offset_bottom = 1109.417
-rotation = 1.5707964
+offset_bottom = 1109.42
+rotation = 1.5708
 
 [node name="4" type="ColorRect" parent="Catalog/9"]
 layout_mode = 0
 offset_left = 294.0
 offset_top = 1101.42
 offset_right = 419.046
-offset_bottom = 1109.417
-rotation = 1.5707964
+offset_bottom = 1109.42
+rotation = 1.5708
 
 [node name="Label_9" type="Label" parent="Catalog/9"]
 layout_mode = 0
-offset_left = 217.94275
-offset_top = 1226.6667
-offset_right = 464.94373
-offset_bottom = 1635.6667
+offset_left = 217.943
+offset_top = 1226.67
+offset_right = 464.944
+offset_bottom = 1635.67
 scale = Vector2(0.165, 0.165)
 theme = SubResource("Theme_ncsg0")
 text = "9"
@@ -583,48 +590,48 @@ scale = Vector2(0.75, 0.75)
 
 [node name="Backdrop" type="ColorRect" parent="Catalog/10"]
 layout_mode = 0
-offset_left = 183.42102
-offset_top = 1108.627
-offset_right = 286.57587
-offset_bottom = 1218.464
-color = Color(0.21568628, 0.21568628, 0.20392157, 0.61960787)
+offset_left = 183.421
+offset_top = 1108.63
+offset_right = 286.576
+offset_bottom = 1218.46
+color = Color(0.215686, 0.215686, 0.203922, 0.619608)
 
 [node name="1" type="ColorRect" parent="Catalog/10"]
 layout_mode = 0
 offset_left = 184.0
 offset_top = 1218.0
 offset_right = 286.01
-offset_bottom = 1226.038
+offset_bottom = 1226.04
 
 [node name="2" type="ColorRect" parent="Catalog/10"]
 layout_mode = 0
 offset_left = 184.0
 offset_top = 1100.53
 offset_right = 286.01
-offset_bottom = 1108.568
+offset_bottom = 1108.57
 
 [node name="3" type="ColorRect" parent="Catalog/10"]
 layout_mode = 0
 offset_left = 184.12
 offset_top = 1101.42
 offset_right = 309.166
-offset_bottom = 1109.417
-rotation = 1.5707964
+offset_bottom = 1109.42
+rotation = 1.5708
 
 [node name="4" type="ColorRect" parent="Catalog/10"]
 layout_mode = 0
 offset_left = 294.0
 offset_top = 1101.42
 offset_right = 419.046
-offset_bottom = 1109.417
-rotation = 1.5707964
+offset_bottom = 1109.42
+rotation = 1.5708
 
 [node name="Label_10" type="Label" parent="Catalog/10"]
 layout_mode = 0
-offset_left = 204.1012
-offset_top = 1226.6667
-offset_right = 614.1026
-offset_bottom = 1635.6667
+offset_left = 204.101
+offset_top = 1226.67
+offset_right = 614.103
+offset_bottom = 1635.67
 scale = Vector2(0.165, 0.165)
 theme = SubResource("Theme_ncsg0")
 text = "10"
@@ -633,18 +640,59 @@ horizontal_alignment = 1
 [node name="Title" type="Label" parent="Catalog"]
 modulate = Color(1, 1, 1, 0.3)
 layout_mode = 0
-offset_left = 54.159996
+offset_left = 54.16
 offset_top = 771.125
 offset_right = 1988.16
-offset_bottom = 1218.1272
+offset_bottom = 1218.13
 scale = Vector2(0.125, 0.125)
 theme = SubResource("Theme_tnm0g")
 text = "CATALOG"
 
 [node name="ColorRect" type="ColorRect" parent="Catalog"]
 layout_mode = 0
-offset_left = 303.44226
-offset_top = 797.11426
-offset_right = 1045.9423
-offset_bottom = 804.11426
+offset_left = 303.442
+offset_top = 797.114
+offset_right = 1045.94
+offset_bottom = 804.114
 color = Color(1, 1, 1, 0.3)
+
+[node name="Icons" type="Node2D" parent="Catalog"]
+position = Vector2(-6.86, -460)
+
+[node name="WashingMachine" type="Node2D" parent="Catalog/Icons"]
+
+[node name="DryingMachine" type="Node2D" parent="Catalog/Icons"]
+
+[node name="Menu" type="Control" parent="."]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Background" type="ColorRect" parent="Menu"]
+layout_mode = 0
+offset_left = 255.5
+offset_top = 157.0
+offset_right = 2304.5
+offset_bottom = 1282.0
+color = Color(0.180005, 0.180005, 0.180005, 0.933333)
+
+[node name="Main_Menu_Button" type="Button" parent="Menu"]
+layout_mode = 0
+offset_left = 1081.0
+offset_top = 968.0
+offset_right = 1479.18
+offset_bottom = 1068.0
+theme = SubResource("Theme_1rsjr")
+text = "MAIN MENU"
+
+[node name="Exit_Button" type="Button" parent="Menu"]
+layout_mode = 0
+offset_left = 2204.0
+offset_top = 180.0
+offset_right = 2279.0
+offset_bottom = 255.0
+theme = SubResource("Theme_1rsjr")
+text = "X"
+
+[connection signal="button_up" from="Menu/Main_Menu_Button" to="." method="_on_menu_button_button_up"]
+[connection signal="button_up" from="Menu/Exit_Button" to="." method="_on_exit_button_button_up"]

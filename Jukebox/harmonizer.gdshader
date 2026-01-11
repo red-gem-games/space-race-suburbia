@@ -4,7 +4,7 @@ shader_type spatial;
 render_mode blend_mix, cull_back, specular_schlick_ggx;
 
 uniform vec4 text_color : source_color = vec4(0.0, 1.0, 0.0, 3.0);
-uniform vec4 bg_color : source_color = vec4(0.0, 0.1, 0.0, 0.1);  
+uniform vec4 bg_color : source_color = vec4(0.0, 0.1, 0.0, 0.1);
 uniform vec4 glass_tint : source_color = vec4(0.2, 0.5, 0.2, 0.35);
 uniform float glass_roughness : hint_range(0.0, 1.0) = 0.05;
 uniform float glass_metallic : hint_range(0.0, 1.0) = 0.0;
@@ -189,7 +189,7 @@ bool check_pixel(int char_code, int px, int py) {
 		if (py == 2 && px == 2) return true;
 		if (py == 3 && px == 1) return true;
 	}
-	
+
 	// NUMBERS
 	// 0
 	else if (char_code == 48) {
@@ -259,7 +259,7 @@ bool check_pixel(int char_code, int px, int py) {
 		if (py == 3 && px == 4) return true;
 		if (py == 4 && px <= 3) return true;
 	}
-	
+
 	// PUNCTUATION & SYMBOLS
 	// Period .
 	else if (char_code == 46) {
@@ -317,21 +317,21 @@ bool check_pixel(int char_code, int px, int py) {
 	else if (char_code == 32) {
 		return false;
 	}
-	
+
 	return false;
 }
 
 void fragment() {
 	// Scroll the text horizontally around the capsule
 	float scroll_offset = TIME * scroll_speed;
-	
+
 	// DON'T use fract() - let it keep scrolling through the full text array
 	float scroll_uv = UV.x + scroll_offset;
-	
+
 	// Define text area
 	float text_area_start = vertical_position - text_height / 2.0;
 	float text_area_end = vertical_position + text_height / 2.0;
-	
+
 	// Check if we're in the text display area
 	if (UV.y < text_area_start || UV.y > text_area_end) {
 		ALBEDO = mix(bg_color.rgb, glass_tint.rgb, 0.5);
@@ -342,10 +342,10 @@ void fragment() {
 		// Character Calculation - now scroll_uv can be > 1.0
 		float char_position = scroll_uv / char_width;
 		int char_index = int(char_position) % text_length;
-		
+
 		// Position within current character
 		float local_x = fract(char_position);
-		
+
 		// Spacing
 		if (local_x > (1.0 - char_spacing)) {
 			ALBEDO = mix(bg_color.rgb, glass_tint.rgb, 0.3);
@@ -355,18 +355,18 @@ void fragment() {
 		} else {
 			// Remap local_x
 			local_x = local_x / (1.0 - char_spacing);
-			
+
 			float local_y = (UV.y - text_area_start) / (text_area_end - text_area_start);
-			
+
 			int pixel_x = int(local_x * 5.0);
 			int pixel_y = int(local_y * 5.0);
-			
+
 			// Get current character
 			int current_char = text_chars[char_index];
-			
+
 			// Check if this pixel should be lit
 			bool is_text = check_pixel(current_char, pixel_x, pixel_y);
-			
+
 			// Choose color
 			if (is_text) {
 				ALBEDO = text_color.rgb;

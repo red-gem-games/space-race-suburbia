@@ -9,12 +9,12 @@ void fragment() {
 	float dist_x = min(UV.x, 1.0 - UV.x);
 	float dist_y = min(UV.y, 1.0 - UV.y);
 	float dist = min(dist_x, dist_y);
-	
+
 	// Only show edges
 	if (dist > edge_thickness) {
 		discard;
 	}
-	
+
 	ALBEDO = edge_color.rgb;
 	ALPHA = edge_color.a;
 }

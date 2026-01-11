@@ -37,9 +37,6 @@ var object_position_timer: Timer = Timer.new()
 
 var proxy_is_moving_to_character: bool = false
 
-# Desired fixed distance in front of the character (adjust as needed)
-var base_distance_in_front: float = 6
-# Speed factor for the interpolation (tweak for smoother/faster movement)
 var grounded_interp_speed: float = 2.0
 var airborne_interp_speed: float = 2.0
 var movement_speed: float = 1.0
@@ -71,7 +68,7 @@ var first_grabbed_object: bool = true
 var touching_launch_button = false
 @onready var launch_instructions: Label3D = $Launch_Sequence/Instructions
 
-@onready var computer_camera: Camera3D = $Workshop/Workbench/Computer_Camera
+@onready var computer_camera: Camera3D = $Environment/Workbench/Computer_Camera
 
 @onready var storage_shed: Node3D = $StorageShed
 
@@ -92,7 +89,7 @@ func _ready() -> void:
 	
 	$Launch_Sequence/Launch_Box_Anim.play("button_glow")
 	
-	$Workshop/Harmonizer/Spin.play("spin_start")
+	$Environment/Harmonizer/Spin.play("spin_start")
 	
 	player_character.storage_shed = storage_shed
 
@@ -330,50 +327,34 @@ func _input(event: InputEvent) -> void:
 					release_object()
 
 	if event is InputEventKey:
-		if event.keycode == KEY_R:
-			print('Resetting Rotation here, genius...')
-			reset_rotation = true
-			player_character.distance_from_character = base_distance_in_front
 	
-		if event.keycode == KEY_Q:
+		if event.keycode == KEY_ENTER:
 			if touching_launch_button and not active_rocket.launch_sequence_started:
 				active_rocket.launch_rocket(11)
-		
-		if event.keycode == KEY_E or event.keycode == KEY_F:
-			if not grabbed_object:
-				return
-			if not player_character.extracting_object_active and not player_character.fusing_object_active:
-				print('Resetting Rotation here, genius...')
-				reset_rotation = true
-				player_character.distance_from_character = base_distance_in_front
-				for child in grabbed_object.object_body.get_children():
-					child.set_material_overlay(grabbed_object.standard_material)
-				exposure_tween(player_character.camera, 0.9, 0.1)
-				flicker_obj_a = null
-			else:
-				if player_character.extracting_object_active:
-					exposure_tween(player_character.camera, 0.5, 0.1)
 
-		if event.keycode == KEY_ESCAPE and not event.is_echo():
-			get_tree().quit()
 
-		if event.keycode == KEY_SHIFT:
-			if event.is_pressed():
-				movement_speed = 2
-			else:
-				movement_speed = 1
+		### COMPUTER CAMERA SWITCH LOGIC ###
 
-		if event.keycode == KEY_C:
-			if not event.pressed:
-				if player_character.camera.is_current():
-					player_character.is_using_computer = true
-					#player_character.camera.projection = Camera3D.PROJECTION_ORTHOGONAL
+		#if event.keycode == KEY_CTRL:
+			#if not event.pressed:
+				#if player_character.camera.is_current():
+					#player_character.is_using_computer = true
+					##player_character.camera.projection = Camera3D.PROJECTION_ORTHOGONAL
+					##player_character.camera.make_current()
+					#
+#
+				#else:
+					#player_character.is_using_computer = false
 					#player_character.camera.make_current()
-					
 
-				else:
-					player_character.is_using_computer = false
-					player_character.camera.make_current()
+		### COMPUTER CAMERA SWITCH LOGIC ###
+
+
+
+
+
+
+
 
 var cam_tween: Tween
 
@@ -387,18 +368,6 @@ func camera_tween(cam: Camera3D, fov: float, dur: float):
 	
 	cam_tween.set_trans(Tween.TRANS_LINEAR)
 	cam_tween.set_ease(Tween.EASE_IN_OUT)
-
-var expo_tween: Tween
-
-func exposure_tween(cam: Camera3D, expo: float, dur: float):
-	
-	expo_tween = create_tween()
-	
-	expo_tween.tween_property(cam, "attributes:exposure_multiplier", expo, dur)
-	expo_tween.set_trans(Tween.TRANS_LINEAR)
-	expo_tween.set_ease(Tween.EASE_IN_OUT)
-
-
 
 var rng = RandomNumberGenerator.new()
 

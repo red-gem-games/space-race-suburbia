@@ -4,6 +4,8 @@ class_name Catalog
 # Storage slots for actual components
 var component_slots: Array[RigidBody3D] = []
 var slot_positions: Array[Vector3] = []
+var is_viewable: bool = false
+var current_slot: int = -1
 
 func _ready() -> void:
 	# Initialize 10 empty slots
@@ -30,6 +32,8 @@ func add_component_to_slot(component: RigidBody3D, slot_index: int) -> bool:
 	# Disable physics while stored
 	component.freeze = true
 	component.visible = false
+	
+	update_viewable_status()
 	
 	return true
 
@@ -74,3 +78,6 @@ func get_component_count() -> int:
 		if component_slots[i] != null:
 			count += 1
 	return count
+
+func update_viewable_status():
+	is_viewable = has_components()

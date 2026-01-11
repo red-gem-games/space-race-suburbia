@@ -5,7 +5,7 @@
 [ext_resource type="Shader" uid="uid://cv76u34p1in0m" path="res://Jukebox/harmonizer.gdshader" id="3_adiye"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mmw2b"]
-albedo_color = Color(1, 0.1254902, 0.05490196, 1)
+albedo_color = Color(1, 0.12549, 0.054902, 1)
 metallic = 1.0
 roughness = 0.2
 emission_enabled = true
@@ -18,7 +18,7 @@ bottom_radius = 0.786
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3svgt"]
 render_priority = 1
 transparency = 1
-albedo_color = Color(0.24477637, 0.2447764, 0.24477637, 0.5254902)
+albedo_color = Color(0.244776, 0.244776, 0.244776, 0.52549)
 metallic = 1.0
 roughness = 0.0
 
@@ -31,11 +31,11 @@ shader_parameter/glass_tint = Color(0.2, 0.5, 0.2, 0.35)
 shader_parameter/glass_roughness = 0.2
 shader_parameter/glass_metallic = 1.0
 shader_parameter/refraction_amount = 0.5
-shader_parameter/scroll_speed = 0.15000010212499992
-shader_parameter/char_width = 0.02499999979047
-shader_parameter/char_spacing = 0.4690000222775
-shader_parameter/text_height = 0.04000000120148
-shader_parameter/vertical_position = 0.5630000267425
+shader_parameter/scroll_speed = 0.15
+shader_parameter/char_width = 0.025
+shader_parameter/char_spacing = 0.469
+shader_parameter/text_height = 0.04
+shader_parameter/vertical_position = 0.563
 shader_parameter/glow_intensity = 3.0
 shader_parameter/text_chars = PackedInt32Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 shader_parameter/text_length = 10
@@ -49,7 +49,7 @@ rings = 24
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ew3up"]
 radius = 1.568
-height = 4.701416
+height = 4.70142
 
 [sub_resource type="BoxMesh" id="BoxMesh_rkmtd"]
 size = Vector3(2.49, 0.48, 1)
@@ -100,7 +100,7 @@ script = ExtResource("1_ew3up")
 
 [node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
 stream = ExtResource("1_mmw2b")
-volume_db = -10.0
+volume_db = -25.0
 unit_size = 2.74
 autoplay = true
 
@@ -109,12 +109,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25524, 0)
 mesh = SubResource("CylinderMesh_xkptw")
 
 [node name="Glass" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.000593722, 2.6687157, 0.000603557)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.000593722, 2.66872, 0.000603557)
 material_overlay = SubResource("StandardMaterial3D_3svgt")
 mesh = SubResource("CapsuleMesh_3svgt")
 
 [node name="Label3D2" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0143264, 1.02148, 0.9751787)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0143264, 1.02148, 0.975179)
 pixel_size = 0.001
 text = "Shuffle (Randomized Loot Drops)
 
@@ -125,13 +125,13 @@ font_size = 123
 outline_size = 10
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.000549316, 2.1613545, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.000549316, 2.16135, 0)
 visible = false
 shape = SubResource("CapsuleShape3D_ew3up")
-debug_color = Color(0.7137255, 0.2627451, 1, 0.29803923)
+debug_color = Color(0.713726, 0.262745, 1, 0.298039)
 
 [node name="ControlPanel" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.77, 0, 0, 0, 0.70773417, 0.3033354, 0, -0.3033354, 0.70773417, 0, 1.90827, 0.8213805)
+transform = Transform3D(0.77, 0, 0, 0, 0.707734, 0.303335, 0, -0.303335, 0.707734, 0, 1.90827, 0.82138)
 mesh = SubResource("BoxMesh_rkmtd")
 
 [node name="SizeUp" type="MeshInstance3D" parent="ControlPanel"]

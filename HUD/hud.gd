@@ -2,6 +2,10 @@ extends Control
 class_name _HUD_
 
 @onready var reticle: Control = $CanvasLayer/Reticle
+@onready var catalog: Control = $Catalog
+@onready var menu: Control = $Menu
+
+var close_menu: bool = false
 
 var extraction_started: bool = false
 var extraction_complete: bool = false
@@ -27,6 +31,9 @@ var current_extraction_slot: int = -1
 var catalog_tweens: Array[Tween] = []
 
 func _ready() -> void:
+	
+	menu.visible = false
+	
 	catalog_tweens.resize(10)
 	for i in range(10):
 		catalog_tweens[i] = null
@@ -215,3 +222,9 @@ func get_next_empty_slot() -> int:
 		if not catalog_slots_filled[i]:
 			return i
 	return -1  # All slots filled
+
+func _on_menu_button_button_up() -> void:
+	get_tree().quit()
+
+func _on_exit_button_button_up() -> void:
+	close_menu = true
