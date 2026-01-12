@@ -1,9 +1,16 @@
-[gd_scene load_steps=11 format=3 uid="uid://baomcogkgkbvv"]
+[gd_scene load_steps=12 format=3 uid="uid://baomcogkgkbvv"]
 
-[ext_resource type="Texture2D" uid="uid://dj7bpyq468f67" path="res://Assets/UI/Reticle.png" id="1_37p78"]
 [ext_resource type="Script" uid="uid://bi78c7lvurqh7" path="res://HUD/hud.gd" id="1_64ctp"]
+[ext_resource type="Shader" uid="uid://beemd34obljbq" path="res://Shaders/reticle.gdshader" id="3_1rsjr"]
 [ext_resource type="FontFile" uid="uid://dfqpfewxx6i48" path="res://Assets/UI/FONTS/Audiowide-Regular.ttf" id="4_1rsjr"]
 [ext_resource type="Texture2D" uid="uid://bu7fdjmqh3iq4" path="res://Assets/UI/Icons/DryingMachine/BlowerMotor.png" id="5_1rsjr"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_tnm0g"]
+shader = ExtResource("3_1rsjr")
+shader_parameter/ring_thickness = 0.045
+shader_parameter/ring_radius = 0.045
+shader_parameter/ring_color = Color(1, 1, 1, 1)
+shader_parameter/smoothness = 0.02000000095
 
 [sub_resource type="FontVariation" id="FontVariation_tnm0g"]
 base_font = ExtResource("4_1rsjr")
@@ -49,20 +56,21 @@ grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(0.2, 0.2)
 
-[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Reticle"]
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer/Reticle"]
+material = SubResource("ShaderMaterial_tnm0g")
+custom_minimum_size = Vector2(500, 500)
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -50.0
-offset_top = -50.0
-offset_right = 50.0
-offset_bottom = 50.0
+offset_left = -500.0
+offset_top = -500.0
+offset_right = 500.0
+offset_bottom = 500.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("1_37p78")
 
 [node name="Catalog" type="Control" parent="."]
 anchors_preset = 0
@@ -664,6 +672,7 @@ position = Vector2(-6.86, -460)
 [node name="DryingMachine" type="Node2D" parent="Catalog/Icons"]
 
 [node name="Menu" type="Control" parent="."]
+visible = false
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
@@ -679,20 +688,20 @@ color = Color(0.180005, 0.180005, 0.180005, 0.933333)
 [node name="Main_Menu_Button" type="Button" parent="Menu"]
 layout_mode = 0
 offset_left = 1081.0
-offset_top = 968.0
-offset_right = 1479.18
-offset_bottom = 1068.0
+offset_top = 799.0
+offset_right = 1481.0
+offset_bottom = 899.0
 theme = SubResource("Theme_1rsjr")
 text = "MAIN MENU"
 
-[node name="Exit_Button" type="Button" parent="Menu"]
+[node name="Resume_Button" type="Button" parent="Menu"]
 layout_mode = 0
-offset_left = 2204.0
-offset_top = 180.0
-offset_right = 2279.0
-offset_bottom = 255.0
+offset_left = 1081.0
+offset_top = 672.0
+offset_right = 1481.0
+offset_bottom = 772.0
 theme = SubResource("Theme_1rsjr")
-text = "X"
+text = "RESUME"
 
 [connection signal="button_up" from="Menu/Main_Menu_Button" to="." method="_on_menu_button_button_up"]
-[connection signal="button_up" from="Menu/Exit_Button" to="." method="_on_exit_button_button_up"]
+[connection signal="button_up" from="Menu/Resume_Button" to="." method="_on_resume_button_button_up"]

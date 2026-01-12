@@ -16,17 +16,17 @@ auto_exposure_min_sensitivity = 250.0
 auto_exposure_max_sensitivity = 1000.0
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1l6l2"]
-render_priority = 0
+render_priority = 5
 shader = ExtResource("2_a23tb")
-shader_parameter/speed = 0.02
-shader_parameter/ring_scale = 3.85
-shader_parameter/wave_scale = 3.33
-shader_parameter/random_scale = 5.5
-shader_parameter/noise_scale = 0.05
-shader_parameter/c1 = 1.72
-shader_parameter/c2 = 1.54
-shader_parameter/c3 = 1.88
-shader_parameter/c4 = 2.5
+shader_parameter/speed = 0.1
+shader_parameter/ring_scale = 2.65
+shader_parameter/wave_scale = 0.304
+shader_parameter/random_scale = 3.73
+shader_parameter/noise_scale = 0.08
+shader_parameter/c1 = 0.31
+shader_parameter/c2 = 0.0
+shader_parameter/c3 = 0.81
+shader_parameter/c4 = -0.01
 shader_parameter/emission_strength = 20.61
 shader_parameter/base_alpha = 1.0
 shader_parameter/uv_projection_mode = 0

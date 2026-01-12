@@ -7,7 +7,6 @@ var start_day: bool = false
 @onready var menu_background: MeshInstance3D = $Camera3D/Menu_Background
 var menu_open: bool = false
 var close_menu: bool = false
-
 var is_clickable: bool = true
 
 var object_data = {}
@@ -323,8 +322,8 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	if menu_open:
-		if HUD.close_menu:
-			toggle_menu()
+		if HUD.resume_game:
+			_toggle_menu()
 	
 	if extraction_started:
 		HUD.extract_time_remaining = extract_time
@@ -552,7 +551,7 @@ func _process(delta: float) -> void:
 ##------------INPUT RESPONSE------------##
 ##--------------------------------------##
 
-func toggle_menu():
+func _toggle_menu():
 	if not menu_open:
 		menu_background.visible = true
 		menu_open = true
@@ -561,6 +560,25 @@ func toggle_menu():
 		PREM_7.visible = false
 		HUD.catalog.visible = false
 		HUD.reticle.visible = false
+		var menu_mat = menu_background.get_active_material(0) as ShaderMaterial
+		var menu_speed: float = randf_range(0.01, 0.09)
+		var menu_ring: float = randf_range(0.75, 5.0)
+		var menu_wave: float = randf_range(0.0, 2.0)
+		var menu_rand: float = randf_range(2.5, 3.75)
+		var menu_c1: float = randf_range(0.0, 1.0)
+		var menu_c2: float = randf_range(0.0, 1.0)
+		var menu_c3: float = randf_range(0.0, 1.0)
+		var menu_c4: float = randf_range(0.0, 0.25)
+		print("ring_scale: ", menu_ring, " | ", "ring_scale: ", menu_wave, " | ", "random_scale: ", menu_rand)
+		if menu_mat:
+			menu_mat.set_shader_parameter("speed", menu_speed)
+			menu_mat.set_shader_parameter("ring_scale", menu_ring)
+			menu_mat.set_shader_parameter("menu_wave", menu_wave)
+			menu_mat.set_shader_parameter("random_scale", menu_rand)
+			menu_mat.set_shader_parameter("c1", menu_c1)
+			menu_mat.set_shader_parameter("c2", menu_c2)
+			menu_mat.set_shader_parameter("c3", menu_c3)
+			menu_mat.set_shader_parameter("c4", menu_c4)
 	else:
 		close_menu = true
 		menu_background.visible = false
@@ -571,7 +589,7 @@ func toggle_menu():
 		HUD.menu.visible = false
 		PREM_7.visible = true
 		HUD.catalog.visible = true
-		HUD.close_menu = false
+		HUD.resume_game = false
 		return
 
 func _on_action_key(status: String):
@@ -687,6 +705,9 @@ func _on_view_key() -> void:
 	viewing_component =! viewing_component
 	
 	if viewing_component:
+		for child in PREM_7.catalog.get_children():
+			if child is RigidBody3D:
+				child.manipulation_mode('View ON')
 		change_exposure(camera, 0.5, 0.1)
 		cycle_catalog(null, current_catalog_index)
 		PREM_7.holo_anim.play("cast_catalog")
@@ -756,9 +777,6 @@ func _input(event: InputEvent) -> void:
 						if grabbed_object or not PREM_7.catalog_active:
 							return
 						cycle_catalog('UP')
-						for child in PREM_7.catalog.get_children():
-							if child is RigidBody3D:
-								child.manipulation_mode('View ON')
 						scroll_cooldown = scroll_cooldown_duration
 						return
 				
@@ -777,9 +795,6 @@ func _input(event: InputEvent) -> void:
 						if grabbed_object or not PREM_7.catalog_active:
 							return
 						cycle_catalog('DOWN')
-						for child in PREM_7.catalog.get_children():
-							if child is RigidBody3D:
-								child.manipulation_mode('View ON')
 						scroll_cooldown = scroll_cooldown_duration
 						return
 
@@ -818,7 +833,7 @@ func _input(event: InputEvent) -> void:
 				_on_view_key()
 				return
 			else:
-				toggle_menu()
+				_toggle_menu()
 
 		if menu_open:
 			return
@@ -1011,6 +1026,8 @@ func grab_object():
 			#child.disabled = false
 
 func release_object():
+	if menu_open:
+		return
 	var children = grabbed_object.get_children()
 	for child in children:
 		if child is CollisionShape3D:
@@ -1293,20 +1310,18 @@ func update_reticle_targeting() -> void:
 			if touched_object:
 				touched_object.is_touched = false
 				touched_object = null
-			match current_mode:
-				MODE_1: HUD.reticle.modulate = MODE_1_COLOR
-				MODE_2: HUD.reticle.modulate = MODE_2_COLOR
-				MODE_3: HUD.reticle.modulate = MODE_3_COLOR
-				MODE_4: HUD.reticle.modulate = MODE_4_COLOR
-				_: HUD.reticle.modulate = Color.WHITE
+			HUD.reticle_material.set_shader_parameter("ring_color", Color.GREEN)
+			HUD.reticle_material.set_shader_parameter("ring_thickness", 0.008)
+			HUD.reticle_material.set_shader_parameter("ring_radius", 0.09)
 			PREM_7.touching_object = true
 			result.collider.is_touched = true
 			touched_object = result.collider
-			
-			
-			#PREM_7.shader_material.set_shader_parameter("base_alpha", 0.1)
+
 		else:
-			HUD.reticle.modulate = Color.WHITE
+			HUD.reticle_material.set_shader_parameter("ring_color", Color.WHITE)
+			HUD.reticle_material.set_shader_parameter("ring_thickness", 0.035)
+			HUD.reticle_material.set_shader_parameter("ring_radius", 0.035)
+			
 			if touched_object:
 				touched_object.is_touched = false
 				touched_object = null
@@ -1317,8 +1332,9 @@ func update_reticle_targeting() -> void:
 			touched_object.is_touched = false
 			touched_object = null
 			PREM_7.touching_object = false
-		HUD.reticle.modulate = Color.WHITE
-		#PREM_7.shader_material.set_shader_parameter("base_alpha", 0.1)
+		HUD.reticle_material.set_shader_parameter("ring_color", Color.WHITE)
+		HUD.reticle_material.set_shader_parameter("ring_thickness", 0.035)
+		HUD.reticle_material.set_shader_parameter("ring_radius", 0.035)
 		
 
 func handle_prem7_decay(delta: float) -> void:
@@ -2050,6 +2066,7 @@ func cycle_catalog(dir = null, direct_slot: int = -1):
 	if not catalog.has_components():
 		print("Catalog is empty - nothing to cycle through")
 		return
+	
 	# Get list of filled slot indices
 	var filled_slots = []
 	for i in range(10):
@@ -2059,12 +2076,23 @@ func cycle_catalog(dir = null, direct_slot: int = -1):
 	if filled_slots.is_empty():
 		return
 	
+	# INITIALIZE on first access
+	if current_catalog_index == -1:
+		current_catalog_index = 0
+		var first_component = catalog.get_component_from_slot(filled_slots[0])
+		if first_component:
+			first_component.visible = true
+		catalog.current_slot = filled_slots[0]
+		print("Now viewing: Slot ", filled_slots[0] + 1, " || Component: ", first_component.name if first_component else "None")
+		return  # Exit early on first view
+	
 	# DIRECT SLOT SELECTION (number keys)
 	if direct_slot != -1:
 		if catalog.is_slot_empty(direct_slot):
 			print("Catalog Slot ", direct_slot + 1, " is empty!")
 			return
 		
+		# Hide current component
 		if current_catalog_index != -1 and current_catalog_index < filled_slots.size():
 			var old_slot_index = filled_slots[current_catalog_index]
 			var old_component = catalog.get_component_from_slot(old_slot_index)
@@ -2074,6 +2102,7 @@ func cycle_catalog(dir = null, direct_slot: int = -1):
 		var filled_index = filled_slots.find(direct_slot)
 		if filled_index != -1:
 			current_catalog_index = filled_index
+			catalog.current_slot = direct_slot
 			var d_component = catalog.get_component_from_slot(direct_slot)
 			if d_component:
 				d_component.visible = true
@@ -2081,6 +2110,7 @@ func cycle_catalog(dir = null, direct_slot: int = -1):
 		return
 	
 	# SCROLLING (UP/DOWN)
+	# Hide current component
 	if current_catalog_index != -1 and current_catalog_index < filled_slots.size():
 		var old_slot_index = filled_slots[current_catalog_index]
 		var old_component = catalog.get_component_from_slot(old_slot_index)
@@ -2094,6 +2124,7 @@ func cycle_catalog(dir = null, direct_slot: int = -1):
 	
 	# Get the actual slot index and component
 	var actual_slot_index = filled_slots[current_catalog_index]
+	catalog.current_slot = actual_slot_index
 	var a_component = catalog.get_component_from_slot(actual_slot_index)
 	
 	# Make the new component visible

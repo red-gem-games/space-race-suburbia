@@ -164,6 +164,7 @@ skeleton = NodePath("")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0)
 shape = SubResource("ConvexPolygonShape3D_ufqsf")
+disabled = true
 
 [node name="R1_Tank_Bake2" type="MeshInstance3D" parent="."]
 transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0)
@@ -173,6 +174,7 @@ skeleton = NodePath("")
 [node name="CollisionShape3D2" type="CollisionShape3D" parent="."]
 transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0)
 shape = SubResource("ConvexPolygonShape3D_mqg8k")
+disabled = true
 
 [node name="R1_Vent_Bake2" type="MeshInstance3D" parent="."]
 transform = Transform3D(2.99207, -0.218045, 0, 0.218045, 2.99207, 0, 0, 0, 3, 0.418518, -2.06006, 0.864148)
@@ -182,3 +184,4 @@ skeleton = NodePath("")
 [node name="CollisionShape3D3" type="CollisionShape3D" parent="."]
 transform = Transform3D(2.99207, -0.218045, 0, 0.218045, 2.99207, 0, 0, 0, 3, 0.418518, -2.06006, 0.864148)
 shape = SubResource("ConvexPolygonShape3D_a2mtd")
+disabled = true

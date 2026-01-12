@@ -1,11 +1,14 @@
 extends Control
 class_name _HUD_
 
-@onready var reticle: Control = $CanvasLayer/Reticle
+@onready var reticle: ColorRect = $CanvasLayer/Reticle/ColorRect
+var reticle_material: ShaderMaterial
+
+
 @onready var catalog: Control = $Catalog
 @onready var menu: Control = $Menu
 
-var close_menu: bool = false
+var resume_game: bool = false
 
 var extraction_started: bool = false
 var extraction_complete: bool = false
@@ -33,6 +36,8 @@ var catalog_tweens: Array[Tween] = []
 func _ready() -> void:
 	
 	menu.visible = false
+	
+	reticle_material = reticle.material as ShaderMaterial
 	
 	catalog_tweens.resize(10)
 	for i in range(10):
@@ -226,5 +231,5 @@ func get_next_empty_slot() -> int:
 func _on_menu_button_button_up() -> void:
 	get_tree().quit()
 
-func _on_exit_button_button_up() -> void:
-	close_menu = true
+func _on_resume_button_button_up() -> void:
+	resume_game = true

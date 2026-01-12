@@ -267,6 +267,8 @@ func grab_object():
 
 
 func release_object():
+	if player_character.menu_open:
+		return
 	if player_character.action_wait_timer.time_left > 0.0:
 		return
 	if player_character.PREM_7.extract_message.visible:

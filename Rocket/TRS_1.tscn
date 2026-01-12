@@ -1639,7 +1639,7 @@ freeze = true
 script = ExtResource("1_5df30")
 
 [node name="Propellent" parent="." instance=ExtResource("2_4w2ea")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.37404, 0.0268655)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.9272046, 0.0268655)
 
 [node name="Engine" parent="." instance=ExtResource("18_12u3l")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.422522, 0)

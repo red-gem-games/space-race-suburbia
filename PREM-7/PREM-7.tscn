@@ -4281,7 +4281,7 @@ outer_radius = 0.74
 render_priority = 2
 shader = ExtResource("5_t05xm")
 shader_parameter/alpha_multiplier = 1.0
-shader_parameter/albedo_alpha = 0.925
+shader_parameter/albedo_alpha = 0.9850000467875
 shader_parameter/tint_color = Color(0.099986, 0.099986, 0.099986, 1)
 shader_parameter/edge_color = Color(3.87218, 1.31756, 0, 1)
 shader_parameter/edge_power = 1.0
@@ -4743,7 +4743,7 @@ mesh = SubResource("BoxMesh_t05xm")
 skeleton = NodePath("../../Object_Inventory")
 
 [node name="Square_Glow" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.246126, -0.00631735, 0.0433845, 0.00862604, 0.249533, -0.0126013, -0.0429851, 0.013903, 0.245884, -0.003, 0, -0.533)
+transform = Transform3D(0.24612574, -0.006317336, 0.0433845, 0.00862603, 0.24953316, -0.012601348, -0.04298506, 0.013903009, 0.24588409, -0.003, 0, -0.533)
 cast_shadow = 0
 mesh = SubResource("BoxMesh_njh5b")
 skeleton = NodePath("../Holo_Glow")
