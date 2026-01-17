@@ -1,5 +1,5 @@
 shader_type spatial;
-render_mode blend_mix, depth_prepass_alpha, cull_back, depth_test_disabled;
+render_mode blend_mix, depth_prepass_alpha, cull_disabled, depth_test_disabled;
 
 uniform float alpha_multiplier : hint_range(0.0, 1.0) = 1.0;
 group_uniforms base_texture;
@@ -10,9 +10,9 @@ uniform float albedo_alpha : hint_range(0.0, 1.0) = 0.25;
 group_uniforms tint_edge;
 uniform vec4 tint_color : source_color = vec4(1.75, 1.0, 0.5, 1.0);
 uniform vec4 edge_color : source_color = vec4(1.0, 0.75, 0.0, 1.0);
-uniform float edge_power : hint_range(0.0, 1.0) = 1.0;
+uniform float edge_power : hint_range(0.0, 5.0) = 1.0;
 uniform float edge_size : hint_range(0.1, 5.0) = 5.0;
-uniform float edge_intensity : hint_range(0.0, 5.0) = 2.5;
+uniform float edge_intensity : hint_range(0.0, 50.0) = 5.0;
 
 // Grupo: Scanlines
 group_uniforms scanlines;

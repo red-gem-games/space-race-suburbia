@@ -14,7 +14,7 @@ shader_parameter/smoothness = 0.02000000095
 
 [sub_resource type="FontVariation" id="FontVariation_tnm0g"]
 base_font = ExtResource("4_1rsjr")
-variation_embolden = 0.25
+variation_embolden = 1.25
 
 [sub_resource type="Theme" id="Theme_ncsg0"]
 default_font = SubResource("FontVariation_tnm0g")

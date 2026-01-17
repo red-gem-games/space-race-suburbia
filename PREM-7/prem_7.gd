@@ -19,24 +19,29 @@ var shader_material: ShaderMaterial
 @onready var holo_glow: MeshInstance3D = $Holo_Glow
 @onready var square_glow: MeshInstance3D = $Square_Glow
 
-@onready var dashboard: Node3D = $Dashboard
+@onready var extract_dashboard: Node3D = $Extract_Dashboard
+@onready var extract_dash_main: MeshInstance3D = $Extract_Dashboard/MAIN_SCREEN
+@onready var extract_dash_h_bar: MeshInstance3D = $Extract_Dashboard/MAIN_SCREEN/Bottom_H_Bar
 
-@onready var component_name: Label3D = $Dashboard/Data/Component/Component_Name
-@onready var component_name_back: Label3D = $Dashboard/Data/Component/Component_Name_Back
+@onready var catalog_dashboard: Node3D = $Catalog_Dashboard
+@onready var catalog_dash_main: MeshInstance3D = $Catalog_Dashboard/MAIN_SCREEN
 
-@onready var machine_name: Label3D = $Dashboard/Data/Information/Machine_Name
-@onready var machine_class: Label3D = $Dashboard/Data/Information/Class_Data
-@onready var component_system: Label3D = $Dashboard/Data/Information/System_Data
-@onready var component_condition: Node3D = $Dashboard/Condition
+@onready var component_name: Label3D = $Extract_Dashboard/Data/Component/Component_Name
+@onready var component_name_back: Label3D = $Extract_Dashboard/Data/Component/Component_Name_Back
 
-@onready var component_rating: Node3D = $Dashboard/Rating
-@onready var component_mass: Label3D = $Dashboard/Mass/Mass
+@onready var machine_name: Label3D = $Extract_Dashboard/Data/Information/Machine_Name
+@onready var machine_class: Label3D = $Extract_Dashboard/Data/Information/Class_Data
+@onready var component_system: Label3D = $Extract_Dashboard/Data/Information/System_Data
+@onready var component_condition: Node3D = $Extract_Dashboard/Condition
 
-@onready var component_mayhem: MeshInstance3D = $Dashboard/Mayhem
-@onready var component_mayhem_pct: Label3D = $Dashboard/Mayhem/Percentage
+@onready var component_rating: Node3D = $Extract_Dashboard/Rating
+@onready var component_mass: Label3D = $Extract_Dashboard/Mass/Mass
 
-@onready var component_force: MeshInstance3D = $Dashboard/Force
-@onready var component_force_amt: Label3D = $Dashboard/Force/Force_Data
+@onready var component_mayhem: MeshInstance3D = $Extract_Dashboard/Mayhem
+@onready var component_mayhem_pct: Label3D = $Extract_Dashboard/Mayhem/Percentage
+
+@onready var component_force: MeshInstance3D = $Extract_Dashboard/Force
+@onready var component_force_amt: Label3D = $Extract_Dashboard/Force/Force_Data
 
 @onready var control_position: Node3D = $Control_Position
 @onready var hologram_position: Node3D = $Holo_Position
@@ -74,14 +79,23 @@ var grab_object_complete: bool = false
 @onready var catalog: Node3D = $Catalog
 var catalog_active: bool = false
 var cast_catalog: bool = false
+var detect_touch: bool = false
 
 
 func _ready() -> void:
 	
 	extract_message.visible = false
 	
-	dashboard.visible = false
-	dashboard.scale = Vector3(0.6, 0.6, 0.6)
+	extract_dashboard.visible = false
+	extract_dashboard.scale = Vector3.ONE
+	extract_dashboard.position.z = -0.316
+	extract_dashboard.rotation_degrees.y = -2.5
+	
+	catalog_dashboard.visible = false
+	catalog_dashboard.scale = Vector3.ONE
+	catalog_dashboard.position.z = -0.316
+	extract_dashboard.rotation_degrees.y = -2.5
+	
 	add_child(control_hologram_timer)
 	control_hologram_timer.one_shot = true
 	grab_anim.play("RESET")
@@ -120,16 +134,6 @@ func _process(_delta: float) -> void:
 #
 	#if control_hologram_timer.time_left == 0.0 and control_hologram_active:
 		#retract_hologram()
-
-func cast_beam():
-	grab_object_complete = false
-	grab_anim.play("grab_object")
-
-func retract_beam():
-	if grab_object_complete:
-		grab_anim.play("release_object")
-	else:
-		grab_anim.play("RESET")
 
 func handle_object():
 	#beam_mesh.visible = false
@@ -214,7 +218,7 @@ func _instance_component_by_name(name_string: StringName) -> RigidBody3D:
 
 
 func _on_hologram_animation_animation_finished(anim_name: StringName) -> void:
-	if anim_name == "cast_hologram" or anim_name == "retract_hologram":
+	if anim_name == "cast_hologram":
 		holo_anim.play("spin_hologram")
 
 
@@ -260,3 +264,8 @@ func set_catalog_glow_color(base_color: Color, tint_color: Color, edge_color: Co
 		square_mat.set_shader_parameter("tint_color", tint_color)
 		square_mat.set_shader_parameter("edge_color", edge_color)
 		square_mat.set_shader_parameter("edge_intensity", edge_intensity)
+
+
+func _on_control_animation_animation_finished(anim_name: StringName) -> void:
+	if anim_name == "view" and not catalog_active:
+		detect_touch = true

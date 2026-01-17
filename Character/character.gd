@@ -284,6 +284,7 @@ var storing_component: bool = false
 var extraction_finalized: bool = false
 var catalog_scale: float
 var catalog_rotation: float
+var component_system: String
 
 var active_rocket: RigidBody3D
 var under_the_hood: bool = false
@@ -321,9 +322,19 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
+	if grabbed_object:
+		if grabbed_object.is_scaffolding:
+			print('hm')
+	
 	if menu_open:
 		if HUD.resume_game:
 			_toggle_menu()
+	
+	if PREM_7.detect_touch:
+		if touched_object:
+			var p_mat = PREM_7.photon_tip.get_active_material(0)
+			p_mat.albedo_color.a = 0.5
+		PREM_7.detect_touch = false
 	
 	if extraction_started:
 		HUD.extract_time_remaining = extract_time
@@ -438,13 +449,20 @@ func _process(delta: float) -> void:
 			grabbed_object.manipulation_material.set_shader_parameter("albedo_alpha", extract_alpha)
 			grabbed_object.manipulation_material.set_shader_parameter("edge_intensity", extract_edge)
 			grabbed_object.manipulation_material.set_shader_parameter("alpha_multiplier", alpha_x)
-			
+			var main_mat = PREM_7.extract_dash_main.get_active_material(0) as ShaderMaterial
+			var e_intensity: float = main_mat.get_shader_parameter("edge_intensity")
+			var e_power: float = main_mat.get_shader_parameter("edge_power")
 			if extraction_started:
 				if extract_time >= 0.002:
 					extract_alpha -= delta / 1.1
 					extract_edge -= delta * 2.25
 					extract_time -= delta
-				grabbed_object.EXTRACT_MATERIAL.albedo_color = lerp(grabbed_object.EXTRACT_MATERIAL.albedo_color, Color.DARK_ORANGE, delta)
+				e_intensity = lerp(e_intensity, 30.0, delta / 3.0)
+				main_mat.set_shader_parameter("edge_intensity", e_intensity)
+				e_power = lerp(e_power, 2.0, delta / 10.0)
+				main_mat.set_shader_parameter("edge_power", e_power)
+				PREM_7.extract_dash_h_bar.transparency = lerp(PREM_7.extract_dash_h_bar.transparency, 1.0, delta * 15.0)
+				grabbed_object.EXTRACT_MATERIAL.albedo_color = lerp(grabbed_object.EXTRACT_MATERIAL.albedo_color, Color.PURPLE, delta)
 				grabbed_object.EXTRACT_MATERIAL.emission = lerp(grabbed_object.EXTRACT_MATERIAL.emission, Color.WHITE, delta)
 				grabbed_object.EXTRACT_MATERIAL.emission_energy_multiplier = lerp(grabbed_object.EXTRACT_MATERIAL.emission_energy_multiplier, 16.0, delta * 7.5)
 				if control_timer.is_stopped() == false:
@@ -476,12 +494,48 @@ func _process(delta: float) -> void:
 
 
 			else:
+				e_intensity = lerp(e_intensity, 2.0, delta * 10.0)
+				main_mat.set_shader_parameter("edge_intensity", e_intensity)
+				e_power = lerp(e_power, 1.0, delta * 5.0)
+				main_mat.set_shader_parameter("edge_power", e_power)
+
+				var emission_color: Color
+				var albedo_color: Color
+				var albedo_alpha: float
+				
+				var engine_emission = Color.RED
+				var engine_albedo = Color.YELLOW
+				var propellent_emission = Color.GREEN
+				var propellent_albedo = Color.BLUE
+				var structure_emission = Color.BLUE
+				var structure_albedo = Color.MEDIUM_PURPLE
+				var operation_emission = Color.PURPLE
+				var operation_albedo = Color.RED
+				
+				if component_system == "Engine":
+					emission_color = engine_emission
+					albedo_color = engine_albedo
+					albedo_alpha = 1.0
+				elif component_system == "Propellent":
+					emission_color = propellent_emission
+					albedo_color = propellent_albedo
+					albedo_alpha = 1.0
+				elif component_system == "Structure":
+					emission_color = structure_emission
+					albedo_color = structure_albedo
+					albedo_alpha = 1.5
+				if component_system == "Operation":
+					emission_color = operation_emission
+					albedo_color = operation_albedo
+					albedo_alpha = 1.5
 				if not selected_component_mesh:
 					return
+
+				PREM_7.extract_dash_h_bar.transparency = lerp(PREM_7.extract_dash_h_bar.transparency, 0.25, delta * 5.0)
 				extract_speed = lerp(extract_speed, base_extract_speed, delta * 7.5)
-				grabbed_object.EXTRACT_MATERIAL.emission = lerp(grabbed_object.EXTRACT_MATERIAL.emission, Color.ORANGE_RED, delta * 7.5)
-				grabbed_object.EXTRACT_MATERIAL.albedo_color = lerp(grabbed_object.EXTRACT_MATERIAL.albedo_color, Color.RED, delta * 7.5)
-				grabbed_object.EXTRACT_MATERIAL.albedo_color.a = 0.9
+				grabbed_object.EXTRACT_MATERIAL.emission = emission_color
+				grabbed_object.EXTRACT_MATERIAL.albedo_color = albedo_color
+				grabbed_object.EXTRACT_MATERIAL.albedo_color.a = albedo_alpha
 				grabbed_object.EXTRACT_MATERIAL.emission_energy_multiplier = lerp(grabbed_object.EXTRACT_MATERIAL.emission_energy_multiplier, selected_component_glow * 2.5, delta * 7.5)
 				selected_component_mesh.position = lerp(selected_component_mesh.position, selected_component_pos, delta * 7.5)
 				selected_component_mesh.scale = lerp(selected_component_mesh.scale, Vector3(x, y, z), delta * 7.5)
@@ -561,7 +615,7 @@ func _toggle_menu():
 		HUD.catalog.visible = false
 		HUD.reticle.visible = false
 		var menu_mat = menu_background.get_active_material(0) as ShaderMaterial
-		var menu_speed: float = randf_range(0.01, 0.09)
+		var menu_speed: float = randf_range(0.02, 0.06) * (1 if randi() % 2 == 0 else -1)
 		var menu_ring: float = randf_range(0.75, 5.0)
 		var menu_wave: float = randf_range(0.0, 2.0)
 		var menu_rand: float = randf_range(2.5, 3.75)
@@ -569,7 +623,7 @@ func _toggle_menu():
 		var menu_c2: float = randf_range(0.0, 1.0)
 		var menu_c3: float = randf_range(0.0, 1.0)
 		var menu_c4: float = randf_range(0.0, 0.25)
-		print("ring_scale: ", menu_ring, " | ", "ring_scale: ", menu_wave, " | ", "random_scale: ", menu_rand)
+		print(menu_speed)
 		if menu_mat:
 			menu_mat.set_shader_parameter("speed", menu_speed)
 			menu_mat.set_shader_parameter("ring_scale", menu_ring)
@@ -636,15 +690,10 @@ func _on_extract_key() -> void:
 		return
 	PREM_7.set_catalog_glow_color(Color(0.914, 0.686, 0.0, 0.537), Color(1.0, 0.502, 0.0), Color(1.694, 0.822, 0.0), 3.6)
 
-	action_wait_timer.start(0.5)
-
 	desired_pitch = 0.0
 	desired_yaw = grabbed_object.rotation.y
-	#print(yaw + grabbed_object.rotation.y)
-	#print(desired_yaw)
-	
 	extracting_object_active =! extracting_object_active
-		
+	
 	if extracting_object_active:
 		change_exposure(camera, 0.5, 0.1)
 		camera.attributes.dof_blur_near_enabled = true
@@ -656,8 +705,8 @@ func _on_extract_key() -> void:
 		PREM_7.ctrl_anim.play("extract")
 		PREM_7.holo_anim.play("cast_hologram")
 		grabbed_object.is_extracting = true
-		#PREM_7.dashboard.scale = Vector3(1.0, 1.0, 1.0)
-		PREM_7.dashboard.visible = true
+		#PREM_7.extract_dashboard.scale = Vector3(1.0, 1.0, 1.0)
+		PREM_7.extract_dashboard.visible = true
 		grabbed_object.extract_active = true
 		#module = PREM_7.component_module.get_parent()
 		#power = PREM_7.component_power.get_parent()
@@ -672,6 +721,7 @@ func _on_extract_key() -> void:
 		
 		#grabbed_target_position.x -= 10
 	else:
+		action_wait_timer.start(0.5)
 		change_exposure(camera, 0.9, 0.1)
 		camera.attributes.dof_blur_near_enabled = false
 		for child in grabbed_object.get_children():
@@ -709,16 +759,21 @@ func _on_view_key() -> void:
 			if child is RigidBody3D:
 				child.manipulation_mode('View ON')
 		change_exposure(camera, 0.5, 0.1)
+		PREM_7.ctrl_anim.play("view")
 		cycle_catalog(null, current_catalog_index)
 		PREM_7.holo_anim.play("cast_catalog")
 		PREM_7.set_catalog_glow_color(Color(0.0, 0.5, 1.0, 0.535), Color(0.0, 0.0, 1.0, 1.0), Color(0.0, 0.66, 1.694, 1.0), 5.0)
+		PREM_7.catalog_dashboard.visible = true
+		HUD.reticle.visible = false
 		camera.attributes.dof_blur_near_enabled = true
 		desired_pitch = 0.0
 	else:
 		change_exposure(camera, 0.9, 0.1)
+		PREM_7.ctrl_anim.play_backwards("view")
 		PREM_7.holo_anim.play_backwards("cast_catalog")
+		HUD.reticle.visible = true
 		camera.attributes.dof_blur_near_enabled = false
-	pass
+
 
 func _on_reset_key() -> void:
 	print('RESETTING')
@@ -757,11 +812,6 @@ func _input(event: InputEvent) -> void:
 
 		elif event.button_index == MOUSE_BUTTON_RIGHT and grabbed_object:
 			print('This will be used somewhere else down the line...')
-			#if not middle_mouse_down and not left_mouse_down:
-				#if event.is_pressed():
-					#handle_object('pressed')
-				#else:
-					#handle_object('released')
 
 		elif event.button_index == MOUSE_BUTTON_WHEEL_UP and event.pressed:
 			if not middle_mouse_down and not right_mouse_down and not left_mouse_down:
@@ -869,7 +919,7 @@ func _input(event: InputEvent) -> void:
 				_on_extract_key()
 
 		if event.keycode == KEY_C and pressed:
-			if grabbed_object or not PREM_7.catalog.is_viewable or extracting_object_active or fusing_object_active:
+			if not PREM_7.catalog.is_viewable or extracting_object_active or fusing_object_active:
 				return
 			if action_wait_timer.time_left > 0.0:
 				return
@@ -877,7 +927,6 @@ func _input(event: InputEvent) -> void:
 				PREM_7.holo_anim.play("RESET")
 				PREM_7.cast_catalog = true
 				_on_view_key()
-				action_wait_timer.start(0.5)
 				return
 			elif PREM_7.catalog_active:
 				PREM_7.cast_catalog = false
@@ -995,21 +1044,13 @@ func _input(event: InputEvent) -> void:
 
 
 func grab_object():
-	
+	PREM_7.grab_anim.play("RESET")
 	PREM_7.cast_catalog = false
-	
-	#if distance_to_ground > 2.97:
-		#print('why would this work?')
-		#for child in get_children():
-			#if child is CollisionShape3D:
-				#child.disabled = true
-				#if is_touching_scaffolding:
-					#child.disabled = false
+	PREM_7.grab_anim.play("grab_object")
 	grabbed_object.extract_body = grabbed_object.object_body.duplicate()
 	grabbed_object.extract_body.position = Vector3(0.0, -0.25, 0.0)
 	grabbed_object.extract_body.scale = Vector3.ZERO
 	PREM_7.control_position.add_child(grabbed_object.extract_body)
-	print('Grab')
 	extracting_object_active = false
 	fusing_object_active = false
 	HUD.reticle.visible = false
@@ -1036,21 +1077,23 @@ func release_object():
 		if child is CollisionShape3D:
 			child.disabled = false
 	grabbed_object.object_body.scale = grabbed_object.current_scale
-	PREM_7.dashboard.scale = Vector3.ZERO
-	PREM_7.dashboard.visible = false
+	if not viewing_component:
+		PREM_7.grab_anim.play("release_object")
+	#else:
+		#touched_object = true
+	#PREM_7.extract_dashboard.scale = Vector3(0.6, 0.6, 0.6)
+	PREM_7.extract_dashboard.visible = false
 	PREM_7.control_position.remove_child(grabbed_object.extract_body)
 	grabbed_object.extract_body = null
 	if touched_object:
 		touched_object.is_touched = false
 		touched_object = null
-	print('Release')
-	#beam.object_is_grabbed = false
 	orbit_radius = target_orbit_radius
-	PREM_7.retract_beam()
 	grabbed_pos_set = false
 	initial_grab = false
 	pitch_max = base_pitch_max
-	HUD.reticle.visible = true
+	if not viewing_component:
+		HUD.reticle.visible = true
 	grabbed_object.recently_grabbed = true
 	grabbed_object.is_released = true
 	if grabbed_object.is_suspended:
@@ -1294,7 +1337,7 @@ func update_reticle_targeting() -> void:
 
 	var result = space_state.intersect_ray(query)
 
-	if result and not grabbed_object:
+	if result and not grabbed_object and not viewing_component:
 		
 		if result.collider is RigidBody3D:
 			if result.collider.is_rocket_system:
@@ -1431,7 +1474,7 @@ func load_json_file(filePath: String):
 func activate_component_data():
 	var obj_name = grabbed_object.name
 	if not object_data.has(obj_name):
-		print("No component data found for", obj_name)
+		print("No component data found for ", obj_name)
 		current_extraction_data = []
 		return
 
@@ -1503,23 +1546,36 @@ func update_component_display():
 	var system_text = pad_with_dots(system_text_raw, 30)
 	
 	# Determine color based on first word
-	var first_word = system_text_raw.split(" ")[0].to_upper()
-	var text_color = Color.WHITE  # default
+	var last_word = machine_class_text.to_upper()
+	var component_color = Color.WHITE  # default
 	
-	if first_word.begins_with("[ENGINE]"):
-		text_color = Color(1.0, 0.5, 0.0, 1.0)
-		HUD.component_color = Color(1.0, 0.5, 0.0, 1.0)
-	elif first_word.begins_with("[PROPELLANT]"):
-		text_color = Color(0.3, 0.85, 0.4, 1.0)
-		HUD.component_color = Color(0.3, 0.85, 0.4, 1.0)
-	elif first_word.begins_with("[STRUCTURE]"):
-		text_color = Color(0.0, 1.0, 1.0, 1.0)
-		HUD.component_color = Color(0.0, 1.0, 1.0, 1.0)
-	elif first_word.begins_with("[OPERATION]"):
-		text_color = Color(1.0, 0.5, 1.0, 1.0)
-		HUD.component_color = Color(1.0, 0.5, 1.0, 1.0)
+	var main_dash_mat = PREM_7.extract_dash_main.get_active_material(0) as ShaderMaterial
+	var main_dash_child = PREM_7.extract_dash_main.get_child(0)
+	var alt_dash_mat = main_dash_child.get_active_material(0) as StandardMaterial3D
+	var h_bar_mat = PREM_7.extract_dash_h_bar.get_active_material(0) as StandardMaterial3D
 	
-	PREM_7.component_system.modulate = text_color
+	if last_word.ends_with("UTILITY"):
+		component_color = Color(0.334, 2.185, 0.817, 1.0)
+		HUD.component_color = Color(0.0, 1.0, 0.522, 1.0)
+		main_dash_mat.set_shader_parameter("edge_color", component_color)
+		alt_dash_mat.albedo_color = Color(0.0, 5.111, 1.739, 1.0)
+		h_bar_mat.albedo_color = Color(0.0, 2.346, 1.115, 1.0)
+	elif last_word.ends_with("KITCHEN"):
+		component_color = Color(0.0, 1.1, 2.923, 1.0)
+		HUD.component_color = component_color
+		main_dash_mat.set_shader_parameter("edge_color", component_color)
+		alt_dash_mat.albedo_color = Color(0.0, 5.111, 5.111)
+		h_bar_mat.albedo_color = Color(0.0, 2.346, 2.538)
+	#elif first_word.begins_with("[STRUCTURE]"):
+		#text_color = Color(0.0, 0.35, 1.0, 1.0)
+		#HUD.component_color = Color(0.0, 0.35, 1.0, 1.0)
+		#component_system = "Structure"
+	#elif first_word.begins_with("[OPERATION]"):
+		#text_color = Color(1.0, 0.35, 1.0, 1.0)
+		#HUD.component_color = Color(1.0, 0.35, 1.0, 1.0)
+		#component_system = "Operation"
+	#
+	PREM_7.machine_class.modulate = HUD.component_color
 	
 	if PREM_7.machine_name.text != machine_name_text:
 		if name_tween:
@@ -2031,6 +2087,7 @@ func reform_component(obj, time, parent):
 	reform = false
 
 func complete_extraction(body: RigidBody3D, mesh: MeshInstance3D):
+	PREM_7.ctrl_anim.play_backwards("activate")
 	PREM_7.holo_anim.speed_scale = 1.0
 	PREM_7.holo_anim.play_backwards("retract_hologram")
 	await get_tree().create_timer(0.25).timeout

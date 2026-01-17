@@ -180,7 +180,7 @@ func _ready() -> void:
 	resting_position = global_position.y
 	set_physics_process(true)
 
-	if name == "scaffolding":
+	if name == "Scaffolding":
 		is_scaffolding = true
 
 var prev_y_vel
@@ -597,8 +597,8 @@ func manipulation_mode(type):
 				var surface_count = child.mesh.get_surface_count()
 				for i in range(surface_count):
 					child.set_surface_override_material(i, manipulation_material)
-					manipulation_material.set_shader_parameter("tint_color", Color(1.75, 1.0, 0.5))
-					manipulation_material.set_shader_parameter("edge_color", Color(1.0, 0.749, 0.0))
+					manipulation_material.set_shader_parameter("tint_color", Color(1.75, 1.25, 0.5))
+					manipulation_material.set_shader_parameter("edge_color", Color(1.75, 1.25, 0.5))
 					manipulation_material.set_shader_parameter("edge_power", 1.0)
 					manipulation_material.set_shader_parameter("edge_intensity", 2.5)
 					child.cast_shadow = false
@@ -609,8 +609,8 @@ func manipulation_mode(type):
 							var x_surface_count = child2.mesh.get_surface_count()
 							for i in range(x_surface_count):
 								child2.set_surface_override_material(i, manipulation_material)
-								manipulation_material.set_shader_parameter("tint_color", Color(1.75, 1.0, 0.5))
-								manipulation_material.set_shader_parameter("edge_color", Color(1.0, 0.749, 0.0))
+								manipulation_material.set_shader_parameter("tint_color", Color(1.75, 1.25, 0.5))
+								manipulation_material.set_shader_parameter("edge_color", Color(1.75, 1.25, 0.5))
 								manipulation_material.set_shader_parameter("edge_power", 1.0)
 								manipulation_material.set_shader_parameter("edge_intensity", 2.5)
 								child2.cast_shadow = false
@@ -621,7 +621,7 @@ func manipulation_mode(type):
 				var surface_count = child.mesh.get_surface_count()
 				for i in range(surface_count):
 					child.set_surface_override_material(i, manipulation_material)
-					manipulation_material.set_shader_parameter("tint_color", Color(0.0, 0.907, 1.75))
+					manipulation_material.set_shader_parameter("tint_color", Color(0.0, 0.323, 1.0))
 					manipulation_material.set_shader_parameter("edge_color", Color(0.0, 0.323, 1.0))
 					manipulation_material.set_shader_parameter("edge_power", 1.15)
 					manipulation_material.set_shader_parameter("edge_intensity", 7.5)
@@ -633,7 +633,7 @@ func manipulation_mode(type):
 							var x_surface_count = child2.mesh.get_surface_count()
 							for i in range(x_surface_count):
 								child2.set_surface_override_material(i, manipulation_material)
-								manipulation_material.set_shader_parameter("tint_color", Color(0.0, 0.907, 1.75))
+								manipulation_material.set_shader_parameter("tint_color", Color(0.0, 0.323, 1.0))
 								manipulation_material.set_shader_parameter("edge_color", Color(0.0, 0.323, 1.0))
 								manipulation_material.set_shader_parameter("edge_power", 1.15)
 								manipulation_material.set_shader_parameter("edge_intensity", 7.5)

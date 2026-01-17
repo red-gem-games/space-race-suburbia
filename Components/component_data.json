@@ -1,7 +1,7 @@
 {
     "WashingMachine": {
             "name": "Washing Machine",
-            "class": "Utility",
+            "class": "Kitchen",
             "scale": 0.6,
             "distance": 6.0,
             "components": [

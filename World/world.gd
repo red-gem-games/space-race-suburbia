@@ -69,8 +69,11 @@ var touching_launch_button = false
 @onready var launch_instructions: Label3D = $Launch_Sequence/Instructions
 
 @onready var computer_camera: Camera3D = $Environment/Workbench/Computer_Camera
+var computer_active: bool = false
 
 @onready var storage_shed: Node3D = $StorageShed
+
+var catalog_active: bool = false
 
 func _activate_rocket():
 	active_rocket = $"Launch_Platform/TRS-1"
@@ -93,9 +96,6 @@ func _ready() -> void:
 	
 	player_character.storage_shed = storage_shed
 
-
-var computer_active: bool = false
-
 func _physics_process(delta: float) -> void:
 	
 	if player_character.is_using_computer:
@@ -113,7 +113,13 @@ func _physics_process(delta: float) -> void:
 			$Launch_Platform/Smoke_Cloud2.transparency += 0.00175
 
 	if grabbed_object:
-		 #--- Force Movement Toward Target ---
+		if player_character.viewing_component:
+			release_object()
+
+	if grabbed_object:
+		if player_character.viewing_component:
+			release_object()
+	
 		var cam_transform = player_character.camera.global_transform
 
 		var forward = -cam_transform.basis.z
@@ -140,11 +146,13 @@ func _physics_process(delta: float) -> void:
 				grabbed_object.extract_body.position.x = lerp(grabbed_object.extract_body.position.x, 0.01, delta * 7.0)
 				grabbed_object.extract_body.position.y = lerp(grabbed_object.extract_body.position.y, -0.35, delta * 7.0)
 				grabbed_object.extract_body.position.z = lerp(grabbed_object.extract_body.position.z, 0.1, delta * 7.0)
-				player_character.PREM_7.dashboard.scale = lerp(player_character.PREM_7.dashboard.scale, Vector3.ZERO, delta * 10.0)
+				#player_character.PREM_7.extract_dashboard.scale = lerp(player_character.PREM_7.extract_dashboard.scale, Vector3(0.25, 0.25, 0.25), delta * 10.0)
+				player_character.PREM_7.extract_dashboard.position.z = lerp(player_character.PREM_7.extract_dashboard.position.z, -0.316, delta * 10.0)
+				player_character.PREM_7.extract_dashboard.rotation_degrees.y = lerp(player_character.PREM_7.extract_dashboard.rotation_degrees.y, -2.5, delta * 10.0)
 				if grabbed_object.object_body.scale.y > 0.01:
 					grabbed_object.object_body.visible = true
-				if player_character.PREM_7.dashboard.scale.y <= 0.5:
-					player_character.PREM_7.dashboard.visible = false
+				if player_character.PREM_7.extract_dashboard.position.z <= 0:
+					player_character.PREM_7.extract_dashboard.visible = false
 				if grabbed_object.extract_body.scale.y <= 0.01:
 					grabbed_object.extract_body.visible = false
 			distance_forward = player_character.distance_factor
@@ -169,7 +177,7 @@ func _physics_process(delta: float) -> void:
 							child.disabled = false
 					release_object()
 					return
-			player_character.PREM_7.dashboard.visible = true
+			player_character.PREM_7.extract_dashboard.visible = true
 			grabbed_object.extract_body.visible = true
 			distance_forward = 6.0
 			offset_left = 0.0
@@ -195,7 +203,9 @@ func _physics_process(delta: float) -> void:
 				grabbed_object.extract_body.position.x = lerp(grabbed_object.extract_body.position.x, 0.0, delta * 7.0)
 				grabbed_object.extract_body.position.y = lerp(grabbed_object.extract_body.position.y, 0.1, delta * 5.0)
 				grabbed_object.extract_body.position.z = lerp(grabbed_object.extract_body.position.z, -1.0, delta * 5.0)
-				player_character.PREM_7.dashboard.scale = lerp(player_character.PREM_7.dashboard.scale, Vector3.ONE, delta * 5.0)
+				#player_character.PREM_7.extract_dashboard.scale = lerp(player_character.PREM_7.extract_dashboard.scale, Vector3.ONE, delta * 5.0)
+				player_character.PREM_7.extract_dashboard.position.z = lerp(player_character.PREM_7.extract_dashboard.position.z, 0.136, delta * 5.0)
+				player_character.PREM_7.extract_dashboard.rotation_degrees.y = lerp(player_character.PREM_7.extract_dashboard.rotation_degrees.y, 13.7, delta * 10.0)
 				if current_spin_timer > 0.25:
 					extraction_spin_initialized = true
 			if extraction_spin_initialized:
@@ -233,13 +243,28 @@ func _physics_process(delta: float) -> void:
 		grabbed_object.apply_force(force)
 		
 
+	if player_character.PREM_7.catalog_active:
+		catalog_active = true
+	
+	if catalog_active:
+		if player_character.viewing_component:
+			print('1')
+			player_character.PREM_7.catalog_dashboard.position.z = lerp(player_character.PREM_7.catalog_dashboard.position.z, 0.136, delta * 5.0)
+			player_character.PREM_7.catalog_dashboard.rotation_degrees.y = lerp(player_character.PREM_7.catalog_dashboard.rotation_degrees.y, 13.7, delta * 10.0)
+		elif not player_character.viewing_component:
+			print('2')
+			player_character.PREM_7.catalog_dashboard.position.z = lerp(player_character.PREM_7.catalog_dashboard.position.z, -0.316, delta * 10.0)
+			player_character.PREM_7.catalog_dashboard.rotation_degrees.y = lerp(player_character.PREM_7.catalog_dashboard.rotation_degrees.y, -2.5, delta * 10.0)
+			if player_character.PREM_7.catalog_dashboard.position.z <= 0:
+				player_character.PREM_7.catalog_dashboard.visible = false
+				catalog_active = false
+
 func grab_object():
 	if first_grabbed_object:
 		player_character.PREM_7.extract_message.visible = true
 		grab_message.visible = false
 		first_grabbed_object = false
 	grab_initiated = true
-	player_character.PREM_7.cast_beam()
 	#await get_tree().create_timer(0.4).timeout
 	grabbed_object = grabbable_object
 	grabbable_object = null
@@ -319,21 +344,21 @@ func _input(event: InputEvent) -> void:
 					grab_object()
 					return
 		elif event.button_index == MOUSE_BUTTON_RIGHT and not (player_character.extracting_object_active or player_character.fusing_object_active):
-			if event.is_pressed():
-				if grabbed_object:
-					player_character.PREM_7.ctrl_anim.play("suspend")
-					grabbed_object.gravity_scale = 0.0
-					grabbed_object.freeze = false
-					grabbed_object.is_suspended = true
-					player_character.PREM_7.suspend_object = true
-					release_object()
+			pass
+			#if event.is_pressed():
+				#if grabbed_object:
+					#player_character.PREM_7.ctrl_anim.play("suspend")
+					#grabbed_object.gravity_scale = 0.0
+					#grabbed_object.freeze = false
+					#grabbed_object.is_suspended = true
+					#player_character.PREM_7.suspend_object = true
+					#release_object()
 
 	if event is InputEventKey:
 	
 		if event.keycode == KEY_ENTER:
 			if touching_launch_button and not active_rocket.launch_sequence_started:
 				active_rocket.launch_rocket(11)
-
 
 		### COMPUTER CAMERA SWITCH LOGIC ###
 
