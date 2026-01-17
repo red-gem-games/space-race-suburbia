@@ -1,0 +1,14 @@
+[remap]
+
+importer="glsl"
+type="RDShaderFile"
+uid="uid://ojudxyx6f4rx"
+path="res://.godot/imported/pre_blur_processor.glsl-e416e22649155fcc2c4d7995b265f62d.res"
+
+[deps]
+
+source_file="res://Character/SphynxMotionBlurToolkit/PreBlurProcessing/Shaders/pre_blur_processor.glsl"
+dest_files=["res://.godot/imported/pre_blur_processor.glsl-e416e22649155fcc2c4d7995b265f62d.res"]
+
+[params]
+

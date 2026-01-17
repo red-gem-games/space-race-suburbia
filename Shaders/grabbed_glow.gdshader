@@ -1,5 +1,5 @@
 shader_type spatial;
-render_mode blend_mix, cull_disabled, depth_draw_always, depth_test_disabled;
+render_mode blend_add, cull_disabled, depth_draw_always, unshaded;
 
 // ——— Control Variables ———
 uniform float speed              = 0.25;

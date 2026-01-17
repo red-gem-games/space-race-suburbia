@@ -29,6 +29,10 @@ window/stretch/aspect="expand"
 movie_writer/video_quality=1.0
 movie_writer/movie_file="/Users/richardgibbs/Desktop/SRS - Media & Documents/VIDEOS/SRSvideo.avi"
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/SphynxMotionBlurToolkit/plugin.cfg", "res://addons/addons/SphynxMotionBlurToolkit/plugin.cfg")
+
 [file_customization]
 
 folder_colors={

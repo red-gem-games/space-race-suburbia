@@ -1,0 +1,14 @@
+[remap]
+
+importer="glsl"
+type="RDShaderFile"
+uid="uid://cqlltc8f21wre"
+path="res://.godot/imported/jf_guertin_tile_max_y.glsl-cec79bff9d59adcfee92f87a7a4d8a36.res"
+
+[deps]
+
+source_file="res://Character/SphynxMotionBlurToolkit/JumpFlood/ShaderFiles/jf_guertin_tile_max_y.glsl"
+dest_files=["res://.godot/imported/jf_guertin_tile_max_y.glsl-cec79bff9d59adcfee92f87a7a4d8a36.res"]
+
+[params]
+

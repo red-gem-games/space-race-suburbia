@@ -16,7 +16,7 @@ var ROTATE_SPEED := BASE_ROTATE_SPEED  # Increase this for snappier rotation
 
 const BASE_GRAB_STIFFNESS := 360.0
 const BASE_GRAB_DAMPING := 36.0
-const BASE_ROTATE_SPEED := 4.0  # Increase this for snappier rotation
+const BASE_ROTATE_SPEED := 0.5  # Increase this for snappier rotation
 const MIN_FORCE := -200000.0 
 const MAX_FORCE := 200000.0    
 
@@ -260,10 +260,10 @@ func _physics_process(delta: float) -> void:
 				catalog_active = false
 
 func grab_object():
-	if first_grabbed_object:
-		player_character.PREM_7.extract_message.visible = true
-		grab_message.visible = false
-		first_grabbed_object = false
+	#if first_grabbed_object:
+		#player_character.PREM_7.extract_message.visible = true
+		#grab_message.visible = false
+		#first_grabbed_object = false
 	grab_initiated = true
 	#await get_tree().create_timer(0.4).timeout
 	grabbed_object = grabbable_object

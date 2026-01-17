@@ -2,16 +2,24 @@
 
 [resource]
 transparency = 1
-blend_mode = 3
 cull_mode = 2
-depth_draw_mode = 1
+albedo_color = Color(1, 1, 1, 0.388)
 metallic = 1.0
 roughness = 0.0
 emission_enabled = true
 emission = Color(0.0533333, 0.8, 0, 1)
-emission_energy_multiplier = 3.0
+emission_energy_multiplier = 22.6
 normal_scale = 16.0
+ao_light_affect = 0.48
 subsurf_scatter_strength = 1.0
+subsurf_scatter_transmittance_color = Color(1, 0, 0, 1)
+subsurf_scatter_transmittance_depth = 1.73
+subsurf_scatter_transmittance_boost = 0.08
 backlight = Color(0, 1, 0.35, 1)
-refraction_scale = -1.0
-grow_amount = -0.12
+refraction_enabled = true
+refraction_scale = 0.02
+grow = true
+grow_amount = 0.025
+proximity_fade_enabled = true
+stencil_flags = 2
+stencil_color = Color(0, 1, 0, 1)

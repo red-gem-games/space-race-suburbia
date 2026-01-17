@@ -1,0 +1,14 @@
+[remap]
+
+importer="glsl"
+type="RDShaderFile"
+uid="uid://dig08kpnfakuf"
+path="res://.godot/imported/jump_flood_overlay.glsl-a049a92cd2aa752ed669e6337ef3206a.res"
+
+[deps]
+
+source_file="res://Character/SphynxMotionBlurToolkit/JumpFlood/ShaderFiles/jump_flood_overlay.glsl"
+dest_files=["res://.godot/imported/jump_flood_overlay.glsl-a049a92cd2aa752ed669e6337ef3206a.res"]
+
+[params]
+

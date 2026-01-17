@@ -1,0 +1,14 @@
+[remap]
+
+importer="glsl"
+type="RDShaderFile"
+uid="uid://dyxn6g5gvoge7"
+path="res://.godot/imported/debug_overlay.glsl-97729d4943cd91f295d307ceb76c3010.res"
+
+[deps]
+
+source_file="res://Character/SphynxMotionBlurToolkit/Debug/ShaderFiles/debug_overlay.glsl"
+dest_files=["res://.godot/imported/debug_overlay.glsl-97729d4943cd91f295d307ceb76c3010.res"]
+
+[params]
+

@@ -1,4 +1,4 @@
-[gd_scene load_steps=225 format=4 uid="uid://bpvm0l41dywjs"]
+[gd_scene load_steps=226 format=4 uid="uid://bpvm0l41dywjs"]
 
 [ext_resource type="Script" uid="uid://so25svauxmkt" path="res://PREM-7/prem_7.gd" id="1_iarxa"]
 [ext_resource type="Shader" uid="uid://cgr7dnph387rx" path="res://PREM-7/prem_7_holo_glow.gdshader" id="2_t05xm"]
@@ -4167,6 +4167,9 @@ spacing_top = 4
 render_priority = 3
 no_depth_test = true
 albedo_color = Color(0, 5.1105056, 2.975155, 1)
+rim_enabled = true
+rim = 0.1
+rim_tint = 0.0
 
 [sub_resource type="BoxMesh" id="BoxMesh_dpu46"]
 material = SubResource("StandardMaterial3D_n01wu")
@@ -4459,6 +4462,31 @@ size = Vector3(1.04, 0.64, -0.02)
 [sub_resource type="BoxMesh" id="BoxMesh_s7cmo"]
 material = SubResource("StandardMaterial3D_n01wu")
 size = Vector3(1.01, 0.01, 0.01)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1amol"]
+render_priority = 0
+shader = ExtResource("5_t05xm")
+shader_parameter/alpha_multiplier = 1.0
+shader_parameter/albedo_alpha = 0.25
+shader_parameter/tint_color = Color(1.75, 1, 0.5, 1)
+shader_parameter/edge_color = Color(1, 0.75, 0, 1)
+shader_parameter/edge_power = 1.0
+shader_parameter/edge_size = 5.0
+shader_parameter/edge_intensity = 5.0
+shader_parameter/scanline_tint = Color(1, 1, 1, 1)
+shader_parameter/scanline_intensity = 0.253
+shader_parameter/scanline_density = 3.351
+shader_parameter/scanline_thickness = 0.513
+shader_parameter/scanline_spacing = 4.0
+shader_parameter/scanline_angle = 1.569
+shader_parameter/scanline_speed = -2.96
+shader_parameter/enable_glitch = false
+shader_parameter/glitch_intensity = 0.5
+shader_parameter/shake_power = 0.25
+shader_parameter/shake_rate = 1.0
+shader_parameter/shake_speed = 3.0
+shader_parameter/shake_block_size = 100.0
+shader_parameter/shake_color_rate = 0.5
 
 [sub_resource type="BoxMesh" id="BoxMesh_sv71j"]
 material = SubResource("StandardMaterial3D_n01wu")
@@ -5186,7 +5214,7 @@ mesh = SubResource("BoxMesh_o2hec")
 skeleton = NodePath("../../Object_Inventory")
 
 [node name="Square_Glow" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.24612574, -0.0063173347, 0.0433845, 0.008626029, 0.24953316, -0.012601349, -0.04298506, 0.013903009, 0.24588409, -0.003, 0, -0.533)
+transform = Transform3D(0.24612574, -0.006317334, 0.0433845, 0.008626028, 0.24953316, -0.012601349, -0.04298506, 0.013903009, 0.24588409, -0.003, 0, -0.533)
 cast_shadow = 0
 mesh = SubResource("BoxMesh_njh5b")
 skeleton = NodePath("../Holo_Glow")
@@ -5910,6 +5938,7 @@ skeleton = NodePath("../..")
 [node name="System_H1" type="MeshInstance3D" parent="Extract_Dashboard/MAIN_SCREEN"]
 transform = Transform3D(0.949977, 4.26418e-05, 0.00697918, 0, 0.249925, -0.0244322, -0.0066322, 0.00610789, 0.999677, -0.005, 0.192, 0.037)
 mesh = SubResource("BoxMesh_s7cmo")
+surface_material_override/0 = SubResource("ShaderMaterial_1amol")
 
 [node name="System_H2" type="MeshInstance3D" parent="Extract_Dashboard/MAIN_SCREEN"]
 transform = Transform3D(0.890986, 0.000492816, 0.00523589, -0.00155507, 0.277996, -0.00523596, -0.00467338, 0.00145304, 0.999973, -0.009, 0.089, 0.117)

@@ -1,0 +1,14 @@
+[remap]
+
+importer="glsl"
+type="RDShaderFile"
+uid="uid://cfk5chwlcyay4"
+path="res://.godot/imported/jf_neighbor_max.glsl-e4033f4775a1def44cafc6e93f5033a6.res"
+
+[deps]
+
+source_file="res://Character/SphynxMotionBlurToolkit/JumpFlood/ShaderFiles/jf_neighbor_max.glsl"
+dest_files=["res://.godot/imported/jf_neighbor_max.glsl-e4033f4775a1def44cafc6e93f5033a6.res"]
+
+[params]
+

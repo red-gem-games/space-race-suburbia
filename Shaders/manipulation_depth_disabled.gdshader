@@ -1,5 +1,5 @@
 shader_type spatial;
-render_mode blend_mix, depth_prepass_alpha, cull_disabled, depth_test_disabled;
+render_mode blend_mix, depth_prepass_alpha, cull_disabled, unshaded;
 
 uniform float alpha_multiplier : hint_range(0.0, 1.0) = 1.0;
 group_uniforms base_texture;

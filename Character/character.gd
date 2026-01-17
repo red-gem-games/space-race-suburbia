@@ -130,7 +130,7 @@ var grab_pitch_min: float = -0.25
 var grab_pitch_max: float = 0.9
 var pitch_min: float = base_pitch_min
 var pitch_max: float = base_pitch_max
-var base_mouse_speed: float = 0.002
+var base_mouse_speed: float = 0.001
 var mouse_speed: float = base_mouse_speed
 var smoothing: float = 0.15
 var current_mouse_speed_x: float
@@ -1558,14 +1558,14 @@ func update_component_display():
 		component_color = Color(0.334, 2.185, 0.817, 1.0)
 		HUD.component_color = Color(0.0, 1.0, 0.522, 1.0)
 		main_dash_mat.set_shader_parameter("edge_color", component_color)
-		alt_dash_mat.albedo_color = Color(0.0, 5.111, 1.739, 1.0)
-		h_bar_mat.albedo_color = Color(0.0, 2.346, 1.115, 1.0)
+		#alt_dash_mat.albedo_color = Color(0.0, 5.111, 1.739, 1.0)
+		#h_bar_mat.albedo_color = Color(0.0, 2.346, 1.115, 1.0)
 	elif last_word.ends_with("KITCHEN"):
 		component_color = Color(0.0, 1.1, 2.923, 1.0)
 		HUD.component_color = component_color
 		main_dash_mat.set_shader_parameter("edge_color", component_color)
-		alt_dash_mat.albedo_color = Color(0.0, 5.111, 5.111)
-		h_bar_mat.albedo_color = Color(0.0, 2.346, 2.538)
+		#alt_dash_mat.albedo_color = Color(0.0, 5.111, 5.111)
+		#h_bar_mat.albedo_color = Color(0.0, 2.346, 2.538)
 	#elif first_word.begins_with("[STRUCTURE]"):
 		#text_color = Color(0.0, 0.35, 1.0, 1.0)
 		#HUD.component_color = Color(0.0, 0.35, 1.0, 1.0)

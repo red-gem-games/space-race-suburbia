@@ -8,7 +8,7 @@ var machine_name: StringName
 var component_name: StringName
 
 var COMPONENT_SCRIPT: Script = preload("res://Components/components.gd")
-var GLOW_SHADER := preload("res://Shaders/grabbed_glow.gdshader")
+var GLOW_SHADER := preload("res://Shaders/grab_n_glow.gdshader")
 var MANIPULATION_SHADER:= preload("res://Shaders/manipulation.gdshader")
 var manipulation_material: ShaderMaterial = ShaderMaterial.new()
 var GLASS_MATERIAL: = preload("res://Shaders/Glass_Material.tres")
@@ -75,7 +75,7 @@ var damp_elapsed_time: float = 0.0
 
 var glow_body: MeshInstance3D
 var shader: Shader
-var shader_material: ShaderMaterial
+var glow_material: ShaderMaterial
 var standard_material: StandardMaterial3D
 
 var grab_particles: GPUParticles3D
@@ -118,6 +118,7 @@ var physics_mat = PhysicsMaterial.new()
 
 var is_touched: bool = false
 var is_touchable: bool = true
+var recently_touched: bool = false
 var glow_timer: float = 0.0
 var outline
 var resting_position
@@ -148,8 +149,9 @@ func _ready() -> void:
 	
 	shader = Shader.new()
 	shader.code = GLOW_SHADER.code
-	shader_material = ShaderMaterial.new()
+	glow_material = ShaderMaterial.new()
 	
+	glow_material.shader = GLOW_SHADER
 	manipulation_material.shader = MANIPULATION_SHADER
 	extraction_material.shader = EXTRACTION_SHADER
 	extracted_object_mat = EXTRACT_MATERIAL.duplicate()
@@ -170,7 +172,7 @@ func _ready() -> void:
 	physics_mat.friction = 0.9
 	physics_mat.bounce = 0.0
 	self.physics_material_override = physics_mat
-	shader_material.shader = GLOW_SHADER
+	
 	standard_material = GLOW_MATERIAL
 	for child in get_children():
 		if child is MeshInstance3D:
@@ -191,6 +193,7 @@ var prev_y_pos
 var curr_y_pos
 
 var set_it_up
+var brightness_increasing: bool = true
 
 func _physics_process(delta: float) -> void:
 	
@@ -227,8 +230,6 @@ func _physics_process(delta: float) -> void:
 		damp_elapsed_time = 0.0
 		damp_set = false
 
-var brightness_increasing: bool = true
-
 func _process(delta: float) -> void:
 	
 	if fade_extract_glow:
@@ -247,11 +248,12 @@ func _process(delta: float) -> void:
 			glow_tween.kill()
 		if is_touchable:
 			if is_touched:
+				recently_touched = false
 				for child in object_body.get_children():
 					if child is MeshInstance3D:
 						child.set_material_overlay(standard_material)
-						standard_material.emission = Color(0.6, 0.9, 0.6)
-						standard_material.emission_energy_multiplier = 2.0
+						standard_material.emission = Color(0.253, 0.882, 0.0, 1.0)
+						standard_material.emission_energy_multiplier = 5
 						
 						# Handle nested meshes
 						var xtra_children = child.get_children()
@@ -261,6 +263,8 @@ func _process(delta: float) -> void:
 									child2.set_material_overlay(standard_material)
 				
 			if not is_touched:
+				if recently_touched:
+					return
 				for child in object_body.get_children():
 					if child is MeshInstance3D:
 						child.set_material_overlay(null)
@@ -271,18 +275,18 @@ func _process(delta: float) -> void:
 							for child2 in xtra_children:
 								if child2 is MeshInstance3D:
 									child2.set_material_overlay(null)
-
+					recently_touched = true
 
 	if is_grabbed:
 		if brightness_increasing:
 			glow_timer -= delta
 			standard_material.emission = lerp(standard_material.emission, Color.GREEN, delta * 3.0)
-			standard_material.emission_energy_multiplier = lerp(standard_material.emission_energy_multiplier, 200.0, delta)
+			standard_material.emission_energy_multiplier = lerp(standard_material.emission_energy_multiplier, 2000.0, delta)
 			if glow_timer <= 0.0:
 				brightness_increasing = false
 		else:
-			standard_material.emission_energy_multiplier = lerp(standard_material.emission_energy_multiplier, 6.0, delta * 7.0)
-			if standard_material.emission_energy_multiplier == 5.9:
+			standard_material.emission_energy_multiplier = lerp(standard_material.emission_energy_multiplier, 25.0, delta * 7.0)
+			if standard_material.emission_energy_multiplier == 24.9:
 				is_grabbed = false
 				brightness_increasing = true
 
@@ -323,53 +327,53 @@ func _on_body_shape_exited(_body_rid: RID, body: Node, _body_shape_index: int, _
 			body.is_touching_scaffolding = false
 
 
-func set_outline(status: String, color: Color, opacity: float) -> void:
-	if not is_instance_valid(glow_body):
-		return
-
-	if status == 'GRAB':
-		randomize()
-		shader_material.shader = shader
+#func set_outline(status: String, color: Color, opacity: float) -> void:
+	#if not is_instance_valid(glow_body):
+		#return
+#
+	#if status == 'GRAB':
+		#randomize()
+		#shader_material.shader = shader
+		##color.a = 0.25
+		##shader_material.set_shader_parameter("albedo", color)
+		##shader_material.set_shader_parameter("fresnel_power", 0.1)
+		##shader_material.set_shader_parameter("random_seed", randf())
+		#glow_body.material_override = shader_material
+		##glow_body.visible = true`
+		##create_particles()
+#
+#
+	#elif status == 'RELEASE':
+		#if not is_being_extracted:
+			#shader_material.shader = null
+			#glow_body.material_override = null
+			#glow_body.visible = false
+		#
+		#if grab_particles:
+			#grab_particles.queue_free()
+			#grab_particles = null
+#
+#
+	#elif status == 'UPDATE':
 		#color.a = 0.25
-		#shader_material.set_shader_parameter("albedo", color)
-		#shader_material.set_shader_parameter("fresnel_power", 0.1)
-		#shader_material.set_shader_parameter("random_seed", randf())
-		glow_body.material_override = shader_material
-		#glow_body.visible = true`
-		#create_particles()
-
-
-	elif status == 'RELEASE':
-		if not is_being_extracted:
-			shader_material.shader = null
-			glow_body.material_override = null
-			glow_body.visible = false
-		
-		if grab_particles:
-			grab_particles.queue_free()
-			grab_particles = null
-
-
-	elif status == 'UPDATE':
-		color.a = 0.25
-		#shader_material.set_shader_parameter("glow_color", color)
-		glow_body.visible = true
-
-	elif status == 'ENHANCE':
-		color.a = opacity
-		#shader_material.set_shader_parameter("glow_color", color)
-		glow_body.visible = true
-
-	elif status == 'DIM':
-		color.a = 0.25
-		#shader_material.set_shader_parameter("glow_color", color)
-		glow_body.visible = true
-		
-	elif status == "EXTRACT":
-		glow_body.visible = false
-
-	elif status == "FUSE":
-		glow_body.visible = false
+		##shader_material.set_shader_parameter("glow_color", color)
+		#glow_body.visible = true
+#
+	#elif status == 'ENHANCE':
+		#color.a = opacity
+		##shader_material.set_shader_parameter("glow_color", color)
+		#glow_body.visible = true
+#
+	#elif status == 'DIM':
+		#color.a = 0.25
+		##shader_material.set_shader_parameter("glow_color", color)
+		#glow_body.visible = true
+		#
+	#elif status == "EXTRACT":
+		#glow_body.visible = false
+#
+	#elif status == "FUSE":
+		#glow_body.visible = false
 
 func create_particles():
 	grab_particles= GPUParticles3D.new()
