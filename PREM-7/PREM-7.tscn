@@ -1,4 +1,4 @@
-[gd_scene load_steps=226 format=4 uid="uid://bpvm0l41dywjs"]
+[gd_scene load_steps=225 format=4 uid="uid://bpvm0l41dywjs"]
 
 [ext_resource type="Script" uid="uid://so25svauxmkt" path="res://PREM-7/prem_7.gd" id="1_iarxa"]
 [ext_resource type="Shader" uid="uid://cgr7dnph387rx" path="res://PREM-7/prem_7_holo_glow.gdshader" id="2_t05xm"]
@@ -2280,75 +2280,43 @@ length = 0.001
 tracks/0/type = "bezier"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Multitool/Photon_Tip:mesh:material:albedo_color:r")
+tracks/0/path = NodePath("Multitool/Back_Panel:material_override:albedo_color:a")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
 "handle_modes": PackedInt32Array(0),
-"points": PackedFloat32Array(1, -0.125, 0, 0.125, 0),
-"times": PackedFloat32Array(0)
-}
-tracks/1/type = "bezier"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Multitool/Photon_Tip:mesh:material:albedo_color:g")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"handle_modes": PackedInt32Array(0),
-"points": PackedFloat32Array(1, -0.125, 0, 0.125, 0),
-"times": PackedFloat32Array(0)
-}
-tracks/2/type = "bezier"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Multitool/Photon_Tip:mesh:material:albedo_color:b")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"handle_modes": PackedInt32Array(0),
-"points": PackedFloat32Array(1, -0.125, 0, 0.125, 0),
-"times": PackedFloat32Array(0)
-}
-tracks/3/type = "bezier"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("Multitool/Photon_Tip:mesh:material:albedo_color:a")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(0, -0.125, 0, 0.125, 0),
 "times": PackedFloat32Array(0)
 }
-tracks/4/type = "value"
-tracks/4/imported = false
-tracks/4/enabled = true
-tracks/4/path = NodePath("Multitool/Photon_Tip:mesh:material:alpha_hash_scale")
-tracks/4/interp = 1
-tracks/4/loop_wrap = true
-tracks/4/keys = {
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Multitool/Back_Panel:material_override:alpha_hash_scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [0.01]
+"values": [1.0]
 }
 
 [sub_resource type="Animation" id="Animation_t05xm"]
 resource_name = "extended_touch"
+length = 3.0
 loop_mode = 2
 step = 0.05
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Multitool/Photon_Tip:mesh:material:alpha_hash_scale")
+tracks/0/path = NodePath("Multitool/Back_Panel:material_override:alpha_hash_scale")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 1),
+"times": PackedFloat32Array(0, 3),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [1.0, 0.01]
+"values": [1.0, 0.75]
 }
 
 [sub_resource type="Animation" id="Animation_8m00m"]
@@ -2358,45 +2326,12 @@ step = 0.05
 tracks/0/type = "bezier"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Multitool/Photon_Tip:mesh:material:albedo_color:r")
+tracks/0/path = NodePath("Multitool/Back_Panel:material_override:albedo_color:a")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"handle_modes": PackedInt32Array(0, 0),
-"points": PackedFloat32Array(1, -0.125, 0, 0.125, 0, 1, -0.125, 0, 0.125, 0),
-"times": PackedFloat32Array(0, 0.25)
-}
-tracks/1/type = "bezier"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Multitool/Photon_Tip:mesh:material:albedo_color:g")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"handle_modes": PackedInt32Array(0, 0),
-"points": PackedFloat32Array(1, -0.125, 0, 0.125, 0, 1, -0.125, 0, 0.125, 0),
-"times": PackedFloat32Array(0, 0.25)
-}
-tracks/2/type = "bezier"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Multitool/Photon_Tip:mesh:material:albedo_color:b")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"handle_modes": PackedInt32Array(0, 0),
-"points": PackedFloat32Array(1, -0.125, 0, 0.125, 0, 1, -0.125, 0, 0.125, 0),
-"times": PackedFloat32Array(0, 0.25)
-}
-tracks/3/type = "bezier"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("Multitool/Photon_Tip:mesh:material:albedo_color:a")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"handle_modes": PackedInt32Array(0, 0),
-"points": PackedFloat32Array(0, -0.125, 0, 0.125, 0, 0.5, -0.125, 0, 0.125, 0),
+"handle_modes": PackedInt32Array(0, 2),
+"points": PackedFloat32Array(0, -0.125, 0, 0.125, 0, 0.05, -0.041666668, -0.008333334, 0, 0),
 "times": PackedFloat32Array(0, 0.25)
 }
 
@@ -2423,18 +2358,18 @@ tracks/0/keys = {
 tracks/1/type = "bezier"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Multitool/Back_Panel:surface_material_override/0:albedo_color:r")
+tracks/1/path = NodePath("Multitool/Back_Panel:surface_material_override/0:albedo_color:a")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
 "handle_modes": PackedInt32Array(0),
-"points": PackedFloat32Array(1, -0.2, 0, 0.2, 0),
+"points": PackedFloat32Array(0, -0.2, 0, 0.2, 0),
 "times": PackedFloat32Array(0)
 }
 tracks/2/type = "bezier"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("Multitool/Back_Panel:surface_material_override/0:albedo_color:g")
+tracks/2/path = NodePath("Multitool/Photon_Tip:mesh:material:albedo_color:r")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
@@ -2445,7 +2380,7 @@ tracks/2/keys = {
 tracks/3/type = "bezier"
 tracks/3/imported = false
 tracks/3/enabled = true
-tracks/3/path = NodePath("Multitool/Back_Panel:surface_material_override/0:albedo_color:b")
+tracks/3/path = NodePath("Multitool/Photon_Tip:mesh:material:albedo_color:g")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
@@ -2456,290 +2391,220 @@ tracks/3/keys = {
 tracks/4/type = "bezier"
 tracks/4/imported = false
 tracks/4/enabled = true
-tracks/4/path = NodePath("Multitool/Back_Panel:surface_material_override/0:albedo_color:a")
+tracks/4/path = NodePath("Multitool/Photon_Tip:mesh:material:albedo_color:b")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {
 "handle_modes": PackedInt32Array(0),
-"points": PackedFloat32Array(0, -0.2, 0, 0.2, 0),
+"points": PackedFloat32Array(1, -0.2, 0, 0.2, 0),
 "times": PackedFloat32Array(0)
 }
 tracks/5/type = "bezier"
 tracks/5/imported = false
 tracks/5/enabled = true
-tracks/5/path = NodePath("Multitool/Photon_Tip:mesh:material:albedo_color:r")
+tracks/5/path = NodePath("Multitool/Photon_Tip:mesh:material:albedo_color:a")
 tracks/5/interp = 1
 tracks/5/loop_wrap = true
 tracks/5/keys = {
 "handle_modes": PackedInt32Array(0),
-"points": PackedFloat32Array(1, -0.2, 0, 0.2, 0),
+"points": PackedFloat32Array(0, -0.2, 0, 0.2, 0),
 "times": PackedFloat32Array(0)
 }
 tracks/6/type = "bezier"
 tracks/6/imported = false
 tracks/6/enabled = true
-tracks/6/path = NodePath("Multitool/Photon_Tip:mesh:material:albedo_color:g")
+tracks/6/path = NodePath("Multitool/Photon_Tip:mesh:material:grow_amount")
 tracks/6/interp = 1
 tracks/6/loop_wrap = true
 tracks/6/keys = {
 "handle_modes": PackedInt32Array(0),
-"points": PackedFloat32Array(1, -0.2, 0, 0.2, 0),
+"points": PackedFloat32Array(0, -0.2, 0, 0.2, 0),
 "times": PackedFloat32Array(0)
 }
 tracks/7/type = "bezier"
 tracks/7/imported = false
 tracks/7/enabled = true
-tracks/7/path = NodePath("Multitool/Photon_Tip:mesh:material:albedo_color:b")
+tracks/7/path = NodePath("Multitool/Back_Panel:surface_material_override/0:emission:a")
 tracks/7/interp = 1
 tracks/7/loop_wrap = true
 tracks/7/keys = {
 "handle_modes": PackedInt32Array(0),
-"points": PackedFloat32Array(1, -0.2, 0, 0.2, 0),
+"points": PackedFloat32Array(1, -0.25, 0, 0.25, 0),
 "times": PackedFloat32Array(0)
 }
 tracks/8/type = "bezier"
 tracks/8/imported = false
 tracks/8/enabled = true
-tracks/8/path = NodePath("Multitool/Photon_Tip:mesh:material:albedo_color:a")
+tracks/8/path = NodePath("Multitool/Photon_Tip:material_override:albedo_color:a")
 tracks/8/interp = 1
 tracks/8/loop_wrap = true
 tracks/8/keys = {
 "handle_modes": PackedInt32Array(0),
-"points": PackedFloat32Array(0, -0.2, 0, 0.2, 0),
+"points": PackedFloat32Array(0.1, -0.25, 0, 0.25, 0),
 "times": PackedFloat32Array(0)
 }
 tracks/9/type = "bezier"
 tracks/9/imported = false
 tracks/9/enabled = true
-tracks/9/path = NodePath("Multitool/Photon_Tip:mesh:material:grow_amount")
+tracks/9/path = NodePath("Multitool/Back_Panel:material_override:albedo_color:a")
 tracks/9/interp = 1
 tracks/9/loop_wrap = true
 tracks/9/keys = {
 "handle_modes": PackedInt32Array(0),
-"points": PackedFloat32Array(0, -0.2, 0, 0.2, 0),
+"points": PackedFloat32Array(0.05, -0.25, 0, 0.25, 0),
 "times": PackedFloat32Array(0)
 }
 
 [sub_resource type="Animation" id="Animation_s7cmo"]
 resource_name = "grab_object"
-length = 0.7
+length = 0.5
+step = 0.01
 tracks/0/type = "bezier"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Multitool/Back_Panel:surface_material_override/0:emission_energy_multiplier")
+tracks/0/path = NodePath("Multitool/Photon_Tip:material_override:albedo_color:a")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
 "handle_modes": PackedInt32Array(0, 0),
-"points": PackedFloat32Array(1, -0.2, 0, 0.2, 0, 10, -0.2, 0, 0.2, 0),
-"times": PackedFloat32Array(0, 0.4)
+"points": PackedFloat32Array(0.1, -0.25, 0, 0.25, 0, 0.35, -0.11666667, -0.15, 0, 0),
+"times": PackedFloat32Array(0, 0.5)
 }
 tracks/1/type = "bezier"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Multitool/Back_Panel:surface_material_override/0:albedo_color:r")
+tracks/1/path = NodePath("Multitool/Back_Panel:material_override:albedo_color:a")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
 "handle_modes": PackedInt32Array(0, 0),
-"points": PackedFloat32Array(0.011, -0.2, 0, 0.2, 0, 1, -0.2, 0, 0.2, 0),
-"times": PackedFloat32Array(0, 0.4)
-}
-tracks/2/type = "bezier"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Multitool/Back_Panel:surface_material_override/0:albedo_color:g")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"handle_modes": PackedInt32Array(0, 0),
-"points": PackedFloat32Array(0.22, -0.2, 0, 0.2, 0, 1.5, -0.2, 0, 0.2, 0),
-"times": PackedFloat32Array(0, 0.4)
-}
-tracks/3/type = "bezier"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("Multitool/Back_Panel:surface_material_override/0:albedo_color:b")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"handle_modes": PackedInt32Array(0, 0),
-"points": PackedFloat32Array(0, -0.2, 0, 0.2, 0, 1, -0.2, 0, 0.2, 0),
-"times": PackedFloat32Array(0, 0.4)
-}
-tracks/4/type = "bezier"
-tracks/4/imported = false
-tracks/4/enabled = true
-tracks/4/path = NodePath("Multitool/Back_Panel:surface_material_override/0:albedo_color:a")
-tracks/4/interp = 1
-tracks/4/loop_wrap = true
-tracks/4/keys = {
-"handle_modes": PackedInt32Array(0, 0),
-"points": PackedFloat32Array(0, -0.2, 0, 0.2, 0, 5, -0.2, 0, 0.2, 0),
-"times": PackedFloat32Array(0, 0.4)
-}
-tracks/5/type = "bezier"
-tracks/5/imported = false
-tracks/5/enabled = true
-tracks/5/path = NodePath("Multitool/Photon_Tip:mesh:material:albedo_color:r")
-tracks/5/interp = 1
-tracks/5/loop_wrap = true
-tracks/5/keys = {
-"handle_modes": PackedInt32Array(0, 0, 0, 0),
-"points": PackedFloat32Array(1, -0.2, 0, 0.2, 0, 1, -0.2, 0, 0.2, 0, 1, -0.2, 0, 0.2, 0, 1, -0.25, 0, 0.25, 0),
-"times": PackedFloat32Array(0, 0.2, 0.4, 0.7)
-}
-tracks/6/type = "bezier"
-tracks/6/imported = false
-tracks/6/enabled = true
-tracks/6/path = NodePath("Multitool/Photon_Tip:mesh:material:albedo_color:g")
-tracks/6/interp = 1
-tracks/6/loop_wrap = true
-tracks/6/keys = {
-"handle_modes": PackedInt32Array(0, 0, 0, 0),
-"points": PackedFloat32Array(1, -0.2, 0, 0.2, 0, 1, -0.2, 0, 0.2, 0, 1, -0.2, 0, 0.2, 0, 1, -0.25, 0, 0.25, 0),
-"times": PackedFloat32Array(0, 0.2, 0.4, 0.7)
-}
-tracks/7/type = "bezier"
-tracks/7/imported = false
-tracks/7/enabled = true
-tracks/7/path = NodePath("Multitool/Photon_Tip:mesh:material:albedo_color:b")
-tracks/7/interp = 1
-tracks/7/loop_wrap = true
-tracks/7/keys = {
-"handle_modes": PackedInt32Array(0, 0, 0, 0),
-"points": PackedFloat32Array(1, -0.2, 0, 0.2, 0, 1, -0.2, 0, 0.2, 0, 1, -0.2, 0, 0.2, 0, 1, -0.25, 0, 0.25, 0),
-"times": PackedFloat32Array(0, 0.2, 0.4, 0.7)
-}
-tracks/8/type = "bezier"
-tracks/8/imported = false
-tracks/8/enabled = true
-tracks/8/path = NodePath("Multitool/Photon_Tip:mesh:material:albedo_color:a")
-tracks/8/interp = 1
-tracks/8/loop_wrap = true
-tracks/8/keys = {
-"handle_modes": PackedInt32Array(0, 0, 0),
-"points": PackedFloat32Array(0.498039, -0.2, 0, 0.2, 0, 0.5, -0.2, 0, 0.2, 0, 1, -0.25, 0, 0.25, 0),
-"times": PackedFloat32Array(0, 0.4, 0.7)
-}
-tracks/9/type = "bezier"
-tracks/9/imported = false
-tracks/9/enabled = true
-tracks/9/path = NodePath("Multitool/Photon_Tip:mesh:material:grow_amount")
-tracks/9/interp = 1
-tracks/9/loop_wrap = true
-tracks/9/keys = {
-"handle_modes": PackedInt32Array(0, 0, 0),
-"points": PackedFloat32Array(0, -0.2, 0, 0.2, 0, 0.806, -0.2, 0, 0.2, 0, 0, -0.2, 0, 0.2, 0),
-"times": PackedFloat32Array(0, 0.266667, 0.533333)
+"points": PackedFloat32Array(0.05, -0.25, 0, 0.25, 0, 1, -0.11666667, -0.15833333, 0, 0),
+"times": PackedFloat32Array(0, 0.5)
 }
 
 [sub_resource type="Animation" id="Animation_dpu46"]
 resource_name = "release_object"
-length = 0.4
+length = 0.2
+step = 0.01
 tracks/0/type = "bezier"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Multitool/Back_Panel:surface_material_override/0:emission_energy_multiplier")
+tracks/0/path = NodePath("Multitool/Back_Panel:material_override:albedo_color:a")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
 "handle_modes": PackedInt32Array(0, 0),
-"points": PackedFloat32Array(12, -0.2, 0, 0.2, 0, 1, -0.2, 0, 0.2, 0),
-"times": PackedFloat32Array(0, 0.4)
+"points": PackedFloat32Array(1, -0.2, 0, 0.2, 0, 0, -0.06666667, 0.16666667, 0, 0),
+"times": PackedFloat32Array(0, 0.2)
 }
 tracks/1/type = "bezier"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Multitool/Back_Panel:surface_material_override/0:albedo_color:r")
+tracks/1/path = NodePath("Multitool/Photon_Tip:material_override:albedo_color:a")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
 "handle_modes": PackedInt32Array(0, 0),
-"points": PackedFloat32Array(1, -0.2, 0, 0.2, 0, 1, -0.2, 0, 0.2, 0),
-"times": PackedFloat32Array(0, 0.4)
+"points": PackedFloat32Array(1, -0.2, 0, 0.2, 0, 0, -0.06666667, 0.16666667, 0, 0),
+"times": PackedFloat32Array(0, 0.009999998)
+}
+
+[sub_resource type="Animation" id="Animation_1amol"]
+resource_name = "grab_UTILITY"
+length = 0.65
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Multitool/Back_Panel:surface_material_override/0:albedo_color:a")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(0, 2),
+"points": PackedFloat32Array(0, -0.25, 0, 0.25, 0, 1, -0.06672208, -0.16666666, 0, 0),
+"times": PackedFloat32Array(0, 0.40033248)
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Multitool/Back_Panel:surface_material_override/0:emission:a")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(2, 2, 2),
+"points": PackedFloat32Array(1, 0, 0, 0.06672208, 0, 1, -0.0006520073, 0, 0.06607008, 0, 1, -0.06672208, 0, 0, 0),
+"times": PackedFloat32Array(0, 0.0039120438, 0.40033248)
 }
 tracks/2/type = "bezier"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("Multitool/Back_Panel:surface_material_override/0:albedo_color:g")
+tracks/2/path = NodePath("Multitool/Back_Panel:surface_material_override/0:emission_energy_multiplier")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
-"handle_modes": PackedInt32Array(0, 0),
-"points": PackedFloat32Array(1, -0.2, 0, 0.2, 0, 1, -0.2, 0, 0.2, 0),
-"times": PackedFloat32Array(0, 0.4)
+"handle_modes": PackedInt32Array(2, 2),
+"points": PackedFloat32Array(1, -0.25, 0, 0.25, 0, 10, -0.06672208, -1.5, 0, 0),
+"times": PackedFloat32Array(0, 0.40033248)
 }
 tracks/3/type = "bezier"
 tracks/3/imported = false
 tracks/3/enabled = true
-tracks/3/path = NodePath("Multitool/Back_Panel:surface_material_override/0:albedo_color:b")
+tracks/3/path = NodePath("Multitool/Photon_Tip:mesh:material:albedo_color:r")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
-"handle_modes": PackedInt32Array(0, 0),
-"points": PackedFloat32Array(1, -0.2, 0, 0.2, 0, 1, -0.2, 0, 0.2, 0),
-"times": PackedFloat32Array(0, 0.4)
+"handle_modes": PackedInt32Array(0, 2, 2),
+"points": PackedFloat32Array(1, -0.25, 0, 0.25, 0, 1, -0.08867299, 0, 0, 0, 1, -0.019660344, 0, 0, 0),
+"times": PackedFloat32Array(0, 0.5320379, 0.65)
 }
 tracks/4/type = "bezier"
 tracks/4/imported = false
 tracks/4/enabled = true
-tracks/4/path = NodePath("Multitool/Back_Panel:surface_material_override/0:albedo_color:a")
+tracks/4/path = NodePath("Multitool/Photon_Tip:mesh:material:albedo_color:g")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {
-"handle_modes": PackedInt32Array(0, 0),
-"points": PackedFloat32Array(1, -0.2, 0, 0.2, 0, 0, -0.2, 0, 0.2, 0),
-"times": PackedFloat32Array(0, 0.4)
+"handle_modes": PackedInt32Array(0, 2, 2),
+"points": PackedFloat32Array(1, -0.25, 0, 0.25, 0, 1, -0.08867299, 0, 0, 0, 1, -0.019660344, 0, 0, 0),
+"times": PackedFloat32Array(0, 0.5320379, 0.65)
 }
 tracks/5/type = "bezier"
 tracks/5/imported = false
 tracks/5/enabled = true
-tracks/5/path = NodePath("Multitool/Photon_Tip:mesh:material:albedo_color:r")
+tracks/5/path = NodePath("Multitool/Photon_Tip:mesh:material:albedo_color:b")
 tracks/5/interp = 1
 tracks/5/loop_wrap = true
 tracks/5/keys = {
-"handle_modes": PackedInt32Array(0, 0),
-"points": PackedFloat32Array(1, -0.2, 0, 0.2, 0, 1, -0.2, 0, 0.2, 0),
-"times": PackedFloat32Array(0, 0.4)
+"handle_modes": PackedInt32Array(0, 2, 2),
+"points": PackedFloat32Array(1, -0.25, 0, 0.25, 0, 1, -0.08867299, 0, 0, 0, 1, -0.019660344, 0, 0, 0),
+"times": PackedFloat32Array(0, 0.5320379, 0.65)
 }
 tracks/6/type = "bezier"
 tracks/6/imported = false
 tracks/6/enabled = true
-tracks/6/path = NodePath("Multitool/Photon_Tip:mesh:material:albedo_color:g")
+tracks/6/path = NodePath("Multitool/Photon_Tip:mesh:material:albedo_color:a")
 tracks/6/interp = 1
 tracks/6/loop_wrap = true
 tracks/6/keys = {
-"handle_modes": PackedInt32Array(0, 0),
-"points": PackedFloat32Array(1, -0.2, 0, 0.2, 0, 1, -0.2, 0, 0.2, 0),
-"times": PackedFloat32Array(0, 0.4)
+"handle_modes": PackedInt32Array(0, 2, 2),
+"points": PackedFloat32Array(0.498039, -0.25, 0, 0.25, 0, 0.498039, -0.08867299, 0, 0, 0, 1, -0.019660344, -0.08366017, 0, 0),
+"times": PackedFloat32Array(0, 0.5320379, 0.65)
 }
 tracks/7/type = "bezier"
 tracks/7/imported = false
 tracks/7/enabled = true
-tracks/7/path = NodePath("Multitool/Photon_Tip:mesh:material:albedo_color:b")
+tracks/7/path = NodePath("Multitool/Photon_Tip:mesh:material:grow_amount")
 tracks/7/interp = 1
 tracks/7/loop_wrap = true
 tracks/7/keys = {
-"handle_modes": PackedInt32Array(0, 0),
-"points": PackedFloat32Array(1, -0.2, 0, 0.2, 0, 1, -0.2, 0, 0.2, 0),
-"times": PackedFloat32Array(0, 0.4)
-}
-tracks/8/type = "bezier"
-tracks/8/imported = false
-tracks/8/enabled = true
-tracks/8/path = NodePath("Multitool/Photon_Tip:mesh:material:albedo_color:a")
-tracks/8/interp = 1
-tracks/8/loop_wrap = true
-tracks/8/keys = {
-"handle_modes": PackedInt32Array(0, 0),
-"points": PackedFloat32Array(1, -0.2, 0, 0.2, 0, 1, -0.2, 0, 0.2, 0),
-"times": PackedFloat32Array(0, 0.4)
+"handle_modes": PackedInt32Array(2, 2, 2),
+"points": PackedFloat32Array(0, 0, 0, 0.044336494, 0.13433284, 0.80599695, -0.044336494, 0, 0, 0, 0, -0.044119164, 0.13433282, 0, 0),
+"times": PackedFloat32Array(0, 0.26601896, 0.53073394)
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_k44yu"]
 _data = {
 &"RESET": SubResource("Animation_njh5b"),
+&"grab_UTILITY": SubResource("Animation_1amol"),
 &"grab_object": SubResource("Animation_s7cmo"),
 &"release_object": SubResource("Animation_dpu46")
 }
@@ -3251,6 +3116,15 @@ albedo_color = Color(0, 0, 0, 1)
 metallic = 1.0
 roughness = 0.0
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_o2hec"]
+transparency = 3
+alpha_hash_scale = 1.0
+alpha_antialiasing_mode = 0
+albedo_color = Color(1, 1, 1, 0.05)
+emission_enabled = true
+emission = Color(1, 1, 1, 1)
+emission_energy_multiplier = 25.0
+
 [sub_resource type="ArrayMesh" id="ArrayMesh_8m00m"]
 resource_name = "PREM-7_v2_Sphere_004"
 _surfaces = [{
@@ -3268,28 +3142,17 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_364h7")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_61m6q"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_okbm5"]
 transparency = 3
-alpha_hash_scale = 1.0
+alpha_hash_scale = 0.2
 alpha_antialiasing_mode = 0
-albedo_color = Color(1, 1, 1, 0)
+albedo_color = Color(1, 1, 1, 0.1)
 emission_enabled = true
-emission = Color(0, 1, 0.0166667, 1)
-emission_energy_multiplier = 12.0
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5hhbi"]
-transparency = 3
-alpha_hash_scale = 0.01
-alpha_antialiasing_mode = 0
-cull_mode = 1
-albedo_color = Color(1, 1, 1, 0)
-emission_enabled = true
-emission = Color(0, 1, 0, 1)
+emission = Color(1, 1, 1, 1)
 emission_energy_multiplier = 40.0
-grow = true
+detail_uv_layer = 1
 
 [sub_resource type="SphereMesh" id="SphereMesh_s7cmo"]
-material = SubResource("StandardMaterial3D_5hhbi")
 radius = 0.165
 height = 0.33
 
@@ -4496,15 +4359,6 @@ size = Vector3(1.01, 0.01, 0.01)
 material = SubResource("StandardMaterial3D_n01wu")
 size = Vector3(0.3, 0.01, 0.01)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_okbm5"]
-render_priority = 3
-no_depth_test = true
-albedo_color = Color(0, 5.6433454, 0.7682578, 1)
-
-[sub_resource type="BoxMesh" id="BoxMesh_x00vi"]
-material = SubResource("StandardMaterial3D_okbm5")
-size = Vector3(1.17, 0.02, 0.015)
-
 [sub_resource type="FontVariation" id="FontVariation_g31vf"]
 base_font = ExtResource("5_8d6ws")
 variation_embolden = 1.0
@@ -4987,13 +4841,14 @@ surface_material_override/0 = SubResource("StandardMaterial3D_3nktn")
 
 [node name="Back_Panel" type="MeshInstance3D" parent="Multitool"]
 transform = Transform3D(1.49012e-08, 0, 0.999997, -0.985108, 0.429822, 2.93367e-08, -0.171929, -2.46277, 1.49012e-08, -0.104313, -0.117038, 0.156245)
+material_override = SubResource("StandardMaterial3D_o2hec")
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_8m00m")
 skeleton = NodePath("")
-surface_material_override/0 = SubResource("StandardMaterial3D_61m6q")
 
 [node name="Photon_Tip" type="MeshInstance3D" parent="Multitool"]
-transform = Transform3D(-0.0567687, 0.816211, 0.0545548, -0.0126095, 0.0538064, -0.818135, -0.817935, -0.0574786, 0.0088262, -0.129532, 0.536914, 4.10372)
+transform = Transform3D(0.25132006, -0.49738088, -0.60153943, 0.1391521, -0.593278, 0.5486867, -0.76803267, -0.27024585, -0.09742815, -0.129532, 0.536914, 4.10372)
+material_override = SubResource("StandardMaterial3D_okbm5")
 cast_shadow = 0
 mesh = SubResource("SphereMesh_s7cmo")
 skeleton = NodePath("")
@@ -5214,7 +5069,7 @@ mesh = SubResource("BoxMesh_o2hec")
 skeleton = NodePath("../../Object_Inventory")
 
 [node name="Square_Glow" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.24612574, -0.006317334, 0.0433845, 0.008626028, 0.24953316, -0.012601349, -0.04298506, 0.013903009, 0.24588409, -0.003, 0, -0.533)
+transform = Transform3D(0.24612574, -0.0063173315, 0.0433845, 0.008626026, 0.24953316, -0.01260135, -0.04298506, 0.013903011, 0.24588409, -0.003, 0, -0.533)
 cast_shadow = 0
 mesh = SubResource("BoxMesh_njh5b")
 skeleton = NodePath("../Holo_Glow")
@@ -5975,10 +5830,6 @@ mesh = SubResource("BoxMesh_dpu46")
 [node name="Main_V3" type="MeshInstance3D" parent="Extract_Dashboard/MAIN_SCREEN"]
 transform = Transform3D(0.0172519, -0.277847, -0.0118036, 1.15151, 0.00436532, -0.00972401, 0.0286668, -0.00813956, 0.397706, -0.163, -0.096, 0.137)
 mesh = SubResource("BoxMesh_dpu46")
-
-[node name="Bottom_H_Bar" type="MeshInstance3D" parent="Extract_Dashboard/MAIN_SCREEN"]
-transform = Transform3D(0.891994, 3.41035e-06, 0.0034864799, 0, 0.01997612, -0.04884971, -0.003113659, 0.0009769893, 0.99879885, 0.001, -0.321, -0.004)
-mesh = SubResource("BoxMesh_x00vi")
 
 [node name="Hold_Message_Mid" type="Label3D" parent="Extract_Dashboard/MAIN_SCREEN"]
 transform = Transform3D(0.892, -1.86265e-09, 2.98023e-08, -1.86265e-09, 0.656, 7.45058e-09, -2.98023e-08, 1.49012e-08, 0.892, -0.003, -0.356, 0)

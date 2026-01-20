@@ -50,9 +50,9 @@ var grabbable_object: RigidBody3D
 var stop_static_glow: bool = true
 var static_glow_active: bool = false
 var static_glow_task = null
-var flicker_obj_a: Node = null
-var flicker_obj_b: Node = null
-var flicker_obj_c: Node = null
+var flicker_obj_a = null
+var flicker_obj_b = null
+var flicker_obj_c = null
 
 var time: float = 0.0
 var current_spin_timer := 0.0
@@ -272,6 +272,7 @@ func grab_object():
 	player_character.grabbed_object = grabbed_object
 	grabbed_object.collision_layer = 1
 	grabbed_object.collision_mask = 1
+	flicker_obj_a = grabbed_object.standard_material
 	flicker_obj_b = player_character.PREM_7.back_panel
 	flicker_obj_c = player_character.PREM_7.photon_tip
 	grabbed_object.object_falling = false
@@ -438,7 +439,7 @@ func _static_glow_blink(rand: RandomNumberGenerator) -> void:
 			if grabbed_object.is_extracting:
 				grabbed_object.set_glitch(false)
 			if flicker_obj_a:
-				flicker_obj_a.visible = true
+				flicker_obj_a.emission_energy_multiplier = 25.0
 			flicker_obj_b.visible = true
 			flicker_obj_c.visible = true
 		await get_tree().create_timer(duration).timeout
@@ -449,7 +450,7 @@ func _static_glow_blink(rand: RandomNumberGenerator) -> void:
 			if grabbed_object.is_extracting:
 				grabbed_object.set_glitch(true)
 			if flicker_obj_a:
-				flicker_obj_a.visible = false
+				flicker_obj_a.emission_energy_multiplier = 10.0
 			flicker_obj_b.visible = false
 			flicker_obj_c.visible = false
 		await get_tree().create_timer(duration).timeout
@@ -458,7 +459,7 @@ func _static_glow_blink(rand: RandomNumberGenerator) -> void:
 		if grabbed_object.is_extracting:
 			grabbed_object.set_glitch(false)
 		if flicker_obj_a:
-			flicker_obj_a.visible = true
+			flicker_obj_a.emission_energy_multiplier = 25.0
 		flicker_obj_b.visible = true
 		flicker_obj_c.visible = true
 			

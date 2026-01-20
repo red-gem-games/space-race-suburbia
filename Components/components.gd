@@ -1,6 +1,17 @@
 extends RigidBody3D
 class_name assembly_objects
 
+#region VARIABLES
+
+var object_data = {}
+var component_data_file = "res://Components/component_data.json"
+var current_component_index := 0
+var current_extraction_data = []  # Will hold the JSON components array
+var current_object_json: Dictionary = {}
+
+var object_class: StringName
+var object_color: Color
+
 var object_set: bool = false
 
 var object_body: MeshInstance3D
@@ -95,6 +106,17 @@ var colliding_with_character: bool = false
 const phantom_body: bool = false
 
 
+var prev_y_vel
+var curr_y_vel
+var object_falling: bool = false
+
+var prev_y_pos
+var curr_y_pos
+
+var set_it_up
+var brightness_increasing: bool = true
+
+
 ### TWEENS ###
 
 var rotate_tween: Tween
@@ -143,9 +165,13 @@ var is_colliding: bool
 var is_on_floor: bool
 
 var fade_extract_glow: bool = false
+#endregion
 
 
 func _ready() -> void:
+	
+	object_data = _load_json_file(component_data_file)
+	_activate_component_data()
 	
 	shader = Shader.new()
 	shader.code = GLOW_SHADER.code
@@ -185,15 +211,48 @@ func _ready() -> void:
 	if name == "Scaffolding":
 		is_scaffolding = true
 
-var prev_y_vel
-var curr_y_vel
-var object_falling: bool = false
+func _load_json_file(filePath: String):
+	if FileAccess.file_exists(filePath):
+		
+		var dataFile = FileAccess.open(filePath, FileAccess.READ)
+		var parsedResult = JSON.parse_string(dataFile.get_as_text())
+	
+		if parsedResult is Dictionary:
+			return parsedResult
+		else:
+			print("Error reading file")
+	else:
+		print("File Doesn't Exist")
 
-var prev_y_pos
-var curr_y_pos
+func _activate_component_data():
+	var obj_name = name
+	if not object_data.has(obj_name):
+		print("No component data found for ", obj_name)
+		current_extraction_data = []
+		return
 
-var set_it_up
-var brightness_increasing: bool = true
+	current_object_json = object_data[obj_name]
+	
+	var machine_class = current_object_json.get("class", "??")
+	var last_word = machine_class.to_upper()
+	
+	if last_word.ends_with("UTILITY"):
+		object_class = "UTILITY"
+		object_color = Color(0.0, 1.0, 0.164, 1.0)
+	elif last_word.ends_with("KITCHEN"):
+		object_class = "KITCHEN"
+		object_color = Color(0.0, 0.933, 1.0, 1.0)
+	elif last_word.ends_with("GARAGE"):
+		object_class = "GARAGE"
+	elif last_word.ends_with("OUTDOOR"):
+		object_class = "OUTDOOR"
+	elif last_word.ends_with("CLASSIFIED"):
+		object_class = "CLASSIFIED"
+
+	await get_tree().create_timer(3.0).timeout
+	print(" -------------- ")
+	print(name, "'s Class is: ", object_class)
+	print("Can we use this file-per-object approach to make sure data stays with components as they are extracted?")
 
 func _physics_process(delta: float) -> void:
 	
@@ -252,41 +311,44 @@ func _process(delta: float) -> void:
 				for child in object_body.get_children():
 					if child is MeshInstance3D:
 						child.set_material_overlay(standard_material)
-						standard_material.emission = Color(0.253, 0.882, 0.0, 1.0)
+						standard_material.emission = object_color
 						standard_material.emission_energy_multiplier = 5
-						
-						# Handle nested meshes
-						var xtra_children = child.get_children()
-						if not xtra_children.is_empty():
-							for child2 in xtra_children:
-								if child2 is MeshInstance3D:
-									child2.set_material_overlay(standard_material)
+					var xtra_children = child.get_children()
+					if not xtra_children.is_empty():
+						for child2 in xtra_children:
+							if child2 is MeshInstance3D:
+								child2.set_material_overlay(standard_material)
+						is_touchable = false
 				
-			if not is_touched:
-				if recently_touched:
-					return
-				for child in object_body.get_children():
-					if child is MeshInstance3D:
-						child.set_material_overlay(null)
-						
-						# Handle nested meshes
-						var xtra_children = child.get_children()
-						if not xtra_children.is_empty():
-							for child2 in xtra_children:
-								if child2 is MeshInstance3D:
-									child2.set_material_overlay(null)
-					recently_touched = true
+		if not is_touched:
+			if recently_touched:
+				return
+			for child in object_body.get_children():
+				if child is MeshInstance3D:
+					child.set_material_overlay(null)
+					print('b')
+					# Handle nested meshes
+					var xtra_children = child.get_children()
+					if not xtra_children.is_empty():
+						for child2 in xtra_children:
+							if child2 is MeshInstance3D:
+								child2.set_material_overlay(null)
+								print('c')
+				recently_touched = true
+				is_touchable = true
 
 	if is_grabbed:
 		if brightness_increasing:
-			glow_timer -= delta
+			glow_timer -= delta * 2
 			standard_material.emission = lerp(standard_material.emission, Color.GREEN, delta * 3.0)
 			standard_material.emission_energy_multiplier = lerp(standard_material.emission_energy_multiplier, 2000.0, delta)
 			if glow_timer <= 0.0:
 				brightness_increasing = false
 		else:
+			if standard_material.emission_energy_multiplier < 25.1:
+				return
 			standard_material.emission_energy_multiplier = lerp(standard_material.emission_energy_multiplier, 25.0, delta * 7.0)
-			if standard_material.emission_energy_multiplier == 24.9:
+			if standard_material.emission_energy_multiplier == 5.0:
 				is_grabbed = false
 				brightness_increasing = true
 
@@ -601,10 +663,11 @@ func manipulation_mode(type):
 				var surface_count = child.mesh.get_surface_count()
 				for i in range(surface_count):
 					child.set_surface_override_material(i, manipulation_material)
-					manipulation_material.set_shader_parameter("tint_color", Color(1.75, 1.25, 0.5))
-					manipulation_material.set_shader_parameter("edge_color", Color(1.75, 1.25, 0.5))
+					
+					manipulation_material.set_shader_parameter("tint_color", Color(1.75, 0.0, 1.75, 5.0))
+					manipulation_material.set_shader_parameter("edge_color", Color(1.75, 0.0, 1.75, 5.0))
 					manipulation_material.set_shader_parameter("edge_power", 1.0)
-					manipulation_material.set_shader_parameter("edge_intensity", 2.5)
+					manipulation_material.set_shader_parameter("edge_intensity",10.0)
 					child.cast_shadow = false
 				var xtra_children = child.get_children()
 				if not xtra_children.is_empty():
@@ -613,10 +676,10 @@ func manipulation_mode(type):
 							var x_surface_count = child2.mesh.get_surface_count()
 							for i in range(x_surface_count):
 								child2.set_surface_override_material(i, manipulation_material)
-								manipulation_material.set_shader_parameter("tint_color", Color(1.75, 1.25, 0.5))
-								manipulation_material.set_shader_parameter("edge_color", Color(1.75, 1.25, 0.5))
+								manipulation_material.set_shader_parameter("tint_color", Color(1.75, 0.0, 1.75, 1.0))
+								manipulation_material.set_shader_parameter("edge_color", Color(1.75, 0.0, 1.75, 1.0))
 								manipulation_material.set_shader_parameter("edge_power", 1.0)
-								manipulation_material.set_shader_parameter("edge_intensity", 2.5)
+								manipulation_material.set_shader_parameter("edge_intensity", 10.0)
 								child2.cast_shadow = false
 
 	if type == "View ON":
@@ -661,6 +724,7 @@ func set_extract_glow(component, selection):
 	extracted_object_mat.albedo_color = Color.DARK_ORANGE
 	extracted_object_mat.albedo_color.a = 6.0
 	extracted_object_mat.emission = Color.CORAL
+	extracted_object_mat.emission_energy_multiplier = 30.0
 	
 	if selection == 'Selected':
 		component.set_material_overlay(EXTRACT_MATERIAL)
@@ -681,6 +745,7 @@ func set_extract_glow(component, selection):
 		component.set_material_overlay(null)
 		for i in range(surface_count):
 			component.set_surface_override_material(i, manipulation_material)
+			
 		
 		# Handle nested children
 		var xtra_children = component.get_children()
@@ -691,6 +756,7 @@ func set_extract_glow(component, selection):
 					var child_surface_count = child.mesh.get_surface_count()
 					for i in range(child_surface_count):
 						child.set_surface_override_material(i, manipulation_material)
+						
 	
 	elif selection == 'Complete':
 		component.set_material_overlay(extracted_object_mat)

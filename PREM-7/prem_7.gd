@@ -1,6 +1,8 @@
 extends Node3D
 class_name PREM7
 
+var game_start: bool = false
+
 @onready var trig_anim: AnimationPlayer = $Trigger_Animation
 @onready var ctrl_anim: AnimationPlayer = $Control_Animation
 @onready var touch_anim: AnimationPlayer = $Touch_Animation
@@ -21,7 +23,6 @@ var shader_material: ShaderMaterial
 
 @onready var extract_dashboard: Node3D = $Extract_Dashboard
 @onready var extract_dash_main: MeshInstance3D = $Extract_Dashboard/MAIN_SCREEN
-@onready var extract_dash_h_bar: MeshInstance3D = $Extract_Dashboard/MAIN_SCREEN/Bottom_H_Bar
 
 @onready var catalog_dashboard: Node3D = $Catalog_Dashboard
 @onready var catalog_dash_main: MeshInstance3D = $Catalog_Dashboard/MAIN_SCREEN
@@ -49,6 +50,7 @@ var shader_material: ShaderMaterial
 var grabbed_object_name: StringName
 var handling_object: bool = false
 var touching_object: bool = false
+var object_is_grabbed: bool = false
 var beam_active: bool = false
 
 var inspect_object: bool = false
@@ -100,9 +102,18 @@ func _ready() -> void:
 	control_hologram_timer.one_shot = true
 	grab_anim.play("RESET")
 	touch_anim.play("RESET")
+	
+	await get_tree().create_timer(0.5).timeout
+	game_start = true
 
 
 func _process(_delta: float) -> void:
+	
+	if not game_start:
+		var p_mat = photon_tip.get_active_material(0) as StandardMaterial3D
+		var b_mat = back_panel.get_active_material(0) as StandardMaterial3D
+		p_mat.albedo_color.a = 0.0
+		b_mat.albedo_color.a = 0.0
 	
 	if cast_catalog and not catalog_active:
 		#holo_anim.play("cast_catalog")
@@ -244,7 +255,7 @@ func scale_object(object, x_scale: float, y_scale: float, z_scale: float, wait_t
 
 
 func _on_grab_animation_animation_finished(anim_name: StringName) -> void:
-	if anim_name == "grab_object":
+	if anim_name == "grab_UTILITY":
 		grab_object_complete = true
 	if anim_name == "release_object":
 		if not touching_object:

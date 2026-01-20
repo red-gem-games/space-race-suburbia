@@ -1,15 +1,14 @@
 shader_type spatial;
-
 render_mode blend_mix, cull_disabled;
 
 uniform vec4 glow_color : source_color = vec4(0.0, 0.5, 1.0, 1.0);
 uniform vec4 pulse_color : source_color = vec4(0.25, 1.0, 0.25, 1.0);
-uniform float speed : hint_range(0.1, 10.0) = 5.0;
+uniform float speed : hint_range(0.1, 10.0) = 1;
 uniform float scale : hint_range(0.1, 10.0) = 8.5;
-uniform float distortion : hint_range(0.01, 5.0) = 0.5;
-uniform float shield_power : hint_range(0.0, 1.0) = 0.1;
-uniform float rim_power : hint_range(0.0, 5.0) = 5.0;
-uniform float pulse_frequency : hint_range(0.1, 10.0) = 1.0;
+uniform float distortion : hint_range(0.01, 5.0) = 0.025;
+uniform float shield_power : hint_range(0.0, 1.0) = 0.345;
+uniform float rim_power : hint_range(0.0, 5.0) = 4.0;
+uniform float pulse_frequency : hint_range(0.1, 10.0) = 0.1;
 
 float noise(vec3 p) {
     return fract(sin(dot(p, vec3(12.9898, 78.233, 45.5432))) * 12.5453);

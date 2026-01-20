@@ -1,6 +1,7 @@
 extends CharacterBody3D
 class_name character
 
+#region VARIABLES
 const is_character: bool = true
 var start_day: bool = false
 
@@ -71,6 +72,8 @@ var grabbed_rotation: Vector3
 var grabbed_initial_rotation: Vector3 = Vector3.ZERO
 var grabbed_global_rotation: Vector3
 var grabbed_target_position: Vector3
+var grabbed_object_class: StringName
+
 
 var grab_timer: Timer = Timer.new()
 var control_timer: Timer = Timer.new()
@@ -297,6 +300,7 @@ var storage_shed: Node3D
 var catalog: Node3D
 var current_catalog_index: int = -1
 var viewing_component: bool = false
+#endregion
 
 
 func _ready() -> void:
@@ -319,9 +323,11 @@ func _ready() -> void:
 	object_data = load_json_file(component_data_file)
 	catalog = PREM_7.catalog
 	menu_background.visible = false
+	PREM_7.touch_anim.play("RESET")
 
 
 func _physics_process(delta: float) -> void:
+	
 	if grabbed_object:
 		if grabbed_object.is_scaffolding:
 			print('hm')
@@ -332,8 +338,7 @@ func _physics_process(delta: float) -> void:
 	
 	if PREM_7.detect_touch:
 		if touched_object:
-			var p_mat = PREM_7.photon_tip.get_active_material(0)
-			p_mat.albedo_color.a = 0.5
+			print('this might work')
 		PREM_7.detect_touch = false
 	
 	if extraction_started:
@@ -441,6 +446,7 @@ func _process(delta: float) -> void:
 		
 
 	if grabbed_object:
+		PREM_7.photon_tip.rotate_x(50)
 		if extracting_object_active:
 			var x = comp_scale_x
 			var y = comp_scale_y
@@ -461,7 +467,6 @@ func _process(delta: float) -> void:
 				main_mat.set_shader_parameter("edge_intensity", e_intensity)
 				e_power = lerp(e_power, 2.0, delta / 10.0)
 				main_mat.set_shader_parameter("edge_power", e_power)
-				PREM_7.extract_dash_h_bar.transparency = lerp(PREM_7.extract_dash_h_bar.transparency, 1.0, delta * 15.0)
 				grabbed_object.EXTRACT_MATERIAL.albedo_color = lerp(grabbed_object.EXTRACT_MATERIAL.albedo_color, Color.PURPLE, delta)
 				grabbed_object.EXTRACT_MATERIAL.emission = lerp(grabbed_object.EXTRACT_MATERIAL.emission, Color.WHITE, delta)
 				grabbed_object.EXTRACT_MATERIAL.emission_energy_multiplier = lerp(grabbed_object.EXTRACT_MATERIAL.emission_energy_multiplier, 16.0, delta * 7.5)
@@ -503,35 +508,40 @@ func _process(delta: float) -> void:
 				var albedo_color: Color
 				var albedo_alpha: float
 				
-				var engine_emission = Color.RED
-				var engine_albedo = Color.YELLOW
-				var propellent_emission = Color.GREEN
-				var propellent_albedo = Color.BLUE
-				var structure_emission = Color.BLUE
-				var structure_albedo = Color.MEDIUM_PURPLE
-				var operation_emission = Color.PURPLE
-				var operation_albedo = Color.RED
+				var utility_emission = Color(0.0, 1.0, 0.152, 1.0)
+				var utility_albedo = Color(0.0, 1.0, 0.152, 1.0)
+				var kitchen_emission = Color.DARK_TURQUOISE
+				var kitchen_albedo = Color.YELLOW
+				var outdoor_emission = Color.BLUE
+				var outdoor_albedo = Color.MEDIUM_PURPLE
+				var garage_emission = Color.PURPLE
+				var garage_albedo = Color.RED
+				var classified_emission = Color.PINK
+				var classified_albedo = Color.RED
 				
-				if component_system == "Engine":
-					emission_color = engine_emission
-					albedo_color = engine_albedo
-					albedo_alpha = 1.0
-				elif component_system == "Propellent":
-					emission_color = propellent_emission
-					albedo_color = propellent_albedo
-					albedo_alpha = 1.0
-				elif component_system == "Structure":
-					emission_color = structure_emission
-					albedo_color = structure_albedo
+				if grabbed_object.object_class == "UTILITY":
+					emission_color = utility_emission
+					albedo_color = utility_albedo
 					albedo_alpha = 1.5
-				if component_system == "Operation":
-					emission_color = operation_emission
-					albedo_color = operation_albedo
+				elif grabbed_object.object_class == "KITCHEN":
+					emission_color = kitchen_emission
+					albedo_color = kitchen_albedo
+					albedo_alpha = 1.5
+				elif grabbed_object.object_class == "OUTDOOR":
+					emission_color = outdoor_emission
+					albedo_color = outdoor_albedo
+					albedo_alpha = 1.5
+				elif grabbed_object.object_class == "GARAGE":
+					emission_color = garage_emission
+					albedo_color = garage_albedo
+					albedo_alpha = 1.5
+				elif grabbed_object.object_class == "CLASSIFIED":
+					emission_color = classified_emission
+					albedo_color = classified_albedo
 					albedo_alpha = 1.5
 				if not selected_component_mesh:
 					return
 
-				PREM_7.extract_dash_h_bar.transparency = lerp(PREM_7.extract_dash_h_bar.transparency, 0.25, delta * 5.0)
 				extract_speed = lerp(extract_speed, base_extract_speed, delta * 7.5)
 				grabbed_object.EXTRACT_MATERIAL.emission = emission_color
 				grabbed_object.EXTRACT_MATERIAL.albedo_color = albedo_color
@@ -557,6 +567,9 @@ func _process(delta: float) -> void:
 	PREM_7.rotation = PREM_7.rotation.lerp(prem7_original_rotation, prem7_decay_speed * delta)
 	
 	update_reticle_targeting()
+	
+	if touched_object and not grabbed_object:
+		update_prem7_grabbed_state()
 	
 	if scroll_cooldown > 0.0:
 		scroll_cooldown -= delta
@@ -599,6 +612,26 @@ func _process(delta: float) -> void:
 	if not grabbed_object and not viewing_component and camera.fov < 74.9:
 		camera.fov = lerp(camera.fov, 75.0, delta * 10)
 		PREM_7.release_handle()
+
+
+
+
+func update_prem7_grabbed_state():
+	HUD.reticle_material.set_shader_parameter("ring_color", touched_object.object_color)
+	HUD.reticle_material.set_shader_parameter("ring_thickness", 0.008)
+	HUD.reticle_material.set_shader_parameter("ring_radius", 0.09)
+	
+	var back_panel_mat = PREM_7.back_panel.get_active_material(0) as StandardMaterial3D
+	var photon_mat = PREM_7.photon_tip.get_active_material(0) as StandardMaterial3D
+	back_panel_mat.emission = touched_object.object_color
+	photon_mat.emission = touched_object.object_color
+	back_panel_mat.albedo_color.a = 0.1
+	
+
+
+
+
+
 
 
 ##--------------------------------------##
@@ -1217,60 +1250,6 @@ func raycast_to_ground() -> float:
 		return from.y - result.position.y
 	return 9999.0
 
-func update_prem7_glow() -> void:
-	match current_mode:
-		MODE_1:
-			new_glow_color = MODE_1_COLOR
-		MODE_2:
-			new_glow_color = MODE_2_COLOR
-		MODE_3:
-			new_glow_color = MODE_3_COLOR
-		MODE_4:
-			new_glow_color = MODE_4_COLOR
-		_:
-			new_glow_color = Color.WHITE
-	var back_glow_instance = PREM_7.back_glow
-	var photon_glow_instance = PREM_7.photon_glow
-
-	if back_glow_instance:
-		var mat = back_glow_instance.get_surface_override_material(0)
-		if mat and mat is ShaderMaterial:
-			mat.set_shader_parameter("glow_color", Vector3(new_glow_color.r, new_glow_color.g, new_glow_color.b))
-
-	if photon_glow_instance:
-		var mat = photon_glow_instance.get_surface_override_material(0)
-		if mat and mat is ShaderMaterial:
-			mat.set_shader_parameter("glow_color", Vector3(new_glow_color.r, new_glow_color.g, new_glow_color.b))
-
-func change_mode(new_mode: String) -> void:
-	if new_mode == current_mode:
-		print("Already in mode: " + new_mode)
-		return
-	current_mode = new_mode
-	print("Multitool Mode Changed: " + current_mode)
-	update_prem7_glow()
-
-	if grabbed_object:
-		match current_mode:
-			MODE_1: glow_color = MODE_1_COLOR
-			MODE_2: glow_color = MODE_2_COLOR
-			MODE_3: glow_color = MODE_3_COLOR
-			MODE_4: glow_color = MODE_4_COLOR
-			_: glow_color = Color.WHITE
-
-		#grabbed_object.set_outline('UPDATE', glow_color, 0.0)
-
-func cycle_mode_direction(forward: bool = true) -> void:
-	var current_index = modes.find(current_mode)
-	var new_index = (current_index + (1 if forward else -1)) % modes.size()
-	if new_index < 0:
-		new_index = modes.size() - 1
-	change_mode(modes[new_index])
-	match current_mode:
-		MODE_1: HUD.reticle.modulate = MODE_1_COLOR
-		MODE_2: HUD.reticle.modulate = MODE_2_COLOR
-		MODE_3: HUD.reticle.modulate = MODE_3_COLOR
-		MODE_4: HUD.reticle.modulate = MODE_4_COLOR
 
 func shortest_angle_diff_value(initial_angle: float, target_angle: float) -> float:
 	initial_angle = wrapf(initial_angle, -180.0, 180.0)
@@ -1353,12 +1332,11 @@ func update_reticle_targeting() -> void:
 			if touched_object:
 				touched_object.is_touched = false
 				touched_object = null
-			HUD.reticle_material.set_shader_parameter("ring_color", Color.GREEN)
-			HUD.reticle_material.set_shader_parameter("ring_thickness", 0.008)
-			HUD.reticle_material.set_shader_parameter("ring_radius", 0.09)
 			PREM_7.touching_object = true
 			result.collider.is_touched = true
 			touched_object = result.collider
+			update_prem7_grabbed_state()
+
 
 		else:
 			HUD.reticle_material.set_shader_parameter("ring_color", Color.WHITE)
@@ -1379,8 +1357,10 @@ func update_reticle_targeting() -> void:
 		HUD.reticle_material.set_shader_parameter("ring_thickness", 0.035)
 		HUD.reticle_material.set_shader_parameter("ring_radius", 0.035)
 		
+		
 
 func handle_prem7_decay(delta: float) -> void:
+	
 	# Smooth the raw input so it doesn't jump
 	var smoothing_speed := 15.0  # lower = floatier, higher = snappier
 	smoothed_mouse_vel_x = lerp(smoothed_mouse_vel_x, current_mouse_speed_x * 10, smoothing_speed * delta)
@@ -1391,11 +1371,11 @@ func handle_prem7_decay(delta: float) -> void:
 	var sway_force_y = smoothed_mouse_vel_y * prem7_rotation_speed * delta
 
 	if extracting_object_active:
-		prem7_rotation_offset.y += -sway_force_x * 2
-		prem7_rotation_offset.x += -sway_force_y * 4
+		prem7_rotation_offset.y += sway_force_x * 2
+		prem7_rotation_offset.x += sway_force_y * 4
 	else:
-		prem7_rotation_offset.y += sway_force_x * 4
-		prem7_rotation_offset.x += sway_force_y * 10
+		prem7_rotation_offset.y += -sway_force_x * 4
+		prem7_rotation_offset.x += -sway_force_y * 10
 
 	# Clamp to prevent flipping out
 	var max_offset = deg_to_rad(25.0)
@@ -1552,20 +1532,19 @@ func update_component_display():
 	var main_dash_mat = PREM_7.extract_dash_main.get_active_material(0) as ShaderMaterial
 	var main_dash_child = PREM_7.extract_dash_main.get_child(0)
 	var alt_dash_mat = main_dash_child.get_active_material(0) as StandardMaterial3D
-	var h_bar_mat = PREM_7.extract_dash_h_bar.get_active_material(0) as StandardMaterial3D
+	var back_panel_mat = PREM_7.back_panel.get_active_material(0) as StandardMaterial3D
 	
-	if last_word.ends_with("UTILITY"):
+	if grabbed_object.object_class == "UTILITY":
+		grabbed_object_class = "UTILITY"
 		component_color = Color(0.334, 2.185, 0.817, 1.0)
 		HUD.component_color = Color(0.0, 1.0, 0.522, 1.0)
 		main_dash_mat.set_shader_parameter("edge_color", component_color)
 		#alt_dash_mat.albedo_color = Color(0.0, 5.111, 1.739, 1.0)
-		#h_bar_mat.albedo_color = Color(0.0, 2.346, 1.115, 1.0)
-	elif last_word.ends_with("KITCHEN"):
+	elif grabbed_object.object_class == "KITCHEN":
 		component_color = Color(0.0, 1.1, 2.923, 1.0)
 		HUD.component_color = component_color
 		main_dash_mat.set_shader_parameter("edge_color", component_color)
 		#alt_dash_mat.albedo_color = Color(0.0, 5.111, 5.111)
-		#h_bar_mat.albedo_color = Color(0.0, 2.346, 2.538)
 	#elif first_word.begins_with("[STRUCTURE]"):
 		#text_color = Color(0.0, 0.35, 1.0, 1.0)
 		#HUD.component_color = Color(0.0, 0.35, 1.0, 1.0)
@@ -2021,7 +2000,7 @@ func setup_component():
 	f_comp.set_script(COMPONENT_SCRIPT)
 	f_comp.shader = Shader.new()
 	f_comp.shader.code = f_comp.GLOW_SHADER.code
-	f_comp.shader_material = ShaderMaterial.new()
+	f_comp.glow_material = ShaderMaterial.new()
 	f_comp.manipulation_material.shader = f_comp.MANIPULATION_SHADER
 	f_comp.extraction_material.shader = f_comp.EXTRACTION_SHADER
 	f_comp.extracted_object_mat = f_comp.EXTRACT_MATERIAL.duplicate()
@@ -2044,7 +2023,7 @@ func setup_component():
 	f_comp.physics_mat.friction = 0.9
 	f_comp.physics_mat.bounce = 0.0
 	f_comp.physics_material_override = f_comp.physics_mat
-	f_comp.shader_material.shader = f_comp.GLOW_SHADER
+	f_comp.glow_material.shader = f_comp.GLOW_SHADER
 	f_comp.standard_material = f_comp.GLOW_MATERIAL
 
 	f_comp.resting_position = f_comp.global_position.y

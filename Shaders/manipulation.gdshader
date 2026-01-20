@@ -4,7 +4,7 @@ render_mode blend_mix, depth_prepass_alpha, cull_back;
 uniform float alpha_multiplier : hint_range(0.0, 1.0) = 1.0;
 group_uniforms base_texture;
 uniform sampler2D albedo_texture : source_color;
-uniform float albedo_alpha : hint_range(0.0, 1.0) = 0.25;
+uniform float albedo_alpha : hint_range(0.0, 1.0) = 0.75;
 
 // Grupo: Tinte y Borde
 group_uniforms tint_edge;
