@@ -267,6 +267,7 @@ var comp_scale_z
 var reform: bool
 var alpha_x = 1.0
 var extract_alpha = 0.25
+var emission_strength: float
 var extract_edge = 1.5
 var base_extract_time = 2.0
 var extract_time = base_extract_time
@@ -408,7 +409,7 @@ func _physics_process(delta: float) -> void:
 	handle_pitch_and_yaw()
 	
 	# Update jetpack thrust, hover, ceiling logic
-	handle_jetpack_logic(delta)
+	#handle_jetpack_logic(delta)
 
 	# Handle grounded/airborne vertical velocity
 	update_vertical_velocity()
@@ -452,30 +453,34 @@ func _process(delta: float) -> void:
 			var y = comp_scale_y
 			var z = comp_scale_z
 			var s = selected_component_scale
-			grabbed_object.manipulation_material.set_shader_parameter("albedo_alpha", extract_alpha)
-			grabbed_object.manipulation_material.set_shader_parameter("edge_intensity", extract_edge)
-			grabbed_object.manipulation_material.set_shader_parameter("alpha_multiplier", alpha_x)
+			grabbed_object.manipulation_material.set_shader_parameter("emission_strength", extract_alpha)
 			var main_mat = PREM_7.extract_dash_main.get_active_material(0) as ShaderMaterial
 			var e_intensity: float = main_mat.get_shader_parameter("edge_intensity")
 			var e_power: float = main_mat.get_shader_parameter("edge_power")
+			var emission_color: Color
+			var albedo_color: Color
+			var albedo_alpha: float
+				
 			if extraction_started:
 				if extract_time >= 0.002:
-					extract_alpha -= delta / 1.1
-					extract_edge -= delta * 2.25
-					extract_time -= delta
+					extract_alpha = lerp(extract_alpha, 0.0, delta * 5.0)
+					print(extract_alpha)
 				e_intensity = lerp(e_intensity, 30.0, delta / 3.0)
 				main_mat.set_shader_parameter("edge_intensity", e_intensity)
 				e_power = lerp(e_power, 2.0, delta / 10.0)
 				main_mat.set_shader_parameter("edge_power", e_power)
-				grabbed_object.EXTRACT_MATERIAL.albedo_color = lerp(grabbed_object.EXTRACT_MATERIAL.albedo_color, Color.PURPLE, delta)
+				
+				## ADJUST HERE
+				grabbed_object.EXTRACT_MATERIAL.albedo_color = lerp(grabbed_object.EXTRACT_MATERIAL.albedo_color, emission_color, delta)
 				grabbed_object.EXTRACT_MATERIAL.emission = lerp(grabbed_object.EXTRACT_MATERIAL.emission, Color.WHITE, delta)
-				grabbed_object.EXTRACT_MATERIAL.emission_energy_multiplier = lerp(grabbed_object.EXTRACT_MATERIAL.emission_energy_multiplier, 16.0, delta * 7.5)
+				grabbed_object.EXTRACT_MATERIAL.emission_energy_multiplier = lerp(grabbed_object.EXTRACT_MATERIAL.emission_energy_multiplier, 32.0, delta * 7.5)
 				if control_timer.is_stopped() == false:
 					var t_left_ratio = control_timer.time_left / control_timer.wait_time
 					var progress = 1.0 - t_left_ratio
 					var high_extract_speed = 1.25
 					extract_speed = lerp(extract_speed, high_extract_speed, progress * delta * 1.25)
 				if control_timer.time_left < 2.0:
+					
 					PREM_7.holo_anim.speed_scale = 0.125
 					PREM_7.holo_anim.play("retract_hologram")
 				if control_timer.time_left < 2.0 and control_timer.time_left > 1.0:
@@ -494,9 +499,6 @@ func _process(delta: float) -> void:
 						scroll_component_data('DOWN')
 						extraction_started = false
 					control_timer.start(1.0)
-				
-
-
 
 			else:
 				e_intensity = lerp(e_intensity, 2.0, delta * 10.0)
@@ -504,41 +506,48 @@ func _process(delta: float) -> void:
 				e_power = lerp(e_power, 1.0, delta * 5.0)
 				main_mat.set_shader_parameter("edge_power", e_power)
 
-				var emission_color: Color
-				var albedo_color: Color
-				var albedo_alpha: float
-				
-				var utility_emission = Color(0.0, 1.0, 0.152, 1.0)
-				var utility_albedo = Color(0.0, 1.0, 0.152, 1.0)
-				var kitchen_emission = Color.DARK_TURQUOISE
-				var kitchen_albedo = Color.YELLOW
-				var outdoor_emission = Color.BLUE
-				var outdoor_albedo = Color.MEDIUM_PURPLE
-				var garage_emission = Color.PURPLE
-				var garage_albedo = Color.RED
-				var classified_emission = Color.PINK
-				var classified_albedo = Color.RED
+				var outdoor_emission = Color(0.178, 1.042, 0.464, 1.0)
+				var outdoor_albedo = Color(0.0, 1.0, 0.421, 1.0)
+				var utility_emission = Color(0.152, 1.0, 0.999, 1.0)
+				var utility_albedo = Color(0.152, 1.0, 0.999, 1.0)
+				var garage_emission = Color(1.0, 0.563, 0.195, 1.0)
+				var garage_albedo = Color(1.0, 0.563, 0.195, 1.0)
+				var kitchen_emission = Color(0.747, 0.193, 0.193, 1.0)
+				var kitchen_albedo = Color(0.747, 0.193, 0.193, 1.0)
+				var classified_emission = Color(0.906, 0.179, 1.164, 1.0)
+				var classified_albedo = Color(0.878, 0.611, 1.0, 1.0)
 				
 				if grabbed_object.object_class == "UTILITY":
 					emission_color = utility_emission
 					albedo_color = utility_albedo
 					albedo_alpha = 1.5
+					grabbed_object.manipulation_material.set_shader_parameter("forcefield_color", Color(0.0, 1.0, 1.0, 1.0))
+					extract_alpha = lerp(extract_alpha, 6.0, delta * 5.0)
 				elif grabbed_object.object_class == "KITCHEN":
 					emission_color = kitchen_emission
 					albedo_color = kitchen_albedo
 					albedo_alpha = 1.5
+					grabbed_object.manipulation_material.set_shader_parameter("forcefield_color", Color.BROWN)
+					extract_alpha = lerp(extract_alpha, 6.0, delta * 5.0)
 				elif grabbed_object.object_class == "OUTDOOR":
 					emission_color = outdoor_emission
 					albedo_color = outdoor_albedo
 					albedo_alpha = 1.5
+					grabbed_object.manipulation_material.set_shader_parameter("forcefield_color", Color(0.0, 1.0, 0.556, 1.0))
+					extract_alpha = lerp(extract_alpha, 6.0, delta * 5.0)
 				elif grabbed_object.object_class == "GARAGE":
 					emission_color = garage_emission
 					albedo_color = garage_albedo
 					albedo_alpha = 1.5
+					grabbed_object.manipulation_material.set_shader_parameter("forcefield_color", Color.DARK_GOLDENROD)
+					extract_alpha = lerp(extract_alpha, 6.0, delta * 5.0)
 				elif grabbed_object.object_class == "CLASSIFIED":
 					emission_color = classified_emission
 					albedo_color = classified_albedo
 					albedo_alpha = 1.5
+					grabbed_object.manipulation_material.set_shader_parameter("forcefield_color", Color(0.8, 0.278, 1.0, 1.0))
+					extract_alpha = lerp(extract_alpha, 6.0, delta * 5.0)
+					
 				if not selected_component_mesh:
 					return
 
@@ -625,7 +634,9 @@ func update_prem7_grabbed_state():
 	var photon_mat = PREM_7.photon_tip.get_active_material(0) as StandardMaterial3D
 	back_panel_mat.emission = touched_object.object_color
 	photon_mat.emission = touched_object.object_color
-	back_panel_mat.albedo_color.a = 0.1
+	#photon_mat.albedo_color = touched_object.object_color
+	#photon_mat.albedo_color.a = 0.0
+	#back_panel_mat.albedo_color.a = 0.25
 	
 
 
@@ -721,7 +732,6 @@ func _on_extract_key() -> void:
 		print('Add warning here:')
 		print("Ah, Ah, Ah. Can't extract a component any further!")
 		return
-	PREM_7.set_catalog_glow_color(Color(0.914, 0.686, 0.0, 0.537), Color(1.0, 0.502, 0.0), Color(1.694, 0.822, 0.0), 3.6)
 
 	desired_pitch = 0.0
 	desired_yaw = grabbed_object.rotation.y
@@ -1094,6 +1104,8 @@ func grab_object():
 	grabbed_object.linear_damp = 0
 	grabbed_initial_rotation = rotation_degrees
 	action_wait_timer.start(0.5)
+	PREM_7.touch_anim.play("extended_touch")
+	PREM_7.touch_anim.speed_scale = 10.0
 	#await get_tree().create_timer(0.5).timeout
 	#for child in get_children():
 		#if child is CollisionShape3D:
@@ -1115,6 +1127,7 @@ func release_object():
 	#else:
 		#touched_object = true
 	#PREM_7.extract_dashboard.scale = Vector3(0.6, 0.6, 0.6)
+	PREM_7.touch_anim.speed_scale = 1.75
 	PREM_7.extract_dashboard.visible = false
 	PREM_7.control_position.remove_child(grabbed_object.extract_body)
 	grabbed_object.extract_body = null
@@ -1216,8 +1229,8 @@ func handle_jetpack(status, timing):
 	elif status == '4':
 		vertical_velocity *= pow(0.55, timing * 4.0)
 	elif status == '5':
-		var hover_gravity = -gravity_strength * (distance_to_ground / 25.0)
-		vertical_velocity = lerp(vertical_velocity, hover_gravity, 3.0 * timing)
+		var fall_gravity = -gravity_strength * (distance_to_ground / 2.0)
+		vertical_velocity = lerp(vertical_velocity, fall_gravity, 3.0 * timing)
 	elif status == '6':
 		vertical_velocity = lerp(vertical_velocity, -gravity_strength, 1.0 * timing)
 	elif status == '7':
@@ -1295,10 +1308,11 @@ func update_vertical_velocity() -> void:
 				if abs(vertical_velocity) < 0.25:
 					vertical_velocity = 0.0
 			else:
-				if distance_to_ground < 8:
-					handle_jetpack('5', get_process_delta_time())
-				else:
-					handle_jetpack('6', get_process_delta_time())
+				handle_jetpack('5', get_process_delta_time())
+				#if distance_to_ground < 8:
+					#handle_jetpack('5', get_process_delta_time())
+				#else:
+					#handle_jetpack('6', get_process_delta_time())
 		else:
 			handle_jetpack('6', get_process_delta_time())
 	else:
@@ -1370,9 +1384,9 @@ func handle_prem7_decay(delta: float) -> void:
 	var sway_force_x = smoothed_mouse_vel_x * prem7_rotation_speed * delta
 	var sway_force_y = smoothed_mouse_vel_y * prem7_rotation_speed * delta
 
-	if extracting_object_active:
-		prem7_rotation_offset.y += sway_force_x * 2
-		prem7_rotation_offset.x += sway_force_y * 4
+	if extracting_object_active or viewing_component:
+		prem7_rotation_offset.y += -sway_force_x * 2
+		prem7_rotation_offset.x += -sway_force_y * 4
 	else:
 		prem7_rotation_offset.y += -sway_force_x * 4
 		prem7_rotation_offset.x += -sway_force_y * 10
@@ -1531,30 +1545,88 @@ func update_component_display():
 	
 	var main_dash_mat = PREM_7.extract_dash_main.get_active_material(0) as ShaderMaterial
 	var main_dash_child = PREM_7.extract_dash_main.get_child(0)
-	var alt_dash_mat = main_dash_child.get_active_material(0) as StandardMaterial3D
+	var alt_dash_mat = main_dash_child.mesh.get_material() as StandardMaterial3D
 	var back_panel_mat = PREM_7.back_panel.get_active_material(0) as StandardMaterial3D
+	var stars_mat = PREM_7.component_stars.get_active_material(0) as StandardMaterial3D
+	var mass_mat = PREM_7.mass_icon.get_active_material(0) as StandardMaterial3D
+	var edge_color: Color
+	var text_outline_modulate: Color
+	var system_modulate: Color
 	
 	if grabbed_object.object_class == "UTILITY":
 		grabbed_object_class = "UTILITY"
-		component_color = Color(0.334, 2.185, 0.817, 1.0)
-		HUD.component_color = Color(0.0, 1.0, 0.522, 1.0)
-		main_dash_mat.set_shader_parameter("edge_color", component_color)
-		#alt_dash_mat.albedo_color = Color(0.0, 5.111, 1.739, 1.0)
+		edge_color = Color(0.0, 0.974, 1.572, 1.0)
+		component_color = Color(0.0, 0.974, 1.572, 1.0)
+		text_outline_modulate = Color(0.0, 0.566, 0.749, 1.0)
+		system_modulate = Color(0.848, 1.391, 1.572, 1.0)
+		alt_dash_mat.emission = Color(0.0, 1.0, 1.0, 1.0)
+		alt_dash_mat.emission_energy_multiplier = 10
+		PREM_7.set_catalog_glow_color(Color(0.0, 1.572, 1.572, 0.366), Color(0.0, 0.502, 1.0, 1.0), Color(0.0, 1.0, 1.0, 1.0), 8.0)
 	elif grabbed_object.object_class == "KITCHEN":
-		component_color = Color(0.0, 1.1, 2.923, 1.0)
-		HUD.component_color = component_color
-		main_dash_mat.set_shader_parameter("edge_color", component_color)
-		#alt_dash_mat.albedo_color = Color(0.0, 5.111, 5.111)
-	#elif first_word.begins_with("[STRUCTURE]"):
-		#text_color = Color(0.0, 0.35, 1.0, 1.0)
-		#HUD.component_color = Color(0.0, 0.35, 1.0, 1.0)
-		#component_system = "Structure"
-	#elif first_word.begins_with("[OPERATION]"):
-		#text_color = Color(1.0, 0.35, 1.0, 1.0)
-		#HUD.component_color = Color(1.0, 0.35, 1.0, 1.0)
-		#component_system = "Operation"
-	#
-	PREM_7.machine_class.modulate = HUD.component_color
+		grabbed_object_class = "KITCHEN"
+		edge_color = Color(1.825, 0.277, 0.317, 1.0)
+		component_color = Color(1.825, 0.591, 0.628, 1.0)
+		text_outline_modulate = Color(0.891, 0.203, 0.211, 1.0)
+		system_modulate = Color(1.825, 0.789, 0.78, 1.0)
+		alt_dash_mat.emission = Color(1.0, 0.2, 0.215, 1.0)
+		alt_dash_mat.emission_energy_multiplier = 16
+		PREM_7.set_catalog_glow_color(Color(1.825, 0.591, 0.628, 0.391), Color(0.974, 0.407, 0.377, 1.0), Color(1.825, 0.789, 0.78, 1.0), 3.6)
+	elif grabbed_object.object_class == "OUTDOOR":
+		grabbed_object_class = "OUTDOOR"
+		edge_color = Color(0.208, 1.459, 0.345, 1.0)
+		component_color = Color(0.0, 1.0, 0.586, 1.0)
+		text_outline_modulate = Color(0.0, 0.604, 0.345, 1.0)
+		system_modulate = Color(0.644, 1.0, 0.748, 1.0)
+		alt_dash_mat.emission = Color(0.0, 1.0, 0.295, 1.0)
+		alt_dash_mat.emission_energy_multiplier = 10
+		PREM_7.set_catalog_glow_color(Color(0.0, 1.353, 0.801, 0.527), Color(0.0, 0.604, 0.478, 1.0), Color(0.0, 1.0, 0.603, 1.0), 8.0)
+	elif grabbed_object.object_class == "GARAGE":
+		grabbed_object_class = "GARAGE"
+		edge_color = Color(1.459, 0.508, 0.0, 1.0)
+		component_color = Color(1.459, 0.919, 0.0, 1.0)
+		text_outline_modulate = Color(1.459, 0.542, 0.0, 1.0)
+		system_modulate = Color(1.459, 1.18, 0.639, 1.0)
+		alt_dash_mat.emission = Color(1.825, 0.722, 0.0, 1.0)
+		alt_dash_mat.emission_energy_multiplier = 5
+		PREM_7.set_catalog_glow_color(Color(0.914, 0.686, 0.0, 0.537), Color(1.0, 0.502, 0.0), Color(1.694, 0.822, 0.0), 3.6)
+	elif grabbed_object.object_class == "CLASSIFIED":
+		grabbed_object_class = "CLASSIFIED"
+		edge_color = Color(0.852, 0.235, 1.572, 1.0)
+		component_color = Color(1.136, 0.547, 1.572, 1.0)
+		text_outline_modulate = Color(0.706, 0.0, 1.043, 1.0)
+		system_modulate = Color(1.206, 0.769, 1.572, 1.0)
+		alt_dash_mat.emission = Color(0.752, 0.24, 1.0, 1.0)
+		alt_dash_mat.emission_energy_multiplier = 8
+		PREM_7.set_catalog_glow_color(Color(1.136, 0.547, 1.572, 0.538), Color(0.852, 0.235, 1.572, 1.0), Color(1.206, 0.769, 1.572, 1.0), 3.6)
+		
+		
+		
+	
+	
+	####### NEED TO FIX THE COLOR OF THE HOLOGRAM BEAM GLOW ########
+	
+	
+	
+	main_dash_mat.set_shader_parameter("edge_color", edge_color)
+	stars_mat.emission = component_color
+	mass_mat.emission = component_color
+	
+	PREM_7.component_name.modulate = component_color
+	PREM_7.component_name.outline_modulate = text_outline_modulate
+	PREM_7.component_name_back.modulate = component_color
+	PREM_7.component_name_back.outline_modulate = text_outline_modulate
+	
+	PREM_7.origin_title.modulate = component_color
+	PREM_7.machine_name.modulate = component_color
+	PREM_7.class_title.modulate = component_color
+	PREM_7.machine_class.modulate = component_color
+	PREM_7.system_title.modulate = system_modulate
+	PREM_7.component_system.modulate = system_modulate
+	
+	PREM_7.condition_title.modulate = component_color
+	PREM_7.condition_title.outline_modulate = component_color
+	PREM_7.rating_title.modulate = component_color
+	PREM_7.rating_title.outline_modulate = component_color
 	
 	if PREM_7.machine_name.text != machine_name_text:
 		if name_tween:

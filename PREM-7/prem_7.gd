@@ -30,13 +30,22 @@ var shader_material: ShaderMaterial
 @onready var component_name: Label3D = $Extract_Dashboard/Data/Component/Component_Name
 @onready var component_name_back: Label3D = $Extract_Dashboard/Data/Component/Component_Name_Back
 
+@onready var origin_title: Label3D = $Extract_Dashboard/Data/Information/Origin
 @onready var machine_name: Label3D = $Extract_Dashboard/Data/Information/Machine_Name
+@onready var class_title: Label3D = $Extract_Dashboard/Data/Information/Class
 @onready var machine_class: Label3D = $Extract_Dashboard/Data/Information/Class_Data
+@onready var system_title: Label3D = $Extract_Dashboard/Data/Information/System
 @onready var component_system: Label3D = $Extract_Dashboard/Data/Information/System_Data
+
+@onready var condition_title: Label3D = $Extract_Dashboard/Condition/adtl/Title
 @onready var component_condition: Node3D = $Extract_Dashboard/Condition
 
+@onready var rating_title: Label3D = $Extract_Dashboard/Rating/Title
 @onready var component_rating: Node3D = $Extract_Dashboard/Rating
 @onready var component_mass: Label3D = $Extract_Dashboard/Mass/Mass
+@onready var component_stars: Node3D = $"Extract_Dashboard/Rating/Stars/1"
+
+@onready var mass_icon: MeshInstance3D = $Extract_Dashboard/Mass/Icon
 
 @onready var component_mayhem: MeshInstance3D = $Extract_Dashboard/Mayhem
 @onready var component_mayhem_pct: Label3D = $Extract_Dashboard/Mayhem/Percentage

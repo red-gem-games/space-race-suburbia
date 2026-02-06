@@ -1,7 +1,7 @@
 extends StaticBody3D
 class_name Harmonizer
 
-@onready var glass: MeshInstance3D = $Glass
+@onready var glass: MeshInstance3D = $Body/Glass
 @export var display_text: String
 
 func _ready() -> void:

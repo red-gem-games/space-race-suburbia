@@ -20,7 +20,7 @@ var component_name: StringName
 
 var COMPONENT_SCRIPT: Script = preload("res://Components/components.gd")
 var GLOW_SHADER := preload("res://Shaders/grab_n_glow.gdshader")
-var MANIPULATION_SHADER:= preload("res://Shaders/manipulation.gdshader")
+var MANIPULATION_SHADER:= preload("res://Shaders/extract_glow.gdshader")
 var manipulation_material: ShaderMaterial = ShaderMaterial.new()
 var GLASS_MATERIAL: = preload("res://Shaders/Glass_Material.tres")
 var GLOW_MATERIAL := preload("res://Shaders/Component_Glow.tres")
@@ -165,6 +165,16 @@ var is_colliding: bool
 var is_on_floor: bool
 
 var fade_extract_glow: bool = false
+
+
+
+var utility_color = Color(0.0, 0.933, 1.0, 1.0)
+var kitchen_color = Color(1.353, 0.328, 0.387, 1.0)
+var garage_color = Color(1.157, 0.696, 0.0, 1.0)
+var outdoor_color = Color(0.0, 1.0, 0.431, 1.0)
+var classified_color = Color(0.674, 0.0, 1.0, 1.0)
+
+
 #endregion
 
 
@@ -238,16 +248,19 @@ func _activate_component_data():
 	
 	if last_word.ends_with("UTILITY"):
 		object_class = "UTILITY"
-		object_color = Color(0.0, 1.0, 0.164, 1.0)
+		object_color = utility_color
 	elif last_word.ends_with("KITCHEN"):
 		object_class = "KITCHEN"
-		object_color = Color(0.0, 0.933, 1.0, 1.0)
+		object_color = kitchen_color
 	elif last_word.ends_with("GARAGE"):
 		object_class = "GARAGE"
+		object_color = garage_color
 	elif last_word.ends_with("OUTDOOR"):
 		object_class = "OUTDOOR"
+		object_color = outdoor_color
 	elif last_word.ends_with("CLASSIFIED"):
 		object_class = "CLASSIFIED"
+		object_color = classified_color
 
 	await get_tree().create_timer(3.0).timeout
 	print(" -------------- ")
@@ -340,7 +353,16 @@ func _process(delta: float) -> void:
 	if is_grabbed:
 		if brightness_increasing:
 			glow_timer -= delta * 2
-			standard_material.emission = lerp(standard_material.emission, Color.GREEN, delta * 3.0)
+			if object_class == "UTILITY":
+				standard_material.emission = lerp(standard_material.emission, utility_color, delta * 3.0)
+			elif object_class == "KITCHEN":
+				standard_material.emission = lerp(standard_material.emission, kitchen_color, delta * 3.0)
+			elif object_class == "GARAGE":
+				standard_material.emission = lerp(standard_material.emission, garage_color, delta * 3.0)
+			elif object_class == "OUTDOOR":
+				standard_material.emission = lerp(standard_material.emission, outdoor_color, delta * 3.0)
+			elif object_class == "CLASSIFIED":
+				standard_material.emission = lerp(standard_material.emission, classified_color, delta * 3.0)
 			standard_material.emission_energy_multiplier = lerp(standard_material.emission_energy_multiplier, 2000.0, delta)
 			if glow_timer <= 0.0:
 				brightness_increasing = false
@@ -662,50 +684,33 @@ func manipulation_mode(type):
 			if child is MeshInstance3D:
 				var surface_count = child.mesh.get_surface_count()
 				for i in range(surface_count):
+					child.cast_shadow = false
 					child.set_surface_override_material(i, manipulation_material)
 					
-					manipulation_material.set_shader_parameter("tint_color", Color(1.75, 0.0, 1.75, 5.0))
-					manipulation_material.set_shader_parameter("edge_color", Color(1.75, 0.0, 1.75, 5.0))
-					manipulation_material.set_shader_parameter("edge_power", 1.0)
-					manipulation_material.set_shader_parameter("edge_intensity",10.0)
-					child.cast_shadow = false
 				var xtra_children = child.get_children()
 				if not xtra_children.is_empty():
 					for child2 in xtra_children:
 						if child2 is MeshInstance3D:
 							var x_surface_count = child2.mesh.get_surface_count()
 							for i in range(x_surface_count):
-								child2.set_surface_override_material(i, manipulation_material)
-								manipulation_material.set_shader_parameter("tint_color", Color(1.75, 0.0, 1.75, 1.0))
-								manipulation_material.set_shader_parameter("edge_color", Color(1.75, 0.0, 1.75, 1.0))
-								manipulation_material.set_shader_parameter("edge_power", 1.0)
-								manipulation_material.set_shader_parameter("edge_intensity", 10.0)
 								child2.cast_shadow = false
+								child2.set_surface_override_material(i, manipulation_material)
 
 	if type == "View ON":
 		for child in get_children():
 			if child is MeshInstance3D:
 				var surface_count = child.mesh.get_surface_count()
 				for i in range(surface_count):
-					child.set_surface_override_material(i, manipulation_material)
-					manipulation_material.set_shader_parameter("tint_color", Color(0.0, 0.323, 1.0))
-					manipulation_material.set_shader_parameter("edge_color", Color(0.0, 0.323, 1.0))
-					manipulation_material.set_shader_parameter("edge_power", 1.15)
-					manipulation_material.set_shader_parameter("edge_intensity", 7.5)
 					child.cast_shadow = false
+					child.set_surface_override_material(i, manipulation_material)
 				var xtra_children = child.get_children()
 				if not xtra_children.is_empty():
 					for child2 in xtra_children:
 						if child2 is MeshInstance3D:
 							var x_surface_count = child2.mesh.get_surface_count()
 							for i in range(x_surface_count):
-								child2.set_surface_override_material(i, manipulation_material)
-								manipulation_material.set_shader_parameter("tint_color", Color(0.0, 0.323, 1.0))
-								manipulation_material.set_shader_parameter("edge_color", Color(0.0, 0.323, 1.0))
-								manipulation_material.set_shader_parameter("edge_power", 1.15)
-								manipulation_material.set_shader_parameter("edge_intensity", 7.5)
 								child2.cast_shadow = false
-
+								child2.set_surface_override_material(i, manipulation_material)
 	elif type == "OFF":
 		for child in extract_body.get_children():
 			if child is MeshInstance3D:
@@ -721,10 +726,6 @@ func set_glitch(status):
 
 func set_extract_glow(component, selection):
 	var surface_count = component.mesh.get_surface_count()
-	extracted_object_mat.albedo_color = Color.DARK_ORANGE
-	extracted_object_mat.albedo_color.a = 6.0
-	extracted_object_mat.emission = Color.CORAL
-	extracted_object_mat.emission_energy_multiplier = 30.0
 	
 	if selection == 'Selected':
 		component.set_material_overlay(EXTRACT_MATERIAL)

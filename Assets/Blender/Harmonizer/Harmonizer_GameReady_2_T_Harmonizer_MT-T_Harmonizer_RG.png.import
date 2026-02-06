@@ -1,0 +1,45 @@
+[remap]
+
+importer="texture"
+type="CompressedTexture2D"
+uid="uid://ygn5bodp0ltp"
+path.s3tc="res://.godot/imported/Harmonizer_GameReady_2_T_Harmonizer_MT-T_Harmonizer_RG.png-b2961e056ef4ae364fc14b153a1ad71f.s3tc.ctex"
+path.etc2="res://.godot/imported/Harmonizer_GameReady_2_T_Harmonizer_MT-T_Harmonizer_RG.png-b2961e056ef4ae364fc14b153a1ad71f.etc2.ctex"
+metadata={
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"vram_texture": true
+}
+generator_parameters={
+"md5": "9380d144ca042f56f8502bc99ea6be45"
+}
+
+[deps]
+
+source_file="res://Assets/Blender/Harmonizer/Harmonizer_GameReady_2_T_Harmonizer_MT-T_Harmonizer_RG.png"
+dest_files=["res://.godot/imported/Harmonizer_GameReady_2_T_Harmonizer_MT-T_Harmonizer_RG.png-b2961e056ef4ae364fc14b153a1ad71f.s3tc.ctex", "res://.godot/imported/Harmonizer_GameReady_2_T_Harmonizer_MT-T_Harmonizer_RG.png-b2961e056ef4ae364fc14b153a1ad71f.etc2.ctex"]
+
+[params]
+
+compress/mode=2
+compress/high_quality=false
+compress/lossy_quality=0.7
+compress/uastc_level=0
+compress/rdo_quality_loss=0.0
+compress/hdr_compression=1
+compress/normal_map=0
+compress/channel_pack=0
+mipmaps/generate=true
+mipmaps/limit=-1
+roughness/mode=0
+roughness/src_normal=""
+process/channel_remap/red=0
+process/channel_remap/green=1
+process/channel_remap/blue=2
+process/channel_remap/alpha=3
+process/fix_alpha_border=true
+process/premult_alpha=false
+process/normal_map_invert_y=false
+process/hdr_as_srgb=false
+process/hdr_clamp_exposure=false
+process/size_limit=0
+detect_3d/compress_to=0

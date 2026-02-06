@@ -1,7 +1,7 @@
 {
     "WashingMachine": {
             "name": "Washing Machine",
-            "class": "Kitchen",
+            "class": "Classified",
             "scale": 0.6,
             "distance": 6.0,
             "components": [
@@ -16,7 +16,7 @@
                 "force": 5.0,
 
                 "scale": 1.5,
-                "glow": 7.0,
+                "glow": 20.0,
                 
                 "catalog_scale": 0.4,
                 "catalog_rotation": 0.0
@@ -32,7 +32,7 @@
                 "force": 2.0,
 
                 "scale": 1.25,
-                "glow": 6.5,
+                "glow": 25.0,
                 
                 "catalog_scale": 0.25,
                 "catalog_rotation": 0.0
@@ -48,7 +48,7 @@
                 "force": 0.3,
 
                 "scale": 2.2,
-                "glow": 7.5,
+                "glow": 30.0,
                 
                 "catalog_scale": 0.45,
                 "catalog_rotation": 180
@@ -64,7 +64,7 @@
                 "force": 0.6,
 
                 "scale": 2.5,
-                "glow": 8.0,
+                "glow": 35.0,
                 
                 "catalog_scale": 1.0,
                 "catalog_rotation": 0.0
@@ -80,7 +80,7 @@
                 "force": 1.6,
 
                 "scale": 1.5,
-                "glow": 8.0,
+                "glow": 25.0,
                 
                 "catalog_scale": 0.325,
                 "catalog_rotation": 180
@@ -104,7 +104,7 @@
                 "force": 5.0,
 
                 "scale": 1.5,
-                "glow": 7.0,
+                "glow": 20.0,
                 
                 "catalog_scale": 0.14,
                 "catalog_rotation": 0.0
@@ -120,7 +120,7 @@
                 "force": 2.0,
 
                 "scale": 1.25,
-                "glow": 7.0,
+                "glow": 20.0,
                 
                 "catalog_scale": 0.35,
                 "catalog_rotation": 0.0
@@ -136,7 +136,7 @@
                 "force": 2.6,
 
                 "scale": 1.5,
-                "glow": 7.0,
+                "glow": 20.0,
                 
                 "catalog_scale": 0.35,
                 "catalog_rotation": 180.0
@@ -152,7 +152,7 @@
                 "force": 0.3,
 
                 "scale": 1.5,
-                "glow": 7.5,
+                "glow": 20.0,
                 
                 "catalog_scale": 0.35,
                 "catalog_rotation": 180
@@ -168,7 +168,7 @@
                 "force": 1.2,
 
                 "scale": 1.5,
-                "glow": 7.5,
+                "glow": 12.0,
                 
                 "catalog_scale": 0.35,
                 "catalog_rotation": 0.0

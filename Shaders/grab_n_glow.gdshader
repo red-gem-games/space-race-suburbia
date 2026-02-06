@@ -15,8 +15,8 @@ uniform float intersection_intensity : hint_range(0.0, 10.0) = 5.0;
 uniform sampler2D depth_texture : hint_depth_texture, repeat_disable, filter_nearest;
 
 // Animation
-uniform float pulse_speed : hint_range(0.0, 5.0) = 1.0;
-uniform float pulse_intensity : hint_range(0.0, 1.0) = 0.3;
+uniform float pulse_speed : hint_range(0.0, 5.0) = 0.5;
+uniform float pulse_intensity : hint_range(0.0, 1.0) = 0.25;
 
 // Scanlines/patterns
 uniform float scanline_speed : hint_range(0.0, 2.0) = 0.5;
